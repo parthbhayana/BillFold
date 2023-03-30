@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Employee.Details.Employee.entity.EmployeeDetails;
-import com.Employee.Details.Employee.service.IEmployeeService;
+import com.nineleaps.expensemanagementproject.entity.EmployeeDetails;
+import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 
 @RestController
 @RequestMapping("/employee")
