@@ -2,17 +2,19 @@ package com.nineleaps.expensemanagementproject.service;
 
 import java.util.List;
 
-import com.Employee.Details.Employee.entity.EmployeeDetails;
+import com.nineleaps.expensemanagementproject.entity.Employee;
+
+
 
 public interface IEmployeeService {
 
-	public List<EmployeeDetails> getAllEmployeeDetails();
+	public List<Employee> getAllEmployeeDetails();
 
-	public EmployeeDetails saveEmployeeDetails(EmployeeDetails employeedetailsEntiry);
+	public Employee saveEmployeeDetails(Employee employeedetailsEntiry);
 
-	public EmployeeDetails getEmployeeDetailsById(Long empId);
+	public Employee getEmployeeDetailsById(Long empId);
 
 	public void deleteEmployeeDetailsById(Long empId);
 
-	public EmployeeDetails updateEmployeeDetails(EmployeeDetails employeeentity);
+	public Employee updateEmployeeDetails(Employee employeeentity);
 }

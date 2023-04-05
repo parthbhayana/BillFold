@@ -1,48 +1,59 @@
 package com.nineleaps.expensemanagementproject.entity;
+
 import java.sql.Date;
+import java.util.Locale.Category;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="expense")
+@Table(name = "expense")
 public class Expense {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="expenseId",nullable=false)
+	@Column(name = "expense_id", nullable = false)
 	private Long expenseId;
-	
-	@Column(name="merchantName",nullable=false)
+	@Column(name = "merchantName", nullable = false)
 	private String merchantName;
-	
-	@Column(name="date",nullable=false)
+	@Column(name = "date", nullable = false)
 	private Date date;
-	
-	@Column(name="amount",nullable=false)
+	@Column(name = "amount", nullable = false)
 	private Long amount;
-	
-	@Column(name="description",nullable=false)
+	@Column(name = "description", nullable = false)
 	private String description;
-	
-	@Column(name="attachment")
+
+	@Column(name = "attachment")
 	@Enumerated(EnumType.STRING)
 	private Category category;
-	
-	
-	public Expense() {
-		
-	}
 
-	
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_empid")
+	private Employee employee;
 
-	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description, Category category) {
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "report_id")
+	private Reports reports;
+
+//	@ManyToOne
+//	@JoinColumn(name = "fk_reportid")
+//	@JsonIgnore
+//	private Reports reports;
+
+	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description, Category category,
+			Employee employee, Reports reports) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
@@ -50,6 +61,12 @@ public class Expense {
 		this.amount = amount;
 		this.description = description;
 		this.category = category;
+		this.employee = employee;
+		this.reports = reports;
+	}
+
+	public Expense() {
+
 	}
 
 	public Long getExpenseId() {
@@ -99,6 +116,21 @@ public class Expense {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-}
 
-	
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
+	public Reports getReports() {
+		return reports;
+	}
+
+	public void setReports(Reports reports) {
+		this.reports = reports;
+	}
+
+}

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineleaps.expensemanagementproject.entity.Expense;
+import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
 
@@ -18,9 +19,9 @@ public class ExpenseController {
 	@Autowired
 	private IExpenseService expService;
 	
-	@PostMapping("/insertexpenses")
-	public Expense saveExpense(@RequestBody Expense expense) {
-		return expService.saveCustomer(expense);
+	@PostMapping("/insertexpenses/{empid}")
+	public Expense saveExpense(@RequestBody Expense expense,@PathVariable Long empid) {
+		return expService.addExpense(expense,empid);
 	}
 	
 	@GetMapping("/showallexpenses")
@@ -35,15 +36,10 @@ public class ExpenseController {
 		return expService.getExpenseById(expenseId);
 	}
 	@PutMapping("/updateexpense/{expId}")
-	public Expense updateCustomer(@RequestBody Expense newExpense,@PathVariable("expId") Long expenseId) {
-		Expense expense =  expService.getExpenseById(expenseId);
-				
-		expense.setMerchantName(newExpense.getMerchantName());
-		expense.setDate(newExpense.getDate());
-		expense.setAmount(newExpense.getAmount());
-		expense.setDescription(newExpense.getDescription());
-		expense.setCategory(newExpense.getCategory());
-		return expService.updateExpense(expense);
+	public Expense updateCustomer(@RequestBody Reports report,@PathVariable("expId") Long expenseId) {
+		
+		
+		return expService.updateExpense(report,expenseId);
 	}
 	
 	@DeleteMapping("/deleteexpense/{expId}")
@@ -51,6 +47,4 @@ public class ExpenseController {
 		 expService.deleteExpenseById(expenseId);
 		 
 	}
-	
-
 }
