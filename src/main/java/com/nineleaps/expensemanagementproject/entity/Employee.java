@@ -1,16 +1,24 @@
 package com.nineleaps.expensemanagementproject.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "Employee")
-public class EmployeeDetails {
-	
+@Table(name = "employee")
+public class Employee {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "emp_Id")
@@ -27,8 +35,16 @@ public class EmployeeDetails {
 	private String designation;
 	@Column(name = "manager_mail")
 	private String reportingManagerEmail;
-	
-	public EmployeeDetails() {
+
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "fk_empid",referencedColumnName = "emp_id")
+//	private List<Expense >expense;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+	private List<Expense> expenseList = new ArrayList<>();
+
+	public Employee() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -39,7 +55,20 @@ public class EmployeeDetails {
 				+ ", reportingManagerEmail=" + reportingManagerEmail + "]";
 	}
 
-	public EmployeeDetails(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
+	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
+			String designation, String reportingManagerEmail, List<Expense> expenseList) {
+		super();
+		this.employeeId = employeeId;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.employeeEmail = employeeEmail;
+		this.designation = designation;
+		this.reportingManagerEmail = reportingManagerEmail;
+		this.expenseList = expenseList;
+	}
+
+	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
 			String designation, String reportingManagerEmail) {
 		super();
 		this.employeeId = employeeId;
@@ -106,8 +135,13 @@ public class EmployeeDetails {
 	public void setReportingManagerEmail(String reportingManagerEmail) {
 		this.reportingManagerEmail = reportingManagerEmail;
 	}
-	
-	
-	
+
+	public List<Expense> getExpenseList() {
+		return expenseList;
+	}
+
+	public void setExpenseList(List<Expense> expenseList) {
+		this.expenseList = expenseList;
+	}
 
 }

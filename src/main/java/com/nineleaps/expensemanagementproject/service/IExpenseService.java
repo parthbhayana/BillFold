@@ -3,18 +3,19 @@ package com.nineleaps.expensemanagementproject.service;
 import java.util.List;
 
 import com.nineleaps.expensemanagementproject.entity.Expense;
+import com.nineleaps.expensemanagementproject.entity.Reports;
 
 public interface IExpenseService {
 
-	public Expense saveCustomer(Expense expense);
+	public Expense addExpense(Expense expense, Long employeeid);
 
 	public List<Expense> getAllExpenses();
 
 	public Expense getExpenseById(Long expenseId);
 
-	public Expense updateExpense(Expense expense);
+	public Expense updateExpense(Reports report,Long employeeId);
 
-	 void deleteExpenseById(Long expenseId);
+	void deleteExpenseById(Long expenseId);
+
+	public Expense getExpenseByEmployeeId(Long fk_empid);
 }
-
-	

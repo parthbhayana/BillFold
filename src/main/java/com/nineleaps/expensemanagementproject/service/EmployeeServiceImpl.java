@@ -4,10 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.Employee.Details.Employee.entity.EmployeeDetails;
-import com.Employee.Details.Employee.repository.EmployeeRepository;
-import com.Employee.Details.Employee.service.IEmployeeService;
+import com.nineleaps.expensemanagementproject.entity.Employee;
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 @Service
 public class EmployeeServiceImpl implements IEmployeeService{
@@ -16,17 +14,17 @@ public class EmployeeServiceImpl implements IEmployeeService{
 	private EmployeeRepository employeerepository;
 	
 	@Override
-	public List<EmployeeDetails> getAllEmployeeDetails(){
+	public List<Employee> getAllEmployeeDetails(){
 		return employeerepository.findAll();
 	}
 	
 	@Override
-	public EmployeeDetails saveEmployeeDetails(EmployeeDetails employeedetailsEntity) {
+	public Employee saveEmployeeDetails(Employee employeedetailsEntity) {
 		return employeerepository.save(employeedetailsEntity);
 	}
 	
 	@Override
-	public EmployeeDetails getEmployeeDetailsById(Long empId){
+	public Employee getEmployeeDetailsById(Long empId){
 		return employeerepository.findById(empId).get();
 	}
 	
@@ -36,7 +34,7 @@ public class EmployeeServiceImpl implements IEmployeeService{
 	}
 	
 	@Override
-	public EmployeeDetails updateEmployeeDetails(EmployeeDetails employeeentity) {
+	public Employee updateEmployeeDetails(Employee employeeentity) {
 		return employeerepository.save(employeeentity);
 	}
 }
