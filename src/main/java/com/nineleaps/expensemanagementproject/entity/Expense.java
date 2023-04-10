@@ -24,7 +24,7 @@ public class Expense {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "expense_id", nullable = false)
 	private Long expenseId;
-	@Column(name = "merchantName", nullable = false)
+	@Column(name = "merchant_Name", nullable = false)
 	private String merchantName;
 	@Column(name = "date", nullable = false)
 	private Date date;
@@ -32,6 +32,8 @@ public class Expense {
 	private Long amount;
 	@Column(name = "description", nullable = false)
 	private String description;
+	@Column(name = "supporting_document")
+	private String supportingDocument;
 
 	@Column(name = "attachment")
 	@Enumerated(EnumType.STRING)
@@ -64,6 +66,7 @@ public class Expense {
 		this.employee = employee;
 		this.reports = reports;
 	}
+	
 
 	public Expense() {
 
