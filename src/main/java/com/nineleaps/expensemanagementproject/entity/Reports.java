@@ -21,7 +21,7 @@ public class Reports {
 
 	@Id
 	@Column(name = "reportid", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.AUTO)
 	private long reportId;
 
 	@Column(name = "report_title")
