@@ -21,17 +21,23 @@ public class Reports {
 
 	@Id
 	@Column(name = "reportid", nullable = false)
-	//@GeneratedValue(strategy = GenerationType.AUTO)
+	// @GeneratedValue(strategy = GenerationType.AUTO)
 	private long reportId;
 
 	@Column(name = "report_title")
 	private String reportTitle;
 
+	@Column(name = "report_description")
+	private String reportDescription;
+
 	@Column(name = "report_comments")
 	private String reportComments;
 
-	@Column(name = "report_status")
-	private Boolean reportStatus;
+	@Column(name = "is_aprooved")
+	private Boolean isAprooved;
+
+	@Column(name = "is_submitted")
+	private Boolean isSubmitted;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
@@ -47,12 +53,15 @@ public class Reports {
 //		this.expenseList = expenseList;
 //	}
 
-	public Reports(long reportId, String reportTitle, String reportComments, Boolean reportStatus) {
+	public Reports(long reportId, String reportTitle, String reportDescription, String reportComments,
+			Boolean isAprooved, Boolean isSubmitted) {
 		super();
 		this.reportId = reportId;
 		this.reportTitle = reportTitle;
+		this.reportDescription = reportDescription;
 		this.reportComments = reportComments;
-		this.reportStatus = reportStatus;
+		this.isAprooved = isAprooved;
+		this.isSubmitted = isSubmitted;
 	}
 
 	public Reports() {
@@ -83,12 +92,28 @@ public class Reports {
 		this.reportComments = reportComments;
 	}
 
-	public Boolean getReportStatus() {
-		return reportStatus;
+	public Boolean getIsAprooved() {
+		return isAprooved;
 	}
 
-	public void setReportStatus(Boolean reportStatus) {
-		this.reportStatus = reportStatus;
+	public void setIsAprooved(Boolean isAprooved) {
+		this.isAprooved = isAprooved;
+	}
+
+	public Boolean getIsSubmitted() {
+		return isSubmitted;
+	}
+
+	public void setIsSubmitted(Boolean isSubmitted) {
+		this.isSubmitted = isSubmitted;
+	}
+
+	public String getReportDescription() {
+		return reportDescription;
+	}
+
+	public void setReportDescription(String reportDescription) {
+		this.reportDescription = reportDescription;
 	}
 
 //	public List<Expense> getExpenseList() {

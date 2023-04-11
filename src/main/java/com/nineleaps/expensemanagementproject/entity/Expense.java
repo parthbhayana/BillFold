@@ -1,7 +1,7 @@
 package com.nineleaps.expensemanagementproject.entity;
 
 import java.sql.Date;
-import java.util.Locale.Category;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
