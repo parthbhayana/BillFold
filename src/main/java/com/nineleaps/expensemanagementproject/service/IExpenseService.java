@@ -12,6 +12,7 @@ public interface IExpenseService {
 	public List<Expense> getAllExpenses();
 
 	public Expense getExpenseById(Long expenseId);
+	public Expense updateSupportingDocument(String supportingDoc, Long expenseId);
 
 	public Expense updateExpense(Reports report,Long employeeId);
 

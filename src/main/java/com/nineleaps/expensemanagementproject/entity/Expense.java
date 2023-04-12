@@ -68,6 +68,31 @@ public class Expense {
 	}
 	
 
+	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description,
+		String supportingDocument, Category category, Employee employee, Reports reports) {
+	super();
+	this.expenseId = expenseId;
+	this.merchantName = merchantName;
+	this.date = date;
+	this.amount = amount;
+	this.description = description;
+	this.supportingDocument = supportingDocument;
+	this.category = category;
+	this.employee = employee;
+	this.reports = reports;
+}
+
+
+	public String getSupportingDocument() {
+		return supportingDocument;
+	}
+
+
+	public void setSupportingDocument(String supportingDocument) {
+		this.supportingDocument = supportingDocument;
+	}
+
+
 	public Expense() {
 
 	}

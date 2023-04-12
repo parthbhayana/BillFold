@@ -37,8 +37,6 @@ public class ReportsServiceImpl implements IReportsService {
 	public Reports addReport(Reports newReport, Long employeeid) {
 		expServices.updateExpense(newReport, employeeid);
 		return reportsrepository.save(newReport);
-		
-
 
 	}
 
