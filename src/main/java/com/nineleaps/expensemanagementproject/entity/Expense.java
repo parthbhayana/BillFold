@@ -35,7 +35,6 @@ public class Expense {
 	@Column(name = "supporting_document")
 	private String supportingDocument;
 
-	@Column(name = "attachment")
 	@Enumerated(EnumType.STRING)
 	private Category category;
 

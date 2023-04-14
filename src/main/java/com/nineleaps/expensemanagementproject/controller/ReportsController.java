@@ -39,8 +39,8 @@ public class ReportsController {
 		return reportsService.getReportByReportId(ReportId);
 	}
 	
-	@PostMapping("/addreport/{employeeid}")
-	public Reports addReport(@RequestBody Reports newReport,@PathVariable Long employeeid) {
-		return reportsService.addReport(newReport,employeeid);
+	@PostMapping("/addreport/{expenseid}")
+	public Reports addReport(@RequestBody Reports newReport,@PathVariable Long expenseid) {
+		return reportsService.addReport(newReport,expenseid);
 	}
 }
