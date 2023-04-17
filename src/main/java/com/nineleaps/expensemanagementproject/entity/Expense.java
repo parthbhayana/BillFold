@@ -1,7 +1,7 @@
 package com.nineleaps.expensemanagementproject.entity;
 
 import java.sql.Date;
-import java.util.Locale.Category;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,7 +24,7 @@ public class Expense {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "expense_id", nullable = false)
 	private Long expenseId;
-	@Column(name = "merchantName", nullable = false)
+	@Column(name = "merchant_Name", nullable = false)
 	private String merchantName;
 	@Column(name = "date", nullable = false)
 	private Date date;
@@ -32,8 +32,9 @@ public class Expense {
 	private Long amount;
 	@Column(name = "description", nullable = false)
 	private String description;
+	@Column(name = "supporting_document")
+	private String supportingDocument;
 
-	@Column(name = "attachment")
 	@Enumerated(EnumType.STRING)
 	private Category category;
 
@@ -64,6 +65,32 @@ public class Expense {
 		this.employee = employee;
 		this.reports = reports;
 	}
+	
+
+	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description,
+		String supportingDocument, Category category, Employee employee, Reports reports) {
+	super();
+	this.expenseId = expenseId;
+	this.merchantName = merchantName;
+	this.date = date;
+	this.amount = amount;
+	this.description = description;
+	this.supportingDocument = supportingDocument;
+	this.category = category;
+	this.employee = employee;
+	this.reports = reports;
+}
+
+
+	public String getSupportingDocument() {
+		return supportingDocument;
+	}
+
+
+	public void setSupportingDocument(String supportingDocument) {
+		this.supportingDocument = supportingDocument;
+	}
+
 
 	public Expense() {
 

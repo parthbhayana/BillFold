@@ -52,6 +52,17 @@ public class ExpenseServiceImpl implements IExpenseService {
 		expRepository.save(exp);
 		return null;
 	}
+	
+	@Override
+	public Expense updateSupportingDocument(String supportingDoc, Long expenseId) {
+
+		Expense exp = getExpenseById(expenseId);
+		if (exp != null) {
+			exp.setSupportingDocument(supportingDoc);
+		}
+		expRepository.save(exp);
+		return null;
+	}
 
 	@Override
 	public void deleteExpenseById(Long expenseId) {
