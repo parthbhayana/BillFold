@@ -1,4 +1,4 @@
- package com.nineleaps.expensemanagementproject.service;
+package com.nineleaps.expensemanagementproject.service;
 
 import java.util.List;
 
@@ -10,16 +10,13 @@ import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
-
 @Service
 public class ExpenseServiceImpl implements IExpenseService {
 	@Autowired
 	private ExpenseRepository expRepository;
 
-
 	@Autowired
 	private IEmployeeService employeeSERVICES;
-
 
 	@Override
 	public Expense addExpense(Expense expense, Long employeeid) {
@@ -52,7 +49,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 		expRepository.save(exp);
 		return null;
 	}
-	
+
 //	@Override
 //	public Expense updateSupportingDocument( String supportingDoc, Long expenseId) {
 //

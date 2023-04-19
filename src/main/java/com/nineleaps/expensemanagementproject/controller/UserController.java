@@ -12,25 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 
-
-
 @RestController
 @RequestMapping()
 
-	
 public class UserController {
 	@Autowired
 	private IEmployeeService userService;
-	
+
 	@GetMapping("/api/v1/listtheuser")
-	public List<Employee> getAllUserDtls(){
+	public List<Employee> getAllUserDtls() {
 		return userService.getAllUser();
 	}
-	
+
 	@PostMapping("/api/v1/theprofile")
 	public Employee insertuser(@RequestBody Employee newUser) {
 		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());
-		if(employee == null) {
+		if (employee == null) {
 			return userService.insertuser(newUser);
 		}
 		return employee;

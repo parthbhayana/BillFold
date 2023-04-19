@@ -57,9 +57,9 @@ public class PdfGeneratorServiceImpl {
 		fontParagraph.setSize(14);
 		Reports report = reportsRepository.findById(reportId).get();
 		List<Expense> expenses = expenseRepository.findByReports(report);
-		
-		Employee employee = employeeRepository.findById(expenses.get(0).getEmployee(). getEmployeeId()).orElse(null);
-		
+
+		Employee employee = employeeRepository.findById(expenses.get(0).getEmployee().getEmployeeId()).orElse(null);
+
 		float total = 0;
 		for (Expense expense : expenses) {
 			table.addCell(expense.getDate().toString());
@@ -68,30 +68,29 @@ public class PdfGeneratorServiceImpl {
 			table.addCell(expense.getAmount().toString());
 			total += expense.getAmount();
 		}
-		
-		
-		
+
 		Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES);
 		fontParagraph1.setSize(14);
 		Paragraph pdfParagraph01 = new Paragraph("Total Expense Amount : Rs." + total, fontParagraph);
 		pdfParagraph01.setAlignment(Paragraph.ALIGN_LEFT);
-		
+
 		Font fontParagraph11 = FontFactory.getFont(FontFactory.TIMES);
 		fontParagraph11.setSize(14);
-		Paragraph pdfParagraph = new Paragraph("Employee Name : "+employee.getFirstName()+" "+employee.getLastName(), fontParagraph);
+		Paragraph pdfParagraph = new Paragraph(
+				"Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
 		pdfParagraph.setAlignment(Paragraph.ALIGN_LEFT);
-		
-		Font fontParagraph12=FontFactory.getFont(FontFactory.TIMES);
+
+		Font fontParagraph12 = FontFactory.getFont(FontFactory.TIMES);
 		fontParagraph12.setSize(14);
-		Paragraph pdfParagraph02=new Paragraph("Employee Email : "+employee.getEmployeeEmail(),fontParagraph);
+		Paragraph pdfParagraph02 = new Paragraph("Employee Email : " + employee.getEmployeeEmail(), fontParagraph);
 		pdfParagraph02.setAlignment(Paragraph.ALIGN_LEFT);
-		
+
 		document.add(headerParagraph);
 		document.add(pdfParagraph);
 		document.add(pdfParagraph02);
 		document.add(table);
 		document.add(pdfParagraph01);
-		
+
 		for (Expense expense : expenses) {
 
 			byte[] imageData = expense.getSupportingDocuments();
@@ -102,8 +101,7 @@ public class PdfGeneratorServiceImpl {
 			image.setAlignment(Image.MIDDLE);
 			document.add(image);
 		}
-		
-		
+
 		document.close();
 	}
 }

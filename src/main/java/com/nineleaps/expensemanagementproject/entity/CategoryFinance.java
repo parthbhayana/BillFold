@@ -8,20 +8,19 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="category_finance")
+@Table(name = "category_finance")
 public class CategoryFinance {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="cat_Id")
+	@Column(name = "cat_Id")
 	private Long catId;
-	
-	@Column(name="cat_decription")
+
+	@Column(name = "cat_decription")
 	private String catDescription;
-	
-	public CategoryFinance()
-	{
-		
+
+	public CategoryFinance() {
+
 	}
 
 	public CategoryFinance(Long catId, String catDescription) {
@@ -45,11 +44,5 @@ public class CategoryFinance {
 	public void setCatDescription(String catDescription) {
 		this.catDescription = catDescription;
 	}
-	
-	
-	
-	
-	
-	
 
 }

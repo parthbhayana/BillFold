@@ -11,14 +11,14 @@ import com.nineleaps.expensemanagementproject.repository.CategoryFinanceReposito
 
 @Service
 public class CategoryFinanceImpl implements ICategoryFinance {
-	
+
 	@Autowired
 	CategoryFinanceRepository catfinrepository;
 
 	@Override
 	public void deleteCategoryFinanceById(Long catId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -44,9 +44,5 @@ public class CategoryFinanceImpl implements ICategoryFinance {
 		catfinrepository.save(categoryfinance);
 		return null;
 	}
-
-	
-	
-	
 
 }

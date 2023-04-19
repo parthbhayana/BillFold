@@ -8,31 +8,31 @@ import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 @Service
-public class EmployeeServiceImpl implements IEmployeeService{
-	
+public class EmployeeServiceImpl implements IEmployeeService {
+
 	@Autowired
 	private EmployeeRepository employeerepository;
-	
+
 	@Override
-	public List<Employee> getAllEmployeeDetails(){
+	public List<Employee> getAllEmployeeDetails() {
 		return employeerepository.findAll();
 	}
-	
+
 	@Override
 	public Employee saveEmployeeDetails(Employee employeedetailsEntity) {
 		return employeerepository.save(employeedetailsEntity);
 	}
-	
+
 	@Override
-	public Employee getEmployeeDetailsById(Long empId){
+	public Employee getEmployeeDetailsById(Long empId) {
 		return employeerepository.findById(empId).get();
 	}
-	
+
 	@Override
 	public void deleteEmployeeDetailsById(Long empId) {
 		employeerepository.deleteById(empId);
 	}
-	
+
 	@Override
 	public Employee updateEmployeeDetails(Employee employeeentity) {
 		return employeerepository.save(employeeentity);
@@ -69,5 +69,4 @@ public class EmployeeServiceImpl implements IEmployeeService{
 //		return null;
 	}
 
-	
 }

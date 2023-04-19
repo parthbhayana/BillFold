@@ -8,7 +8,7 @@ import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
-	
+
 	List<Expense> findByReports(Reports reports);
 
 }

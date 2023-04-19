@@ -14,33 +14,29 @@ import com.nineleaps.expensemanagementproject.service.IReportsService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-@RestController  
+@RestController
 public class ReportsController {
-	
+
 	@Autowired
 	private IReportsService reportsService;
-	
-	
+
 	@GetMapping("/getallreports")
-	public List<Reports> getAllReports()
-	{
+	public List<Reports> getAllReports() {
 		return reportsService.getAllReports();
 	}
-	
+
 	@DeleteMapping("/deletereport/{reportid}")
-	public void deleteReport(@PathVariable("Reportid")Long reportId)
-	{
+	public void deleteReport(@PathVariable("Reportid") Long reportId) {
 		reportsService.deleteReport(reportId);
 	}
-	
+
 	@GetMapping("/getbyreportid/{reportid}")
-	public Reports getReportById(@PathVariable(name = "ReportId") Long ReportId)
-	{
+	public Reports getReportById(@PathVariable(name = "ReportId") Long ReportId) {
 		return reportsService.getReportByReportId(ReportId);
 	}
-	
+
 	@PostMapping("/addreport/{expenseid}")
-	public Reports addReport(@RequestBody Reports newReport,@PathVariable Long expenseid) {
-		return reportsService.addReport(newReport,expenseid);
+	public Reports addReport(@RequestBody Reports newReport, @PathVariable Long expenseid) {
+		return reportsService.addReport(newReport, expenseid);
 	}
 }

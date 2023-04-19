@@ -48,7 +48,6 @@ public class Employee {
 		// TODO Auto-generated constructor stub
 	}
 
-
 	public Employee(Long employeeId, String firstName, String middleName, String lastName, String email,
 			String designation, String reportingManagerEmail, List<Expense> expenseList) {
 		super();
