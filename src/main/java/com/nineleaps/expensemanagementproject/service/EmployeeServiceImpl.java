@@ -37,4 +37,37 @@ public class EmployeeServiceImpl implements IEmployeeService{
 	public Employee updateEmployeeDetails(Employee employeeentity) {
 		return employeerepository.save(employeeentity);
 	}
+
+	@Override
+	public Employee getEmployeeByEmail(String emailToVerify) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Employee getUserByEmail(String emailToVerify) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Employee> getAllUser() {
+		// TODO Auto-generated method stub
+		return employeerepository.findAll();
+	}
+
+	@Override
+	public Employee insertuser(Employee newUser) {
+		// TODO Auto-generated method stub
+		return employeerepository.save(newUser);
+	}
+
+	@Override
+	public Employee findByEmailId(String emailId) {
+		// TODO Auto-generated method stub
+		return employeerepository.findByEmployeeEmail(emailId);
+//		return null;
+	}
+
+	
 }

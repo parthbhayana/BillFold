@@ -1,4 +1,4 @@
-package com.nineleaps.expensemanagementproject.service;
+ package com.nineleaps.expensemanagementproject.service;
 
 import java.util.List;
 
@@ -53,16 +53,16 @@ public class ExpenseServiceImpl implements IExpenseService {
 		return null;
 	}
 	
-	@Override
-	public Expense updateSupportingDocument(String supportingDoc, Long expenseId) {
-
-		Expense exp = getExpenseById(expenseId);
-		if (exp != null) {
-			exp.setSupportingDocument(supportingDoc);
-		}
-		expRepository.save(exp);
-		return null;
-	}
+//	@Override
+//	public Expense updateSupportingDocument( String supportingDoc, Long expenseId) {
+//
+//		Expense exp = getExpenseById(expenseId);
+//		if (exp != null) {
+//			exp.setSupportingDocument(supportingDoc);
+//		}
+//		expRepository.save(exp);
+//		return null;
+//	}
 
 	@Override
 	public void deleteExpenseById(Long expenseId) {
@@ -74,6 +74,12 @@ public class ExpenseServiceImpl implements IExpenseService {
 	public Expense getExpenseByEmployeeId(Long fk_empid) {
 
 		return expRepository.findById(fk_empid).get();
+	}
+
+	@Override
+	public Expense updateSupportingDocument(String supportingDoc, Long expenseId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

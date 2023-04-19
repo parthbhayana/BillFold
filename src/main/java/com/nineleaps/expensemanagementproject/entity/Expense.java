@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -32,8 +33,14 @@ public class Expense {
 	private Long amount;
 	@Column(name = "description", nullable = false)
 	private String description;
-	@Column(name = "supporting_document")
-	private String supportingDocument;
+//	 @Lob
+//	 @Column(name = "supporting_document", nullable=true)
+//	 private byte[] supportingDocument;
+	 
+	 
+	 @Lob
+	 @Column(name = "supporting_documents", nullable=true)
+	 private byte[] supportingDocuments;
 
 	@Enumerated(EnumType.STRING)
 	private Category category;
@@ -53,43 +60,59 @@ public class Expense {
 //	@JsonIgnore
 //	private Reports reports;
 
-	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description, Category category,
-			Employee employee, Reports reports) {
-		super();
-		this.expenseId = expenseId;
-		this.merchantName = merchantName;
-		this.date = date;
-		this.amount = amount;
-		this.description = description;
-		this.category = category;
-		this.employee = employee;
-		this.reports = reports;
-	}
+
+
+
+
 	
 
+
+	
+
+
 	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description,
-		String supportingDocument, Category category, Employee employee, Reports reports) {
+		byte[] supportingDocuments, Category category, Employee employee, Reports reports) {
 	super();
 	this.expenseId = expenseId;
 	this.merchantName = merchantName;
 	this.date = date;
 	this.amount = amount;
 	this.description = description;
-	this.supportingDocument = supportingDocument;
+	this.supportingDocuments = supportingDocuments;
 	this.category = category;
 	this.employee = employee;
 	this.reports = reports;
 }
+	
 
 
-	public String getSupportingDocument() {
-		return supportingDocument;
+	public Expense(String merchantName, Date date, Long amount, String description, byte[] supportingDocument,
+			Category category, Employee employee, Reports reports) {
+		super();
+		this.merchantName = merchantName;
+		this.date = date;
+		this.amount = amount;
+		this.description = description;
+		this.supportingDocuments = supportingDocuments;
+		this.category = category;
+		this.employee = employee;
+		this.reports = reports;
 	}
 
 
-	public void setSupportingDocument(String supportingDocument) {
-		this.supportingDocument = supportingDocument;
+
+
+
+	public byte[] getSupportingDocuments() {
+		return supportingDocuments;
 	}
+
+
+
+	public void setSupportingDocuments(byte[] supportingDocuments) {
+		this.supportingDocuments = supportingDocuments;
+	}
+
 
 
 	public Expense() {

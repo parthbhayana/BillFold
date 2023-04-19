@@ -48,34 +48,28 @@ public class Employee {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "EmployeeDetails [employeeId=" + employeeId + ", firstName=" + firstName + ", middleName=" + middleName
-				+ ", lastName=" + lastName + ", employeeEmail=" + employeeEmail + ", designation=" + designation
-				+ ", reportingManagerEmail=" + reportingManagerEmail + "]";
-	}
 
-	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
+	public Employee(Long employeeId, String firstName, String middleName, String lastName, String email,
 			String designation, String reportingManagerEmail, List<Expense> expenseList) {
 		super();
 		this.employeeId = employeeId;
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
-		this.employeeEmail = employeeEmail;
+		this.employeeEmail = email;
 		this.designation = designation;
 		this.reportingManagerEmail = reportingManagerEmail;
 		this.expenseList = expenseList;
 	}
 
-	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
+	public Employee(Long employeeId, String firstName, String middleName, String lastName, String email,
 			String designation, String reportingManagerEmail) {
 		super();
 		this.employeeId = employeeId;
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
-		this.employeeEmail = employeeEmail;
+		this.employeeEmail = email;
 		this.designation = designation;
 		this.reportingManagerEmail = reportingManagerEmail;
 	}

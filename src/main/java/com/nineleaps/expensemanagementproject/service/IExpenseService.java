@@ -19,4 +19,6 @@ public interface IExpenseService {
 	void deleteExpenseById(Long expenseId);
 
 	public Expense getExpenseByEmployeeId(Long fk_empid);
+
+	//Expense updateSupportingDocument(byte[] supportingDoc, Long expenseId);
 }
