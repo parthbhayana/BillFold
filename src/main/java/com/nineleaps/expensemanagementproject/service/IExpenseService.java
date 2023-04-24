@@ -12,11 +12,18 @@ public interface IExpenseService {
 	public List<Expense> getAllExpenses();
 
 	public Expense getExpenseById(Long expenseId);
+
 	public Expense updateSupportingDocument(String supportingDoc, Long expenseId);
 
-	public Expense updateExpense(Reports report,Long employeeId);
+	public Expense updateExpense(Long reportId, Long employeeId);
 
 	void deleteExpenseById(Long expenseId);
 
-	public Expense getExpenseByEmployeeId(Long fk_empid);
+	public List<Expense> getExpenseByEmployeeId(Long employeeId);
+
+	public Expense updateExpenses(Expense expense);
+	
+//	public Expense fetchEmpId(Long expenseId); 
+
+	// Expense updateSupportingDocument(byte[] supportingDoc, Long expenseId);
 }

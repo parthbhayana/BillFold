@@ -2,7 +2,6 @@ package com.nineleaps.expensemanagementproject.entity;
 
 import java.sql.Date;
 
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +11,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "expense")
@@ -23,28 +28,36 @@ public class Expense {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "expense_id", nullable = false)
+	@ApiModelProperty(hidden = true)
 	private Long expenseId;
+
 	@Column(name = "merchant_Name", nullable = false)
 	private String merchantName;
+
 	@Column(name = "date", nullable = false)
 	private Date date;
+
 	@Column(name = "amount", nullable = false)
 	private Long amount;
 	@Column(name = "description", nullable = false)
 	private String description;
-	@Column(name = "supporting_document")
-	private String supportingDocument;
+
+	@Lob
+	@Column(name = "supporting_documents", nullable = true)
+	private byte[] supportingDocuments;
 
 	@Enumerated(EnumType.STRING)
 	private Category category;
 
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JoinColumn(name = "fk_empid")
 	private Employee employee;
 
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JoinColumn(name = "report_id")
 	private Reports reports;
 
@@ -53,44 +66,27 @@ public class Expense {
 //	@JsonIgnore
 //	private Reports reports;
 
-	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description, Category category,
-			Employee employee, Reports reports) {
+	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description,
+			byte[] supportingDocuments, Category category, Employee employee, Reports reports) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
 		this.amount = amount;
 		this.description = description;
+		this.supportingDocuments = supportingDocuments;
 		this.category = category;
 		this.employee = employee;
 		this.reports = reports;
 	}
-	
 
-	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description,
-		String supportingDocument, Category category, Employee employee, Reports reports) {
-	super();
-	this.expenseId = expenseId;
-	this.merchantName = merchantName;
-	this.date = date;
-	this.amount = amount;
-	this.description = description;
-	this.supportingDocument = supportingDocument;
-	this.category = category;
-	this.employee = employee;
-	this.reports = reports;
-}
-
-
-	public String getSupportingDocument() {
-		return supportingDocument;
+	public byte[] getSupportingDocuments() {
+		return supportingDocuments;
 	}
 
-
-	public void setSupportingDocument(String supportingDocument) {
-		this.supportingDocument = supportingDocument;
+	public void setSupportingDocuments(byte[] supportingDocuments) {
+		this.supportingDocuments = supportingDocuments;
 	}
-
 
 	public Expense() {
 

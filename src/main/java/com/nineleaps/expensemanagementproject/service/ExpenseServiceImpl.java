@@ -8,18 +8,21 @@ import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
-
 
 @Service
 public class ExpenseServiceImpl implements IExpenseService {
 	@Autowired
 	private ExpenseRepository expRepository;
 
-
+	@Autowired
+	private EmployeeRepository empRepository;
 	@Autowired
 	private IEmployeeService employeeSERVICES;
 
+	@Autowired
+	private IReportsService reportServices;
 
 	@Override
 	public Expense addExpense(Expense expense, Long employeeid) {
@@ -43,26 +46,27 @@ public class ExpenseServiceImpl implements IExpenseService {
 	}
 
 	@Override
-	public Expense updateExpense(Reports report, Long employeeId) {
+	public Expense updateExpense(Long reportId, Long employeeId) {
 
 		Expense exp = getExpenseById(employeeId);
+		Reports report = reportServices.getReportById(reportId);
 		if (exp != null) {
 			exp.setReports(report);
 		}
 		expRepository.save(exp);
 		return null;
 	}
-	
-	@Override
-	public Expense updateSupportingDocument(String supportingDoc, Long expenseId) {
 
-		Expense exp = getExpenseById(expenseId);
-		if (exp != null) {
-			exp.setSupportingDocument(supportingDoc);
-		}
-		expRepository.save(exp);
-		return null;
-	}
+//	@Override
+//	public Expense updateSupportingDocument( String supportingDoc, Long expenseId) {
+//
+//		Expense exp = getExpenseById(expenseId);
+//		if (exp != null) {
+//			exp.setSupportingDocument(supportingDoc);
+//		}
+//		expRepository.save(exp);
+//		return null;
+//	}
 
 	@Override
 	public void deleteExpenseById(Long expenseId) {
@@ -71,9 +75,20 @@ public class ExpenseServiceImpl implements IExpenseService {
 	}
 
 	@Override
-	public Expense getExpenseByEmployeeId(Long fk_empid) {
+	public List<Expense> getExpenseByEmployeeId(Long employeeId) {
+		Employee employee = empRepository.findById(employeeId).get();
+		return expRepository.findByEmployee(employee);
+	}
 
-		return expRepository.findById(fk_empid).get();
+	@Override
+	public Expense updateSupportingDocument(String supportingDoc, Long expenseId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expense updateExpenses(Expense expense) {
+		return expRepository.save(expense);
 	}
 
 }

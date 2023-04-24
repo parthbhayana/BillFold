@@ -4,7 +4,7 @@ public class FileResponse {
 
 	private String message;
 	private String fileName;
-	
+
 	public FileResponse() {
 		// TODO Auto-generated constructor stub
 	}
@@ -30,6 +30,5 @@ public class FileResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
+
 }
