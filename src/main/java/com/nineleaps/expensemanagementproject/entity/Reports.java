@@ -13,34 +13,44 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "reports")
 public class Reports {
 
 	@Id
-	@Column(name = "reportid", nullable = false)
-	// @GeneratedValue(strategy = GenerationType.AUTO)
-	private long reportId;
+	@Column(name = "report_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@ApiModelProperty(hidden = true)
+	private Long reportId;
 
-	@Column(name = "report_title")
+	@Column(name = "report_title", nullable = false)
 	private String reportTitle;
 
 	@Column(name = "report_description")
 	private String reportDescription;
 
-	@Column(name = "report_comments")
+	@Column(name = "report_comments",nullable = true)
+//	@ApiModelProperty(hidden = true)
 	private String reportComments;
 
-	@Column(name = "is_aprooved")
-	private Boolean isAprooved;
+	@Column(name = "is_aprooved",nullable = true)
+	@ApiModelProperty(hidden = true)
+	private Boolean isAprooved=false;
 
-	@Column(name = "is_submitted")
-	private Boolean isSubmitted;
+	@Column(name = "is_submitted",nullable = true)
+	@ApiModelProperty(hidden = true)
+	private Boolean isSubmitted=false;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private List<Expense> expenseList = new ArrayList<>();
 
 //	public Reports(long reportId, String reportTitle, String reportComments, Boolean reportStatus,
@@ -68,11 +78,11 @@ public class Reports {
 		// TODO Auto-generated constructor stub
 	}
 
-	public long getReportId() {
+	public Long getReportId() {
 		return reportId;
 	}
 
-	public void setReportId(long reportId) {
+	public void setReportId(Long reportId) {
 		this.reportId = reportId;
 	}
 

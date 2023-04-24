@@ -35,15 +35,26 @@ public class ExpenseController {
 		return expService.getExpenseById(expenseId);
 	}
 
-	@PutMapping("/updateexpense/{expId}")
-	public Expense updateCustomer(@RequestBody Reports report, @PathVariable("expId") Long expenseId) {
-
-		return expService.updateExpense(report, expenseId);
+	@PutMapping("/updateexpenses/{expId}")
+	public Expense updateExpenses(@RequestBody Expense newExpense,@PathVariable("expId") Long expenseId) {
+ Expense expense = expService.getExpenseById(expenseId);
+ expense.setMerchantName(newExpense.getMerchantName());
+ expense.setDate(newExpense.getDate());
+ expense.setAmount(newExpense.getAmount());
+ expense.setDescription(newExpense.getDescription());
+ expense.setCategory(newExpense.getCategory());
+ expense.setSupportingDocuments(newExpense.getSupportingDocuments());
+ return expService.updateExpenses(expense);
 	}
 
 	@DeleteMapping("/deleteexpense/{expId}")
 	public void deleteCustomerById(@PathVariable("expId") Long expenseId) {
 		expService.deleteExpenseById(expenseId);
 
+	}
+
+	@GetMapping("/findexpenses/{empid}")
+	public List<Expense> getExpenseByEmpId(@PathVariable("empid") Long employeeId) {
+		return expService.getExpenseByEmployeeId(employeeId);
 	}
 }
