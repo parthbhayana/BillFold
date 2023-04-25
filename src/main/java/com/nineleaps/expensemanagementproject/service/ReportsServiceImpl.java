@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
+import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
@@ -18,6 +19,9 @@ public class ReportsServiceImpl implements IReportsService {
 	@Autowired
 	private ReportsRepository reportsrepository;
 
+	@Autowired
+	private ExpenseRepository expRepo;
+	
 	@Autowired
 	private IExpenseService expServices;
 
@@ -46,11 +50,17 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Override
 	public Reports addExpenseToReport(Long reportId, Long expenseid) {
+		boolean reportedStatus = true;
 		Reports report = getReportById(reportId);
+		Expense expense = expServices.getExpenseById(expenseid);
 		if (report != null) {
+			expense.setIsReported(reportedStatus);
 			expServices.updateExpense(reportId, expenseid);
+			
 		}
-		return reportsrepository.save(report);
+		reportsrepository.save(report);
+		expRepo.save(expense);
+		return null;
 
 	}
 

@@ -17,6 +17,8 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "category_finance")
 public class CategoryFinance {
@@ -24,6 +26,7 @@ public class CategoryFinance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cat_Id")
+	@ApiModelProperty(hidden = true)
 	private Long catId;
 
 	@Column(name = "cat_decription")
