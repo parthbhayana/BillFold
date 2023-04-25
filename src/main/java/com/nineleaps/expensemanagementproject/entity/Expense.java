@@ -68,7 +68,7 @@ public class Expense {
     private CategoryFinance categoryfinance;
 	
 	
-	@Column(name = "cat_description")
+	@Column(name = "category")
 	private String catDescription;
 
 
