@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -46,8 +47,8 @@ public class Expense {
 	@Column(name = "supporting_documents", nullable = true)
 	private byte[] supportingDocuments;
 
-	@Enumerated(EnumType.STRING)
-	private Category category;
+//	@Enumerated(EnumType.STRING)
+//	private Category category;
 
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -60,25 +61,35 @@ public class Expense {
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JoinColumn(name = "report_id")
 	private Reports reports;
+	
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
+    private CategoryFinance categoryfinance;
+	
+	
+	@Column(name = "cat_description")
+	private String catDescription;
 
-//	@ManyToOne
-//	@JoinColumn(name = "fk_reportid")
-//	@JsonIgnore
-//	private Reports reports;
 
-	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description,
-			byte[] supportingDocuments, Category category, Employee employee, Reports reports) {
+	
+
+	public Expense(String merchantName, Date date, Long amount, String description, byte[] supportingDocuments,
+			 Employee employee, Reports reports, CategoryFinance categoryfinance,
+			String catDescription) {
 		super();
-		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
 		this.amount = amount;
 		this.description = description;
 		this.supportingDocuments = supportingDocuments;
-		this.category = category;
 		this.employee = employee;
 		this.reports = reports;
+		this.categoryfinance = categoryfinance;
+		this.catDescription = catDescription;
 	}
+
+
 
 	public byte[] getSupportingDocuments() {
 		return supportingDocuments;
@@ -132,13 +143,13 @@ public class Expense {
 		this.description = description;
 	}
 
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
+//	public Category getCategory() {
+//		return category;
+//	}
+//
+//	public void setCategory(Category category) {
+//		this.category = category;
+//	}
 
 	public Employee getEmployee() {
 		return employee;
@@ -155,5 +166,23 @@ public class Expense {
 	public void setReports(Reports reports) {
 		this.reports = reports;
 	}
+	public CategoryFinance getCategoryfinance() {
+		return categoryfinance;
+	}
+
+	public void setCategoryfinance(CategoryFinance categoryfinance) {
+		this.categoryfinance = categoryfinance;
+	}
+
+	public String getCatDescription() {
+		return catDescription;
+	}
+
+	public void setCatDescription(String catDescription) {
+		this.catDescription = catDescription;
+	}
+
+	
+	
 
 }

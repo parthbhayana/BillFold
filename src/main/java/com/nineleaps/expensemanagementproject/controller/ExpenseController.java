@@ -19,9 +19,9 @@ public class ExpenseController {
 	@Autowired
 	private IExpenseService expService;
 
-	@PostMapping("/insertexpenses/{empid}")
-	public Expense saveExpense(@RequestBody Expense expense, @PathVariable Long empid) {
-		return expService.addExpense(expense, empid);
+	@PostMapping("/insertexpenses/{empid}/{catid}")
+	public Expense saveExpense(@RequestBody Expense expense, @PathVariable Long empid, @PathVariable Long catid) {
+		return expService.addExpense(expense, empid, catid);
 	}
 
 	@GetMapping("/showallexpenses")
@@ -36,15 +36,15 @@ public class ExpenseController {
 	}
 
 	@PutMapping("/updateexpenses/{expId}")
-	public Expense updateExpenses(@RequestBody Expense newExpense,@PathVariable("expId") Long expenseId) {
- Expense expense = expService.getExpenseById(expenseId);
- expense.setMerchantName(newExpense.getMerchantName());
- expense.setDate(newExpense.getDate());
- expense.setAmount(newExpense.getAmount());
- expense.setDescription(newExpense.getDescription());
- expense.setCategory(newExpense.getCategory());
- expense.setSupportingDocuments(newExpense.getSupportingDocuments());
- return expService.updateExpenses(expense);
+	public Expense updateExpenses(@RequestBody Expense newExpense, @PathVariable("expId") Long expenseId) {
+		Expense expense = expService.getExpenseById(expenseId);
+		expense.setMerchantName(newExpense.getMerchantName());
+		expense.setDate(newExpense.getDate());
+		expense.setAmount(newExpense.getAmount());
+		expense.setDescription(newExpense.getDescription());
+		//expense.setCategory(newExpense.getCategory());
+		expense.setSupportingDocuments(newExpense.getSupportingDocuments());
+		return expService.updateExpenses(expense);
 	}
 
 	@DeleteMapping("/deleteexpense/{expId}")

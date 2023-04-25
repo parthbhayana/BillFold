@@ -7,7 +7,7 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 
 public interface IExpenseService {
 
-	public Expense addExpense(Expense expense, Long employeeid);
+	//public Expense addExpense(Expense expense, Long employeeid);
 
 	public List<Expense> getAllExpenses();
 
@@ -22,6 +22,8 @@ public interface IExpenseService {
 	public List<Expense> getExpenseByEmployeeId(Long employeeId);
 
 	public Expense updateExpenses(Expense expense);
+
+	Expense addExpense(Expense expense, Long employeeid, Long catId);
 	
 //	public Expense fetchEmpId(Long expenseId); 
 
