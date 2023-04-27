@@ -15,6 +15,7 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.repository.CategoryFinanceRepository;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
+import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
 public class ExpenseServiceImpl implements IExpenseService {
@@ -23,55 +24,53 @@ public class ExpenseServiceImpl implements IExpenseService {
 
 	@Autowired
 	private EmployeeRepository empRepository;
+
 	@Autowired
 	private IEmployeeService employeeSERVICES;
-	
+
 	@Autowired
 	private CategoryFinanceRepository catrepository;
 
 	@Autowired
 	private IReportsService reportServices;
-	
+
+	@Autowired
+	private ReportsRepository reportsRepo;
+
 	@Autowired
 	private EntityManager entityManager;
-	
-    @Transactional
-	@Override
-	public Expense addExpense(Expense expense, Long employeeid,Long catId) {
 
-    	 Employee empDetails = employeeSERVICES.getEmployeeDetailsById(employeeid);
-    	    CategoryFinance catfin = catrepository.findById(catId).get();
-    	    expense.setEmployee(empDetails);
-    	    expense.setCategoryfinance(catfin);
-    	    CategoryFinance mergedCategoryFinance = entityManager.merge(catfin);
-    	    expense.setCategoryfinance(mergedCategoryFinance);
-    	    expense.setCatDescription(mergedCategoryFinance.getCatDescription()); // set the category description
-    	    return expRepository.save(expense);
-    }
-	
+	@Transactional
+	@Override
+	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
+		Employee empDetails = employeeSERVICES.getEmployeeDetailsById(employeeid);
+		CategoryFinance catfin = catrepository.findById(catId).get();
+		expense.setEmployee(empDetails);
+		expense.setCategoryfinance(catfin);
+		CategoryFinance mergedCategoryFinance = entityManager.merge(catfin);
+		expense.setCategoryfinance(mergedCategoryFinance);
+		expense.setCatDescription(mergedCategoryFinance.getCatDescription()); // set the category description
+		return expRepository.save(expense);
+	}
 
 	@Override
 	public List<Expense> getAllExpenses() {
-
 		return expRepository.findAll();
 	}
 
 	@Override
 	public Expense getExpenseById(Long expenseId) {
-
 		return expRepository.findById(expenseId).get();
 	}
 
 	@Override
 	public Expense updateExpense(Long reportId, Long employeeId) {
-
 		Expense exp = getExpenseById(employeeId);
 		Reports report = reportServices.getReportById(reportId);
 		if (exp != null) {
 			exp.setReports(report);
 		}
-		expRepository.save(exp);
-		return null;
+		return expRepository.save(exp);
 	}
 
 //	@Override
@@ -88,7 +87,6 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Override
 	public void deleteExpenseById(Long expenseId) {
 		expRepository.deleteById(expenseId);
-
 	}
 
 	@Override
@@ -108,6 +106,25 @@ public class ExpenseServiceImpl implements IExpenseService {
 		return expRepository.save(expense);
 	}
 
-	
+	@Override
+	public List<Expense> getExpensesByEmployeeId(Long employeeId) {
+		Employee employee = empRepository.findById(employeeId).get();
+		return expRepository.findByEmployeeAndIsReported(employee, false);
+	}
+
+	@Override
+	public Expense removeTaggedExpense(Long expenseId) {
+		Expense exp = expRepository.findById(expenseId).get();
+		boolean removeExpense = false;
+		exp.setIsReported(removeExpense);
+		exp.setReports(null);
+		return expRepository.save(exp);
+	}
+
+	@Override
+	public List<Expense> getExpenseByReportId(Long reportId) {
+		Reports report = reportsRepo.findById(reportId).get();
+		return expRepository.findByReports(report);
+	}
 
 }

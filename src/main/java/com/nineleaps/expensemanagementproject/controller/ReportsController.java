@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineleaps.expensemanagementproject.entity.Reports;
@@ -37,45 +36,64 @@ public class ReportsController {
 		return reportsService.getReportById(reportId);
 	}
 
-	@GetMapping("/getreportbyemployeeid")
-	public List<Reports> getReportByEmpId(@RequestParam Long EmployeeId) {
-
+	@GetMapping("/getreportbyemployeeid/{employeeId}")
+	public List<Reports> getReportByEmpId(@PathVariable Long EmployeeId) {
 		return reportsService.getReportByEmpId(EmployeeId);
 	}
 
-	@PostMapping("/addreport")
-	public Reports addReport(@RequestBody Reports newReport) {
-		return reportsService.addReport(newReport);
+	@GetMapping("/getreportssubmittedtouser/{manageremail}")
+	public List<Reports> getReportsSubmittedToUser(@PathVariable("manageremail") String managerEmail) {
+		return reportsService.getReportsSubmittedToUser(managerEmail);
 	}
 
-	@PatchMapping("/addexpensetoreport")
-	public Reports addExpenseToReport(@RequestParam Long reportId, @RequestParam Long expenseid) {
+	@GetMapping("/getallsubmittedreports")
+	public List<Reports> getAllSubmittedReports() {
+		return reportsService.getAllSubmittedReports();
+	}
+
+	@PostMapping("/addreport/{empId}")
+	public Reports addReport(@RequestBody Reports newReport, @PathVariable("empId") Long employeeId) {
+		return reportsService.addReport(newReport, employeeId);
+	}
+
+	@PatchMapping("/addexpensetoreport/{reportId}/{expenseid}")
+	public Reports addExpenseToReport(@PathVariable Long reportId, @PathVariable Long expenseid) {
 		return reportsService.addExpenseToReport(reportId, expenseid);
 	}
 
-	@PostMapping("/addReportComments")
-	public Reports addReportComments(@RequestBody Reports report, @RequestParam Long reportId) {
+	@PostMapping("/addReportComments/{reportId}")
+	public Reports addReportComments(@RequestBody Reports report, @PathVariable Long reportId) {
 		return reportsService.addReportComments(report, reportId);
 	}
 
-	@PostMapping("/submitReport")
-	public Reports submitReport(@RequestParam Long reportId) {
+	@PostMapping("/submitReport/{reportId}")
+	public Reports submitReport(@PathVariable Long reportId) {
 		return reportsService.submitReport(reportId);
 	}
 
-	@PostMapping("/updateReport")
-	public Reports updateReport(@RequestBody Reports report, @RequestParam Long reportId) {
+	@PostMapping("/updateReport/{reportId}")
+	public Reports updateReport(@RequestBody Reports report, @PathVariable Long reportId) {
 		return reportsService.updateReport(report, reportId);
 	}
 
-	@PostMapping("/approveReport")
-	public Reports approveReport(@RequestParam Long reportId) {
-		return reportsService.approveReport(reportId);
+	@PostMapping("/approveReportByManager/{reportId}")
+	public Reports approveReportbymanager(@PathVariable Long reportId) {
+		return reportsService.approveReportByManager(reportId);
 	}
 
-	@PostMapping("/rejectReport")
-	public Reports rejectReport(@RequestParam Long reportId) {
-		return reportsService.rejectReport(reportId);
+	@PostMapping("/rejectReportByManager/{reportId}")
+	public Reports rejectReportbymanager(@PathVariable Long reportId) {
+		return reportsService.rejectReportByManager(reportId);
+	}
+
+	@PostMapping("/approveReportByFinance/{reportId}")
+	public Reports approveReportbyfinance(@PathVariable Long reportId) {
+		return reportsService.approveReportByFinance(reportId);
+	}
+
+	@PostMapping("/rejectReportByFinance/{reportId}")
+	public Reports rejectReportbyfinance(@PathVariable Long reportId) {
+		return reportsService.rejectReportByFinance(reportId);
 	}
 
 }

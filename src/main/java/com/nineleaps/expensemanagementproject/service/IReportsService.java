@@ -12,7 +12,7 @@ public interface IReportsService {
 
 	public Reports getReportById(Long reportId);
 
-	public Reports addReport(Reports newReport);
+	public Reports addReport(Reports newReport, Long employeeId);
 
 	public List<Reports> getReportByEmpId(Long employeeId);
 
@@ -24,8 +24,16 @@ public interface IReportsService {
 
 	public Reports submitReport(Long reportId);
 
-	public Reports approveReport(Long reportId);
+	public Reports approveReportByManager(Long reportId);
 
-	public Reports rejectReport(Long reportId);
+	public Reports rejectReportByManager(Long reportId);
+	
+	public Reports approveReportByFinance(Long reportId);
+
+	public Reports rejectReportByFinance(Long reportId);
+	
+	public List<Reports> getAllSubmittedReports();
+
+	public List<Reports> getReportsSubmittedToUser(String managerEmail);
 
 }

@@ -20,12 +20,14 @@ public interface IExpenseService {
 	void deleteExpenseById(Long expenseId);
 
 	public List<Expense> getExpenseByEmployeeId(Long employeeId);
+	
+	public List<Expense> getExpenseByReportId(Long employeeId);
 
 	public Expense updateExpenses(Expense expense);
 
-	Expense addExpense(Expense expense, Long employeeid, Long catId);
+	public Expense addExpense(Expense expense, Long employeeid, Long catId);
 	
-//	public Expense fetchEmpId(Long expenseId); 
-
-	// Expense updateSupportingDocument(byte[] supportingDoc, Long expenseId);
+	public Expense removeTaggedExpense(Long expenseId);
+	
+	public List<Expense> getExpensesByEmployeeId(Long employeeId);
 }

@@ -17,6 +17,8 @@ public interface IEmployeeService {
 	public Employee updateEmployeeDetails(Employee employeeentity);
 
 	public Employee getEmployeeByEmail(String emailToVerify);
+	
+	
 
 	public Employee getUserByEmail(String emailToVerify);
 

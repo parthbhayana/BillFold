@@ -7,4 +7,8 @@ import com.nineleaps.expensemanagementproject.entity.Employee;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	Employee findByEmployeeEmail(String employeeEmail);
 
+	
+
+	
+
 }

@@ -91,16 +91,16 @@ public class PdfGeneratorServiceImpl {
 		document.add(table);
 		document.add(pdfParagraph01);
 
-		for (Expense expense : expenses) {
-
-			byte[] imageData = expense.getSupportingDocuments();
-			InputStream in = new ByteArrayInputStream(imageData);
-			BufferedImage bufferedImage = ImageIO.read(in);
-			Image image = Image.getInstance(bufferedImage, null);
-			image.scaleAbsolute(400f, 400f);
-			image.setAlignment(Image.MIDDLE);
-			document.add(image);
-		}
+//		for (Expense expense : expenses) {
+//
+//			byte[] imageData = expense.getSupportingDocuments();
+//			InputStream in = new ByteArrayInputStream(imageData);
+//			BufferedImage bufferedImage = ImageIO.read(in);
+//			Image image = Image.getInstance(bufferedImage, null);
+//			image.scaleAbsolute(400f, 400f);
+//			image.setAlignment(Image.MIDDLE);
+//			document.add(image);
+//		}
 
 		document.close();
 	}
