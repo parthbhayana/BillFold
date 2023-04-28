@@ -3,7 +3,6 @@ package com.nineleaps.expensemanagementproject.service;
 import java.util.List;
 
 import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.entity.Reports;
 
 public interface IExpenseService {
 
@@ -20,12 +19,14 @@ public interface IExpenseService {
 	void deleteExpenseById(Long expenseId);
 
 	public List<Expense> getExpenseByEmployeeId(Long employeeId);
-
-	public Expense updateExpenses(Expense expense);
-
-	Expense addExpense(Expense expense, Long employeeid, Long catId);
 	
-//	public Expense fetchEmpId(Long expenseId); 
+	public List<Expense> getExpenseByReportId(Long employeeId);
 
-	// Expense updateSupportingDocument(byte[] supportingDoc, Long expenseId);
+	public Expense updateExpenses(Expense expense, Long expenseId);
+
+	public Expense addExpense(Expense expense, Long employeeid, Long catId);
+	
+	public Expense removeTaggedExpense(Long expenseId);
+	
+	public List<Expense> getExpensesByEmployeeId(Long employeeId);
 }

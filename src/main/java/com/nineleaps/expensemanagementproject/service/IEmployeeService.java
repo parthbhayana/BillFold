@@ -14,7 +14,7 @@ public interface IEmployeeService {
 
 	public void deleteEmployeeDetailsById(Long empId);
 
-	public Employee updateEmployeeDetails(Employee employeeentity);
+	public Employee updateEmployeeDetails(Employee employeeentity,Long employeeId);
 
 	public Employee getEmployeeByEmail(String emailToVerify);
 

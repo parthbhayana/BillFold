@@ -13,6 +13,9 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -32,26 +35,25 @@ public class Employee {
 	private String designation;
 	@Column(name = "manager_mail")
 	private String reportingManagerEmail;
-	
+	@Column(name = "is_finance_admin", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private Boolean isFinanceAdmin = false;
+
 	public String getImageUrl() {
 		return imageUrl;
 	}
+
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	@Column(name="employee_image_url")
+
+	@Column(name = "employee_image_url")
 	private String imageUrl;
-	/*/*
-//	 * public String getImageUrl() { return imageUrl; }
-//	 *
-//	 *
-//	 *
-//	 *
-//	 * public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-//	 *
-//	 *
-//	 * @Column(name = "image_url") private String imageUrl;
-//	 */
+	/*
+	 * /* // * public String getImageUrl() { return imageUrl; } // * // * // * // *
+	 * // * public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+	 * // * // * // * @Column(name = "image_url") private String imageUrl; //
+	 */
 //	 * public String getImageUrl() { return imageUrl; }
 //	 *
 //	 *
@@ -82,9 +84,11 @@ public class Employee {
 	@JsonIgnore
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
 	private List<Expense> expenseList = new ArrayList<>();
+
 	public Employee() {
 		// TODO Auto-generated constructor stub
 	}
+
 //	public Employee(Long employeeId, String firstName, String middleName, String lastName, String email,
 //			String designation, String reportingManagerEmail) {
 //		super();
@@ -112,20 +116,23 @@ public class Employee {
 	public Long getEmployeeId() {
 		return employeeId;
 	}
-	
-public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
-		String designation, String reportingManagerEmail, String imageUrl, List<Expense> expenseList) {
-	super();
-	this.employeeId = employeeId;
-	this.firstName = firstName;
-	this.middleName = middleName;
-	this.lastName = lastName;
-	this.employeeEmail = employeeEmail;
-	this.designation = designation;
-	this.reportingManagerEmail = reportingManagerEmail;
-	this.imageUrl = imageUrl;
-	this.expenseList = expenseList;
-}
+
+	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
+			String designation, String reportingManagerEmail, Boolean isFinanceAdmin, String imageUrl,
+			List<Expense> expenseList) {
+		super();
+		this.employeeId = employeeId;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.employeeEmail = employeeEmail;
+		this.designation = designation;
+		this.reportingManagerEmail = reportingManagerEmail;
+		this.isFinanceAdmin = isFinanceAdmin;
+		this.imageUrl = imageUrl;
+		this.expenseList = expenseList;
+	}
+
 //	public byte[] getProfile_picture() {
 //		return profile_picture;
 //	}
@@ -135,46 +142,68 @@ public Employee(Long employeeId, String firstName, String middleName, String las
 	public void setEmployeeId(Long employeeId) {
 		this.employeeId = employeeId;
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
 	public String getMiddleName() {
 		return middleName;
 	}
+
 	public void setMiddleName(String middleName) {
 		this.middleName = middleName;
 	}
+
 	public String getLastName() {
 		return lastName;
 	}
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+
 	public String getEmployeeEmail() {
 		return employeeEmail;
 	}
+
 	public void setEmployeeEmail(String employeeEmail) {
 		this.employeeEmail = employeeEmail;
 	}
+
 	public String getDesignation() {
 		return designation;
 	}
+
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
+
 	public String getReportingManagerEmail() {
 		return reportingManagerEmail;
 	}
+
 	public void setReportingManagerEmail(String reportingManagerEmail) {
 		this.reportingManagerEmail = reportingManagerEmail;
 	}
+
 	public List<Expense> getExpenseList() {
 		return expenseList;
 	}
+
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;
+	}
+
+	public Boolean getIsFinanceAdmin() {
+		return isFinanceAdmin;
+	}
+
+	public void setIsFinanceAdmin(Boolean isFinanceAdmin) {
+		this.isFinanceAdmin = isFinanceAdmin;
 	}
 }
