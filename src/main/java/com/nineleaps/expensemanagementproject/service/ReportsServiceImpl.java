@@ -52,7 +52,6 @@ public class ReportsServiceImpl implements IReportsService {
 		Employee emp = empServices.getEmployeeDetailsById(employeeId);
 		String managerEmail = emp.getReportingManagerEmail();
 		newReport.setManagerEmail(managerEmail);
-//		expServices.updateExpense(newReport, employeeid);
 		return reportsrepository.save(newReport);
 	}
 
@@ -125,7 +124,7 @@ public class ReportsServiceImpl implements IReportsService {
 		List<Reports> ReportsApprovedByManager = new ArrayList<>();
 		for (Reports reports2 : Reports) {
 			if (reports2.getIsSubmitted() == true
-					&& reports2.getManagerapprovalstatus() == ManagerApprovalStatus.approve) {
+					&& reports2.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
 				ReportsApprovedByManager.add(reports2);
 			}
 		}
@@ -145,7 +144,7 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Override
 	public Reports approveReportByManager(Long reportId, String comments) {
-		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.approve;
+		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.APPROVED;
 		Reports re = getReportById(reportId);
 		if (re != null && re.getIsSubmitted() == true) {
 			re.setManagerapprovalstatus(approvalStaus);
@@ -157,7 +156,7 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Override
 	public Reports rejectReportByManager(Long reportId, String comments) {
-		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.reject;
+		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.REJECTED;
 		Reports re = getReportById(reportId);
 		if (re != null && re.getIsSubmitted() == true) {
 			re.setManagerapprovalstatus(approvalStaus);
@@ -168,10 +167,10 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Override
 	public Reports approveReportByFinance(Long reportId, String comments) {
-		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.approve;
+		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.REIMBURSED;
 		Reports re = getReportById(reportId);
 		if (re != null && re.getIsSubmitted() == true
-				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.approve) {
+				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
 			re.setFinanceapprovalstatus(approvalStaus);
 			re.setManagerComments(comments);
 		}
@@ -180,28 +179,29 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Override
 	public Reports rejectReportByFinance(Long reportId, String comments) {
-		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.reject;
+		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.REJECT;
 		Reports re = getReportById(reportId);
 //		if(re.getIsSubmitted()==false)
 //		{
 //			return "Error! Report Not Submitted Yet!"
 //		}
 		if (re != null && re.getIsSubmitted() == true
-				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.approve) {
+				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
 			re.setFinanceapprovalstatus(approvalStaus);
 			re.setManagerComments(comments);
 		}
 		return reportsrepository.save(re);
 	}
 
+	@Override
 	public float totalamount(Long reportId) {
 		Reports report = reportsrepository.findById(reportId).get();
 		List<Expense> expenses = expRepo.findByReports(report);
-		float amt = 0;
+		float totalamount = 0;
 		for (Expense expense2 : expenses) {
-			amt += expense2.getAmount();
+			totalamount += expense2.getAmount();
 		}
-		return amt;
+		return totalamount;
 	}
 
 }

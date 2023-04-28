@@ -170,8 +170,8 @@ public class Reports {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(float amt) {
-		this.totalAmount = (long) amt;
+	public void setTotalAmount(float totalamount) {
+		this.totalAmount = (long) totalamount;
 	}
 
 	public String getManagerEmail() {
