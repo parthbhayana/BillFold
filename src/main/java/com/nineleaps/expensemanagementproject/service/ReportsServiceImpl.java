@@ -8,8 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
+import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
+import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.Reports;
+import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
@@ -19,7 +23,13 @@ public class ReportsServiceImpl implements IReportsService {
 	private ReportsRepository reportsrepository;
 
 	@Autowired
+	private ExpenseRepository expRepo;
+
+	@Autowired
 	private IExpenseService expServices;
+
+	@Autowired
+	private IEmployeeService empServices;
 
 	@Override
 	public List<Reports> getAllReports() {
@@ -38,26 +48,41 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports addReport(Reports newReport) {
+	public Reports addReport(Reports newReport, Long employeeId) {
+		Employee emp = empServices.getEmployeeDetailsById(employeeId);
+		String managerEmail = emp.getReportingManagerEmail();
+		newReport.setManagerEmail(managerEmail);
 //		expServices.updateExpense(newReport, employeeid);
 		return reportsrepository.save(newReport);
+	}
 
+	@Override
+	public Reports updateReport(Reports report, Long reportId) {
+		Reports re = getReportById(reportId);
+		if (re != null) {
+			re.setReportTitle(report.getReportTitle());
+			re.setReportDescription(report.getReportDescription());
+		}
+		return reportsrepository.save(re);
 	}
 
 	@Override
 	public Reports addExpenseToReport(Long reportId, Long expenseid) {
+		boolean reportedStatus = true;
 		Reports report = getReportById(reportId);
+		Expense expense = expServices.getExpenseById(expenseid);
 		if (report != null) {
+			expense.setIsReported(reportedStatus);
+			expRepo.save(expense);
 			expServices.updateExpense(reportId, expenseid);
+			report.setTotalAmount(totalamount(reportId));
+			reportsrepository.save(report);
 		}
-		return reportsrepository.save(report);
-
+		return report;
 	}
 
 	@Override
 	public List<Reports> getReportByEmpId(Long employeeId) {
-		// TODO Auto-generated method stub
-
 		List<Expense> expense = expServices.getExpenseByEmployeeId(employeeId);
 		List<Reports> report = new ArrayList<>();
 		for (Expense expense2 : expense) {
@@ -70,24 +95,41 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports updateReport(Reports report, Long reportId) {
-		Reports re = getReportById(reportId);
-		if (re != null) {
-			re.setReportTitle(report.getReportTitle());
-			re.setReportDescription(report.getReportDescription());
+	public List<Reports> getReportsSubmittedToUser(String managerEmail) {
+		List<Reports> reports = reportsrepository.findByManagerEmail(managerEmail);
+		List<Reports> reportfinal = new ArrayList<>();
+		for (Reports report3 : reports) {
+			if (report3 != null && report3.getIsSubmitted() == true) {
+				reportfinal.add(report3);
+			}
 		}
-		reportsrepository.save(re);
-		return null;
+		List<Reports> reportsSubmittedToUserWODuplicates = reportfinal.stream().distinct().collect(Collectors.toList());
+		return reportsSubmittedToUserWODuplicates;
 	}
 
 	@Override
-	public Reports addReportComments(Reports report, Long reportId) {
-		Reports re = getReportById(reportId);
-		if (re != null) {
-			re.setReportComments(report.getReportComments());
+	public List<Reports> getAllSubmittedReports() {
+		List<Reports> Reports = reportsrepository.findAll();
+		List<Reports> submitttedReports = new ArrayList<>();
+		for (Reports reports2 : Reports) {
+			if (reports2.getIsSubmitted() == true) {
+				submitttedReports.add(reports2);
+			}
 		}
-		reportsrepository.save(re);
-		return null;
+		return submitttedReports;
+	}
+
+	@Override
+	public List<Reports> getAllReportsApprovedByManager() {
+		List<Reports> Reports = reportsrepository.findAll();
+		List<Reports> ReportsApprovedByManager = new ArrayList<>();
+		for (Reports reports2 : Reports) {
+			if (reports2.getIsSubmitted() == true
+					&& reports2.getManagerapprovalstatus() == ManagerApprovalStatus.approve) {
+				ReportsApprovedByManager.add(reports2);
+			}
+		}
+		return ReportsApprovedByManager;
 	}
 
 	@Override
@@ -97,30 +139,69 @@ public class ReportsServiceImpl implements IReportsService {
 		if (re != null) {
 			re.setIsSubmitted(submissionStatus);
 		}
-		reportsrepository.save(re);
-		return null;
+
+		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports approveReport(Long reportId) {
-		boolean approvalStaus = true;
+	public Reports approveReportByManager(Long reportId, String comments) {
+		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.approve;
 		Reports re = getReportById(reportId);
-		if (re != null) {
-			re.setIsAprooved(approvalStaus);
+		if (re != null && re.getIsSubmitted() == true) {
+			re.setManagerapprovalstatus(approvalStaus);
+			re.setManagerComments(comments);
 		}
-		reportsrepository.save(re);
-		return null;
+
+		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports rejectReport(Long reportId) {
-		boolean approvalStaus = false;
+	public Reports rejectReportByManager(Long reportId, String comments) {
+		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.reject;
 		Reports re = getReportById(reportId);
-		if (re != null) {
-			re.setIsAprooved(approvalStaus);
+		if (re != null && re.getIsSubmitted() == true) {
+			re.setManagerapprovalstatus(approvalStaus);
+			re.setManagerComments(comments);
 		}
-		reportsrepository.save(re);
-		return null;
+		return reportsrepository.save(re);
+	}
+
+	@Override
+	public Reports approveReportByFinance(Long reportId, String comments) {
+		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.approve;
+		Reports re = getReportById(reportId);
+		if (re != null && re.getIsSubmitted() == true
+				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.approve) {
+			re.setFinanceapprovalstatus(approvalStaus);
+			re.setManagerComments(comments);
+		}
+		return reportsrepository.save(re);
+	}
+
+	@Override
+	public Reports rejectReportByFinance(Long reportId, String comments) {
+		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.reject;
+		Reports re = getReportById(reportId);
+//		if(re.getIsSubmitted()==false)
+//		{
+//			return "Error! Report Not Submitted Yet!"
+//		}
+		if (re != null && re.getIsSubmitted() == true
+				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.approve) {
+			re.setFinanceapprovalstatus(approvalStaus);
+			re.setManagerComments(comments);
+		}
+		return reportsrepository.save(re);
+	}
+
+	public float totalamount(Long reportId) {
+		Reports report = reportsrepository.findById(reportId).get();
+		List<Expense> expenses = expRepo.findByReports(report);
+		float amt = 0;
+		for (Expense expense2 : expenses) {
+			amt += expense2.getAmount();
+		}
+		return amt;
 	}
 
 }

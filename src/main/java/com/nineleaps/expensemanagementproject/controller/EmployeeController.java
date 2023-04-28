@@ -32,14 +32,7 @@ public class EmployeeController {
 
 	@PutMapping("/updateemployee/{employee_Id}")
 	public Employee updateEmployee(@RequestBody Employee newemployee, @PathVariable("employee_Id") Long employeeId) {
-		Employee employee = employeeService.getEmployeeDetailsById(employeeId);
-		employee.setDesignation(newemployee.getDesignation());
-		employee.setEmployeeEmail(newemployee.getEmployeeEmail());
-		employee.setFirstName(newemployee.getFirstName());
-		employee.setLastName(newemployee.getLastName());
-		employee.setMiddleName(newemployee.getMiddleName());
-		employee.setReportingManagerEmail(newemployee.getReportingManagerEmail());
-		return employeeService.updateEmployeeDetails(employee);
+		return employeeService.updateEmployeeDetails(newemployee, employeeId);
 
 	}
 

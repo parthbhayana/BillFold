@@ -5,8 +5,7 @@ import java.sql.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,15 +38,25 @@ public class Expense {
 
 	@Column(name = "amount", nullable = false)
 	private Long amount;
+
 	@Column(name = "description", nullable = false)
 	private String description;
+
+	@Column(name = "category")
+	@ApiModelProperty(hidden = true)
+	private String catDescription;
+
+	@Column(name = "is_reported", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private Boolean isReported = false;
+
+//	@Column(name = "manager_email")
+//	@ApiModelProperty(hidden = true)
+//	private String managerEmail;
 
 	@Lob
 	@Column(name = "supporting_documents", nullable = true)
 	private byte[] supportingDocuments;
-
-	@Enumerated(EnumType.STRING)
-	private Category category;
 
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -61,23 +70,42 @@ public class Expense {
 	@JoinColumn(name = "report_id")
 	private Reports reports;
 
-//	@ManyToOne
-//	@JoinColumn(name = "fk_reportid")
-//	@JsonIgnore
-//	private Reports reports;
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "category_id")
+	private CategoryFinance categoryfinance;
 
-	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description,
-			byte[] supportingDocuments, Category category, Employee employee, Reports reports) {
+//	public Expense(String merchantName, Date date, Long amount, String description, byte[] supportingDocuments,
+//			Employee employee, Reports reports, CategoryFinance categoryfinance, String catDescription) {
+//		super();
+//		this.merchantName = merchantName;
+//		this.date = date;
+//		this.amount = amount;
+//		this.description = description;
+//		this.supportingDocuments = supportingDocuments;
+//		this.employee = employee;
+//		this.reports = reports;
+//		this.categoryfinance = categoryfinance;
+//		this.catDescription = catDescription;
+//	}
+//	
+//	
+
+	public Expense(String merchantName, Date date, Long amount, String description, String catDescription,
+			Boolean isReported, byte[] supportingDocuments, Employee employee, Reports reports,
+			CategoryFinance categoryfinance) {
 		super();
-		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
 		this.amount = amount;
 		this.description = description;
+		this.catDescription = catDescription;
+		this.isReported = isReported;
+//		this.managerEmail = managerEmail;
 		this.supportingDocuments = supportingDocuments;
-		this.category = category;
 		this.employee = employee;
 		this.reports = reports;
+		this.categoryfinance = categoryfinance;
 	}
 
 	public byte[] getSupportingDocuments() {
@@ -132,14 +160,6 @@ public class Expense {
 		this.description = description;
 	}
 
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
 	public Employee getEmployee() {
 		return employee;
 	}
@@ -154,6 +174,30 @@ public class Expense {
 
 	public void setReports(Reports reports) {
 		this.reports = reports;
+	}
+
+	public CategoryFinance getCategoryfinance() {
+		return categoryfinance;
+	}
+
+	public void setCategoryfinance(CategoryFinance categoryfinance) {
+		this.categoryfinance = categoryfinance;
+	}
+
+	public String getCatDescription() {
+		return catDescription;
+	}
+
+	public void setCatDescription(String catDescription) {
+		this.catDescription = catDescription;
+	}
+
+	public Boolean getIsReported() {
+		return isReported;
+	}
+
+	public void setIsReported(Boolean isReported) {
+		this.isReported = isReported;
 	}
 
 }
