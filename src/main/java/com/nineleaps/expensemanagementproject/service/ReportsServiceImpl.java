@@ -48,11 +48,15 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports addReport(Reports newReport, Long employeeId) {
+	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids) {
 		Employee emp = empServices.getEmployeeDetailsById(employeeId);
 		String managerEmail = emp.getReportingManagerEmail();
+		String employeeEmail = emp.getEmployeeEmail();
 		newReport.setManagerEmail(managerEmail);
-//		expServices.updateExpense(newReport, employeeid);
+		newReport.setEmployeeMail(employeeEmail);
+		reportsrepository.save(newReport);
+		Long id = newReport.getReportId();
+		addExpenseToReport(id, expenseids);
 		return reportsrepository.save(newReport);
 	}
 
@@ -71,7 +75,13 @@ public class ReportsServiceImpl implements IReportsService {
 		boolean reportedStatus = true;
 		Reports report = getReportById(reportId);
 		Expense expense = expServices.getExpenseById(expenseid);
-		if (report != null) {
+		if (report == null) {
+			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
+		}
+		if (expense.getIsReported() == true) {
+			throw new IllegalStateException("Expense with ID " + expenseid + " is already reported in another report!");
+		}
+		if (report != null && expense.getIsReported() != true) {
 			expense.setIsReported(reportedStatus);
 			expRepo.save(expense);
 			expServices.updateExpense(reportId, expenseid);
@@ -79,6 +89,30 @@ public class ReportsServiceImpl implements IReportsService {
 			reportsrepository.save(report);
 		}
 		return report;
+	}
+
+	@Override
+	public Reports addExpenseToReport(Long reportId, List<Long> expenseids) {
+		boolean reportedStatus = true;
+		Reports report = getReportById(reportId);
+		if (report == null) {
+			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
+		}
+		for (Long expenseid : expenseids) {
+			Expense expense = expServices.getExpenseById(expenseid);
+			if (expense.getIsReported() == true) {
+				throw new IllegalStateException(
+						"Expense with ID " + expenseid + " is already reported in another report!");
+			}
+			if (report != null && expense.getIsReported() != true) {
+				expense.setIsReported(reportedStatus);
+				expRepo.save(expense);
+				expServices.updateExpense(reportId, expenseid);
+			}
+		}
+		report.setTotalAmount(totalamount(reportId));
+
+		return reportsrepository.save(report);
 	}
 
 	@Override
@@ -120,12 +154,16 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports addReportComments(Reports report, Long reportId) {
-		Reports re = getReportById(reportId);
-		if (re != null) {
-			re.setManagerComments(report.getManagerComments());
+	public List<Reports> getAllReportsApprovedByManager() {
+		List<Reports> Reports = reportsrepository.findAll();
+		List<Reports> ReportsApprovedByManager = new ArrayList<>();
+		for (Reports reports2 : Reports) {
+			if (reports2.getIsSubmitted() == true
+					&& reports2.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
+				ReportsApprovedByManager.add(reports2);
+			}
 		}
-		return reportsrepository.save(re);
+		return ReportsApprovedByManager;
 	}
 
 	@Override
@@ -140,50 +178,52 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports approveReportByManager(Long reportId) {
-		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.approve;
+	public Reports approveReportByManager(Long reportId, String comments) {
+		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.APPROVED;
 		Reports re = getReportById(reportId);
 		if (re != null && re.getIsSubmitted() == true) {
 			re.setManagerapprovalstatus(approvalStaus);
+			re.setManagerComments(comments);
 		}
 
 		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports rejectReportByManager(Long reportId) {
-		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.reject;
+	public Reports rejectReportByManager(Long reportId, String comments) {
+		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.REJECTED;
 		Reports re = getReportById(reportId);
 		if (re != null && re.getIsSubmitted() == true) {
 			re.setManagerapprovalstatus(approvalStaus);
+			re.setManagerComments(comments);
 		}
 		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports approveReportByFinance(Long reportId) {
-		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.approve;
+	public Reports approveReportByFinance(Long reportId, String comments) {
+		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.REIMBURSED;
 		Reports re = getReportById(reportId);
-		if (re.getManagerapprovalstatus() == ManagerApprovalStatus.approve) {
-			if (re != null && re.getIsSubmitted() == true) {
-				re.setFinanceapprovalstatus(approvalStaus);
-			}
+		if (re != null && re.getIsSubmitted() == true
+				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
+			re.setFinanceapprovalstatus(approvalStaus);
+			re.setManagerComments(comments);
 		}
 		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports rejectReportByFinance(Long reportId) {
-		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.reject;
+	public Reports rejectReportByFinance(Long reportId, String comments) {
+		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.REJECT;
 		Reports re = getReportById(reportId);
 //		if(re.getIsSubmitted()==false)
 //		{
 //			return "Error! Report Not Submitted Yet!"
 //		}
-		if (re.getManagerapprovalstatus() == ManagerApprovalStatus.reject) {
-			if (re != null && re.getIsSubmitted() == true) {
-				re.setFinanceapprovalstatus(approvalStaus);
-			}
+		if (re != null && re.getIsSubmitted() == true
+				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
+			re.setFinanceapprovalstatus(approvalStaus);
+			re.setManagerComments(comments);
 		}
 		return reportsrepository.save(re);
 	}
@@ -196,6 +236,15 @@ public class ReportsServiceImpl implements IReportsService {
 			amt += expense2.getAmount();
 		}
 		return amt;
+	}
+
+	@Override
+	public void hideReport(Long reportId) {
+		Boolean hidden = true;
+		Reports report = getReportById(reportId);
+		report.setIsHidden(hidden);
+		reportsrepository.save(report);
+		
 	}
 
 }

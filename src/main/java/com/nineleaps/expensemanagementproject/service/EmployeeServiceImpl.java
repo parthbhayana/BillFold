@@ -69,4 +69,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
 //		return null;
 	}
 
+	@Override
+	public void hideEmployee(Long empId) {
+		Boolean hidden = true;
+		Employee emp = getEmployeeDetailsById(empId);
+		emp.setIsHidden(hidden);
+		employeerepository.save(emp);
+	}
+
 }

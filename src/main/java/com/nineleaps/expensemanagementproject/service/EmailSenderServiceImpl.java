@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 @Service
-public class EmailSenderServiceImpl implements EmailSenderService {
+public class EmailSenderServiceImpl implements IEmailSenderService {
 	@Autowired
 	EmployeeRepository emprepository;
     private final JavaMailSender mailSender;

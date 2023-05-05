@@ -53,5 +53,9 @@ public class EmployeeController {
 	public void deleteEmployeeById(@PathVariable("employee_id") Long employeeId) {
 		employeeService.deleteEmployeeDetailsById(employeeId);
 	}
-
+	
+	@PostMapping("/hideemployee/{empId}")
+	public void hideEmployee(@PathVariable Long empId) {
+		employeeService.hideEmployee(empId);
+	}
 }
