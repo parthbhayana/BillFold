@@ -34,8 +34,15 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
-	public Employee updateEmployeeDetails(Employee employeeentity) {
-		return employeerepository.save(employeeentity);
+	public Employee updateEmployeeDetails(Employee newemployee, Long employeeId) {
+		Employee employee = getEmployeeDetailsById(employeeId);
+		employee.setDesignation(newemployee.getDesignation());
+		employee.setEmployeeEmail(newemployee.getEmployeeEmail());
+		employee.setFirstName(newemployee.getFirstName());
+		employee.setLastName(newemployee.getLastName());
+		employee.setMiddleName(newemployee.getMiddleName());
+		employee.setReportingManagerEmail(newemployee.getReportingManagerEmail());
+		return employeerepository.save(employee);
 	}
 
 	@Override

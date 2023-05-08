@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.entity.Employee;
+import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
+import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
+import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.Reports;
@@ -28,6 +31,9 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Autowired
 	private IExpenseService expServices;
+
+	@Autowired
+	private IEmployeeService empServices;
 
 	@Autowired
 	private IEmployeeService empServices;
@@ -60,6 +66,7 @@ public class ReportsServiceImpl implements IReportsService {
 		addExpenseToReport(id, expenseids);
 		return reportsrepository.save(newReport);
 	}
+	}
 
 	@Override
 	public Reports updateReport(Reports report, Long reportId) {
@@ -84,6 +91,7 @@ public class ReportsServiceImpl implements IReportsService {
 		}
 		if (report != null && expense.getIsReported() != true) {
 			expense.setIsReported(reportedStatus);
+			expRepo.save(expense);
 			expRepo.save(expense);
 			expServices.updateExpense(reportId, expenseid);
 			report.setTotalAmount(totalamount(reportId));
@@ -150,7 +158,28 @@ public class ReportsServiceImpl implements IReportsService {
 			if (reports2.getIsSubmitted() == true) {
 				submitttedReports.add(reports2);
 			}
+	public List<Reports> getReportsSubmittedToUser(String managerEmail) {
+		List<Reports> reports = reportsrepository.findByManagerEmail(managerEmail);
+		List<Reports> reportfinal = new ArrayList<>();
+		for (Reports report3 : reports) {
+			if (report3 != null && report3.getIsSubmitted() == true) {
+				reportfinal.add(report3);
+			}
 		}
+		List<Reports> reportsSubmittedToUserWODuplicates = reportfinal.stream().distinct().collect(Collectors.toList());
+		return reportsSubmittedToUserWODuplicates;
+	}
+
+	@Override
+	public List<Reports> getAllSubmittedReports() {
+		List<Reports> Reports = reportsrepository.findAll();
+		List<Reports> submitttedReports = new ArrayList<>();
+		for (Reports reports2 : Reports) {
+			if (reports2.getIsSubmitted() == true) {
+				submitttedReports.add(reports2);
+			}
+		}
+		return submitttedReports;
 		return submitttedReports;
 	}
 
@@ -164,6 +193,7 @@ public class ReportsServiceImpl implements IReportsService {
 				ReportsApprovedByManager.add(reports2);
 			}
 		}
+		return ReportsApprovedByManager;
 		return ReportsApprovedByManager;
 	}
 

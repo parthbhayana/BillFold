@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -84,7 +85,6 @@ public class Expense {
 			String catDescription, Boolean isReported, Boolean isHidden, byte[] supportingDocuments, Employee employee,
 			Reports reports, CategoryFinance categoryfinance) {
 		super();
-		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
 		this.amount = amount;
