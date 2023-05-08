@@ -12,28 +12,33 @@ public interface IReportsService {
 
 	public Reports getReportById(Long reportId);
 
-	public Reports addReport(Reports newReport, Long employeeId);
+//	public Reports addReport(Reports newReport, Long employeeId);
+	
+	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids);
 
 	public List<Reports> getReportByEmpId(Long employeeId);
 
 	public Reports updateReport(Reports report, Long employeeId);
 
-	Reports addExpenseToReport(Long reportId, Long employeeid);
-
-	public Reports addReportComments(Reports report, Long reportId);
+	public Reports addExpenseToReport(Long reportId, Long employeeid);
+	
+	public Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
 	public Reports submitReport(Long reportId);
 
-	public Reports approveReportByManager(Long reportId);
+	public Reports approveReportByManager(Long reportId, String comments);
 
-	public Reports rejectReportByManager(Long reportId);
+	public Reports rejectReportByManager(Long reportId, String comments);
 	
-	public Reports approveReportByFinance(Long reportId);
+	public Reports approveReportByFinance(Long reportId, String comments);
 
-	public Reports rejectReportByFinance(Long reportId);
+	public Reports rejectReportByFinance(Long reportId, String comments);
 	
 	public List<Reports> getAllSubmittedReports();
 
 	public List<Reports> getReportsSubmittedToUser(String managerEmail);
+	
+	public List<Reports> getAllReportsApprovedByManager();
 
+	public void hideReport(Long reportId);
 }

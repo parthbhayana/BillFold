@@ -39,7 +39,7 @@ public class Reports {
 	private String reportDescription;
 
 	@Column(name = "manager_comments")
-	@ApiModelProperty(hidden = true)
+	//@ApiModelProperty(hidden = true)
 	private String managerComments;
 
 	@Column(name = "finance_comments")
@@ -49,6 +49,10 @@ public class Reports {
 	@Column(name = "is_submitted", nullable = true)
 	@ApiModelProperty(hidden = true)
 	private Boolean isSubmitted = false;
+
+	@Column(name = "employee_mail", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private String employeeMail;
 
 	@Column(name = "manager_email")
 	@ApiModelProperty(hidden = true)
@@ -62,17 +66,25 @@ public class Reports {
 
 	@Column(name = "total_amount")
 	@ApiModelProperty(hidden = true)
-	private Long totalAmount;
+	private Float totalAmount;
+
+	@Column(name = "is_hidden", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private Boolean isHidden = false;
 
 	@Column(name = "finance_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private FinanceApprovalStatus financeapprovalstatus;
+	private FinanceApprovalStatus financeapprovalstatus = FinanceApprovalStatus.PENDING;
 
 	@Column(name = "manager_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private ManagerApprovalStatus managerapprovalstatus;
+	private ManagerApprovalStatus managerapprovalstatus = ManagerApprovalStatus.PENDING;
+
+	@Column(name = "pdf_file", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private byte[] pdfFile;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
@@ -84,9 +96,9 @@ public class Reports {
 	}
 
 	public Reports(Long reportId, String reportTitle, String reportDescription, String managerComments,
-			String financeComments, Boolean isSubmitted, String managerEmail, Date dateSubmitted, Date dateCreated,
-			Long totalAmount, FinanceApprovalStatus financeapprovalstatus,
-			ManagerApprovalStatus managerapprovalstatus) {
+			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail, Date dateSubmitted,
+			Date dateCreated, Float totalAmount, Boolean isHidden, FinanceApprovalStatus financeapprovalstatus,
+			ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
 		super();
 		this.reportId = reportId;
 		this.reportTitle = reportTitle;
@@ -94,12 +106,15 @@ public class Reports {
 		this.managerComments = managerComments;
 		this.financeComments = financeComments;
 		this.isSubmitted = isSubmitted;
+		this.employeeMail = employeeMail;
 		this.managerEmail = managerEmail;
 		this.dateSubmitted = dateSubmitted;
 		this.dateCreated = dateCreated;
 		this.totalAmount = totalAmount;
+		this.isHidden = isHidden;
 		this.financeapprovalstatus = financeapprovalstatus;
 		this.managerapprovalstatus = managerapprovalstatus;
+		this.pdfFile = pdfFile;
 	}
 
 	public Long getReportId() {
@@ -116,14 +131,6 @@ public class Reports {
 
 	public void setReportTitle(String reportTitle) {
 		this.reportTitle = reportTitle;
-	}
-
-	public Boolean getIsSubmitted() {
-		return isSubmitted;
-	}
-
-	public void setIsSubmitted(Boolean isSubmitted) {
-		this.isSubmitted = isSubmitted;
 	}
 
 	public String getReportDescription() {
@@ -150,6 +157,30 @@ public class Reports {
 		this.financeComments = financeComments;
 	}
 
+	public Boolean getIsSubmitted() {
+		return isSubmitted;
+	}
+
+	public void setIsSubmitted(Boolean isSubmitted) {
+		this.isSubmitted = isSubmitted;
+	}
+
+	public String getEmployeeMail() {
+		return employeeMail;
+	}
+
+	public void setEmployeeMail(String employeeMail) {
+		this.employeeMail = employeeMail;
+	}
+
+	public String getManagerEmail() {
+		return managerEmail;
+	}
+
+	public void setManagerEmail(String managerEmail) {
+		this.managerEmail = managerEmail;
+	}
+
 	public Date getDateSubmitted() {
 		return dateSubmitted;
 	}
@@ -166,20 +197,20 @@ public class Reports {
 		this.dateCreated = dateCreated;
 	}
 
-	public Long getTotalAmount() {
+	public Float getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(float amt) {
-		this.totalAmount = (long) amt;
+	public void setTotalAmount(Float totalAmount) {
+		this.totalAmount = totalAmount;
 	}
 
-	public String getManagerEmail() {
-		return managerEmail;
+	public Boolean getIsHidden() {
+		return isHidden;
 	}
 
-	public void setManagerEmail(String managerEmail) {
-		this.managerEmail = managerEmail;
+	public void setIsHidden(Boolean isHidden) {
+		this.isHidden = isHidden;
 	}
 
 	public FinanceApprovalStatus getFinanceapprovalstatus() {
@@ -198,16 +229,12 @@ public class Reports {
 		this.managerapprovalstatus = managerapprovalstatus;
 	}
 
-	public void setTotalAmount(Long totalAmount) {
-		this.totalAmount = totalAmount;
+	public byte[] getPdfFile() {
+		return pdfFile;
 	}
 
-//	public List<Expense> getExpenseList() {
-//		return expenseList;
-//	}
-//
-//	public void setExpenseList(List<Expense> expenseList) {
-//		this.expenseList = expenseList;
-//	}
+	public void setPdfFile(byte[] pdfFile) {
+		this.pdfFile = pdfFile;
+	}
 
 }

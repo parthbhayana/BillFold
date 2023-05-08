@@ -18,7 +18,7 @@ public interface IEmployeeService {
 
 	public Employee getEmployeeByEmail(String emailToVerify);
 	
-	
+	public void hideEmployee(Long empId);
 
 	public Employee getUserByEmail(String emailToVerify);
 
