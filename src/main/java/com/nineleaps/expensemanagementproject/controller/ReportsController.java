@@ -1,9 +1,10 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
+//import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,16 +28,18 @@ public class ReportsController {
 		return reportsService.getAllReports();
 	}
 
-	@DeleteMapping("/deletereport/{reportid}")
-	public void deleteReportById(@PathVariable("reportid") Long reportId) {
-		reportsService.deleteReportById(reportId);
-	}
+//	@DeleteMapping("/deletereport/{reportid}")
+//	public void deleteReportById(@PathVariable("reportid") Long reportId) {
+//		reportsService.deleteReportById(reportId);
+//	}
 
 	@GetMapping("/getbyreportid/{report_id}")
 	public Reports getReportByReportId(@PathVariable("report_id") Long reportId) {
 		return reportsService.getReportById(reportId);
 	}
 
+	@GetMapping("/getreportbyemployeeid/{employeeId}")
+	public List<Reports> getReportByEmpId(@PathVariable Long EmployeeId) {
 	@GetMapping("/getreportbyemployeeid/{employeeId}")
 	public List<Reports> getReportByEmpId(@PathVariable Long EmployeeId) {
 		return reportsService.getReportByEmpId(EmployeeId);
@@ -57,14 +60,20 @@ public class ReportsController {
 		return reportsService.getAllReportsApprovedByManager();
 	}
 
+//	@PostMapping("/addreport/{empId}")
+//	public Reports addReport(@RequestBody Reports newReport, @PathVariable("empId") Long employeeId) {
+//		return reportsService.addReport(newReport, employeeId);
+//	}
+
 	@PostMapping("/addreport/{empId}")
-	public Reports addReport(@RequestBody Reports newReport, @PathVariable("empId") Long employeeId) {
-		return reportsService.addReport(newReport, employeeId);
+	public Reports addReport(@RequestBody Reports newReport, @PathVariable("empId") Long employeeId,
+			@RequestParam ArrayList<Long> expenseIds) {
+		return reportsService.addReport(newReport, employeeId, expenseIds);
 	}
 
-	@PatchMapping("/addexpensetoreport/{reportId}/{expenseid}")
-	public Reports addExpenseToReport(@PathVariable Long reportId, @PathVariable Long expenseid) {
-		return reportsService.addExpenseToReport(reportId, expenseid);
+	@PatchMapping("/addexpensetoreport/{reportId}")
+	public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
+		return reportsService.addExpenseToReport(reportId, expenseIds);
 	}
 
 	@PostMapping("/submitReport/{reportId}")
@@ -72,6 +81,8 @@ public class ReportsController {
 		return reportsService.submitReport(reportId);
 	}
 
+	@PostMapping("/updateReport/{reportId}")
+	public Reports updateReport(@RequestBody Reports report, @PathVariable Long reportId) {
 	@PostMapping("/updateReport/{reportId}")
 	public Reports updateReport(@RequestBody Reports report, @PathVariable Long reportId) {
 		return reportsService.updateReport(report, reportId);
@@ -101,4 +112,8 @@ public class ReportsController {
 		return reportsService.rejectReportByFinance(reportId, Comments);
 	}
 
+	@PostMapping("/hidereport/{reportId}")
+	public void hideReport(@PathVariable Long reportId) {
+		reportsService.hideReport(reportId);
+	}
 }

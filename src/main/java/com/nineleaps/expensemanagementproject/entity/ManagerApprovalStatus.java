@@ -1,6 +1,8 @@
 package com.nineleaps.expensemanagementproject.entity;
 
-public enum ManagerApprovalStatus {
-	approve, reject, pending
 
+public enum ManagerApprovalStatus {
+	APPROVED, REJECTED, PENDING
+
+}
 }
