@@ -12,13 +12,17 @@ public interface IReportsService {
 
 	public Reports getReportById(Long reportId);
 
-	public Reports addReport(Reports newReport, Long employeeId);
+//	public Reports addReport(Reports newReport, Long employeeId);
+	
+	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids);
 
 	public List<Reports> getReportByEmpId(Long employeeId);
 
 	public Reports updateReport(Reports report, Long employeeId);
 
-	Reports addExpenseToReport(Long reportId, Long employeeid);
+	public Reports addExpenseToReport(Long reportId, Long employeeid);
+	
+	public Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
 	public Reports submitReport(Long reportId);
 
@@ -36,6 +40,5 @@ public interface IReportsService {
 	
 	public List<Reports> getAllReportsApprovedByManager();
 
-	float totalamount(Long reportId);
-
+	public void hideReport(Long reportId);
 }

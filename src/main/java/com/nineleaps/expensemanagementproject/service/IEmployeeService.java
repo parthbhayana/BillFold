@@ -17,6 +17,8 @@ public interface IEmployeeService {
 	public Employee updateEmployeeDetails(Employee employeeentity,Long employeeId);
 
 	public Employee getEmployeeByEmail(String emailToVerify);
+	
+	public void hideEmployee(Long empId);
 
 	public Employee getUserByEmail(String emailToVerify);
 

@@ -29,4 +29,6 @@ public interface IExpenseService {
 	public Expense removeTaggedExpense(Long expenseId);
 	
 	public List<Expense> getExpensesByEmployeeId(Long employeeId);
+	
+	public void hideExpense(Long expId);
 }

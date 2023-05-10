@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.entity.Employee;
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 
 @RestController
@@ -19,7 +21,10 @@ public class EmployeeController {
 
 	@Autowired
 	private IEmployeeService employeeService;
-
+	
+	@Autowired
+	private EmployeeRepository employeeRepository;
+	
 	@GetMapping("/listemployee")
 	public List<Employee> getAllEmployeeDetails() {
 		return employeeService.getAllEmployeeDetails();
@@ -46,5 +51,17 @@ public class EmployeeController {
 	public void deleteEmployeeById(@PathVariable("employee_id") Long employeeId) {
 		employeeService.deleteEmployeeDetailsById(employeeId);
 	}
-
+	
+	@PostMapping("/hideemployee/{empId}")
+	public void hideEmployee(@PathVariable Long empId) {
+		employeeService.hideEmployee(empId);
+	}
+	
+	@PostMapping("/setfinanceadmin")
+	public Employee setFinanceAdmin(@RequestParam Long empId) {
+		Boolean isAdmin = true;
+		Employee emp = employeeService.getEmployeeDetailsById(empId);
+		emp.setIsFinanceAdmin(isAdmin);
+		return employeeRepository.save(emp);
+	}
 }

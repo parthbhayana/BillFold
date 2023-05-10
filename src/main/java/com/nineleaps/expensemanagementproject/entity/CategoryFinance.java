@@ -32,30 +32,25 @@ public class CategoryFinance {
 	@Column(name = "cat_decription")
 	private String catDescription;
 
+	@Column(name = "is_hidden", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private Boolean isHidden = false;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "categoryfinance", cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private List<Expense> expenseList = new ArrayList<>();
 
-	public CategoryFinance(String catDescription, List<Expense> expenseList) {
-		super();
-		this.catDescription = catDescription;
-		this.expenseList = expenseList;
-	}
-
 	public CategoryFinance() {
-
+		// TODO Auto-generated constructor stub
 	}
 
-	public CategoryFinance(Long catId, String catDescription) {
+	public CategoryFinance(Long catId, String catDescription, Boolean isHidden, List<Expense> expenseList) {
 		super();
 		this.catId = catId;
 		this.catDescription = catDescription;
-	}
-
-	public CategoryFinance(String catDescription) {
-		super();
-		this.catDescription = catDescription;
+		this.isHidden = isHidden;
+		this.expenseList = expenseList;
 	}
 
 	public Long getCatId() {
@@ -74,6 +69,14 @@ public class CategoryFinance {
 		this.catDescription = catDescription;
 	}
 
+	public Boolean getIsHidden() {
+		return isHidden;
+	}
+
+	public void setIsHidden(Boolean isHidden) {
+		this.isHidden = isHidden;
+	}
+
 	public List<Expense> getExpenseList() {
 		return expenseList;
 	}
@@ -81,5 +84,7 @@ public class CategoryFinance {
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;
 	}
+	
+	
 
 }

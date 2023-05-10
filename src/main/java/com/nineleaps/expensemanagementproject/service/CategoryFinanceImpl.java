@@ -44,4 +44,12 @@ public class CategoryFinanceImpl implements ICategoryFinance {
 
 	}
 
+	@Override
+	public void hideCategory(Long categoryId) {
+		Boolean hidden = true;
+		CategoryFinance category = getCategoryFinanceById(categoryId);
+		category.setIsHidden(hidden);
+		catfinrepository.save(category);
+	}
+
 }

@@ -2,7 +2,7 @@ package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
+//import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,9 +42,13 @@ public class CategoryFinanceController {
 		return catFinService.updateCategoryFinance(catfin);
 	}
 
-	@DeleteMapping("/deletecategory/{catid}")
-	public void deleteCategoryFinanceById(@PathVariable("catid") Long catId) {
-		catFinService.deleteCategoryFinanceById(catId);
+//	@DeleteMapping("/deletecategory/{catid}")
+//	public void deleteCategoryFinanceById(@PathVariable("catid") Long catId) {
+//		catFinService.deleteCategoryFinanceById(catId);
+//	}
 
+	@PostMapping("/hidecategory/{categoryId}")
+	public void hideCategory(@PathVariable Long categoryId) {
+		catFinService.hideCategory(categoryId);
 	}
 }

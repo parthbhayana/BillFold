@@ -67,7 +67,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 	public Expense updateExpense(Long reportId, Long employeeId) {
 		Expense exp = getExpenseById(employeeId);
 		Reports report = reportServices.getReportById(reportId);
-		if (exp != null && exp.getIsReported()==false) {
+		if (exp != null ) {    
 			exp.setReports(report);
 		}
 		return expRepository.save(exp);
@@ -132,6 +132,14 @@ public class ExpenseServiceImpl implements IExpenseService {
 	public List<Expense> getExpenseByReportId(Long reportId) {
 		Reports report = reportsRepo.findById(reportId).get();
 		return expRepository.findByReports(report);
+	}
+
+	@Override
+	public void hideExpense(Long expId) {
+		Boolean hidden = true;
+		Expense exp = getExpenseById(expId);
+		exp.setIsHidden(hidden);
+		expRepository.save(exp);
 	}
 
 }
