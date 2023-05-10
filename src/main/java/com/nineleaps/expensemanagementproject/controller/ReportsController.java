@@ -40,6 +40,8 @@ public class ReportsController {
 
 	@GetMapping("/getreportbyemployeeid/{employeeId}")
 	public List<Reports> getReportByEmpId(@PathVariable Long EmployeeId) {
+	@GetMapping("/getreportbyemployeeid/{employeeId}")
+	public List<Reports> getReportByEmpId(@PathVariable Long EmployeeId) {
 		return reportsService.getReportByEmpId(EmployeeId);
 	}
 
@@ -79,6 +81,8 @@ public class ReportsController {
 		return reportsService.submitReport(reportId);
 	}
 
+	@PostMapping("/updateReport/{reportId}")
+	public Reports updateReport(@RequestBody Reports report, @PathVariable Long reportId) {
 	@PostMapping("/updateReport/{reportId}")
 	public Reports updateReport(@RequestBody Reports report, @PathVariable Long reportId) {
 		return reportsService.updateReport(report, reportId);

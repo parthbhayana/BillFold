@@ -55,6 +55,7 @@ public class Employee {
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
 	private List<Expense> expenseList = new ArrayList<>();
 
+
 	public Employee() {
 		// TODO Auto-generated constructor stub
 	}
@@ -94,49 +95,61 @@ public class Employee {
 		this.employeeId = employeeId;
 	}
 
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
+
 	public String getMiddleName() {
 		return middleName;
 	}
+
 
 	public void setMiddleName(String middleName) {
 		this.middleName = middleName;
 	}
 
+
 	public String getLastName() {
 		return lastName;
 	}
+
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
+
 	public String getEmployeeEmail() {
 		return employeeEmail;
 	}
+
 
 	public void setEmployeeEmail(String employeeEmail) {
 		this.employeeEmail = employeeEmail;
 	}
 
+
 	public String getDesignation() {
 		return designation;
 	}
+
 
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
 
+
 	public String getReportingManagerEmail() {
 		return reportingManagerEmail;
 	}
+
 
 	public void setReportingManagerEmail(String reportingManagerEmail) {
 		this.reportingManagerEmail = reportingManagerEmail;
@@ -169,6 +182,7 @@ public class Employee {
 	public List<Expense> getExpenseList() {
 		return expenseList;
 	}
+
 
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;

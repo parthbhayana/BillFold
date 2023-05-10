@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.entity.Employee;
+import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
+import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
+import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.Reports;
@@ -27,6 +31,9 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Autowired
 	private IExpenseService expServices;
+
+	@Autowired
+	private IEmployeeService empServices;
 
 	@Autowired
 	private IEmployeeService empServices;
@@ -59,11 +66,12 @@ public class ReportsServiceImpl implements IReportsService {
 		addExpenseToReport(id, expenseids);
 		return reportsrepository.save(newReport);
 	}
+	}
 
 	@Override
 	public Reports updateReport(Reports report, Long reportId) {
 		Reports re = getReportById(reportId);
-		if (re != null) {
+		if (re != null && re.getIsHidden() != true) {
 			re.setReportTitle(report.getReportTitle());
 			re.setReportDescription(report.getReportDescription());
 		}
@@ -75,7 +83,7 @@ public class ReportsServiceImpl implements IReportsService {
 		boolean reportedStatus = true;
 		Reports report = getReportById(reportId);
 		Expense expense = expServices.getExpenseById(expenseid);
-		if (report == null) {
+		if (report == null || report.getIsHidden() == true) {
 			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
 		}
 		if (expense.getIsReported() == true) {
@@ -83,6 +91,7 @@ public class ReportsServiceImpl implements IReportsService {
 		}
 		if (report != null && expense.getIsReported() != true) {
 			expense.setIsReported(reportedStatus);
+			expRepo.save(expense);
 			expRepo.save(expense);
 			expServices.updateExpense(reportId, expenseid);
 			report.setTotalAmount(totalamount(reportId));
@@ -95,7 +104,7 @@ public class ReportsServiceImpl implements IReportsService {
 	public Reports addExpenseToReport(Long reportId, List<Long> expenseids) {
 		boolean reportedStatus = true;
 		Reports report = getReportById(reportId);
-		if (report == null) {
+		if (report == null || report.getIsHidden() == true) {
 			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
 		}
 		for (Long expenseid : expenseids) {
@@ -149,7 +158,28 @@ public class ReportsServiceImpl implements IReportsService {
 			if (reports2.getIsSubmitted() == true) {
 				submitttedReports.add(reports2);
 			}
+	public List<Reports> getReportsSubmittedToUser(String managerEmail) {
+		List<Reports> reports = reportsrepository.findByManagerEmail(managerEmail);
+		List<Reports> reportfinal = new ArrayList<>();
+		for (Reports report3 : reports) {
+			if (report3 != null && report3.getIsSubmitted() == true) {
+				reportfinal.add(report3);
+			}
 		}
+		List<Reports> reportsSubmittedToUserWODuplicates = reportfinal.stream().distinct().collect(Collectors.toList());
+		return reportsSubmittedToUserWODuplicates;
+	}
+
+	@Override
+	public List<Reports> getAllSubmittedReports() {
+		List<Reports> Reports = reportsrepository.findAll();
+		List<Reports> submitttedReports = new ArrayList<>();
+		for (Reports reports2 : Reports) {
+			if (reports2.getIsSubmitted() == true) {
+				submitttedReports.add(reports2);
+			}
+		}
+		return submitttedReports;
 		return submitttedReports;
 	}
 
@@ -163,6 +193,7 @@ public class ReportsServiceImpl implements IReportsService {
 				ReportsApprovedByManager.add(reports2);
 			}
 		}
+		return ReportsApprovedByManager;
 		return ReportsApprovedByManager;
 	}
 
@@ -179,10 +210,16 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Override
 	public Reports approveReportByManager(Long reportId, String comments) {
-		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.APPROVED;
+		ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.APPROVED;
 		Reports re = getReportById(reportId);
-		if (re != null && re.getIsSubmitted() == true) {
-			re.setManagerapprovalstatus(approvalStaus);
+		if (re.getIsSubmitted() == false) {
+			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
+		}
+		if (re == null || re.getIsHidden() == true) {
+			throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
+		}
+		if (re != null && re.getIsHidden() == false && re.getIsSubmitted() == true) {
+			re.setManagerapprovalstatus(approvalStatus);
 			re.setManagerComments(comments);
 		}
 
@@ -191,10 +228,16 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Override
 	public Reports rejectReportByManager(Long reportId, String comments) {
-		ManagerApprovalStatus approvalStaus = ManagerApprovalStatus.REJECTED;
+		ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.REJECTED;
 		Reports re = getReportById(reportId);
-		if (re != null && re.getIsSubmitted() == true) {
-			re.setManagerapprovalstatus(approvalStaus);
+		if (re.getIsSubmitted() == false) {
+			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
+		}
+		if (re == null || re.getIsHidden() == true) {
+			throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
+		}
+		if (re != null && re.getIsHidden() == false && re.getIsSubmitted() == true) {
+			re.setManagerapprovalstatus(approvalStatus);
 			re.setManagerComments(comments);
 		}
 		return reportsrepository.save(re);
@@ -202,28 +245,36 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Override
 	public Reports approveReportByFinance(Long reportId, String comments) {
-		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.REIMBURSED;
+		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REIMBURSED;
 		Reports re = getReportById(reportId);
-		if (re != null && re.getIsSubmitted() == true
+		if (re.getIsSubmitted() == false) {
+			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
+		}
+		if (re == null || re.getIsHidden() == true) {
+			throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
+		}
+		if (re != null && re.getIsHidden() == false && re.getIsSubmitted() == true
 				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
-			re.setFinanceapprovalstatus(approvalStaus);
-			re.setManagerComments(comments);
+			re.setFinanceapprovalstatus(approvalStatus);
+			re.setFinanceComments(comments);
 		}
 		return reportsrepository.save(re);
 	}
 
 	@Override
 	public Reports rejectReportByFinance(Long reportId, String comments) {
-		FinanceApprovalStatus approvalStaus = FinanceApprovalStatus.REJECT;
+		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECT;
 		Reports re = getReportById(reportId);
-//		if(re.getIsSubmitted()==false)
-//		{
-//			return "Error! Report Not Submitted Yet!"
-//		}
-		if (re != null && re.getIsSubmitted() == true
+		if (re.getIsSubmitted() == false) {
+			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
+		}
+		if (re == null || re.getIsHidden() == true) {
+			throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
+		}
+		if (re != null && re.getIsHidden() == false && re.getIsSubmitted() == true
 				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
-			re.setFinanceapprovalstatus(approvalStaus);
-			re.setManagerComments(comments);
+			re.setFinanceapprovalstatus(approvalStatus);
+			re.setFinanceComments(comments);
 		}
 		return reportsrepository.save(re);
 	}
@@ -244,7 +295,7 @@ public class ReportsServiceImpl implements IReportsService {
 		Reports report = getReportById(reportId);
 		report.setIsHidden(hidden);
 		reportsrepository.save(report);
-		
+
 	}
 
 }
