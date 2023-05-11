@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineleaps.expensemanagementproject.entity.Employee;
@@ -18,8 +19,8 @@ public class EmailController {
     }
 
     @PostMapping("/send-email")
-    public ResponseEntity<String> sendEmail(@RequestBody Employee emailMessage) {
-        this.iEmailSenderService.sendEmail(emailMessage.getReportingManagerEmail(), emailMessage.getSubject(), emailMessage.getMessage());
+    public ResponseEntity<String> sendEmail(@RequestBody Employee emailMessage) { //, @RequestParam Employee employeeId
+        this.iEmailSenderService.sendEmail(emailMessage.getReportingManagerEmail(), emailMessage.getSubject(), emailMessage.getMessage());//, emailMessage.getEmployeeId()
         return ResponseEntity.ok("Success");
     }
 }
