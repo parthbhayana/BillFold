@@ -16,7 +16,6 @@ import com.nineleaps.expensemanagementproject.repository.CategoryFinanceReposito
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
-import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
 public class ExpenseServiceImpl implements IExpenseService {
@@ -26,10 +25,8 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Autowired
 	private EmployeeRepository empRepository;
 
-
 	@Autowired
 	private IEmployeeService employeeSERVICES;
-
 
 	@Autowired
 	private CategoryFinanceRepository catrepository;
@@ -40,28 +37,11 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Autowired
 	private ReportsRepository reportsRepo;
 
-
-	@Autowired
-	private ReportsRepository reportsRepo;
-
 	@Autowired
 	private EntityManager entityManager;
 
 	@Transactional
-
-	@Transactional
 	@Override
-	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
-		Employee empDetails = employeeSERVICES.getEmployeeDetailsById(employeeid);
-		CategoryFinance catfin = catrepository.findById(catId).get();
-		expense.setEmployee(empDetails);
-		expense.setCategoryfinance(catfin);
-		CategoryFinance mergedCategoryFinance = entityManager.merge(catfin);
-		expense.setCategoryfinance(mergedCategoryFinance);
-		expense.setCatDescription(mergedCategoryFinance.getCatDescription()); // set the category description
-		return expRepository.save(expense);
-	}
-
 	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
 		Employee empDetails = employeeSERVICES.getEmployeeDetailsById(employeeid);
 		CategoryFinance catfin = catrepository.findById(catId).get();
@@ -90,7 +70,6 @@ public class ExpenseServiceImpl implements IExpenseService {
 		if (exp != null ) {    
 			exp.setReports(report);
 		}
-		return expRepository.save(exp);
 		return expRepository.save(exp);
 	}
 
