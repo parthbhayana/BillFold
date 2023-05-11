@@ -97,9 +97,6 @@ public class Reports {
 	public Reports() {
 		// TODO Auto-generated constructor stub
 	}
-	public Reports() {
-		// TODO Auto-generated constructor stub
-	}
 
 	public Reports(Long reportId, String reportTitle, String reportDescription, String managerComments,
 			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail, Date dateSubmitted,

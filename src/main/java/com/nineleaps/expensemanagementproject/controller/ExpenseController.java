@@ -3,13 +3,11 @@ package com.nineleaps.expensemanagementproject.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.DeleteMapping;
-//import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,12 +43,7 @@ public class ExpenseController {
 //	public void deleteCustomerById(@PathVariable("expId") Long expenseId) {
 //		expService.deleteExpenseById(expenseId);
 //	}
-//	@DeleteMapping("/deleteexpense/{expId}")
-//	public void deleteCustomerById(@PathVariable("expId") Long expenseId) {
-//		expService.deleteExpenseById(expenseId);
-//	}
 
-	@GetMapping("/getexpensebyemployeeid/{empid}")
 	@GetMapping("/getexpensebyemployeeid/{empid}")
 	public List<Expense> getExpenseByEmpId(@PathVariable("empid") Long employeeId) {
 		return expService.getExpenseByEmployeeId(employeeId);

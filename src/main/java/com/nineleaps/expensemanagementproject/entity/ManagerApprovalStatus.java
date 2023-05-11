@@ -5,4 +5,3 @@ public enum ManagerApprovalStatus {
 	APPROVED, REJECTED, PENDING
 
 }
-}
