@@ -84,4 +84,17 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		employeerepository.save(emp);
 	}
 
+	@Override
+	public Boolean isFinanceAdmin(Long empId) {
+		Employee emp = getEmployeeDetailsById(empId);
+		Boolean isAdmin = emp.getIsFinanceAdmin();
+//		if(isAdmin == true) {
+//			return true;
+//		}
+//		else {
+//			return false;
+//		}
+		return isAdmin;
+	}
+
 }

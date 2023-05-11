@@ -64,4 +64,10 @@ public class EmployeeController {
 		emp.setIsFinanceAdmin(isAdmin);
 		return employeeRepository.save(emp);
 	}
+	
+	@GetMapping("/isadmin")
+//	@GetMapping("/isadmin/{empId}")
+	public void isFinanceAdmin(@RequestParam Long empId) {
+		employeeService.isFinanceAdmin(empId);
+	}
 }
