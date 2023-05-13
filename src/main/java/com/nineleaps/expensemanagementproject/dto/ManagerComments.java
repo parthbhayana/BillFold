@@ -2,7 +2,6 @@ package com.nineleaps.expensemanagementproject.dto;
 
 public class ManagerComments {
 	String managerComments;
-	Long id;
 
 	public String getManagerComments() {
 		return managerComments;
@@ -12,18 +11,10 @@ public class ManagerComments {
 		this.managerComments = managerComments;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public ManagerComments(String managerComments, Long id) {
+	public ManagerComments(String managerComments) {
 		super();
 		this.managerComments = managerComments;
-		this.id = id;
+
 	}
 
 	public ManagerComments() {

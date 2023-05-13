@@ -27,6 +27,8 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
+
+
 @Service
 public class PdfGeneratorServiceImpl {
 	@Autowired
@@ -36,6 +38,7 @@ public class PdfGeneratorServiceImpl {
 	@Autowired
 	EmployeeRepository employeeRepository;
 
+	
 	public byte[] generatePdf(Long reportId) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Document document = new Document(PageSize.A4);
@@ -47,7 +50,9 @@ public class PdfGeneratorServiceImpl {
 		headerParagraph.setAlignment(Paragraph.ALIGN_CENTER);
 		Table table = new Table(4);
 		table.setWidth(100);
-		table.addCell("Date");
+		
+		
+		table.addCell("Date");	
 		table.addCell("Merchant");
 		table.addCell("Description");
 		table.addCell("Amount");
@@ -96,6 +101,8 @@ public class PdfGeneratorServiceImpl {
 		document.close();
 		return baos.toByteArray();
 	}
+
+
 
 	public void export(Long reportId, HttpServletResponse response) throws IOException {
 		byte[] pdfBytes = generatePdf(reportId);

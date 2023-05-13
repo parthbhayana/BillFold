@@ -5,8 +5,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import com.nineleaps.expensemanagementproject.entity.CategoryFinance;
 import com.nineleaps.expensemanagementproject.entity.Employee;
@@ -42,7 +44,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 
 	@Transactional
 	@Override
-	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
+	public Expense addExpense(Expense expense, Long employeeid,Long catId) {
 		Employee empDetails = employeeSERVICES.getEmployeeDetailsById(employeeid);
 		CategoryFinance catfin = catrepository.findById(catId).get();
 		expense.setEmployee(empDetails);
@@ -52,6 +54,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 		expense.setCatDescription(mergedCategoryFinance.getCatDescription()); // set the category description
 		return expRepository.save(expense);
 	}
+	
 
 	@Override
 	public List<Expense> getAllExpenses() {
@@ -141,5 +144,9 @@ public class ExpenseServiceImpl implements IExpenseService {
 		exp.setIsHidden(hidden);
 		expRepository.save(exp);
 	}
+
+
+
+	
 
 }

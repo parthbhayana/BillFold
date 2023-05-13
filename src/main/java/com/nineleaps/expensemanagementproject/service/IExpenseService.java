@@ -24,11 +24,18 @@ public interface IExpenseService {
 
 	public Expense updateExpenses(Expense expense, Long expenseId);
 
-	public Expense addExpense(Expense expense, Long employeeid, Long catId);
+	
 	
 	public Expense removeTaggedExpense(Long expenseId);
 	
 	public List<Expense> getExpensesByEmployeeId(Long employeeId);
 	
 	public void hideExpense(Long expId);
+
+	
+
+	
+
+	
+	Expense addExpense(Expense expense, Long employeeid, Long catId);
 }

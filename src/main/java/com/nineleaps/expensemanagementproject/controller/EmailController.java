@@ -19,7 +19,7 @@ public class EmailController {
 
     @PostMapping("/send-email")
     public ResponseEntity<String> sendEmail(@RequestBody Employee emailMessage) {
-        this.iEmailSenderService.sendEmail(emailMessage.getReportingManagerEmail(), emailMessage.getSubject(), emailMessage.getMessage());
+        this.iEmailSenderService.sendEmail(emailMessage.getManagerEmail(), emailMessage.getSubject(), emailMessage.getMessage());
         return ResponseEntity.ok("Success");
     }
 }

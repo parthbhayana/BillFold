@@ -27,4 +27,6 @@ public interface IEmployeeService {
 	public Employee insertuser(Employee newUser);
 
 	public Employee findByEmailId(String emailId);
+
+	public void isfinanceadmin(Long empId);
 }

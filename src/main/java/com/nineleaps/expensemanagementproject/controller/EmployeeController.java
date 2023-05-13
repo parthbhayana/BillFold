@@ -38,7 +38,7 @@ public class EmployeeController {
 		employee.setFirstName(newemployee.getFirstName());
 		employee.setLastName(newemployee.getLastName());
 		employee.setMiddleName(newemployee.getMiddleName());
-		employee.setReportingManagerEmail(newemployee.getReportingManagerEmail());
+		employee.setManagerEmail(newemployee.getManagerEmail());
 		return employeeService.updateEmployeeDetails(employee);
 
 	}
@@ -57,5 +57,10 @@ public class EmployeeController {
 	@PostMapping("/hideemployee/{empId}")
 	public void hideEmployee(@PathVariable Long empId) {
 		employeeService.hideEmployee(empId);
+	}
+	@PostMapping("/isfinanceadmin/{empId}")
+	public void financeadmin(@PathVariable Long empId)
+	{
+		employeeService.isfinanceadmin(empId);
 	}
 }
