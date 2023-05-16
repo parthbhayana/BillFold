@@ -24,7 +24,7 @@ public interface IReportsService {
 	
 	public Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
-	public Reports submitReport(Long reportId);
+	public Reports submitReport(Long reportId, String managerMail);
 
 	public Reports approveReportByManager(Long reportId, String comments);
 
