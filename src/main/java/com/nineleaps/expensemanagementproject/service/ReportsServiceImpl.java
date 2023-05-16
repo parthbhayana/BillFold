@@ -2,6 +2,7 @@ package com.nineleaps.expensemanagementproject.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +58,8 @@ public class ReportsServiceImpl implements IReportsService {
 		String employeeEmail = emp.getEmployeeEmail();
 		newReport.setManagerEmail(managerEmail);
 		newReport.setEmployeeMail(employeeEmail);
+		LocalDate today = LocalDate.now();
+		newReport.setDateCreated(today);
 		reportsrepository.save(newReport);
 		Long id = newReport.getReportId();
 		addExpenseToReport(id, expenseids);
@@ -192,6 +195,8 @@ public class ReportsServiceImpl implements IReportsService {
 		Reports re = getReportById(reportId);
 		if (re != null) {
 			re.setIsSubmitted(submissionStatus);
+			LocalDate today = LocalDate.now();
+			re.setDateSubmitted(today);
 			try {
 				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
 				decodedEmail = decodedEmail.replace("=", "");
