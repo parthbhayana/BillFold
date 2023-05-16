@@ -1,7 +1,14 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.management.AttributeNotFoundException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
+import com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImpl;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
@@ -22,6 +30,9 @@ public class ReportsController {
 
 	@Autowired
 	private IReportsService reportsService;
+
+	@Autowired
+	PdfGeneratorServiceImpl pdfGeneratorService;
 
 	@GetMapping("/getallreports")
 	public List<Reports> getAllReports() {
@@ -74,9 +85,43 @@ public class ReportsController {
 		return reportsService.addExpenseToReport(reportId, expenseIds);
 	}
 
+//	@PostMapping("/submitReport")
+//	public Reports submitReport(@RequestParam Long reportId) {
+//		return reportsService.submitReport(reportId);
+//	}
+
 	@PostMapping("/submitReport/{reportId}")
-	public Reports submitReport(@PathVariable Long reportId) {
-		return reportsService.submitReport(reportId);
+	public void submitReport(@PathVariable Long reportId, @RequestBody String managerMail, HttpServletResponse response)
+			throws AttributeNotFoundException {
+		try {
+
+			response.setContentType("application/pdf");
+			DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+			String currentDateTime = dateFormatter.format(new Date());
+			String headerKey = "Content-Disposition";
+			String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+			response.setHeader(headerKey, headerValue);
+			pdfGeneratorService.export(reportId, response);
+
+			reportsService.submitReport(reportId, managerMail);
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			try {
+				response.getWriter().write("Error exporting PDF");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				response.getWriter().flush();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 	}
 
 	@PostMapping("/updateReport/{reportId}")
