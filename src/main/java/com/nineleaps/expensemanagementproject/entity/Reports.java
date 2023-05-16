@@ -1,12 +1,15 @@
 package com.nineleaps.expensemanagementproject.entity;
 
 import java.sql.Date;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -103,6 +106,8 @@ public class Reports {
 		this.reportId = reportId;
 		this.reportTitle = reportTitle;
 		this.reportDescription = reportDescription;
+		this.managerComments = managerComments;
+		this.financeComments = financeComments;
 		this.managerComments = managerComments;
 		this.financeComments = financeComments;
 		this.isSubmitted = isSubmitted;

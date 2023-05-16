@@ -1,5 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -167,15 +169,40 @@ public class ReportsServiceImpl implements IReportsService {
 		return ReportsApprovedByManager;
 	}
 
+//	@Override
+//	public Reports submitReport(Long reportId, String managerMail) {
+//		boolean submissionStatus = true;
+//		Reports re = getReportById(reportId);
+//		if (re != null) {
+//			re.setIsSubmitted(submissionStatus);
+//			try {
+//				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
+//				decodedEmail = decodedEmail.replace("=", "");
+//				re.setManagerEmail(decodedEmail);
+//			} catch (UnsupportedEncodingException e) {
+//				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
+//			}
+//		}
+//		return reportsrepository.save(re);
+//	}
+
 	@Override
-	public Reports submitReport(Long reportId) {
+	public Reports submitReport(Long reportId, String managerMail) {
 		boolean submissionStatus = true;
 		Reports re = getReportById(reportId);
 		if (re != null) {
 			re.setIsSubmitted(submissionStatus);
-		}
+			try {
+				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
+				decodedEmail = decodedEmail.replace("=", "");
+				re.setManagerEmail(decodedEmail);
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
 
+			}
+		}
 		return reportsrepository.save(re);
+
 	}
 
 	@Override
