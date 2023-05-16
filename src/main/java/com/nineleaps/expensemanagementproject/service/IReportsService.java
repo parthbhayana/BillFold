@@ -3,6 +3,8 @@ package com.nineleaps.expensemanagementproject.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
@@ -26,7 +28,7 @@ public interface IReportsService {
 	
 	public Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
-	public Reports submitReport(Long reportId,String managerMail);
+	//public Reports submitReport(Long reportId,String managerMail);
 
 	public Reports approveReportByManager(Long reportId, String comments);
 
@@ -48,6 +50,10 @@ public interface IReportsService {
 
 
 	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids);
+
+//	public Reports submitReport(Long reportId, String managerMail, HttpServletResponse response);
+
+	public Reports submitReport(Long reportId, String managerMail);
 
 	
 	

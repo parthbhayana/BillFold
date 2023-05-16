@@ -2,12 +2,13 @@ package com.nineleaps.expensemanagementproject.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,17 +57,15 @@ public class ReportsServiceImpl implements IReportsService {
 		Employee emp = empServices.getEmployeeDetailsById(employeeId);
 		String employeeEmail = emp.getEmployeeEmail();
 		newReport.setEmployeeMail(employeeEmail);
+		newReport.setEmployeeMail(employeeEmail);
+		LocalDate today = LocalDate.now();
+		newReport.setDateCreated(today);
 		reportsrepository.save(newReport);
 		Long id = newReport.getReportId();
 		addExpenseToReport(id, expenseids);
 		return reportsrepository.save(newReport);
 	}
 
-
-	
-
-
-	
 //	@Override
 //	public Reports addReport(Reports newReport, List<Long> expenseIds, Long employeeId) {
 //	    Employee emp = empServices.getEmployeeDetailsById(employeeId);
@@ -82,9 +81,6 @@ public class ReportsServiceImpl implements IReportsService {
 //	    }
 //	    return reportsrepository.save(newReport);
 //	}
-	
-
-	
 
 	@Override
 	public Reports addExpenseToReport(Long reportId, Long expenseid) {
@@ -101,7 +97,7 @@ public class ReportsServiceImpl implements IReportsService {
 			expense.setIsReported(reportedStatus);
 			expRepo.save(expense);
 			expServices.updateExpense(reportId, expenseid);
-			
+
 			reportsrepository.save(report);
 		}
 		return report;
@@ -127,11 +123,10 @@ public class ReportsServiceImpl implements IReportsService {
 			}
 		}
 		report.setTotalAmount(totalamount(reportId));
-		
 
 		return reportsrepository.save(report);
 	}
-	
+
 	@Override
 	public float totalamount(Long reportId) {
 		Reports report = reportsrepository.findById(reportId).get();
@@ -140,13 +135,11 @@ public class ReportsServiceImpl implements IReportsService {
 		for (Expense expense2 : expenses) {
 			totalAmount += expense2.getAmount();
 		}
-		System.out.println("total amount:"+totalAmount);
-		
-		
+		System.out.println("total amount:" + totalAmount);
+
 		return totalAmount;
 	}
-	
-	
+
 	@Override
 	public Reports updateReport(Reports report, Long reportId) {
 		Reports re = getReportById(reportId);
@@ -220,24 +213,26 @@ public class ReportsServiceImpl implements IReportsService {
 //
 //		return reportsrepository.save(re);
 //	}
-	
+
 	@Override
 	public Reports submitReport(Long reportId, String managerMail) {
-	    boolean submissionStatus = true;
-	    Reports re = getReportById(reportId);
-	    if (re != null) {
-	        re.setIsSubmitted(submissionStatus);
-	        try {
-	            String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
-	            decodedEmail=decodedEmail.replace("=","");
-	            re.setManagerEmail(decodedEmail);
-	        } catch (UnsupportedEncodingException e) {
-	            throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
-	        }
-	    }
-	    
+		boolean submissionStatus = true;
+		Reports re = getReportById(reportId);
+		if (re != null) {
+			re.setIsSubmitted(submissionStatus);
+			LocalDate today = LocalDate.now();
+			re.setDateSubmitted(today);
+			try {
+				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
+				decodedEmail = decodedEmail.replace("=", "");
+				re.setManagerEmail(decodedEmail);
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
 
-	    return reportsrepository.save(re);
+			}
+		}
+		return reportsrepository.save(re);
+
 	}
 
 	@Override
@@ -287,8 +282,6 @@ public class ReportsServiceImpl implements IReportsService {
 		return reportsrepository.save(re);
 	}
 
-	
-
 	@Override
 	public void hideReport(Long reportId) {
 		Boolean hidden = true;
@@ -297,7 +290,5 @@ public class ReportsServiceImpl implements IReportsService {
 		reportsrepository.save(report);
 
 	}
-
-	
 
 }
