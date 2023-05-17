@@ -41,11 +41,6 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public void deleteReportById(Long reportId) {
-		reportsrepository.deleteById(reportId);
-	}
-
-	@Override
 	public Reports getReportById(Long reportId) {
 		Optional<Reports> optionalReport = reportsrepository.findById(reportId);
 		return optionalReport.orElseThrow(() -> new RuntimeException("Report not found"));
@@ -192,9 +187,11 @@ public class ReportsServiceImpl implements IReportsService {
 	@Override
 	public Reports submitReport(Long reportId, String managerMail) {
 		boolean submissionStatus = true;
+		ManagerApprovalStatus pending = ManagerApprovalStatus.PENDING;
 		Reports re = getReportById(reportId);
 		if (re != null) {
 			re.setIsSubmitted(submissionStatus);
+			re.setManagerapprovalstatus(pending);
 			LocalDate today = LocalDate.now();
 			re.setDateSubmitted(today);
 			try {
@@ -213,6 +210,7 @@ public class ReportsServiceImpl implements IReportsService {
 	@Override
 	public Reports approveReportByManager(Long reportId, String comments) {
 		ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.APPROVED;
+		FinanceApprovalStatus pending = FinanceApprovalStatus.PENDING;
 		Reports re = getReportById(reportId);
 		if (re.getIsSubmitted() == false) {
 			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
@@ -223,6 +221,7 @@ public class ReportsServiceImpl implements IReportsService {
 		if (re != null && re.getIsHidden() == false && re.getIsSubmitted() == true) {
 			re.setManagerapprovalstatus(approvalStatus);
 			re.setManagerComments(comments);
+			re.setFinanceapprovalstatus(pending);
 		}
 
 		return reportsrepository.save(re);
