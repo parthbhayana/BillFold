@@ -8,11 +8,7 @@ public interface IReportsService {
 
 	public List<Reports> getAllReports();
 
-	void deleteReportById(Long reportId);
-
 	public Reports getReportById(Long reportId);
-
-//	public Reports addReport(Reports newReport, Long employeeId);
 	
 	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids);
 

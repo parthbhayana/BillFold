@@ -39,11 +39,6 @@ public class ReportsController {
 		return reportsService.getAllReports();
 	}
 
-//	@DeleteMapping("/deletereport/{reportid}")
-//	public void deleteReportById(@PathVariable("reportid") Long reportId) {
-//		reportsService.deleteReportById(reportId);
-//	}
-
 	@GetMapping("/getbyreportid/{report_id}")
 	public Reports getReportByReportId(@PathVariable("report_id") Long reportId) {
 		return reportsService.getReportById(reportId);
