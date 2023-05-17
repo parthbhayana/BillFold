@@ -57,6 +57,9 @@ public class ReportsServiceImpl implements IReportsService {
 		newReport.setDateCreated(today);
 		reportsrepository.save(newReport);
 		Long id = newReport.getReportId();
+		float amt = totalamount(id);
+		long amtAsLong = Math.round(amt);
+		newReport.setTotalAmount(amtAsLong);
 		addExpenseToReport(id, expenseids);
 		return reportsrepository.save(newReport);
 	}
@@ -86,7 +89,10 @@ public class ReportsServiceImpl implements IReportsService {
 			expense.setIsReported(reportedStatus);
 			expRepo.save(expense);
 			expServices.updateExpense(reportId, expenseid);
-			report.setTotalAmount(totalamount(reportId));
+			float amt = totalamount(reportId);
+			long amtAsLong = Math.round(amt);
+			report.setTotalAmount(amtAsLong);
+//			report.setTotalAmount(totalamount(reportId));
 			reportsrepository.save(report);
 		}
 		return report;
@@ -111,8 +117,9 @@ public class ReportsServiceImpl implements IReportsService {
 				expServices.updateExpense(reportId, expenseid);
 			}
 		}
-		report.setTotalAmount(totalamount(reportId));
-
+		float amt = totalamount(reportId);
+		long amtAsLong = Math.round(amt);
+		report.setTotalAmount(amtAsLong);
 		return reportsrepository.save(report);
 	}
 
@@ -194,13 +201,22 @@ public class ReportsServiceImpl implements IReportsService {
 			re.setManagerapprovalstatus(pending);
 			LocalDate today = LocalDate.now();
 			re.setDateSubmitted(today);
+			float amt = totalamount(reportId);
+			long amtAsLong = Math.round(amt);
+			re.setTotalAmount(amtAsLong);
+			System.out.println(
+					"----------------------------------------------------------------------------&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+							+ amt + "///////");
+			System.out.println(
+					"----------------------------------------------------------------------------&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+							+ amtAsLong + "///////");
+			reportsrepository.save(re);
 			try {
 				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
 				decodedEmail = decodedEmail.replace("=", "");
 				re.setManagerEmail(decodedEmail);
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
-
 			}
 		}
 		return reportsrepository.save(re);
@@ -280,6 +296,7 @@ public class ReportsServiceImpl implements IReportsService {
 		return reportsrepository.save(re);
 	}
 
+	@Override
 	public float totalamount(Long reportId) {
 		Reports report = reportsrepository.findById(reportId).get();
 		List<Expense> expenses = expRepo.findByReports(report);

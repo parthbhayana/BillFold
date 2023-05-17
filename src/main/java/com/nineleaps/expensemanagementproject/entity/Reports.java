@@ -69,7 +69,7 @@ public class Reports {
 
 	@Column(name = "total_amount")
 	@ApiModelProperty(hidden = true)
-	private Float totalAmount;
+	private Long totalAmount;
 
 	@Column(name = "is_hidden", nullable = true)
 	@ApiModelProperty(hidden = true)
@@ -100,7 +100,7 @@ public class Reports {
 
 	public Reports(Long reportId, String reportTitle, String reportDescription, String managerComments,
 			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail,
-			LocalDate dateSubmitted, LocalDate dateCreated, Float totalAmount, Boolean isHidden,
+			LocalDate dateSubmitted, LocalDate dateCreated, Long totalAmount, Boolean isHidden,
 			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
 		super();
 		this.reportId = reportId;
@@ -200,11 +200,11 @@ public class Reports {
 		this.dateCreated = today;
 	}
 
-	public Float getTotalAmount() {
+	public Long getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(Long totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 

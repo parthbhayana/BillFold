@@ -37,4 +37,6 @@ public interface IReportsService {
 	public List<Reports> getAllReportsApprovedByManager();
 
 	public void hideReport(Long reportId);
+	
+	public float totalamount(Long reportId);
 }
