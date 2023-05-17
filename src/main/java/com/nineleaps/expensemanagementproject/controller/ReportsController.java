@@ -152,4 +152,9 @@ public class ReportsController {
 	public void hideReport(@PathVariable Long reportId) {
 		reportsService.hideReport(reportId);
 	}
+	
+	@GetMapping("/gettotalamountbyreportid")
+	public float totalAmount(@RequestParam Long reportId) {
+		return reportsService.totalamount(reportId);
+	}
 }
