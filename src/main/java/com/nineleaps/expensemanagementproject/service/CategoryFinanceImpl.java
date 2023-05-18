@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +18,28 @@ public class CategoryFinanceImpl implements ICategoryFinance {
 	@Override
 	public void deleteCategoryFinanceById(Long catId) {
 		catfinrepository.deleteById(catId);
-
 	}
 
 	@Override
 	public CategoryFinance updateCategoryFinance(CategoryFinance categoryfinance) {
-
 		return catfinrepository.save(categoryfinance);
 	}
 
 	@Override
 	public CategoryFinance getCategoryFinanceById(Long catId) {
-
 		return catfinrepository.findById(catId).get();
 	}
 
 	@Override
 	public List<CategoryFinance> getAllCategoryFinances() {
-
-		return catfinrepository.findAll();
+		List<CategoryFinance> category = catfinrepository.findAll();
+		List<CategoryFinance> nondeletedcategories = new ArrayList<>();
+		for (CategoryFinance cat2 : category) {
+			if (cat2.getIsHidden() != true) {
+				nondeletedcategories.add(cat2);
+			}
+		}
+		return nondeletedcategories;
 	}
 
 	@Override
