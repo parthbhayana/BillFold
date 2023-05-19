@@ -52,7 +52,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 		expense.setCategoryfinance(catfin);
 		CategoryFinance mergedCategoryFinance = entityManager.merge(catfin);
 		expense.setCategoryfinance(mergedCategoryFinance);
-		expense.setCatDescription(mergedCategoryFinance.getCatDescription()); // set the category description
+		expense.setCatDescription(mergedCategoryFinance.getCatDescription());
 		expRepository.save(expense);
 		String curr = expense.getCurrency();
 		double rate = CurrencyExchange.getExchangeRate(curr);

@@ -31,7 +31,6 @@ public class CurrencyExchangeServiceImpl implements ICurrencyExchange {
 			}
 			reader.close();
 			connection.disconnect();
-			System.out.println(response.toString());
 			String json = response.toString();
 			try {
 				ObjectMapper objectMapper = new ObjectMapper();
@@ -39,9 +38,9 @@ public class CurrencyExchangeServiceImpl implements ICurrencyExchange {
 				JsonNode dataNode = rootNode.get("data");
 				if (dataNode != null && dataNode.has("INR")) {
 					exchangeValue = dataNode.get("INR").asDouble();
-					System.out.println("AED value: " + exchangeValue);
+
 				} else {
-					System.out.println("Currency data not found.");
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
