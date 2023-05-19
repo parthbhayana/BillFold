@@ -61,6 +61,15 @@ public class ReportsServiceImpl implements IReportsService {
 		long amtAsLong = Math.round(amt);
 		newReport.setTotalAmount(amtAsLong);
 		addExpenseToReport(id, expenseids);
+		reportsrepository.save(newReport);
+		String reportTitle = newReport.getReportTitle();
+		List<Expense> exp = expServices.getExpenseByReportId(id);
+		for (Expense exp2 : exp) {
+			if (exp != null) {
+				exp2.setReportTitle(reportTitle);
+				expRepo.save(exp2);
+			}
+		}
 		return reportsrepository.save(newReport);
 	}
 
@@ -92,8 +101,15 @@ public class ReportsServiceImpl implements IReportsService {
 			float amt = totalamount(reportId);
 			long amtAsLong = Math.round(amt);
 			report.setTotalAmount(amtAsLong);
-//			report.setTotalAmount(totalamount(reportId));
 			reportsrepository.save(report);
+			String reportTitle = report.getReportTitle();
+			List<Expense> exp = expServices.getExpenseByReportId(reportId);
+			for (Expense exp2 : exp) {
+				if (exp2 != null) {
+					exp2.setReportTitle(reportTitle);
+					expRepo.save(exp2);
+				}
+			}
 		}
 		return report;
 	}
@@ -115,6 +131,14 @@ public class ReportsServiceImpl implements IReportsService {
 				expense.setIsReported(reportedStatus);
 				expRepo.save(expense);
 				expServices.updateExpense(reportId, expenseid);
+			}
+		}
+		String reportTitle = report.getReportTitle();
+		List<Expense> exp = expServices.getExpenseByReportId(reportId);
+		for (Expense exp2 : exp) {
+			if (exp2 != null) {
+				exp2.setReportTitle(reportTitle);
+				expRepo.save(exp2);
 			}
 		}
 		float amt = totalamount(reportId);
