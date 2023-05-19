@@ -1,5 +1,5 @@
 
-# BillFold
+# Introduction to BillFold
 
 BillFold is aimed at automating the expenses reimbursement process for the company's employees and finance team. Currently, the reimbursement process is managed using an external tool, and approvals are done manually through email, leading to inefficiencies and delays. To address this challenge, the project will create a mobile platform that enables employees to create and manage expense reports, view their expenses history, and submit reports for approval. The platform will also include features such as employee login, approval management, and reimbursement management. By implementing this project, Nineleaps can enhance its operational efficiency and improve collaboration and networking among its employees.
 
