@@ -326,7 +326,7 @@ public class ReportsServiceImpl implements IReportsService {
 		List<Expense> expenses = expRepo.findByReports(report);
 		float amt = 0;
 		for (Expense expense2 : expenses) {
-			amt += expense2.getAmount();
+			amt += expense2.getAmountINR();
 		}
 		return amt;
 	}
