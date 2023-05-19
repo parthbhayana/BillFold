@@ -45,8 +45,8 @@ public class ReportsController {
 	}
 
 	@GetMapping("/getreportbyemployeeid/{employeeId}")
-	public List<Reports> getReportByEmpId(@PathVariable Long EmployeeId) {
-		return reportsService.getReportByEmpId(EmployeeId);
+	public List<Reports> getReportByEmpId(@PathVariable Long employeeId) {
+		return reportsService.getReportByEmpId(employeeId);
 	}
 
 	@GetMapping("/getreportssubmittedtouser/{manageremail}")
