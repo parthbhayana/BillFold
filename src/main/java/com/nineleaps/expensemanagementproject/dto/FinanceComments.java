@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.dto;
 public class FinanceComments {
 	String financeComments;
 	Long id;
+
 	public FinanceComments(String financeComments, Long id) {
 		super();
 		this.financeComments = financeComments;

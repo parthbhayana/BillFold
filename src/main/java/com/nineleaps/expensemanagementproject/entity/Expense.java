@@ -6,7 +6,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,8 +37,15 @@ public class Expense {
 	@Column(name = "date", nullable = false)
 	private Date date;
 
+	@Column(name = "currency")
+	private String currency;
+
 	@Column(name = "amount", nullable = false)
 	private Long amount;
+
+	@Column(name = "amount_INR", nullable = false)
+	@ApiModelProperty(hidden = true)
+	private double amountINR;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -55,6 +61,10 @@ public class Expense {
 	@Column(name = "is_hidden", nullable = true)
 	@ApiModelProperty(hidden = true)
 	private Boolean isHidden = false;
+
+	@Column(name = "report_title")
+	@ApiModelProperty(hidden = true)
+	private String reportTitle;
 
 	@Lob
 	@Column(name = "supporting_documents", nullable = true)
@@ -81,17 +91,21 @@ public class Expense {
 
 	}
 
-	public Expense(Long expenseId, String merchantName, Date date, Long amount, String description,
-			String catDescription, Boolean isReported, Boolean isHidden, byte[] supportingDocuments, Employee employee,
-			Reports reports, CategoryFinance categoryfinance) {
+	public Expense(Long expenseId, String merchantName, Date date, String currency, Long amount, double amountINR,
+			String description, String catDescription, Boolean isReported, Boolean isHidden, String reportTitle,
+			byte[] supportingDocuments, Employee employee, Reports reports, CategoryFinance categoryfinance) {
 		super();
+		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
+		this.currency = currency;
 		this.amount = amount;
+		this.amountINR = amountINR;
 		this.description = description;
 		this.catDescription = catDescription;
 		this.isReported = isReported;
 		this.isHidden = isHidden;
+		this.reportTitle = reportTitle;
 		this.supportingDocuments = supportingDocuments;
 		this.employee = employee;
 		this.reports = reports;
@@ -120,6 +134,14 @@ public class Expense {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 	public Long getAmount() {
@@ -192,6 +214,22 @@ public class Expense {
 
 	public void setCategoryfinance(CategoryFinance categoryfinance) {
 		this.categoryfinance = categoryfinance;
+	}
+
+	public String getReportTitle() {
+		return reportTitle;
+	}
+
+	public void setReportTitle(String reportTitle) {
+		this.reportTitle = reportTitle;
+	}
+
+	public double getAmountINR() {
+		return amountINR;
+	}
+
+	public void setAmountINR(double amountINR) {
+		this.amountINR = amountINR;
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.nineleaps.expensemanagementproject.entity;
 
-import java.sql.Date;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -62,14 +60,16 @@ public class Reports {
 	private String managerEmail;
 
 	@Column(name = "date_submitted")
-	private Date dateSubmitted;
+	@ApiModelProperty(hidden = true)
+	private LocalDate dateSubmitted;
 
 	@Column(name = "date_created")
-	private Date dateCreated;
+	@ApiModelProperty(hidden = true)
+	private LocalDate dateCreated;
 
 	@Column(name = "total_amount")
 	@ApiModelProperty(hidden = true)
-	private Float totalAmount;
+	private Long totalAmount;
 
 	@Column(name = "is_hidden", nullable = true)
 	@ApiModelProperty(hidden = true)
@@ -78,12 +78,12 @@ public class Reports {
 	@Column(name = "finance_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private FinanceApprovalStatus financeapprovalstatus = FinanceApprovalStatus.PENDING;
+	private FinanceApprovalStatus financeapprovalstatus;// = FinanceApprovalStatus.PENDING;
 
 	@Column(name = "manager_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private ManagerApprovalStatus managerapprovalstatus = ManagerApprovalStatus.PENDING;
+	private ManagerApprovalStatus managerapprovalstatus;// = ManagerApprovalStatus.PENDING;
 
 	@Column(name = "pdf_file", nullable = true)
 	@ApiModelProperty(hidden = true)
@@ -99,15 +99,13 @@ public class Reports {
 	}
 
 	public Reports(Long reportId, String reportTitle, String reportDescription, String managerComments,
-			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail, Date dateSubmitted,
-			Date dateCreated, Float totalAmount, Boolean isHidden, FinanceApprovalStatus financeapprovalstatus,
-			ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail,
+			LocalDate dateSubmitted, LocalDate dateCreated, Long totalAmount, Boolean isHidden,
+			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
 		super();
 		this.reportId = reportId;
 		this.reportTitle = reportTitle;
 		this.reportDescription = reportDescription;
-		this.managerComments = managerComments;
-		this.financeComments = financeComments;
 		this.managerComments = managerComments;
 		this.financeComments = financeComments;
 		this.isSubmitted = isSubmitted;
@@ -186,27 +184,27 @@ public class Reports {
 		this.managerEmail = managerEmail;
 	}
 
-	public Date getDateSubmitted() {
+	public LocalDate getDateSubmitted() {
 		return dateSubmitted;
 	}
 
-	public void setDateSubmitted(Date dateSubmitted) {
+	public void setDateSubmitted(LocalDate dateSubmitted) {
 		this.dateSubmitted = dateSubmitted;
 	}
 
-	public Date getDateCreated() {
+	public LocalDate getDateCreated() {
 		return dateCreated;
 	}
 
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
+	public void setDateCreated(LocalDate today) {
+		this.dateCreated = today;
 	}
 
-	public Float getTotalAmount() {
+	public Long getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(Long totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 

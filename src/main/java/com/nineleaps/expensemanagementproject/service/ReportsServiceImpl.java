@@ -2,6 +2,7 @@ package com.nineleaps.expensemanagementproject.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,11 +41,6 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public void deleteReportById(Long reportId) {
-		reportsrepository.deleteById(reportId);
-	}
-
-	@Override
 	public Reports getReportById(Long reportId) {
 		Optional<Reports> optionalReport = reportsrepository.findById(reportId);
 		return optionalReport.orElseThrow(() -> new RuntimeException("Report not found"));
@@ -57,9 +53,23 @@ public class ReportsServiceImpl implements IReportsService {
 		String employeeEmail = emp.getEmployeeEmail();
 		newReport.setManagerEmail(managerEmail);
 		newReport.setEmployeeMail(employeeEmail);
+		LocalDate today = LocalDate.now();
+		newReport.setDateCreated(today);
 		reportsrepository.save(newReport);
 		Long id = newReport.getReportId();
+		float amt = totalamount(id);
+		long amtAsLong = Math.round(amt);
+		newReport.setTotalAmount(amtAsLong);
 		addExpenseToReport(id, expenseids);
+		reportsrepository.save(newReport);
+		String reportTitle = newReport.getReportTitle();
+		List<Expense> exp = expServices.getExpenseByReportId(id);
+		for (Expense exp2 : exp) {
+			if (exp != null) {
+				exp2.setReportTitle(reportTitle);
+				expRepo.save(exp2);
+			}
+		}
 		return reportsrepository.save(newReport);
 	}
 
@@ -88,8 +98,18 @@ public class ReportsServiceImpl implements IReportsService {
 			expense.setIsReported(reportedStatus);
 			expRepo.save(expense);
 			expServices.updateExpense(reportId, expenseid);
-			report.setTotalAmount(totalamount(reportId));
+			float amt = totalamount(reportId);
+			long amtAsLong = Math.round(amt);
+			report.setTotalAmount(amtAsLong);
 			reportsrepository.save(report);
+			String reportTitle = report.getReportTitle();
+			List<Expense> exp = expServices.getExpenseByReportId(reportId);
+			for (Expense exp2 : exp) {
+				if (exp2 != null) {
+					exp2.setReportTitle(reportTitle);
+					expRepo.save(exp2);
+				}
+			}
 		}
 		return report;
 	}
@@ -113,8 +133,17 @@ public class ReportsServiceImpl implements IReportsService {
 				expServices.updateExpense(reportId, expenseid);
 			}
 		}
-		report.setTotalAmount(totalamount(reportId));
-
+		String reportTitle = report.getReportTitle();
+		List<Expense> exp = expServices.getExpenseByReportId(reportId);
+		for (Expense exp2 : exp) {
+			if (exp2 != null) {
+				exp2.setReportTitle(reportTitle);
+				expRepo.save(exp2);
+			}
+		}
+		float amt = totalamount(reportId);
+		long amtAsLong = Math.round(amt);
+		report.setTotalAmount(amtAsLong);
 		return reportsrepository.save(report);
 	}
 
@@ -189,16 +218,29 @@ public class ReportsServiceImpl implements IReportsService {
 	@Override
 	public Reports submitReport(Long reportId, String managerMail) {
 		boolean submissionStatus = true;
+		ManagerApprovalStatus pending = ManagerApprovalStatus.PENDING;
 		Reports re = getReportById(reportId);
 		if (re != null) {
 			re.setIsSubmitted(submissionStatus);
+			re.setManagerapprovalstatus(pending);
+			LocalDate today = LocalDate.now();
+			re.setDateSubmitted(today);
+			float amt = totalamount(reportId);
+			long amtAsLong = Math.round(amt);
+			re.setTotalAmount(amtAsLong);
+			System.out.println(
+					"----------------------------------------------------------------------------&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+							+ amt + "///////");
+			System.out.println(
+					"----------------------------------------------------------------------------&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+							+ amtAsLong + "///////");
+			reportsrepository.save(re);
 			try {
 				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
 				decodedEmail = decodedEmail.replace("=", "");
 				re.setManagerEmail(decodedEmail);
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
-
 			}
 		}
 		return reportsrepository.save(re);
@@ -208,6 +250,7 @@ public class ReportsServiceImpl implements IReportsService {
 	@Override
 	public Reports approveReportByManager(Long reportId, String comments) {
 		ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.APPROVED;
+		FinanceApprovalStatus pending = FinanceApprovalStatus.PENDING;
 		Reports re = getReportById(reportId);
 		if (re.getIsSubmitted() == false) {
 			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
@@ -218,6 +261,7 @@ public class ReportsServiceImpl implements IReportsService {
 		if (re != null && re.getIsHidden() == false && re.getIsSubmitted() == true) {
 			re.setManagerapprovalstatus(approvalStatus);
 			re.setManagerComments(comments);
+			re.setFinanceapprovalstatus(pending);
 		}
 
 		return reportsrepository.save(re);
@@ -276,12 +320,13 @@ public class ReportsServiceImpl implements IReportsService {
 		return reportsrepository.save(re);
 	}
 
+	@Override
 	public float totalamount(Long reportId) {
 		Reports report = reportsrepository.findById(reportId).get();
 		List<Expense> expenses = expRepo.findByReports(report);
 		float amt = 0;
 		for (Expense expense2 : expenses) {
-			amt += expense2.getAmount();
+			amt += expense2.getAmountINR();
 		}
 		return amt;
 	}

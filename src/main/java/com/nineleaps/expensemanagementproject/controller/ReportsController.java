@@ -39,19 +39,14 @@ public class ReportsController {
 		return reportsService.getAllReports();
 	}
 
-//	@DeleteMapping("/deletereport/{reportid}")
-//	public void deleteReportById(@PathVariable("reportid") Long reportId) {
-//		reportsService.deleteReportById(reportId);
-//	}
-
 	@GetMapping("/getbyreportid/{report_id}")
 	public Reports getReportByReportId(@PathVariable("report_id") Long reportId) {
 		return reportsService.getReportById(reportId);
 	}
 
 	@GetMapping("/getreportbyemployeeid/{employeeId}")
-	public List<Reports> getReportByEmpId(@PathVariable Long EmployeeId) {
-		return reportsService.getReportByEmpId(EmployeeId);
+	public List<Reports> getReportByEmpId(@PathVariable Long employeeId) {
+		return reportsService.getReportByEmpId(employeeId);
 	}
 
 	@GetMapping("/getreportssubmittedtouser/{manageremail}")
@@ -156,5 +151,10 @@ public class ReportsController {
 	@PostMapping("/hidereport/{reportId}")
 	public void hideReport(@PathVariable Long reportId) {
 		reportsService.hideReport(reportId);
+	}
+	
+	@GetMapping("/gettotalamountbyreportid")
+	public float totalAmount(@RequestParam Long reportId) {
+		return reportsService.totalamount(reportId);
 	}
 }

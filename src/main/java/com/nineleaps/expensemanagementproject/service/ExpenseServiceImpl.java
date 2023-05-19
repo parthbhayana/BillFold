@@ -40,6 +40,9 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Autowired
 	private EntityManager entityManager;
 
+	@Autowired
+	private ICurrencyExchange CurrencyExchange;
+
 	@Transactional
 	@Override
 	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
@@ -49,7 +52,12 @@ public class ExpenseServiceImpl implements IExpenseService {
 		expense.setCategoryfinance(catfin);
 		CategoryFinance mergedCategoryFinance = entityManager.merge(catfin);
 		expense.setCategoryfinance(mergedCategoryFinance);
-		expense.setCatDescription(mergedCategoryFinance.getCatDescription()); // set the category description
+		expense.setCatDescription(mergedCategoryFinance.getCatDescription());
+		expRepository.save(expense);
+		String curr = expense.getCurrency();
+		double rate = CurrencyExchange.getExchangeRate(curr);
+		double amountininr = expense.getAmount() * rate;
+		expense.setAmountINR(amountininr);
 		return expRepository.save(expense);
 	}
 
@@ -67,7 +75,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 	public Expense updateExpense(Long reportId, Long employeeId) {
 		Expense exp = getExpenseById(employeeId);
 		Reports report = reportServices.getReportById(reportId);
-		if (exp != null ) {    
+		if (exp != null) {
 			exp.setReports(report);
 		}
 		return expRepository.save(exp);
