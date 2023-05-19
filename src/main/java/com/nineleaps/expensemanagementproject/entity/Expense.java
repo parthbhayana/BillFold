@@ -43,6 +43,10 @@ public class Expense {
 	@Column(name = "amount", nullable = false)
 	private Long amount;
 
+	@Column(name = "amount_INR", nullable = false)
+	@ApiModelProperty(hidden = true)
+	private double amountINR;
+
 	@Column(name = "description", nullable = false)
 	private String description;
 
@@ -87,15 +91,16 @@ public class Expense {
 
 	}
 
-	public Expense(Long expenseId, String merchantName, Date date, String currency, Long amount, String description,
-			String catDescription, Boolean isReported, Boolean isHidden, String reportTitle, byte[] supportingDocuments,
-			Employee employee, Reports reports, CategoryFinance categoryfinance) {
+	public Expense(Long expenseId, String merchantName, Date date, String currency, Long amount, double amountINR,
+			String description, String catDescription, Boolean isReported, Boolean isHidden, String reportTitle,
+			byte[] supportingDocuments, Employee employee, Reports reports, CategoryFinance categoryfinance) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
 		this.currency = currency;
 		this.amount = amount;
+		this.amountINR = amountINR;
 		this.description = description;
 		this.catDescription = catDescription;
 		this.isReported = isReported;
@@ -217,6 +222,14 @@ public class Expense {
 
 	public void setReportTitle(String reportTitle) {
 		this.reportTitle = reportTitle;
+	}
+
+	public double getAmountINR() {
+		return amountINR;
+	}
+
+	public void setAmountINR(double amountINR) {
+		this.amountINR = amountINR;
 	}
 
 }
