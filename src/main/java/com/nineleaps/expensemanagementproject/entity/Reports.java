@@ -34,6 +34,7 @@ public class Reports {
 	private Long reportId;
 
 	@Column(name = "report_title", nullable = false)
+	
 	private String reportTitle;
 
 	@Column(name = "report_description")
