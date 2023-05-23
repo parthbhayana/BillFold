@@ -34,7 +34,6 @@ public class Reports {
 	private Long reportId;
 
 	@Column(name = "report_title", nullable = false)
-	
 	private String reportTitle;
 
 	@Column(name = "report_description")
@@ -68,9 +67,16 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	private LocalDate dateCreated;
 
-	@Column(name = "total_amount")
+	@Column(name = "currency")
+	private String currency;
+
+	@Column(name = "total_amount_INR")
 	@ApiModelProperty(hidden = true)
-	private Long totalAmount;
+	private float totalAmountINR;
+
+	@Column(name = "total_amount_currency")
+	@ApiModelProperty(hidden = true)
+	private float totalAmountCurrency;
 
 	@Column(name = "is_hidden", nullable = true)
 	@ApiModelProperty(hidden = true)
@@ -101,8 +107,9 @@ public class Reports {
 
 	public Reports(Long reportId, String reportTitle, String reportDescription, String managerComments,
 			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail,
-			LocalDate dateSubmitted, LocalDate dateCreated, Long totalAmount, Boolean isHidden,
-			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+			LocalDate dateSubmitted, LocalDate dateCreated, String currency, float totalAmountINR,
+			float totalAmountCurrency, Boolean isHidden, FinanceApprovalStatus financeapprovalstatus,
+			ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
 		super();
 		this.reportId = reportId;
 		this.reportTitle = reportTitle;
@@ -114,7 +121,9 @@ public class Reports {
 		this.managerEmail = managerEmail;
 		this.dateSubmitted = dateSubmitted;
 		this.dateCreated = dateCreated;
-		this.totalAmount = totalAmount;
+		this.currency = currency;
+		this.totalAmountINR = totalAmountINR;
+		this.totalAmountCurrency = totalAmountCurrency;
 		this.isHidden = isHidden;
 		this.financeapprovalstatus = financeapprovalstatus;
 		this.managerapprovalstatus = managerapprovalstatus;
@@ -197,16 +206,32 @@ public class Reports {
 		return dateCreated;
 	}
 
-	public void setDateCreated(LocalDate today) {
-		this.dateCreated = today;
+	public void setDateCreated(LocalDate dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
-	public Long getTotalAmount() {
-		return totalAmount;
+	public String getCurrency() {
+		return currency;
 	}
 
-	public void setTotalAmount(Long totalAmount) {
-		this.totalAmount = totalAmount;
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public float getTotalAmountINR() {
+		return totalAmountINR;
+	}
+
+	public void setTotalAmountINR(float totalAmountINR) {
+		this.totalAmountINR = totalAmountINR;
+	}
+
+	public float getTotalAmountCurrency() {
+		return totalAmountCurrency;
+	}
+
+	public void setTotalAmountCurrency(float totalAmountCurrency) {
+		this.totalAmountCurrency = totalAmountCurrency;
 	}
 
 	public Boolean getIsHidden() {

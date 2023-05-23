@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.service; 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.nineleaps.expensemanagementproject.entity.Reports;
@@ -38,5 +39,11 @@ public interface IReportsService {
 
 	public void hideReport(Long reportId);
 	
-	public float totalamount(Long reportId);
+	public float totalamountINR(Long reportId);
+	
+	public float totalamountCurrency(Long reportId);
+	
+	public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate);
+
+	public String getAmountOfReportsInDateRange(LocalDate startDate, LocalDate endDate);
 }

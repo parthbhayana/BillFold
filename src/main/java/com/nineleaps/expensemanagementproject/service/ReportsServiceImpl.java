@@ -55,6 +55,13 @@ public class ReportsServiceImpl implements IReportsService {
 		newReport.setEmployeeMail(employeeEmail);
 		LocalDate today = LocalDate.now();
 		newReport.setDateCreated(today);
+		String currency = null;
+		if (!expenseids.isEmpty()) {
+		    Long firstExpenseId = expenseids.get(0);
+		    Expense ep = expRepo.getExpenseByexpenseId(firstExpenseId);
+		    currency = ep.getCurrency();
+		}
+		newReport.setCurrency(currency);
 		reportsrepository.save(newReport);
 		Long id = newReport.getReportId();
 		List<Expense> expp = expRepo.findAllById(expenseids);
@@ -62,8 +69,12 @@ public class ReportsServiceImpl implements IReportsService {
 		for (Expense expense2 : expp) {
 			amt += expense2.getAmountINR();
 		}
-		long amtAsLong = Math.round(amt);
-		newReport.setTotalAmount(amtAsLong);
+		newReport.setTotalAmountINR(amt);
+		float amtCurrency = 0;
+		for (Expense expense2 : expp) {
+			amtCurrency += expense2.getAmount();
+		}
+		newReport.setTotalAmountCurrency(amtCurrency);
 		addExpenseToReport(id, expenseids);
 		String reportTitle = newReport.getReportTitle();
 		List<Expense> exp = expServices.getExpenseByReportId(id);
@@ -99,9 +110,10 @@ public class ReportsServiceImpl implements IReportsService {
 			expense.setIsReported(reportedStatus);
 			expRepo.save(expense);
 			expServices.updateExpense(reportId, expenseid);
-			float amt = totalamount(reportId);
-			long amtAsLong = Math.round(amt);
-			report.setTotalAmount(amtAsLong);
+			float amt = totalamountINR(reportId);
+			report.setTotalAmountINR(amt);
+			float amtCurrency = totalamountCurrency(reportId);
+			report.setTotalAmountCurrency(amtCurrency);
 			reportsrepository.save(report);
 			String reportTitle = report.getReportTitle();
 			List<Expense> exp = expServices.getExpenseByReportId(reportId);
@@ -142,9 +154,10 @@ public class ReportsServiceImpl implements IReportsService {
 				expRepo.save(exp2);
 			}
 		}
-		float amt = totalamount(reportId);
-		long amtAsLong = Math.round(amt);
-		report.setTotalAmount(amtAsLong);
+		float amt = totalamountINR(reportId);
+		report.setTotalAmountINR(amt);
+		float amtCurrency = totalamountCurrency(reportId);
+		report.setTotalAmountCurrency(amtCurrency);
 		return reportsrepository.save(report);
 	}
 
@@ -209,9 +222,10 @@ public class ReportsServiceImpl implements IReportsService {
 			re.setManagerapprovalstatus(pending);
 			LocalDate today = LocalDate.now();
 			re.setDateSubmitted(today);
-			float amt = totalamount(reportId);
-			long amtAsLong = Math.round(amt);
-			re.setTotalAmount(amtAsLong);
+			float amt = totalamountINR(reportId);
+			re.setTotalAmountINR(amt);
+			float amtCurrency = totalamountCurrency(reportId);
+			re.setTotalAmountCurrency(amtCurrency);
 			re.setManagerEmail(managerMail);
 			reportsrepository.save(re);
 			try {
@@ -300,16 +314,42 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public float totalamount(Long reportId) {
+	public float totalamountINR(Long reportId) {
 		Reports report = reportsrepository.findById(reportId).get();
 		List<Expense> expenses = expRepo.findByReports(report);
 
-		float amt = 0;
+		float amtINR = 0;
 		for (Expense expense2 : expenses) {
-			amt += expense2.getAmountINR();
+			amtINR += expense2.getAmountINR();
 		}
-		return amt;
+		return amtINR;
 	}
+	
+	@Override
+	public float totalamountCurrency(Long reportId) {
+		Reports report = reportsrepository.findById(reportId).get();
+		List<Expense> expenses = expRepo.findByReports(report);
+
+		float amtCurrency = 0;
+		for (Expense expense2 : expenses) {
+			amtCurrency += expense2.getAmountINR();
+		}
+		return amtCurrency;
+	}
+	
+//	@Override
+//	public String totalamountINR(Long reportId) {
+//		Reports report = reportsrepository.findById(reportId).get();
+//		List<Expense> expenses = expRepo.findByReports(report);
+//
+//		float amtINR = 0;
+//		String currency = null;
+//		for (Expense expense2 : expenses) {
+//			amtINR += expense2.getAmountINR();
+//			currency = expense2.getCurrency();
+//		}
+//		return (amtINR+currency);
+//	}
 
 	@Override
 	public void hideReport(Long reportId) {
@@ -318,6 +358,22 @@ public class ReportsServiceImpl implements IReportsService {
 		report.setIsHidden(hidden);
 		reportsrepository.save(report);
 
+	}
+
+	@Override
+	public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate) {
+		List<Reports> reports = reportsrepository.findByDateSubmittedBetween(startDate, endDate);
+		return reports;
+	}
+
+	@Override
+	public String getAmountOfReportsInDateRange(LocalDate startDate, LocalDate endDate) {
+		List<Reports> reports = reportsrepository.findByDateSubmittedBetween(startDate, endDate);
+		float total = 0;
+		for (Reports report2 : reports) {
+			total += report2.getTotalAmountINR();
+		}
+		return (total+" INR");
 	}
 
 }
