@@ -86,8 +86,9 @@ public class ReportsController {
 //	}
 
 	@PostMapping("/submitReport/{reportId}")
-	public void submitReport(@PathVariable Long reportId, @RequestBody String managerMail, HttpServletResponse response)
+	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail, HttpServletResponse response)
 			throws AttributeNotFoundException {
+		System.out.print("---------------------------------------------------------------------------------" + managerMail);
 		try {
 
 			response.setContentType("application/pdf");
@@ -117,6 +118,7 @@ public class ReportsController {
 			}
 			e.printStackTrace();
 		}
+		reportsService.submitReport(reportId, managerMail);
 	}
 
 	@PostMapping("/updateReport/{reportId}")
