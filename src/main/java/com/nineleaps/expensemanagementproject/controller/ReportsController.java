@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.controller;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import javax.management.AttributeNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 //import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -86,9 +88,10 @@ public class ReportsController {
 //	}
 
 	@PostMapping("/submitReport/{reportId}")
-	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail, HttpServletResponse response)
-			throws AttributeNotFoundException {
-		System.out.print("---------------------------------------------------------------------------------" + managerMail);
+	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail,
+			HttpServletResponse response) throws AttributeNotFoundException {
+		System.out.print(
+				"---------------------------------------------------------------------------------" + managerMail);
 		try {
 
 			response.setContentType("application/pdf");
@@ -154,9 +157,28 @@ public class ReportsController {
 	public void hideReport(@PathVariable Long reportId) {
 		reportsService.hideReport(reportId);
 	}
+
+	@GetMapping("/gettotalamountinrbyreportid")
+	public float totalAmountINR(@RequestParam Long reportId) {
+		return reportsService.totalamountINR(reportId);
+	}
 	
-	@GetMapping("/gettotalamountbyreportid")
-	public float totalAmount(@RequestParam Long reportId) {
-		return reportsService.totalamount(reportId);
+	@GetMapping("/gettotalamountcurrencybyreportid")
+	public float totalAmountCurrency(@RequestParam Long reportId) {
+		return reportsService.totalamountCurrency(reportId);
+	}
+	
+	@GetMapping("/getreportsindaterange")
+	public List<Reports> getReportsInDateRange(
+			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+		return reportsService.getReportsInDateRange(startDate, endDate);
+	}
+
+	@GetMapping("/getamountofreportsindaterange")
+	public String getAmountOfReportsInDateRange(
+			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+		return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
 	}
 }
