@@ -82,45 +82,40 @@ public class ReportsController {
 		return reportsService.removeExpenseFromReport(reportId, expenseIds);
 	}
 
-//	@PostMapping("/submitReport")
-//	public Reports submitReport(@RequestParam Long reportId) {
-//		return reportsService.submitReport(reportId);
-//	}
-
 	@PostMapping("/submitReport/{reportId}")
 	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail,
 			HttpServletResponse response) throws AttributeNotFoundException {
-		System.out.print(
-				"---------------------------------------------------------------------------------" + managerMail);
-		try {
-
-			response.setContentType("application/pdf");
-			DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-			String currentDateTime = dateFormatter.format(new Date());
-			String headerKey = "Content-Disposition";
-			String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
-			response.setHeader(headerKey, headerValue);
-			pdfGeneratorService.export(reportId, response);
-
-			reportsService.submitReport(reportId, managerMail);
-			response.setStatus(HttpServletResponse.SC_OK);
-		} catch (Exception e) {
-
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			try {
-				response.getWriter().write("Error exporting PDF");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
-				response.getWriter().flush();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
+//		System.out.print(
+//				"---------------------------------------------------------------------------------" + managerMail);
+//		try {
+//
+//			response.setContentType("application/pdf");
+//			DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+//			String currentDateTime = dateFormatter.format(new Date());
+//			String headerKey = "Content-Disposition";
+//			String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+//			response.setHeader(headerKey, headerValue);
+//			pdfGeneratorService.export(reportId, response);
+//
+//			reportsService.submitReport(reportId, managerMail);
+//			response.setStatus(HttpServletResponse.SC_OK);
+//		} catch (Exception e) {
+//
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//			try {
+//				response.getWriter().write("Error exporting PDF");
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			try {
+//				response.getWriter().flush();
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			e.printStackTrace();
+//		}
 		reportsService.submitReport(reportId, managerMail);
 	}
 
