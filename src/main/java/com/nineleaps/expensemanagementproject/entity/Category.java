@@ -20,8 +20,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-@Table(name = "category_finance")
-public class CategoryFinance {
+@Table(name = "category")
+public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,28 +29,32 @@ public class CategoryFinance {
 	@ApiModelProperty(hidden = true)
 	private Long catId;
 
-	@Column(name = "cat_decription")
+	@Column(name = "category_name")
 	private String catDescription;
+
+	@Column(name = "category_total")
+	@ApiModelProperty(hidden = true)
+	private long categoryTotal;
 
 	@Column(name = "is_hidden", nullable = true)
 	@ApiModelProperty(hidden = true)
 	private Boolean isHidden = false;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "categoryfinance", cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private List<Expense> expenseList = new ArrayList<>();
 
-	public CategoryFinance() {
+	public Category() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CategoryFinance(Long catId, String catDescription, Boolean isHidden, List<Expense> expenseList) {
+	public Category(Long catId, String catDescription, long categoryTotal, Boolean isHidden) {
 		super();
 		this.catId = catId;
 		this.catDescription = catDescription;
+		this.categoryTotal = categoryTotal;
 		this.isHidden = isHidden;
-		this.expenseList = expenseList;
 	}
 
 	public Long getCatId() {
@@ -69,6 +73,14 @@ public class CategoryFinance {
 		this.catDescription = catDescription;
 	}
 
+	public long getCategoryTotal() {
+		return categoryTotal;
+	}
+
+	public void setCategoryTotal(long categoryTotal) {
+		this.categoryTotal = categoryTotal;
+	}
+
 	public Boolean getIsHidden() {
 		return isHidden;
 	}
@@ -76,15 +88,5 @@ public class CategoryFinance {
 	public void setIsHidden(Boolean isHidden) {
 		this.isHidden = isHidden;
 	}
-
-	public List<Expense> getExpenseList() {
-		return expenseList;
-	}
-
-	public void setExpenseList(List<Expense> expenseList) {
-		this.expenseList = expenseList;
-	}
-	
-	
 
 }

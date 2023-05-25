@@ -66,11 +66,6 @@ public class ReportsController {
 		return reportsService.getAllReportsApprovedByManager();
 	}
 
-//	@PostMapping("/addreport/{empId}")
-//	public Reports addReport(@RequestBody Reports newReport, @PathVariable("empId") Long employeeId) {
-//		return reportsService.addReport(newReport, employeeId);
-//	}
-
 	@PostMapping("/addreport/{empId}")
 	public Reports addReport(@RequestBody Reports newReport, @PathVariable("empId") Long employeeId,
 			@RequestParam ArrayList<Long> expenseIds) {
@@ -80,6 +75,11 @@ public class ReportsController {
 	@PatchMapping("/addexpensetoreport/{reportId}")
 	public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
 		return reportsService.addExpenseToReport(reportId, expenseIds);
+	}
+
+	@PatchMapping("/removeexpensesfromreport/{reportId}")
+	public Reports removeExpenseFromReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
+		return reportsService.removeExpenseFromReport(reportId, expenseIds);
 	}
 
 //	@PostMapping("/submitReport")
@@ -129,6 +129,12 @@ public class ReportsController {
 		return reportsService.updateReport(report, reportId);
 	}
 
+	@PostMapping("/editreport/{reportId}")
+	public Reports editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
+			@RequestParam String reportDescription, @RequestParam ArrayList<Long> expenseIds) {
+		return reportsService.editReport(reportId, reportTitle, reportDescription, expenseIds);
+	}
+
 	@PostMapping("/approveReportByManager/{reportId}")
 	public Reports approveReportbymanager(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
@@ -162,12 +168,12 @@ public class ReportsController {
 	public float totalAmountINR(@RequestParam Long reportId) {
 		return reportsService.totalamountINR(reportId);
 	}
-	
+
 	@GetMapping("/gettotalamountcurrencybyreportid")
 	public float totalAmountCurrency(@RequestParam Long reportId) {
 		return reportsService.totalamountCurrency(reportId);
 	}
-	
+
 	@GetMapping("/getreportsindaterange")
 	public List<Reports> getReportsInDateRange(
 			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
