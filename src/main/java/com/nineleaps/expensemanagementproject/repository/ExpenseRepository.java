@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,9 +13,14 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
 	List<Expense> findByReports(Reports reports);
+
 	Optional<Expense> findReportByEmployee(Long fkEmpId);
-	
+
 	List<Expense> findByEmployee(Employee employee);
+
 	List<Expense> findByEmployeeAndIsReported(Employee employee, boolean b);
-//	List<Expense> findByManagerEmail(String managerEmail);
-}
+
+	Expense getExpenseByexpenseId(Long expenseID);
+	
+	List<Expense> findByDateBetween(LocalDate startDate, LocalDate endDate);
+}  

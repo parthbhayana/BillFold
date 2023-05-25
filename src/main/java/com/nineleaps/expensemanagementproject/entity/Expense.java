@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,7 +36,7 @@ public class Expense {
 	private String merchantName;
 
 	@Column(name = "date", nullable = false)
-	private Date date;
+	private LocalDate date;
 
 	@Column(name = "currency")
 	private String currency;
@@ -45,7 +46,7 @@ public class Expense {
 
 	@Column(name = "amount_INR", nullable = false)
 	@ApiModelProperty(hidden = true)
-	private double amountINR;
+	private float amountINR;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -85,15 +86,15 @@ public class Expense {
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "category_id")
-	private CategoryFinance categoryfinance;
+	private Category categoryfinance;
 
 	public Expense() {
 
 	}
 
-	public Expense(Long expenseId, String merchantName, Date date, String currency, Long amount, double amountINR,
+	public Expense(Long expenseId, String merchantName, LocalDate date, String currency, Long amount, float amountINR,
 			String description, String catDescription, Boolean isReported, Boolean isHidden, String reportTitle,
-			byte[] supportingDocuments, Employee employee, Reports reports, CategoryFinance categoryfinance) {
+			byte[] supportingDocuments, Employee employee, Reports reports, Category categoryfinance) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
@@ -128,11 +129,11 @@ public class Expense {
 		this.merchantName = merchantName;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -208,11 +209,11 @@ public class Expense {
 		this.reports = reports;
 	}
 
-	public CategoryFinance getCategoryfinance() {
+	public Category getCategoryfinance() {
 		return categoryfinance;
 	}
 
-	public void setCategoryfinance(CategoryFinance categoryfinance) {
+	public void setCategoryfinance(Category categoryfinance) {
 		this.categoryfinance = categoryfinance;
 	}
 
@@ -224,11 +225,11 @@ public class Expense {
 		this.reportTitle = reportTitle;
 	}
 
-	public double getAmountINR() {
+	public float getAmountINR() {
 		return amountINR;
 	}
 
-	public void setAmountINR(double amountINR) {
+	public void setAmountINR(float amountINR) {
 		this.amountINR = amountINR;
 	}
 

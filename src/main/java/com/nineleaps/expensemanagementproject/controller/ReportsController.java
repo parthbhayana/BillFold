@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.controller;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import javax.management.AttributeNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 //import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -64,11 +66,6 @@ public class ReportsController {
 		return reportsService.getAllReportsApprovedByManager();
 	}
 
-//	@PostMapping("/addreport/{empId}")
-//	public Reports addReport(@RequestBody Reports newReport, @PathVariable("empId") Long employeeId) {
-//		return reportsService.addReport(newReport, employeeId);
-//	}
-
 	@PostMapping("/addreport/{empId}")
 	public Reports addReport(@RequestBody Reports newReport, @PathVariable("empId") Long employeeId,
 			@RequestParam ArrayList<Long> expenseIds) {
@@ -80,15 +77,21 @@ public class ReportsController {
 		return reportsService.addExpenseToReport(reportId, expenseIds);
 	}
 
+	@PatchMapping("/removeexpensesfromreport/{reportId}")
+	public Reports removeExpenseFromReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
+		return reportsService.removeExpenseFromReport(reportId, expenseIds);
+	}
+
 //	@PostMapping("/submitReport")
 //	public Reports submitReport(@RequestParam Long reportId) {
 //		return reportsService.submitReport(reportId);
 //	}
 
 	@PostMapping("/submitReport/{reportId}")
-	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail, HttpServletResponse response)
-			throws AttributeNotFoundException {
-		System.out.print("---------------------------------------------------------------------------------" + managerMail);
+	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail,
+			HttpServletResponse response) throws AttributeNotFoundException {
+		System.out.print(
+				"---------------------------------------------------------------------------------" + managerMail);
 		try {
 
 			response.setContentType("application/pdf");
@@ -126,6 +129,12 @@ public class ReportsController {
 		return reportsService.updateReport(report, reportId);
 	}
 
+	@PostMapping("/editreport/{reportId}")
+	public Reports editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
+			@RequestParam String reportDescription, @RequestParam ArrayList<Long> expenseIds) {
+		return reportsService.editReport(reportId, reportTitle, reportDescription, expenseIds);
+	}
+
 	@PostMapping("/approveReportByManager/{reportId}")
 	public Reports approveReportbymanager(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
@@ -154,9 +163,28 @@ public class ReportsController {
 	public void hideReport(@PathVariable Long reportId) {
 		reportsService.hideReport(reportId);
 	}
-	
-	@GetMapping("/gettotalamountbyreportid")
-	public float totalAmount(@RequestParam Long reportId) {
-		return reportsService.totalamount(reportId);
+
+	@GetMapping("/gettotalamountinrbyreportid")
+	public float totalAmountINR(@RequestParam Long reportId) {
+		return reportsService.totalamountINR(reportId);
+	}
+
+	@GetMapping("/gettotalamountcurrencybyreportid")
+	public float totalAmountCurrency(@RequestParam Long reportId) {
+		return reportsService.totalamountCurrency(reportId);
+	}
+
+	@GetMapping("/getreportsindaterange")
+	public List<Reports> getReportsInDateRange(
+			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+		return reportsService.getReportsInDateRange(startDate, endDate);
+	}
+
+	@GetMapping("/getamountofreportsindaterange")
+	public String getAmountOfReportsInDateRange(
+			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+		return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
 	}
 }

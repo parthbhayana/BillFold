@@ -55,6 +55,13 @@ public class ReportsServiceImpl implements IReportsService {
 		newReport.setEmployeeMail(employeeEmail);
 		LocalDate today = LocalDate.now();
 		newReport.setDateCreated(today);
+		String currency = null;
+		if (!expenseids.isEmpty()) {
+			Long firstExpenseId = expenseids.get(0);
+			Expense ep = expRepo.getExpenseByexpenseId(firstExpenseId);
+			currency = ep.getCurrency();
+		}
+		newReport.setCurrency(currency);
 		reportsrepository.save(newReport);
 		Long id = newReport.getReportId();
 		List<Expense> expp = expRepo.findAllById(expenseids);
@@ -62,8 +69,12 @@ public class ReportsServiceImpl implements IReportsService {
 		for (Expense expense2 : expp) {
 			amt += expense2.getAmountINR();
 		}
-		long amtAsLong = Math.round(amt);
-		newReport.setTotalAmount(amtAsLong);
+		newReport.setTotalAmountINR(amt);
+		float amtCurrency = 0;
+		for (Expense expense2 : expp) {
+			amtCurrency += expense2.getAmount();
+		}
+		newReport.setTotalAmountCurrency(amtCurrency);
 		addExpenseToReport(id, expenseids);
 		String reportTitle = newReport.getReportTitle();
 		List<Expense> exp = expServices.getExpenseByReportId(id);
@@ -82,42 +93,72 @@ public class ReportsServiceImpl implements IReportsService {
 		if (re != null && re.getIsHidden() != true) {
 			re.setReportTitle(report.getReportTitle());
 			re.setReportDescription(report.getReportDescription());
+			List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+			for (Expense exp : expenseList) {
+				if (exp != null) {
+					exp.setReportTitle(report.getReportTitle());
+				}
+			}
 		}
 		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports addExpenseToReport(Long reportId, Long expenseid) {
-		boolean reportedStatus = true;
+	public Reports editReport(Long reportId, String reportTitle, String reportDescription, List<Long> expenseIds) {
 		Reports report = getReportById(reportId);
-		Expense expense = expServices.getExpenseById(expenseid);
 		if (report == null || report.getIsHidden() == true) {
 			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
-		} else if (expense.getIsReported() == true) {
-			throw new IllegalStateException("Expense with ID " + expenseid + " is already reported in another report!");
-		} else if (report != null && expense.getIsReported() != true) {
-			expense.setIsReported(reportedStatus);
-			expRepo.save(expense);
-			expServices.updateExpense(reportId, expenseid);
-			float amt = totalamount(reportId);
-			long amtAsLong = Math.round(amt);
-			report.setTotalAmount(amtAsLong);
+		}
+		if (report != null && report.getIsHidden() != true) {
+			report.setReportTitle(reportTitle);
+			report.setReportDescription(reportDescription);
 			reportsrepository.save(report);
-			String reportTitle = report.getReportTitle();
-			List<Expense> exp = expServices.getExpenseByReportId(reportId);
-			for (Expense exp2 : exp) {
-				if (exp2 != null) {
-					exp2.setReportTitle(reportTitle);
-					expRepo.save(exp2);
+			List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+			for (Expense exp : expenseList) {
+				if (exp != null) {
+					exp.setReportTitle(reportTitle);
+					expRepo.save(exp);
+				}
+			}
+			boolean reportedStatus = false;
+			for (Long expenseid : expenseIds) {
+				Expense expense = expServices.getExpenseById(expenseid);
+				if (report != null && expense.getIsReported() == true) {
+					expense.setIsReported(reportedStatus);
+					expense.setReports(null);
+					expense.setReportTitle(null);
+					expRepo.save(expense);
 				}
 			}
 		}
-		return report;
+		Reports re = getReportById(reportId);
+		re.setTotalAmountINR(totalamountINR(reportId));
+		re.setTotalAmountCurrency(totalamountCurrency(reportId));
+		reportsrepository.save(re);
+		return null;
+	}
+
+	@Override
+	public Reports removeExpenseFromReport(Long reportId, List<Long> expenseIds) {
+		boolean reportedStatus = false;
+		Reports report = getReportById(reportId);
+		if (report == null || report.getIsHidden() == true) {
+			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
+		}
+		for (Long expenseid : expenseIds) {
+			Expense expense = expServices.getExpenseById(expenseid);
+			if (report != null && expense.getIsReported() == true) {
+				expense.setIsReported(reportedStatus);
+				expense.setReports(null);
+				expense.setReportTitle(null);
+				expRepo.save(expense);
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public Reports addExpenseToReport(Long reportId, List<Long> expenseids) {
-		boolean reportedStatus = true;
 		Reports report = getReportById(reportId);
 		if (report == null || report.getIsHidden() == true) {
 			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
@@ -129,23 +170,13 @@ public class ReportsServiceImpl implements IReportsService {
 						"Expense with ID " + expenseid + " is already reported in another report!");
 			}
 			if (report != null && expense.getIsReported() != true) {
-				expense.setIsReported(reportedStatus);
-				expRepo.save(expense);
 				expServices.updateExpense(reportId, expenseid);
 			}
 		}
-		String reportTitle = report.getReportTitle();
-		List<Expense> exp = expServices.getExpenseByReportId(reportId);
-		for (Expense exp2 : exp) {
-			if (exp2 != null) {
-				exp2.setReportTitle(reportTitle);
-				expRepo.save(exp2);
-			}
-		}
-		float amt = totalamount(reportId);
-		long amtAsLong = Math.round(amt);
-		report.setTotalAmount(amtAsLong);
-		return reportsrepository.save(report);
+		Reports re = getReportById(reportId);
+		re.setTotalAmountINR(totalamountINR(reportId));
+		re.setTotalAmountCurrency(totalamountCurrency(reportId));
+		return reportsrepository.save(re);
 	}
 
 	@Override
@@ -209,9 +240,8 @@ public class ReportsServiceImpl implements IReportsService {
 			re.setManagerapprovalstatus(pending);
 			LocalDate today = LocalDate.now();
 			re.setDateSubmitted(today);
-			float amt = totalamount(reportId);
-			long amtAsLong = Math.round(amt);
-			re.setTotalAmount(amtAsLong);
+			re.setTotalAmountINR(totalamountINR(reportId));
+			re.setTotalAmountCurrency(totalamountCurrency(reportId));
 			re.setManagerEmail(managerMail);
 			reportsrepository.save(re);
 			try {
@@ -300,16 +330,42 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public float totalamount(Long reportId) {
+	public float totalamountINR(Long reportId) {
 		Reports report = reportsrepository.findById(reportId).get();
 		List<Expense> expenses = expRepo.findByReports(report);
 
-		float amt = 0;
+		float amtINR = 0;
 		for (Expense expense2 : expenses) {
-			amt += expense2.getAmountINR();
+			amtINR += expense2.getAmountINR();
 		}
-		return amt;
+		return amtINR;
 	}
+
+	@Override
+	public float totalamountCurrency(Long reportId) {
+		Reports report = reportsrepository.findById(reportId).get();
+		List<Expense> expenses = expRepo.findByReports(report);
+
+		float amtCurrency = 0;
+		for (Expense expense2 : expenses) {
+			amtCurrency += expense2.getAmount();
+		}
+		return amtCurrency;
+	}
+
+//	@Override
+//	public String totalamountINR(Long reportId) {
+//		Reports report = reportsrepository.findById(reportId).get();
+//		List<Expense> expenses = expRepo.findByReports(report);
+//
+//		float amtINR = 0;
+//		String currency = null;
+//		for (Expense expense2 : expenses) {
+//			amtINR += expense2.getAmountINR();
+//			currency = expense2.getCurrency();
+//		}
+//		return (amtINR+currency);
+//	}
 
 	@Override
 	public void hideReport(Long reportId) {
@@ -318,6 +374,22 @@ public class ReportsServiceImpl implements IReportsService {
 		report.setIsHidden(hidden);
 		reportsrepository.save(report);
 
+	}
+
+	@Override
+	public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate) {
+		List<Reports> reports = reportsrepository.findByDateSubmittedBetween(startDate, endDate);
+		return reports;
+	}
+
+	@Override
+	public String getAmountOfReportsInDateRange(LocalDate startDate, LocalDate endDate) {
+		List<Reports> reports = reportsrepository.findByDateSubmittedBetween(startDate, endDate);
+		float total = 0;
+		for (Reports report2 : reports) {
+			total += report2.getTotalAmountINR();
+		}
+		return (total + " INR");
 	}
 
 }

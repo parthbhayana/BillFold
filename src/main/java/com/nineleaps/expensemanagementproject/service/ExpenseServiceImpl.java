@@ -8,7 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nineleaps.expensemanagementproject.entity.CategoryFinance;
+import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
@@ -47,17 +47,17 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Override
 	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
 		Employee empDetails = employeeSERVICES.getEmployeeDetailsById(employeeid);
-		CategoryFinance catfin = catrepository.findById(catId).get();
+		Category catfin = catrepository.findById(catId).get();
 		expense.setEmployee(empDetails);
 		expense.setCategoryfinance(catfin);
-		CategoryFinance mergedCategoryFinance = entityManager.merge(catfin);
+		Category mergedCategoryFinance = entityManager.merge(catfin);
 		expense.setCategoryfinance(mergedCategoryFinance);
 		expense.setCatDescription(mergedCategoryFinance.getCatDescription());
 		expRepository.save(expense);
 		String curr = expense.getCurrency();
 		double rate = CurrencyExchange.getExchangeRate(curr);
 		double amountininr = expense.getAmount() * rate;
-		expense.setAmountINR(amountininr);
+		expense.setAmountINR((float) amountininr);
 		return expRepository.save(expense);
 	}
 
@@ -71,12 +71,26 @@ public class ExpenseServiceImpl implements IExpenseService {
 		return expRepository.findById(expenseId).get();
 	}
 
+//	@Override
+//	public Expense updateExpense(Long reportId, Long employeeId) {
+//		Expense exp = getExpenseById(employeeId);
+//		Reports report = reportServices.getReportById(reportId);
+//		if (exp != null) {
+//			exp.setReports(report);
+//		}
+//		return expRepository.save(exp);
+//	}
+	
 	@Override
 	public Expense updateExpense(Long reportId, Long employeeId) {
 		Expense exp = getExpenseById(employeeId);
 		Reports report = reportServices.getReportById(reportId);
+		String reportTitle = report.getReportTitle();
+		boolean reportedStatus = true;
 		if (exp != null) {
 			exp.setReports(report);
+			exp.setIsReported(reportedStatus);
+			exp.setReportTitle(reportTitle);
 		}
 		return expRepository.save(exp);
 	}

@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,6 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 	Optional<Reports> findById(Long id);
 
 	List<Reports> findByManagerEmail(String managerEmail);
+
+	List<Reports> findByDateSubmittedBetween(LocalDate startDate, LocalDate endDate);
 }
