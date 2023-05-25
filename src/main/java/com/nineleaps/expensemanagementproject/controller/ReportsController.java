@@ -129,8 +129,8 @@ public class ReportsController {
 		return reportsService.updateReport(report, reportId);
 	}
 
-	@PostMapping("/editreport/{reportId}")
-	public Reports editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
+	@PatchMapping("/editreport/{reportId}")
+	public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
 			@RequestParam String reportDescription, @RequestParam ArrayList<Long> expenseIds) {
 		return reportsService.editReport(reportId, reportTitle, reportDescription, expenseIds);
 	}

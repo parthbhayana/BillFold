@@ -34,6 +34,9 @@ public class ReportsServiceImpl implements IReportsService {
 
 	@Autowired
 	private IEmployeeService empServices;
+	
+	@Autowired
+	private IEmailSenderService emailService;
 
 	@Override
 	public List<Reports> getAllReports() {
@@ -104,7 +107,7 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports editReport(Long reportId, String reportTitle, String reportDescription, List<Long> expenseIds) {
+	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription, List<Long> expenseIds) {
 		Reports report = getReportById(reportId);
 		if (report == null || report.getIsHidden() == true) {
 			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
@@ -134,8 +137,12 @@ public class ReportsServiceImpl implements IReportsService {
 		Reports re = getReportById(reportId);
 		re.setTotalAmountINR(totalamountINR(reportId));
 		re.setTotalAmountCurrency(totalamountCurrency(reportId));
-		reportsrepository.save(re);
-		return null;
+		//Fetching Employee ID
+				List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+				Expense expense = expenseList.get(0);
+				Employee employee = expense.getEmployee();
+				Long empId = employee.getEmployeeId();
+				return getReportByEmpId(empId);
 	}
 
 	@Override
@@ -251,6 +258,14 @@ public class ReportsServiceImpl implements IReportsService {
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
 			}
+			//Email Functionality Integration
+			//----------------------------------------------------------------------------------
+			List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+			Expense expense = expenseList.get(0);
+			Employee employee = expense.getEmployee();
+			Long empId = employee.getEmployeeId();
+			emailService.sendEmail(empId);
+			//----------------------------------------------------------------------------------
 		}
 		return reportsrepository.save(re);
 
