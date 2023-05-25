@@ -68,6 +68,7 @@ public class Reports {
 	private LocalDate dateCreated;
 
 	@Column(name = "currency")
+	@ApiModelProperty(hidden = true)
 	private String currency;
 
 	@Column(name = "total_amount_INR")
