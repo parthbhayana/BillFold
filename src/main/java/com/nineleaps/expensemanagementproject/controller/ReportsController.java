@@ -174,6 +174,12 @@ public class ReportsController {
 		return reportsService.getReportsInDateRange(startDate, endDate);
 	}
 
+//	@GetMapping("/getreportsindaterange")
+//    public List<Reports> getReportsInDateRange(
+//            @RequestBody LocalDate startDate,
+//            @RequestBody LocalDate endDate) {
+//        return reportsService.getReportsInDateRange(startDate, endDate);
+//    }
 	@GetMapping("/getamountofreportsindaterange")
 	public String getAmountOfReportsInDateRange(
 			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,

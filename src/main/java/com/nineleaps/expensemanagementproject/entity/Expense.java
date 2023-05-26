@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,7 +36,12 @@ public class Expense {
 	private String merchantName;
 
 	@Column(name = "date", nullable = false)
+	@ApiModelProperty(hidden = true)
 	private LocalDate date;
+
+	@Column(name = "created_time", nullable = false)
+	@ApiModelProperty(hidden = true)
+	private LocalTime time;
 
 	@Column(name = "currency")
 	private String currency;
@@ -91,13 +97,15 @@ public class Expense {
 
 	}
 
-	public Expense(Long expenseId, String merchantName, LocalDate date, String currency, Long amount, float amountINR,
-			String description, String catDescription, Boolean isReported, Boolean isHidden, String reportTitle,
-			byte[] supportingDocuments, Employee employee, Reports reports, Category categoryfinance) {
+	public Expense(Long expenseId, String merchantName, LocalDate date, LocalTime time, String currency, Long amount,
+			float amountINR, String description, String catDescription, Boolean isReported, Boolean isHidden,
+			String reportTitle, byte[] supportingDocuments, Employee employee, Reports reports,
+			Category categoryfinance) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
+		this.time = time;
 		this.currency = currency;
 		this.amount = amount;
 		this.amountINR = amountINR;
@@ -134,6 +142,14 @@ public class Expense {
 
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+
+	public LocalTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalTime time) {
+		this.time = time;
 	}
 
 	public String getCurrency() {

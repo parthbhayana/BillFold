@@ -383,7 +383,15 @@ public class ReportsServiceImpl implements IReportsService {
 	@Override
 	public void hideReport(Long reportId) {
 		Boolean hidden = true;
+		Boolean isReported = false;
 		Reports report = getReportById(reportId);
+		List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+		for(Expense exp : expenseList) {
+			exp.setIsReported(isReported);
+			exp.setReports(null);
+			exp.setReportTitle(null);
+			expRepo.save(exp);
+		}
 		report.setIsHidden(hidden);
 		reportsrepository.save(report);
 
