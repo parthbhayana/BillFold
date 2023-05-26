@@ -21,13 +21,13 @@ public interface IReportsService {
 
 	public Reports submitReport(Long reportId, String managerMail);
 
-	public Reports approveReportByManager(Long reportId, String comments);
+	public void approveReportByManager(Long reportId, String comments);
 
-	public Reports rejectReportByManager(Long reportId, String comments);
+	public void rejectReportByManager(Long reportId, String comments);
 
-	public Reports approveReportByFinance(Long reportId, String comments);
+	public void approveReportByFinance(Long reportId, String comments);
 
-	public Reports rejectReportByFinance(Long reportId, String comments);
+	public void rejectReportByFinance(Long reportId, String comments);
 
 	public List<Reports> getAllSubmittedReports();
 
@@ -47,5 +47,5 @@ public interface IReportsService {
 
 	public Reports removeExpenseFromReport(Long reportId, List<Long> expenseIds);
 
-	public Reports editReport(Long reportId, String reportTitle, String reportDescription, List<Long> expenseids);
+	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription, List<Long> expenseids);
 }

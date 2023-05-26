@@ -82,11 +82,6 @@ public class ReportsController {
 		return reportsService.removeExpenseFromReport(reportId, expenseIds);
 	}
 
-//	@PostMapping("/submitReport")
-//	public Reports submitReport(@RequestParam Long reportId) {
-//		return reportsService.submitReport(reportId);
-//	}
-
 	@PostMapping("/submitReport/{reportId}")
 	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail,
 			HttpServletResponse response) throws AttributeNotFoundException {
@@ -110,13 +105,11 @@ public class ReportsController {
 			try {
 				response.getWriter().write("Error exporting PDF");
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
 				response.getWriter().flush();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
@@ -129,34 +122,34 @@ public class ReportsController {
 		return reportsService.updateReport(report, reportId);
 	}
 
-	@PostMapping("/editreport/{reportId}")
-	public Reports editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
+	@PatchMapping("/editreport/{reportId}")
+	public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
 			@RequestParam String reportDescription, @RequestParam ArrayList<Long> expenseIds) {
 		return reportsService.editReport(reportId, reportTitle, reportDescription, expenseIds);
 	}
 
 	@PostMapping("/approveReportByManager/{reportId}")
-	public Reports approveReportbymanager(@PathVariable Long reportId,
+	public void approveReportbymanager(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		return reportsService.approveReportByManager(reportId, Comments);
+		reportsService.approveReportByManager(reportId, Comments);
 	}
 
 	@PostMapping("/rejectReportByManager/{reportId}")
-	public Reports rejectReportbymanager(@PathVariable Long reportId,
+	public void rejectReportbymanager(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		return reportsService.rejectReportByManager(reportId, Comments);
+		reportsService.rejectReportByManager(reportId, Comments);
 	}
 
 	@PostMapping("/approveReportByFinance/{reportId}")
-	public Reports approveReportbyfinance(@PathVariable Long reportId,
+	public void approveReportbyfinance(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		return reportsService.approveReportByFinance(reportId, Comments);
+		reportsService.approveReportByFinance(reportId, Comments);
 	}
 
 	@PostMapping("/rejectReportByFinance/{reportId}")
-	public Reports rejectReportbyfinance(@PathVariable Long reportId,
+	public void rejectReportbyfinance(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		return reportsService.rejectReportByFinance(reportId, Comments);
+		reportsService.rejectReportByFinance(reportId, Comments);
 	}
 
 	@PostMapping("/hidereport/{reportId}")

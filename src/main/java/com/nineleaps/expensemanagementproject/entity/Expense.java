@@ -1,6 +1,5 @@
 package com.nineleaps.expensemanagementproject.entity;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 import javax.persistence.CascadeType;

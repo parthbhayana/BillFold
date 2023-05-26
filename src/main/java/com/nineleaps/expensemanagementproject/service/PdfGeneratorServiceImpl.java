@@ -55,7 +55,11 @@ public class PdfGeneratorServiceImpl {
 		fontParagraph.setSize(14);
 		Reports report = reportsRepository.findById(reportId).get();
 		List<Expense> expenses = expenseRepository.findByReports(report);
-		Employee employee = employeeRepository.findById(expenses.get(0).getEmployee().getEmployeeId()).orElse(null);
+		Employee employee = null;
+		if (!expenses.isEmpty()) {
+			Expense firstExpense = expenses.get(0);
+			employee = employeeRepository.findById(firstExpense.getEmployee().getEmployeeId()).orElse(null);
+		}
 		float total = 0;
 		for (Expense expense : expenses) {
 			table.addCell(expense.getDate().toString());
@@ -70,6 +74,7 @@ public class PdfGeneratorServiceImpl {
 		pdfParagraph01.setAlignment(Paragraph.ALIGN_LEFT);
 		Font fontParagraph11 = FontFactory.getFont(FontFactory.TIMES);
 		fontParagraph11.setSize(14);
+		@SuppressWarnings("null")
 		Paragraph pdfParagraph = new Paragraph(
 				"Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
 		pdfParagraph.setAlignment(Paragraph.ALIGN_LEFT);

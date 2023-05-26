@@ -35,6 +35,9 @@ public class ReportsServiceImpl implements IReportsService {
 	@Autowired
 	private IEmployeeService empServices;
 
+	@Autowired
+	private IEmailService emailService;
+
 	@Override
 	public List<Reports> getAllReports() {
 		return reportsrepository.findAll();
@@ -104,7 +107,8 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports editReport(Long reportId, String reportTitle, String reportDescription, List<Long> expenseIds) {
+	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
+			List<Long> expenseIds) {
 		Reports report = getReportById(reportId);
 		if (report == null || report.getIsHidden() == true) {
 			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
@@ -134,8 +138,12 @@ public class ReportsServiceImpl implements IReportsService {
 		Reports re = getReportById(reportId);
 		re.setTotalAmountINR(totalamountINR(reportId));
 		re.setTotalAmountCurrency(totalamountCurrency(reportId));
-		reportsrepository.save(re);
-		return null;
+		// Fetching Employee ID
+		List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+		Expense expense = expenseList.get(0);
+		Employee employee = expense.getEmployee();
+		Long empId = employee.getEmployeeId();
+		return getReportByEmpId(empId);
 	}
 
 	@Override
@@ -235,7 +243,13 @@ public class ReportsServiceImpl implements IReportsService {
 		boolean submissionStatus = true;
 		ManagerApprovalStatus pending = ManagerApprovalStatus.PENDING;
 		Reports re = getReportById(reportId);
-		if (re != null) {
+		if (re == null || re.getIsHidden() == true) {
+			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
+		}
+		if (re != null && re.getIsSubmitted() == submissionStatus) {
+			throw new IllegalStateException("Report with ID " + reportId + " is already submitted!");
+		}
+		if (re != null && re.getIsSubmitted() != submissionStatus) {
 			re.setIsSubmitted(submissionStatus);
 			re.setManagerapprovalstatus(pending);
 			LocalDate today = LocalDate.now();
@@ -244,6 +258,8 @@ public class ReportsServiceImpl implements IReportsService {
 			re.setTotalAmountCurrency(totalamountCurrency(reportId));
 			re.setManagerEmail(managerMail);
 			reportsrepository.save(re);
+			// Email Functionality Integration
+			emailService.managerNotification(reportId);
 			try {
 				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
 				decodedEmail = decodedEmail.replace("=", "");
@@ -257,7 +273,7 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports approveReportByManager(Long reportId, String comments) {
+	public void approveReportByManager(Long reportId, String comments) {
 		ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.APPROVED;
 		FinanceApprovalStatus pending = FinanceApprovalStatus.PENDING;
 		Reports re = getReportById(reportId);
@@ -271,13 +287,15 @@ public class ReportsServiceImpl implements IReportsService {
 			re.setManagerapprovalstatus(approvalStatus);
 			re.setManagerComments(comments);
 			re.setFinanceapprovalstatus(pending);
+			LocalDate today = LocalDate.now();
+			re.setManagerActionDate(today);
+			reportsrepository.save(re);
+			emailService.userApprovedNotification(reportId);
 		}
-
-		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports rejectReportByManager(Long reportId, String comments) {
+	public void rejectReportByManager(Long reportId, String comments) {
 		ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.REJECTED;
 		Reports re = getReportById(reportId);
 		if (re.getIsSubmitted() == false) {
@@ -289,12 +307,15 @@ public class ReportsServiceImpl implements IReportsService {
 		if (re != null && re.getIsHidden() == false && re.getIsSubmitted() == true) {
 			re.setManagerapprovalstatus(approvalStatus);
 			re.setManagerComments(comments);
+			LocalDate today = LocalDate.now();
+			re.setManagerActionDate(today);
+			reportsrepository.save(re);
+			emailService.userRejectedNotification(reportId);
 		}
-		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports approveReportByFinance(Long reportId, String comments) {
+	public void approveReportByFinance(Long reportId, String comments) {
 		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REIMBURSED;
 		Reports re = getReportById(reportId);
 		if (re.getIsSubmitted() == false) {
@@ -307,13 +328,16 @@ public class ReportsServiceImpl implements IReportsService {
 				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
 			re.setFinanceapprovalstatus(approvalStatus);
 			re.setFinanceComments(comments);
+			LocalDate today = LocalDate.now();
+			re.setFinanceActionDate(today);
+			reportsrepository.save(re);
+			emailService.financeReimbursedNotification(reportId);
 		}
-		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports rejectReportByFinance(Long reportId, String comments) {
-		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECT;
+	public void rejectReportByFinance(Long reportId, String comments) {
+		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECTED;
 		Reports re = getReportById(reportId);
 		if (re.getIsSubmitted() == false) {
 			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
@@ -325,8 +349,11 @@ public class ReportsServiceImpl implements IReportsService {
 				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
 			re.setFinanceapprovalstatus(approvalStatus);
 			re.setFinanceComments(comments);
+			LocalDate today = LocalDate.now();
+			re.setFinanceActionDate(today);
+			reportsrepository.save(re);
+			emailService.financeRejectedNotification(reportId);
 		}
-		return reportsrepository.save(re);
 	}
 
 	@Override
@@ -352,20 +379,6 @@ public class ReportsServiceImpl implements IReportsService {
 		}
 		return amtCurrency;
 	}
-
-//	@Override
-//	public String totalamountINR(Long reportId) {
-//		Reports report = reportsrepository.findById(reportId).get();
-//		List<Expense> expenses = expRepo.findByReports(report);
-//
-//		float amtINR = 0;
-//		String currency = null;
-//		for (Expense expense2 : expenses) {
-//			amtINR += expense2.getAmountINR();
-//			currency = expense2.getCurrency();
-//		}
-//		return (amtINR+currency);
-//	}
 
 	@Override
 	public void hideReport(Long reportId) {
