@@ -85,37 +85,35 @@ public class ReportsController {
 	@PostMapping("/submitReport/{reportId}")
 	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail,
 			HttpServletResponse response) throws AttributeNotFoundException {
-//		System.out.print(
-//				"---------------------------------------------------------------------------------" + managerMail);
-//		try {
-//
-//			response.setContentType("application/pdf");
-//			DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-//			String currentDateTime = dateFormatter.format(new Date());
-//			String headerKey = "Content-Disposition";
-//			String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
-//			response.setHeader(headerKey, headerValue);
-//			pdfGeneratorService.export(reportId, response);
-//
-//			reportsService.submitReport(reportId, managerMail);
-//			response.setStatus(HttpServletResponse.SC_OK);
-//		} catch (Exception e) {
-//
-//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//			try {
-//				response.getWriter().write("Error exporting PDF");
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			try {
-//				response.getWriter().flush();
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			e.printStackTrace();
-//		}
+		System.out.print(
+				"---------------------------------------------------------------------------------" + managerMail);
+		try {
+
+			response.setContentType("application/pdf");
+			DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+			String currentDateTime = dateFormatter.format(new Date());
+			String headerKey = "Content-Disposition";
+			String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+			response.setHeader(headerKey, headerValue);
+			pdfGeneratorService.export(reportId, response);
+
+			reportsService.submitReport(reportId, managerMail);
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			try {
+				response.getWriter().write("Error exporting PDF");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			try {
+				response.getWriter().flush();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 		reportsService.submitReport(reportId, managerMail);
 	}
 
@@ -131,27 +129,27 @@ public class ReportsController {
 	}
 
 	@PostMapping("/approveReportByManager/{reportId}")
-	public Reports approveReportbymanager(@PathVariable Long reportId,
+	public void approveReportbymanager(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		return reportsService.approveReportByManager(reportId, Comments);
+		reportsService.approveReportByManager(reportId, Comments);
 	}
 
 	@PostMapping("/rejectReportByManager/{reportId}")
-	public Reports rejectReportbymanager(@PathVariable Long reportId,
+	public void rejectReportbymanager(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		return reportsService.rejectReportByManager(reportId, Comments);
+		reportsService.rejectReportByManager(reportId, Comments);
 	}
 
 	@PostMapping("/approveReportByFinance/{reportId}")
-	public Reports approveReportbyfinance(@PathVariable Long reportId,
+	public void approveReportbyfinance(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		return reportsService.approveReportByFinance(reportId, Comments);
+		reportsService.approveReportByFinance(reportId, Comments);
 	}
 
 	@PostMapping("/rejectReportByFinance/{reportId}")
-	public Reports rejectReportbyfinance(@PathVariable Long reportId,
+	public void rejectReportbyfinance(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		return reportsService.rejectReportByFinance(reportId, Comments);
+		reportsService.rejectReportByFinance(reportId, Comments);
 	}
 
 	@PostMapping("/hidereport/{reportId}")

@@ -14,6 +14,6 @@ public class EmailController {
 
 	@PostMapping("/sendemail/{empId}")
 	public void sendEmail(@RequestParam Long reportId) {
-		emailService.sendEmail(reportId);
+		emailService.managerNotification(reportId);
 	}
 }

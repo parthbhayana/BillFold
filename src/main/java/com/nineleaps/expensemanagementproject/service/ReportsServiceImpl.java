@@ -259,7 +259,7 @@ public class ReportsServiceImpl implements IReportsService {
 			re.setManagerEmail(managerMail);
 			reportsrepository.save(re);
 			// Email Functionality Integration
-			emailService.sendEmail(reportId);
+			emailService.managerNotification(reportId);
 			try {
 				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
 				decodedEmail = decodedEmail.replace("=", "");
@@ -273,7 +273,7 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports approveReportByManager(Long reportId, String comments) {
+	public void approveReportByManager(Long reportId, String comments) {
 		ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.APPROVED;
 		FinanceApprovalStatus pending = FinanceApprovalStatus.PENDING;
 		Reports re = getReportById(reportId);
@@ -287,13 +287,15 @@ public class ReportsServiceImpl implements IReportsService {
 			re.setManagerapprovalstatus(approvalStatus);
 			re.setManagerComments(comments);
 			re.setFinanceapprovalstatus(pending);
+			LocalDate today = LocalDate.now();
+			re.setManagerActionDate(today);
+			reportsrepository.save(re);
+			emailService.userApprovedNotification(reportId);
 		}
-
-		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports rejectReportByManager(Long reportId, String comments) {
+	public void rejectReportByManager(Long reportId, String comments) {
 		ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.REJECTED;
 		Reports re = getReportById(reportId);
 		if (re.getIsSubmitted() == false) {
@@ -305,12 +307,15 @@ public class ReportsServiceImpl implements IReportsService {
 		if (re != null && re.getIsHidden() == false && re.getIsSubmitted() == true) {
 			re.setManagerapprovalstatus(approvalStatus);
 			re.setManagerComments(comments);
+			LocalDate today = LocalDate.now();
+			re.setManagerActionDate(today);
+			reportsrepository.save(re);
+			emailService.userRejectedNotification(reportId);
 		}
-		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports approveReportByFinance(Long reportId, String comments) {
+	public void approveReportByFinance(Long reportId, String comments) {
 		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REIMBURSED;
 		Reports re = getReportById(reportId);
 		if (re.getIsSubmitted() == false) {
@@ -323,13 +328,16 @@ public class ReportsServiceImpl implements IReportsService {
 				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
 			re.setFinanceapprovalstatus(approvalStatus);
 			re.setFinanceComments(comments);
+			LocalDate today = LocalDate.now();
+			re.setFinanceActionDate(today);
+			reportsrepository.save(re);
+			emailService.financeReimbursedNotification(reportId);
 		}
-		return reportsrepository.save(re);
 	}
 
 	@Override
-	public Reports rejectReportByFinance(Long reportId, String comments) {
-		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECT;
+	public void rejectReportByFinance(Long reportId, String comments) {
+		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECTED;
 		Reports re = getReportById(reportId);
 		if (re.getIsSubmitted() == false) {
 			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
@@ -341,8 +349,11 @@ public class ReportsServiceImpl implements IReportsService {
 				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
 			re.setFinanceapprovalstatus(approvalStatus);
 			re.setFinanceComments(comments);
+			LocalDate today = LocalDate.now();
+			re.setFinanceActionDate(today);
+			reportsrepository.save(re);
+			emailService.financeRejectedNotification(reportId);
 		}
-		return reportsrepository.save(re);
 	}
 
 	@Override
@@ -368,20 +379,6 @@ public class ReportsServiceImpl implements IReportsService {
 		}
 		return amtCurrency;
 	}
-
-//	@Override
-//	public String totalamountINR(Long reportId) {
-//		Reports report = reportsrepository.findById(reportId).get();
-//		List<Expense> expenses = expRepo.findByReports(report);
-//
-//		float amtINR = 0;
-//		String currency = null;
-//		for (Expense expense2 : expenses) {
-//			amtINR += expense2.getAmountINR();
-//			currency = expense2.getCurrency();
-//		}
-//		return (amtINR+currency);
-//	}
 
 	@Override
 	public void hideReport(Long reportId) {
