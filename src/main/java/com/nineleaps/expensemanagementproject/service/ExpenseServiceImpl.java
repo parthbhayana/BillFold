@@ -2,7 +2,6 @@ package com.nineleaps.expensemanagementproject.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -87,7 +86,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 //		}
 //		return expRepository.save(exp);
 //	}
-
+	
 	@Override
 	public Expense updateExpense(Long reportId, Long employeeId) {
 		Expense exp = getExpenseById(employeeId);
@@ -121,9 +120,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Override
 	public List<Expense> getExpenseByEmployeeId(Long employeeId) {
 		Employee employee = empRepository.findById(employeeId).get();
-		List<Expense> expenseList = expRepository.findByEmployee(employee);
-		Collections.reverse(expenseList);
-		return expenseList;
+		return expRepository.findByEmployee(employee);
 	}
 
 	@Override
