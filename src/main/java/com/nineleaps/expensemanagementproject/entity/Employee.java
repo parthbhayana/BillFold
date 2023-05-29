@@ -45,6 +45,7 @@ public class Employee {
 	private Boolean isFinanceAdmin = false;
 
 	@Column(name = "employee_image_url")
+	@ApiModelProperty(hidden = true)
 	private String imageUrl;
 
 	@Column(name = "is_hidden", nullable = true)
@@ -55,14 +56,13 @@ public class Employee {
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
 	private List<Expense> expenseList = new ArrayList<>();
 
-
 	public Employee() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
 			String designation, String reportingManagerEmail, Boolean isFinanceAdmin, String imageUrl, Boolean isHidden,
-			List<Expense> expenseList, String subject, String message) {
+			List<Expense> expenseList) {
 		super();
 		this.employeeId = employeeId;
 		this.firstName = firstName;
@@ -75,17 +75,8 @@ public class Employee {
 		this.imageUrl = imageUrl;
 		this.isHidden = isHidden;
 		this.expenseList = expenseList;
-		this.subject = subject;
-		this.message = message;
+
 	}
-
-	// --Email Functionality Objects---
-
-	private String subject;
-
-	private String message;
-
-	// --Email Functionality Objects---
 
 	public Long getEmployeeId() {
 		return employeeId;
@@ -95,61 +86,49 @@ public class Employee {
 		this.employeeId = employeeId;
 	}
 
-
 	public String getFirstName() {
 		return firstName;
 	}
-
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-
 	public String getMiddleName() {
 		return middleName;
 	}
-
 
 	public void setMiddleName(String middleName) {
 		this.middleName = middleName;
 	}
 
-
 	public String getLastName() {
 		return lastName;
 	}
-
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-
 	public String getEmployeeEmail() {
 		return employeeEmail;
 	}
-
 
 	public void setEmployeeEmail(String employeeEmail) {
 		this.employeeEmail = employeeEmail;
 	}
 
-
 	public String getDesignation() {
 		return designation;
 	}
-
 
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
 
-
 	public String getReportingManagerEmail() {
 		return reportingManagerEmail;
 	}
-
 
 	public void setReportingManagerEmail(String reportingManagerEmail) {
 		this.reportingManagerEmail = reportingManagerEmail;
@@ -183,25 +162,8 @@ public class Employee {
 		return expenseList;
 	}
 
-
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;
-	}
-
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 }

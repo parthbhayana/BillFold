@@ -386,7 +386,7 @@ public class ReportsServiceImpl implements IReportsService {
 		Boolean isReported = false;
 		Reports report = getReportById(reportId);
 		List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
-		for(Expense exp : expenseList) {
+		for (Expense exp : expenseList) {
 			exp.setIsReported(isReported);
 			exp.setReports(null);
 			exp.setReportTitle(null);
@@ -400,6 +400,14 @@ public class ReportsServiceImpl implements IReportsService {
 	@Override
 	public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate) {
 		List<Reports> reports = reportsrepository.findByDateSubmittedBetween(startDate, endDate);
+		return reports;
+	}
+
+	@Override
+	public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
+			LocalDate endDate) {
+		List<Reports> reports = reportsrepository.findByManagerEmailAndDateSubmittedBetween(managerEmail, startDate,
+				endDate);
 		return reports;
 	}
 

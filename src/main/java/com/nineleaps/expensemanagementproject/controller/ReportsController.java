@@ -173,6 +173,13 @@ public class ReportsController {
 			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
 		return reportsService.getReportsInDateRange(startDate, endDate);
 	}
+	
+	@GetMapping("/getreportssubmittedtouserindaterange")
+	public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
+			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+		return reportsService.getReportsSubmittedToUserInDateRange(managerEmail,startDate, endDate);
+	}
 
 //	@GetMapping("/getreportsindaterange")
 //    public List<Reports> getReportsInDateRange(
