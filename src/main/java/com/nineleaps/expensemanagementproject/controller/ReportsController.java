@@ -124,8 +124,9 @@ public class ReportsController {
 
 	@PatchMapping("/editreport/{reportId}")
 	public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
-			@RequestParam String reportDescription, @RequestParam ArrayList<Long> expenseIds) {
-		return reportsService.editReport(reportId, reportTitle, reportDescription, expenseIds);
+			@RequestParam String reportDescription, @RequestParam ArrayList<Long> addExpenseIds,
+			@RequestParam ArrayList<Long> removeExpenseIds) {
+		return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
 	}
 
 	@PostMapping("/approveReportByManager/{reportId}")
@@ -173,20 +174,14 @@ public class ReportsController {
 			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
 		return reportsService.getReportsInDateRange(startDate, endDate);
 	}
-	
+
 	@GetMapping("/getreportssubmittedtouserindaterange")
 	public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
 			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-		return reportsService.getReportsSubmittedToUserInDateRange(managerEmail,startDate, endDate);
+		return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate);
 	}
 
-//	@GetMapping("/getreportsindaterange")
-//    public List<Reports> getReportsInDateRange(
-//            @RequestBody LocalDate startDate,
-//            @RequestBody LocalDate endDate) {
-//        return reportsService.getReportsInDateRange(startDate, endDate);
-//    }
 	@GetMapping("/getamountofreportsindaterange")
 	public String getAmountOfReportsInDateRange(
 			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
