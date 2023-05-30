@@ -67,6 +67,14 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	private LocalDate dateCreated;
 
+	@Column(name = "date_manager_action")
+	@ApiModelProperty(hidden = true)
+	private LocalDate managerActionDate;
+
+	@Column(name = "date_finance_action")
+	@ApiModelProperty(hidden = true)
+	private LocalDate financeActionDate;
+
 	@Column(name = "currency")
 	@ApiModelProperty(hidden = true)
 	private String currency;
@@ -108,9 +116,9 @@ public class Reports {
 
 	public Reports(Long reportId, String reportTitle, String reportDescription, String managerComments,
 			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail,
-			LocalDate dateSubmitted, LocalDate dateCreated, String currency, float totalAmountINR,
-			float totalAmountCurrency, Boolean isHidden, FinanceApprovalStatus financeapprovalstatus,
-			ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+			LocalDate dateSubmitted, LocalDate dateCreated, LocalDate dateApproved, LocalDate dateReimbursed,
+			String currency, float totalAmountINR, float totalAmountCurrency, Boolean isHidden,
+			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
 		super();
 		this.reportId = reportId;
 		this.reportTitle = reportTitle;
@@ -122,6 +130,8 @@ public class Reports {
 		this.managerEmail = managerEmail;
 		this.dateSubmitted = dateSubmitted;
 		this.dateCreated = dateCreated;
+		this.managerActionDate = dateApproved;
+		this.financeActionDate = dateReimbursed;
 		this.currency = currency;
 		this.totalAmountINR = totalAmountINR;
 		this.totalAmountCurrency = totalAmountCurrency;
@@ -209,6 +219,22 @@ public class Reports {
 
 	public void setDateCreated(LocalDate dateCreated) {
 		this.dateCreated = dateCreated;
+	}
+
+	public LocalDate getManagerActionDate() {
+		return managerActionDate;
+	}
+
+	public void setManagerActionDate(LocalDate managerActionDate) {
+		this.managerActionDate = managerActionDate;
+	}
+
+	public LocalDate getFinanceActionDate() {
+		return financeActionDate;
+	}
+
+	public void setFinanceActionDate(LocalDate financeActionDate) {
+		this.financeActionDate = financeActionDate;
 	}
 
 	public String getCurrency() {

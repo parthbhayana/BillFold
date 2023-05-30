@@ -1,5 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -48,11 +50,15 @@ public class ExpenseServiceImpl implements IExpenseService {
 	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
 		Employee empDetails = employeeSERVICES.getEmployeeDetailsById(employeeid);
 		Category catfin = catrepository.findById(catId).get();
+		LocalDate today = LocalDate.now();
+		LocalTime now = LocalTime.now();
 		expense.setEmployee(empDetails);
 		expense.setCategoryfinance(catfin);
 		Category mergedCategoryFinance = entityManager.merge(catfin);
 		expense.setCategoryfinance(mergedCategoryFinance);
 		expense.setCatDescription(mergedCategoryFinance.getCatDescription());
+		expense.setDate(today);
+		expense.setTime(now);
 		expRepository.save(expense);
 		String curr = expense.getCurrency();
 		double rate = CurrencyExchange.getExchangeRate(curr);

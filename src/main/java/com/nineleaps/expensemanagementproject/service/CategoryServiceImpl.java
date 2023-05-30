@@ -63,17 +63,23 @@ public class CategoryServiceImpl implements ICategory {
 	}
 
 	@Override
-	public HashMap<String,Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
-//		List<Category> categoryList = catfinrepository.findAll();
-		List<Expense> expenseList = expRepo.findByDateBetween(startDate, endDate);
-		HashMap<String, Float> catAmount = new HashMap<>();
+	public HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
+//		List<Expense> expenseList = expRepo.findByDateBetween(startDate, endDate);
+		List<Expense> expenseList = expRepo.findByDateBetweenAndIsReported(startDate, endDate, true);
+		HashMap<String, Float> categoryAmountMap = new HashMap<>();
+
 		for (Expense expense : expenseList) {
 			Category category = expense.getCategoryfinance();
 			String categoryName = category.getCatDescription();
 			Float amt = expense.getAmountINR();
-			catAmount.put(categoryName, amt);
+			if (categoryAmountMap.containsKey(categoryName)) {
+				Float previousAmt = categoryAmountMap.get(categoryName);
+				categoryAmountMap.put(categoryName, previousAmt + amt);
+			} else {
+				categoryAmountMap.put(categoryName, amt);
+			}
 		}
-		return catAmount;
+		return categoryAmountMap;
 	}
 
 }

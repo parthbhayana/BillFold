@@ -1,11 +1,11 @@
 
-# Nineleaps-Expense-Management-Project
+# Introduction to BillFold
 
-The Nineleaps Expense Management project is aimed at automating the expenses reimbursement process for the company's employees and finance team. Currently, the reimbursement process is managed using an external tool, and approvals are done manually through email, leading to inefficiencies and delays. To address this challenge, the project will create a mobile platform that enables employees to create and manage expense reports, view their expenses history, and submit reports for approval. The platform will also include features such as employee login, approval management, and reimbursement management. By implementing this project, Nineleaps can enhance its operational efficiency and improve collaboration and networking among its employees.
+BillFold is aimed at automating the expenses reimbursement process for the company's employees and finance team. Currently, the reimbursement process is managed using an external tool, and approvals are done manually through email, leading to inefficiencies and delays. To address this challenge, the project will create a mobile platform that enables employees to create and manage expense reports, view their expenses history, and submit reports for approval. The platform will also include features such as employee login, approval management, and reimbursement management. By implementing this project, Nineleaps can enhance its operational efficiency and improve collaboration and networking among its employees.
 
 ## Getting Started
 
-To get started with the Nineleaps Expense Management Project, you need to follow these steps:
+To get started with BillFold, you need to follow these steps:
 
 ## Prerequisites
 
@@ -22,7 +22,7 @@ To install and run the project, you need to follow these steps:
 Clone the repository from GitHub:
 
 ```bash
-git clone https://github.com/parthbhayana/Nineleaps-Expense-Management-Project.git
+https://github.com/parthbhayana/BillFold.git
 ```
 
 Create a MySQL database and update the **'application.properties'** file with your database credentials:
@@ -39,7 +39,7 @@ mvn spring-boot:run
 
 ## Features
 
-The Nineleaps Expense Management Project has the following features:
+The BillFold Project has the following features:
 
 - Employee Login: Employees can log in to the mobile application using their work email ID (SSO).
 
@@ -86,7 +86,43 @@ The Nineleaps Expense Management Project has the following features:
 
 - **'java-jwt'**: Provides a Java library for creating and verifying JWTs, which includes support for JWKs (JSON Web Keys) and JWSs (JSON Web Signatures).
 
+## Currencies Supported
 
+| Code | Name                    |
+| ---- | ----------------------- |
+| EUR  | Euro                    |
+| USD  | US Dollar               |
+| JPY  | Japanese Yen            |
+| BGN  | Bulgarian Lev           |
+| CZK  | Czech Republic Koruna   |
+| DKK  | Danish Krone            |
+| GBP  | British Pound Sterling  |
+| HUF  | Hungarian Forint        |
+| PLN  | Polish Zloty            |
+| RON  | Romanian Leu            |
+| SEK  | Swedish Krona           |
+| CHF  | Swiss Franc             |
+| ISK  | Icelandic Króna         |
+| NOK  | Norwegian Krone         |
+| HRK  | Croatian Kuna           |
+| RUB  | Russian Ruble           |
+| TRY  | Turkish Lira            |
+| AUD  | Australian Dollar       |
+| BRL  | Brazilian Real          |
+| CAD  | Canadian Dollar         |
+| CNY  | Chinese Yuan            |
+| HKD  | Hong Kong Dollar        |
+| IDR  | Indonesian Rupiah       |
+| ILS  | Israeli New Sheqel      |
+| INR  | Indian Rupee            |
+| KRW  | South Korean Won        |
+| MXN  | Mexican Peso            |
+| MYR  | Malaysian Ringgit       |
+| NZD  | New Zealand Dollar      |
+| PHP  | Philippine Peso         |
+| SGD  | Singapore Dollar        |
+| THB  | Thai Baht               |
+| ZAR  | South African Rand      |
 
 
 
