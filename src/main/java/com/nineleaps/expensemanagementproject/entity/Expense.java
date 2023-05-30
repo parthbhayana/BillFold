@@ -39,7 +39,7 @@ public class Expense {
 	@ApiModelProperty(hidden = true)
 	private LocalDate date;
 
-	@Column(name = "created_time", nullable = false)
+	@Column(name = "created_time")
 	@ApiModelProperty(hidden = true)
 	private LocalTime time;
 
