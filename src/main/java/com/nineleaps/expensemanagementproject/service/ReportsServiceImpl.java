@@ -171,6 +171,7 @@ public class ReportsServiceImpl implements IReportsService {
 				}
 			}
 			// Adding Expenses
+			Reports re = getReportById(reportId);
 			for (Long expenseid : addExpenseIds) {
 				Expense expense = expServices.getExpenseById(expenseid);
 				if (expense.getIsReported() == true) {
@@ -181,6 +182,7 @@ public class ReportsServiceImpl implements IReportsService {
 					expServices.updateExpense(reportId, expenseid);
 				}
 			}
+			reportsrepository.save(re);
 			// Removing Expenses
 			boolean reportedStatus = false;
 			for (Long expenseid : removeExpenseIds) {
@@ -192,17 +194,11 @@ public class ReportsServiceImpl implements IReportsService {
 					expRepo.save(expense);
 				}
 			}
+			
 		}
 		Reports re = getReportById(reportId);
 		re.setTotalAmountINR(totalamountINR(reportId));
 		re.setTotalAmountCurrency(totalamountCurrency(reportId));
-		// Fetching Employee ID
-//		List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
-//		if (!expenseList.isEmpty()) {
-//			Expense expense = expenseList.get(0);
-//			Employee employee = expense.getEmployee();
-//			empId = employee.getEmployeeId();
-//		}
 
 		return getReportByEmpId(empId);
 	}
