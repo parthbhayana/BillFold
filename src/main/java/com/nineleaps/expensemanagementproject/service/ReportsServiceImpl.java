@@ -196,10 +196,23 @@ public class ReportsServiceImpl implements IReportsService {
 			}
 			
 		}
-		Reports re = getReportById(reportId);
-		re.setTotalAmountINR(totalamountINR(reportId));
-		re.setTotalAmountCurrency(totalamountCurrency(reportId));
-
+//		Reports re = getReportById(reportId);
+//		re.setTotalAmountINR(totalamountINR(reportId));
+//		re.setTotalAmountCurrency(totalamountCurrency(reportId));
+		//Setting total amounts
+		List<Expense> expp = expServices.getExpenseByReportId(reportId);
+		Reports newReport = getReportById(reportId);
+		float amt = 0;
+		for (Expense expense2 : expp) {
+			amt += expense2.getAmountINR();
+		}
+		newReport.setTotalAmountINR(amt);
+		float amtCurrency = 0;
+		for (Expense expense2 : expp) {
+			amtCurrency += expense2.getAmount();
+		}
+		newReport.setTotalAmountCurrency(amtCurrency);
+		reportsrepository.save(newReport);
 		return getReportByEmpId(empId);
 	}
 
