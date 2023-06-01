@@ -36,7 +36,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 	private CategoryFinanceRepository catrepository;
 
 	@Autowired
-	private IReportsService reportServices;
+	 private IReportsService reportServices;
 
 	@Autowired
 	private ReportsRepository reportsRepo;

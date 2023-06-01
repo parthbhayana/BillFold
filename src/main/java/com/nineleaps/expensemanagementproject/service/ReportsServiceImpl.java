@@ -54,8 +54,10 @@ public class ReportsServiceImpl implements IReportsService {
 		Employee emp = empServices.getEmployeeDetailsById(employeeId);
 		String managerEmail = emp.getReportingManagerEmail();
 		String employeeEmail = emp.getEmployeeEmail();
+
 		newReport.setManagerEmail(managerEmail);
 		newReport.setEmployeeMail(employeeEmail);
+
 		LocalDate today = LocalDate.now();
 		newReport.setDateCreated(today);
 		String currency = null;

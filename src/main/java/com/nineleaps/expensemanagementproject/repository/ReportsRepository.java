@@ -6,7 +6,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.Reports;
+import com.nineleaps.expensemanagementproject.entity.StatusExcel;
 
 public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
@@ -16,7 +18,9 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
 	List<Reports> findByManagerEmail(String managerEmail);
 
+	List<Reports> findByManagerEmailAndDateSubmittedBetween(String managerEmail, LocalDate startDate,
+			LocalDate endDate);
+
 	List<Reports> findByDateSubmittedBetween(LocalDate startDate, LocalDate endDate);
-	
-	List<Reports> findByManagerEmailAndDateSubmittedBetween(String managerEmail, LocalDate startDate , LocalDate endDate);
+
 }
