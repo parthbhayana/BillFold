@@ -169,5 +169,4 @@ public class ExpenseServiceImpl implements IExpenseService {
 		exp.setIsHidden(hidden);
 		expRepository.save(exp);
 	}
-
 }

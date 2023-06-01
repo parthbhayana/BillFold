@@ -454,5 +454,4 @@ public class ReportsServiceImpl implements IReportsService {
 		}
 		return (total + " INR");
 	}
-
 }

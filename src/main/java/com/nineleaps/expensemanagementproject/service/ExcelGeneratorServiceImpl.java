@@ -1,0 +1,182 @@
+package com.nineleaps.expensemanagementproject.service;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.activation.DataSource;
+
+import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.hssf.usermodel.*;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+
+import org.jfree.data.general.DefaultPieDataset;
+import com.nineleaps.expensemanagementproject.entity.Category;
+import com.nineleaps.expensemanagementproject.entity.Expense;
+
+import com.nineleaps.expensemanagementproject.repository.CategoryFinanceRepository;
+import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
+
+@Service
+public class ExcelGeneratorServiceImpl {
+
+	@Autowired
+	private CategoryFinanceRepository catfinrepo;
+
+	@Autowired
+	private ExpenseRepository expRepo;
+
+	@Autowired
+	private JavaMailSender mailSender;
+
+	private static final int CHART_IMAGE_WIDTH = 640;
+	private static final int CHART_IMAGE_HEIGHT = 480;
+
+	public boolean generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate)
+			throws Exception {
+
+		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
+		generateExcel(excelStream, startDate, endDate);
+		byte[] excelBytes = excelStream.toByteArray();
+
+		boolean emailsent=sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
+				"Please find the attached Excel report.", excelBytes, "report.xls");
+		return emailsent;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate)
+			throws Exception {
+
+		List<Category> categories = catfinrepo.findAll();
+		HashMap<String, Float> categoryAmountMap = CategoryTotalAmount(startDate, endDate);
+
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("Category Wise Expense Analytics");
+		HSSFRow row = sheet.createRow(0);
+
+		row.createCell(0).setCellValue("Sl.no.");
+		row.createCell(1).setCellValue("Category Name");
+		row.createCell(2).setCellValue("Total Amount");
+
+		int dataRowIndex = 1;
+		int sl = 1;
+		for (Category category : categories) {
+			HSSFRow dataRow = sheet.createRow(dataRowIndex);
+			dataRow.createCell(0).setCellValue(sl);
+			dataRow.createCell(1).setCellValue(category.getCatDescription());
+
+			String categoryName = category.getCatDescription();
+			if (categoryAmountMap.containsKey(categoryName)) {
+				Float totalAmount = categoryAmountMap.get(categoryName);
+				dataRow.createCell(2).setCellValue(totalAmount);
+			} else {
+				dataRow.createCell(2).setCellValue(0.0f);
+			}
+			sl++;
+			dataRowIndex++;
+		}
+
+		@SuppressWarnings("rawtypes")
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		for (Category category : categories) {
+			String categoryName = category.getCatDescription();
+			if (categoryAmountMap.containsKey(categoryName)) {
+				Float totalAmount = categoryAmountMap.get(categoryName);
+				dataset.setValue(categoryName, totalAmount);
+			} else {
+				dataset.setValue(categoryName, 0.0f);
+			}
+		}
+
+		JFreeChart chart = ChartFactory.createPieChart("Category Wise Expense Analytics", dataset, true, true, false);
+		@SuppressWarnings("rawtypes")
+		PiePlot plot = (PiePlot) chart.getPlot();
+		plot.setLabelGenerator(null);
+
+		HSSFPatriarch drawing = sheet.createDrawingPatriarch();
+		HSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 20, 15);
+		@SuppressWarnings("unused")
+		HSSFPicture picture = drawing.createPicture(anchor,
+				loadChartImage(chart, CHART_IMAGE_WIDTH, CHART_IMAGE_HEIGHT, workbook));
+
+		workbook.write(excelStream);
+		workbook.close();
+	}
+
+	public int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException {
+		BufferedImage chartImage = chart.createBufferedImage(width, height);
+		ByteArrayOutputStream chartOut = new ByteArrayOutputStream();
+		try {
+			ChartUtils.writeChartAsPNG(chartOut, chart, width, height);
+			int pictureIdx = workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);
+			return pictureIdx;
+		} finally {
+			chartOut.close();
+		}
+	}
+
+	public HashMap<String, Float> CategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
+		List<Expense> expenseList = expRepo.findByDateBetween(startDate, endDate);
+		HashMap<String, Float> categoryAmountMap = new HashMap<>();
+
+		for (Expense expense : expenseList) {
+			Category category = expense.getCategoryfinance();
+			String categoryName = category.getCatDescription();
+			Float amt = expense.getAmountINR();
+			if (categoryAmountMap.containsKey(categoryName)) {
+				Float previousAmt = categoryAmountMap.get(categoryName);
+				categoryAmountMap.put(categoryName, previousAmt + amt);
+			} else {
+				categoryAmountMap.put(categoryName, amt);
+			}
+		}
+		return categoryAmountMap;
+
+	}
+
+	private boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
+			String attachmentFilename) {
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+			helper.setTo(toEmail);
+			helper.setSubject(subject);
+			helper.setText(body);
+
+			DataSource attachment = new ByteArrayDataSource(attachmentContent, "application/vnd.ms-excel");
+			helper.addAttachment(attachmentFilename, attachment);
+
+			mailSender.send(message);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+
+		}
+	}
+}
