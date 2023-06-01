@@ -39,15 +39,16 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 	@Autowired
 	private IExpenseService expenseService;
 
-	public void generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
+	public boolean generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
 			StatusExcel status) throws Exception {
 
 		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
 		generateExcel(excelStream, startDate, endDate, status);
 		byte[] excelBytes = excelStream.toByteArray();
 
-		sendEmailWithAttachment("r.karthik8129@gmail.com", "BillFold:Excel Report", "Please find the attached Excel report.",
+		boolean emailsent=sendEmailWithAttachment("arjntmor9611@gmail.com", "BillFold:Excel Report", "Please find the attached Excel report.",
 				excelBytes, "report.xls");
+		return emailsent;
 	}
 
 	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate,
@@ -220,7 +221,7 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 	}
 	}
 
-	private void sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
+	private boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
 			String attachmentFilename) {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
@@ -234,7 +235,10 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 			helper.addAttachment(attachmentFilename, attachment);
 
 			mailSender.send(message);
+			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 
 		}
 	}
