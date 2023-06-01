@@ -211,6 +211,7 @@ public class ReportsServiceImpl implements IReportsService {
 		for (Expense expense2 : expp) {
 			amtCurrency += expense2.getAmount();
 		}
+		newReport.setTotalAmountCurrency(amtCurrency);
 		Reports re = getReportById(reportId);
 		re.setTotalAmountINR(totalamountINR(reportId));
 		re.setTotalAmountCurrency(totalamountCurrency(reportId));
@@ -218,8 +219,8 @@ public class ReportsServiceImpl implements IReportsService {
 		List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
 		Expense expense = expenseList.get(0);
 		Employee employee = expense.getEmployee();
-		Long empId = employee.getEmployeeId();
-		return getReportByEmpId(empId);
+		Long employeeId = employee.getEmployeeId();
+		return getReportByEmpId(employeeId);
 	}
 
 	@Override
