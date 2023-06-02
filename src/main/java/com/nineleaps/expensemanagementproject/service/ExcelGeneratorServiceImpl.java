@@ -62,7 +62,7 @@ public class ExcelGeneratorServiceImpl {
 		generateExcel(excelStream, startDate, endDate);
 		byte[] excelBytes = excelStream.toByteArray();
 
-		boolean emailsent=sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
+		boolean emailsent=sendEmailWithAttachment("parinayprasad@gmail.com", "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
 		return emailsent;
 	}
@@ -128,6 +128,7 @@ public class ExcelGeneratorServiceImpl {
 	}
 
 	public int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException {
+		@SuppressWarnings("unused")
 		BufferedImage chartImage = chart.createBufferedImage(width, height);
 		ByteArrayOutputStream chartOut = new ByteArrayOutputStream();
 		try {

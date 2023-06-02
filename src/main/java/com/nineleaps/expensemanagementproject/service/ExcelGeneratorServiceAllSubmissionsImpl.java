@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.io.ByteArrayOutputStream;
+
 import java.time.LocalDate;
 
 import java.util.List;
@@ -46,8 +47,8 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 		generateExcel(excelStream, startDate, endDate, status);
 		byte[] excelBytes = excelStream.toByteArray();
 
-		boolean emailsent=sendEmailWithAttachment("arjntmor9611@gmail.com", "BillFold:Excel Report", "Please find the attached Excel report.",
-				excelBytes, "report.xls");
+		boolean emailsent = sendEmailWithAttachment("parinayprasad@gmail.com", "BillFold:Excel Report",
+				"Please find the attached Excel report.", excelBytes, "report.xls");
 		return emailsent;
 	}
 
@@ -55,46 +56,106 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 			StatusExcel status) throws Exception {
 
 		if (status == StatusExcel.ALL) {
-
 			List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
 			HSSFWorkbook workbook = new HSSFWorkbook();
-			HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_All");
+			HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Pending_Reimbursed");
 			HSSFRow row = sheet.createRow(0);
 
-			row.createCell(0).setCellValue("Employee Email");
-			row.createCell(1).setCellValue("Employee Name");
-			// row.createCell(2).setCellValue("Calender Month");
-			row.createCell(2).setCellValue("Report Id");
-			row.createCell(3).setCellValue("Report Name");
-			row.createCell(7).setCellValue("Submitted On");
-			 row.createCell(8).setCellValue("Approved On");
-			row.createCell(4).setCellValue("Approved by");
-			row.createCell(5).setCellValue("Total Amount(INR)");
-			row.createCell(6).setCellValue("Status");
+			row.createCell(0).setCellValue("Sl.no.");
+			row.createCell(1).setCellValue("Employee Email");
+			row.createCell(2).setCellValue("Employee Name");
+			row.createCell(3).setCellValue("Report Id");
+			row.createCell(4).setCellValue("Report Name");
+			row.createCell(5).setCellValue("submitted on");
+			row.createCell(6).setCellValue("Appproved  on");
+			row.createCell(7).setCellValue("Approved by");
+			row.createCell(8).setCellValue("Total Amount(INR)");
+			row.createCell(9).setCellValue("Status");
 
 			int dataRowIndex = 1;
+			int sl = 1;
 
-			for (Reports reports : reportlist) {
+			for (Reports report : reportlist) {
+
 				HSSFRow dataRow = sheet.createRow(dataRowIndex);
-				
-				Long id = reports.getReportId();
+				dataRow.createCell(0).setCellValue(sl);
+				dataRow.createCell(1).setCellValue(report.getEmployeeMail());
+				Long id = report.getReportId();
 				List<Expense> expenseList = expenseService.getExpenseByReportId(id);
 
 				if (!expenseList.isEmpty()) {
 					Expense expense = expenseList.get(0);
 					Employee employee = expense.getEmployee();
-					dataRow.createCell(0).setCellValue(reports.getEmployeeMail());
-					dataRow.createCell(1).setCellValue(employee.getFirstName() + " " + employee.getLastName());
-					// dataRow.createCell(1).setCellValue(reports.getDateSubmitted().toString());
-					dataRow.createCell(2).setCellValue(reports.getReportId());
-					dataRow.createCell(3).setCellValue(reports.getReportTitle());
-					dataRow.createCell(7).setCellValue(reports.getDateSubmitted().toString());
-				 dataRow.createCell(8).setCellValue(reports.getManagerActionDate().toString());
-					dataRow.createCell(4).setCellValue(reports.getManagerEmail());
-					dataRow.createCell(5).setCellValue(reports.getTotalAmountINR());
-					dataRow.createCell(6).setCellValue("Pending/Reimbursed");
+					dataRow.createCell(2).setCellValue(employee.getFirstName() + " " + employee.getLastName());
+					dataRow.createCell(3).setCellValue(report.getReportId());
+					dataRow.createCell(4).setCellValue(report.getReportTitle());
+					dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
+					LocalDate managerActionDate = report.getManagerActionDate();
+					if (managerActionDate != null) {
+						dataRow.createCell(6).setCellValue(managerActionDate.toString());
+					}
+					dataRow.createCell(7).setCellValue(report.getManagerEmail());
+					dataRow.createCell(8).setCellValue(report.getTotalAmountINR());
+					dataRow.createCell(9).setCellValue("Pending/Reimbursed");
 
 					dataRowIndex++;
+					sl++;
+				}
+			}
+
+			// ServletOutputStream ops = response.getOutputStream();
+			workbook.write(excelStream);
+			workbook.close();
+			// ops.close();
+
+		}
+
+		if (status == StatusExcel.PENDING) {
+			List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Pending");
+			HSSFRow row = sheet.createRow(0);
+
+			row.createCell(0).setCellValue("Sl.no.");
+			row.createCell(1).setCellValue("Employee Email");
+			row.createCell(2).setCellValue("Employee Name");
+			row.createCell(3).setCellValue("Report Id");
+			row.createCell(4).setCellValue("Report Name");
+			row.createCell(5).setCellValue("submitted on");
+			row.createCell(6).setCellValue("Appproved  on");
+			row.createCell(7).setCellValue("Approved by");
+			row.createCell(8).setCellValue("Total Amount(INR)");
+			row.createCell(9).setCellValue("Status");
+
+			int dataRowIndex = 1;
+			int sl = 1;
+
+			for (Reports report : reportlist) {
+				if (report.getFinanceapprovalstatus() == FinanceApprovalStatus.PENDING) {
+					HSSFRow dataRow = sheet.createRow(dataRowIndex);
+					dataRow.createCell(0).setCellValue(sl);
+					dataRow.createCell(1).setCellValue(report.getEmployeeMail());
+					Long id = report.getReportId();
+					List<Expense> expenseList = expenseService.getExpenseByReportId(id);
+
+					if (!expenseList.isEmpty()) {
+						Expense expense = expenseList.get(0);
+						Employee employee = expense.getEmployee();
+						dataRow.createCell(2).setCellValue(employee.getFirstName() + " " + employee.getLastName());
+						dataRow.createCell(3).setCellValue(report.getReportId());
+						dataRow.createCell(4).setCellValue(report.getReportTitle());
+						dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
+						LocalDate managerActionDate = report.getManagerActionDate();
+						if (managerActionDate != null) {
+							dataRow.createCell(6).setCellValue(managerActionDate.toString());
+						}
+						dataRow.createCell(7).setCellValue(report.getManagerEmail());
+						dataRow.createCell(8).setCellValue(report.getTotalAmountINR());
+						dataRow.createCell(9).setCellValue("Pending");
+
+						dataRowIndex++;
+						sl++;
+					}
 				}
 			}
 			// ServletOutputStream ops = response.getOutputStream();
@@ -103,73 +164,6 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 			// ops.close();
 
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-
-		if (status == StatusExcel.PENDING) {
-			List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
-			HSSFWorkbook workbook = new HSSFWorkbook();
-			HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_pending");
-			HSSFRow row = sheet.createRow(0);
-
-			row.createCell(0).setCellValue("Employee Email");
-			row.createCell(1).setCellValue("Employee Name");
-			// row.createCell(2).setCellValue("Calender Month");
-			row.createCell(2).setCellValue("Report Id");
-			row.createCell(3).setCellValue("Report Name");
-			// row.createCell(5).setCellValue("Submitted On");
-			// row.createCell(6).setCellValue("Approved On");
-			row.createCell(4).setCellValue("Approved by");
-			row.createCell(5).setCellValue("Total Amount(INR)");
-			row.createCell(6).setCellValue("Status");
-
-			int dataRowIndex = 1;
-
-			for (Reports reports : reportlist) {
-				if (reports.getFinanceapprovalstatus() == FinanceApprovalStatus.PENDING) {
-					HSSFRow dataRow = sheet.createRow(dataRowIndex);
-					dataRow.createCell(0).setCellValue(reports.getEmployeeMail());
-					Long id = reports.getReportId();
-					List<Expense> expenseList = expenseService.getExpenseByReportId(id);
-
-					if (!expenseList.isEmpty()) {
-						Expense expense = expenseList.get(0);
-						Employee employee = expense.getEmployee();
-						dataRow.createCell(1).setCellValue(employee.getFirstName() + " " + employee.getLastName());
-					// dataRow.createCell(1).setCellValue(reports.getDateSubmitted().toString());
-					dataRow.createCell(2).setCellValue(reports.getReportId());
-					dataRow.createCell(3).setCellValue(reports.getReportTitle());
-					// dataRow.createCell(1).setCellValue(reports.getDateSubmitted().toString());
-					// dataRow.createCell(1).setCellValue(reports.getManagerActionDate().toString());
-					dataRow.createCell(4).setCellValue(reports.getManagerEmail());
-					dataRow.createCell(5).setCellValue(reports.getTotalAmountINR());
-					dataRow.createCell(1).setCellValue("Pending");
-
-					dataRowIndex++;
-					}
-				}
-				// ServletOutputStream ops = response.getOutputStream();
-				workbook.write(excelStream);
-				workbook.close();
-				// ops.close();
-
-			}
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
 
 		if (status == StatusExcel.REIMBURSED) {
 			List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
@@ -177,48 +171,54 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 			HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Reimbursed");
 			HSSFRow row = sheet.createRow(0);
 
-			row.createCell(0).setCellValue("Employee Email");
-			row.createCell(1).setCellValue("Employee Name");
-			// row.createCell(2).setCellValue("Calender Month");
-			row.createCell(2).setCellValue("Report Id");
-			row.createCell(3).setCellValue("Report Name");
-			// row.createCell(5).setCellValue("Submitted On");
-			// row.createCell(6).setCellValue("Approved On");
-			row.createCell(4).setCellValue("Approved by");
-			row.createCell(5).setCellValue("Total Amount(INR)");
-			row.createCell(6).setCellValue("Status");
+			row.createCell(0).setCellValue("Sl.no.");
+			row.createCell(1).setCellValue("Employee Email");
+			row.createCell(2).setCellValue("Employee Name");
+			row.createCell(3).setCellValue("Report Id");
+			row.createCell(4).setCellValue("Report Name");
+			row.createCell(5).setCellValue("submitted on");
+			row.createCell(6).setCellValue("Appproved  on");
+			row.createCell(7).setCellValue("Approved by");
+			row.createCell(8).setCellValue("Total Amount(INR)");
+			row.createCell(9).setCellValue("Status");
 
 			int dataRowIndex = 1;
-
-			for (Reports reports : reportlist) {
-				if (reports.getFinanceapprovalstatus() == FinanceApprovalStatus.REIMBURSED) {
+			int sl = 1;
+			for (Reports report : reportlist) {
+				if (report.getFinanceapprovalstatus() == FinanceApprovalStatus.REIMBURSED) {
 					HSSFRow dataRow = sheet.createRow(dataRowIndex);
-					dataRow.createCell(0).setCellValue(reports.getEmployeeMail());
-					Long id = reports.getReportId();
+					dataRow.createCell(0).setCellValue(sl);
+					dataRow.createCell(1).setCellValue(report.getEmployeeMail());
+					Long id = report.getReportId();
 					List<Expense> expenseList = expenseService.getExpenseByReportId(id);
 
 					if (!expenseList.isEmpty()) {
 						Expense expense = expenseList.get(0);
 						Employee employee = expense.getEmployee();
-						dataRow.createCell(1).setCellValue(employee.getFirstName() + " " + employee.getLastName());
-					dataRow.createCell(2).setCellValue(reports.getReportId());
-					dataRow.createCell(3).setCellValue(reports.getReportTitle());
-					// dataRow.createCell(1).setCellValue(reports.getDateSubmitted().toString());
-					// dataRow.createCell(1).setCellValue(reports.getManagerActionDate().toString());
-					dataRow.createCell(4).setCellValue(reports.getManagerEmail());
-					dataRow.createCell(5).setCellValue(reports.getTotalAmountINR());
-					dataRow.createCell(6).setCellValue("Reimbursed");
+						dataRow.createCell(2).setCellValue(employee.getFirstName() + " " + employee.getLastName());
+						dataRow.createCell(3).setCellValue(report.getReportId());
+						dataRow.createCell(4).setCellValue(report.getReportTitle());
+						dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
+						LocalDate managerActionDate = report.getManagerActionDate();
+						if (managerActionDate != null) {
+							dataRow.createCell(6).setCellValue(managerActionDate.toString());
+						}
+						dataRow.createCell(7).setCellValue(report.getManagerEmail());
+						dataRow.createCell(8).setCellValue(report.getTotalAmountINR());
+						dataRow.createCell(9).setCellValue("Reimbursed");
 
-					dataRowIndex++;
+						dataRowIndex++;
+						sl++;
+					}
 				}
 			}
+
 			// ServletOutputStream ops = response.getOutputStream();
 			workbook.write(excelStream);
 			workbook.close();
 //			ops.close();
 
 		}
-	}
 	}
 
 	private boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
