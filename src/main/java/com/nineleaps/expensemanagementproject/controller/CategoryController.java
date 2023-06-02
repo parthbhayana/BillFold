@@ -1,3 +1,4 @@
+
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.time.LocalDate;
@@ -57,5 +58,5 @@ public class CategoryController {
 
 		return categoryService.getCategoryTotalAmount(startDate, endDate);
 	}
-
 }
+

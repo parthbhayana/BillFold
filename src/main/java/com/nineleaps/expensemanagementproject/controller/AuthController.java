@@ -1,3 +1,4 @@
+
 package com.nineleaps.expensemanagementproject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,4 +56,4 @@ public class AuthController {
 		        else
 		            return "User not found. Please contact your administrator !!!";
 		    }
-	}
+}
