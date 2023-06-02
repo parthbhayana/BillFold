@@ -6,13 +6,17 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
+import javax.servlet.http.HttpServletResponse;
 
 import javax.activation.DataSource;
 
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 
-import javax.servlet.http.HttpServletResponse;
+
 
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFPatriarch;
@@ -161,9 +165,13 @@ public class ExcelGeneratorServiceImpl {
 
 	private boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
 			String attachmentFilename) {
+		
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			Properties properties = new Properties();
+	       
+	        
 
 			helper.setTo(toEmail);
 			helper.setSubject(subject);
@@ -173,9 +181,12 @@ public class ExcelGeneratorServiceImpl {
 			helper.addAttachment(attachmentFilename, attachment);
 
 			mailSender.send(message);
+			
 			return true;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			return false;
 
 		}

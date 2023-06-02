@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ public class ExcelExportAllSubmissions {
 	
 	
 	@GetMapping("/excel/allsubmissions")
-	public void generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+	public ResponseEntity<String> generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 	@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,@RequestParam StatusExcel status) throws Exception{
 		
 		response.setContentType("application/octet-stream");
@@ -34,6 +35,7 @@ public class ExcelExportAllSubmissions {
 		excelserviceallsubmissions.generateExcelAndSendEmail(response,startDate, endDate,status);
 		
 		response.flushBuffer();
+		return ResponseEntity.ok("Mail sent successfully!");
 	}
 
 }
