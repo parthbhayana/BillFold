@@ -119,7 +119,7 @@ public class ReportsController {
 		reportsService.submitReport(reportId, managerMail);
 	}
 
-	@PostMapping("/updateReport/{reportId}")
+	@PostMapping("/updatereport/{reportId}")
 	public Reports updateReport(@RequestBody Reports report, @PathVariable Long reportId) {
 		return reportsService.updateReport(report, reportId);
 	}
@@ -131,25 +131,25 @@ public class ReportsController {
 		return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
 	}
 
-	@PostMapping("/approveReportByManager/{reportId}")
+	@PostMapping("/approvereportbymanager/{reportId}")
 	public void approveReportbymanager(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
 		reportsService.approveReportByManager(reportId, Comments);
 	}
 
-	@PostMapping("/rejectReportByManager/{reportId}")
+	@PostMapping("/rejectreportbymanager/{reportId}")
 	public void rejectReportbymanager(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
 		reportsService.rejectReportByManager(reportId, Comments);
 	}
 
-	@PostMapping("/approveReportByFinance/{reportId}")
+	@PostMapping("/approvereportbyfinance/{reportId}")
 	public void approveReportbyfinance(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
 		reportsService.approveReportByFinance(reportId, Comments);
 	}
 
-	@PostMapping("/rejectReportByFinance/{reportId}")
+	@PostMapping("/rejectreportbyfinance/{reportId}")
 	public void rejectReportbyfinance(@PathVariable Long reportId,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
 		reportsService.rejectReportByFinance(reportId, Comments);
