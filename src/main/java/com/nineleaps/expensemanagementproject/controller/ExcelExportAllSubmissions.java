@@ -22,7 +22,9 @@ public class ExcelExportAllSubmissions {
 	
 	
 	@GetMapping("/excel/allsubmissions")
+
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+
 	@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,@RequestParam StatusExcel status) throws Exception{
 		
 		response.setContentType("application/octet-stream");
@@ -35,7 +37,10 @@ public class ExcelExportAllSubmissions {
 		excelserviceallsubmissions.generateExcelAndSendEmail(response,startDate, endDate,status);
 		
 		response.flushBuffer();
+
+
 		return ResponseEntity.ok("Mail sent successfully!");
+
 	}
 
 }

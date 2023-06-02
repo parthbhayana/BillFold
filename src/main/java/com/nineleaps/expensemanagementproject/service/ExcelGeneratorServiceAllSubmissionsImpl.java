@@ -40,16 +40,20 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 	@Autowired
 	private IExpenseService expenseService;
 
-	public boolean generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
+	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
 			StatusExcel status) throws Exception {
 
 		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
 		generateExcel(excelStream, startDate, endDate, status);
 		byte[] excelBytes = excelStream.toByteArray();
 
-		boolean emailsent = sendEmailWithAttachment("parinayprasad@gmail.com", "BillFold:Excel Report",
+		boolean emailsent = sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
-		return emailsent;
+		if (emailsent) {
+	        return "Email sent successfully!";
+	    } else {
+	        return "Failed to send email.";
+	    }
 	}
 
 	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate,

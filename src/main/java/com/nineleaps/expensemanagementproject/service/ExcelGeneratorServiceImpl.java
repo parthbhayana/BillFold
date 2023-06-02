@@ -66,7 +66,7 @@ public class ExcelGeneratorServiceImpl {
 		generateExcel(excelStream, startDate, endDate);
 		byte[] excelBytes = excelStream.toByteArray();
 
-		boolean emailsent=sendEmailWithAttachment("parinayprasad@gmail.com", "BillFold:Excel Report",
+		boolean emailsent = sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
 		return emailsent;
 	}
@@ -85,9 +85,11 @@ public class ExcelGeneratorServiceImpl {
 		row.createCell(0).setCellValue("Sl.no.");
 		row.createCell(1).setCellValue("Category Name");
 		row.createCell(2).setCellValue("Total Amount");
-
+		row.createCell(3).setCellValue("Percentage");
 		int dataRowIndex = 1;
 		int sl = 1;
+		float totalAmountSum = 0.0f;
+
 		for (Category category : categories) {
 			HSSFRow dataRow = sheet.createRow(dataRowIndex);
 			dataRow.createCell(0).setCellValue(sl);
@@ -97,10 +99,25 @@ public class ExcelGeneratorServiceImpl {
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Float totalAmount = categoryAmountMap.get(categoryName);
 				dataRow.createCell(2).setCellValue(totalAmount);
+				totalAmountSum += totalAmount;
 			} else {
 				dataRow.createCell(2).setCellValue(0.0f);
 			}
 			sl++;
+			dataRowIndex++;
+		}
+
+		dataRowIndex = 1;
+		for (Category category : categories) {
+			HSSFRow dataRow = sheet.getRow(dataRowIndex);
+			String categoryName = category.getCatDescription();
+			if (categoryAmountMap.containsKey(categoryName)) {
+				Float totalAmount = categoryAmountMap.get(categoryName);
+				float percentage = (totalAmount / totalAmountSum) * 100;
+				dataRow.createCell(3).setCellValue(percentage);
+			} else {
+				dataRow.createCell(3).setCellValue(0.0f);
+			}
 			dataRowIndex++;
 		}
 
