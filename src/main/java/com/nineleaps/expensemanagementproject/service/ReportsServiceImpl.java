@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDate;
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.mail.MessagingException;
 
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +57,8 @@ public class ReportsServiceImpl implements IReportsService {
 		Employee emp = empServices.getEmployeeDetailsById(employeeId);
 		String managerEmail = emp.getReportingManagerEmail();
 		String employeeEmail = emp.getEmployeeEmail();
-
 		newReport.setManagerEmail(managerEmail);
 		newReport.setEmployeeMail(employeeEmail);
-
 		LocalDate today = LocalDate.now();
 		newReport.setDateCreated(today);
 		String currency = null;
@@ -108,9 +109,50 @@ public class ReportsServiceImpl implements IReportsService {
 		return reportsrepository.save(re);
 	}
 
+//	@Override
+//	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
+//			List<Long> expenseIds) {
+//		Reports report = getReportById(reportId);
+//		if (report == null || report.getIsHidden() == true) {
+//			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
+//		}
+//		if (report != null && report.getIsHidden() != true) {
+//			report.setReportTitle(reportTitle);
+//			report.setReportDescription(reportDescription);
+//			reportsrepository.save(report);
+//			List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+//			for (Expense exp : expenseList) {
+//				if (exp != null) {
+//					exp.setReportTitle(reportTitle);
+//					expRepo.save(exp);
+//				}
+//			}
+//			boolean reportedStatus = false;
+//			for (Long expenseid : expenseIds) {
+//				Expense expense = expServices.getExpenseById(expenseid);
+//				if (report != null && expense.getIsReported() == true) {
+//					expense.setIsReported(reportedStatus);
+//					expense.setReports(null);
+//					expense.setReportTitle(null);
+//					expRepo.save(expense);
+//				}
+//			}
+//		}
+//		Reports re = getReportById(reportId);
+//		re.setTotalAmountINR(totalamountINR(reportId));
+//		re.setTotalAmountCurrency(totalamountCurrency(reportId));
+//		// Fetching Employee ID
+//		List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+//		Expense expense = expenseList.get(0);
+//		Employee employee = expense.getEmployee();
+//		Long empId = employee.getEmployeeId();
+//		return getReportByEmpId(empId);
+//	}
+
 	@Override
 	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
-			List<Long> expenseIds) {
+			List<Long> addExpenseIds, List<Long> removeExpenseIds) {
+		Long empId = null;
 		Reports report = getReportById(reportId);
 		if (report == null || report.getIsHidden() == true) {
 			throw new NullPointerException("Report with ID " + reportId + " does not exist!");
@@ -119,15 +161,32 @@ public class ReportsServiceImpl implements IReportsService {
 			report.setReportTitle(reportTitle);
 			report.setReportDescription(reportDescription);
 			reportsrepository.save(report);
+			// Updating Report Title in existing expenses
 			List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
 			for (Expense exp : expenseList) {
 				if (exp != null) {
 					exp.setReportTitle(reportTitle);
 					expRepo.save(exp);
+					// Fetching employeeId
+					Expense expense = expenseList.get(0);
+					Employee employee = expense.getEmployee();
+					empId = employee.getEmployeeId();
 				}
 			}
+			// Adding Expenses
+			for (Long expenseid : addExpenseIds) {
+				Expense expense = expServices.getExpenseById(expenseid);
+				if (expense.getIsReported() == true) {
+					throw new IllegalStateException(
+							"Expense with ID " + expenseid + " is already reported in another report!");
+				}
+				if (report != null && expense.getIsReported() != true) {
+					expServices.updateExpense(reportId, expenseid);
+				}
+			}
+			// Removing Expenses
 			boolean reportedStatus = false;
-			for (Long expenseid : expenseIds) {
+			for (Long expenseid : removeExpenseIds) {
 				Expense expense = expServices.getExpenseById(expenseid);
 				if (report != null && expense.getIsReported() == true) {
 					expense.setIsReported(reportedStatus);
@@ -141,10 +200,13 @@ public class ReportsServiceImpl implements IReportsService {
 		re.setTotalAmountINR(totalamountINR(reportId));
 		re.setTotalAmountCurrency(totalamountCurrency(reportId));
 		// Fetching Employee ID
-		List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
-		Expense expense = expenseList.get(0);
-		Employee employee = expense.getEmployee();
-		Long empId = employee.getEmployeeId();
+//		List<Expense> expenseList = expServices.getExpenseByReportId(reportId);
+//		if (!expenseList.isEmpty()) {
+//			Expense expense = expenseList.get(0);
+//			Employee employee = expense.getEmployee();
+//			empId = employee.getEmployeeId();
+//		}
+
 		return getReportByEmpId(empId);
 	}
 
@@ -241,7 +303,7 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports submitReport(Long reportId, String managerMail) {
+	public Reports submitReport(Long reportId, String managerMail) throws FileNotFoundException, MessagingException {
 		boolean submissionStatus = true;
 		ManagerApprovalStatus pending = ManagerApprovalStatus.PENDING;
 		Reports re = getReportById(reportId);

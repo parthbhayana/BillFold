@@ -116,7 +116,7 @@ public class Reports {
 
 	public Reports(Long reportId, String reportTitle, String reportDescription, String managerComments,
 			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail,
-			LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate, LocalDate financeActionDate,
+			LocalDate dateSubmitted, LocalDate dateCreated, LocalDate dateApproved, LocalDate dateReimbursed,
 			String currency, float totalAmountINR, float totalAmountCurrency, Boolean isHidden,
 			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
 		super();
@@ -130,8 +130,8 @@ public class Reports {
 		this.managerEmail = managerEmail;
 		this.dateSubmitted = dateSubmitted;
 		this.dateCreated = dateCreated;
-		this.managerActionDate = managerActionDate;
-		this.financeActionDate = financeActionDate;
+		this.managerActionDate = dateApproved;
+		this.financeActionDate = dateReimbursed;
 		this.currency = currency;
 		this.totalAmountINR = totalAmountINR;
 		this.totalAmountCurrency = totalAmountCurrency;

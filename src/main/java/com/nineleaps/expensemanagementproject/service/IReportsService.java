@@ -1,7 +1,10 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
@@ -19,7 +22,7 @@ public interface IReportsService {
 
 	public Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
-	public Reports submitReport(Long reportId, String managerMail);
+	public Reports submitReport(Long reportId, String managerMail) throws FileNotFoundException, MessagingException;
 
 	public void approveReportByManager(Long reportId, String comments);
 
@@ -47,7 +50,11 @@ public interface IReportsService {
 
 	public Reports removeExpenseFromReport(Long reportId, List<Long> expenseIds);
 
-	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription, List<Long> expenseids);
+//	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription, List<Long> expenseids);
 
-	public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate, LocalDate endDate);
+	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
+			List<Long> addExpenseIds,List<Long> removeExpenseIds);
+
+	public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
+			LocalDate endDate);
 }
