@@ -1,5 +1,9 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+import java.io.FileNotFoundException;
+
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,7 +17,7 @@ public class EmailController {
 	private IEmailService emailService;
 
 	@PostMapping("/sendemail/{empId}")
-	public void sendEmail(@RequestParam Long reportId) {
+	public void sendEmail(@RequestParam Long reportId) throws FileNotFoundException, MessagingException {
 		emailService.managerNotification(reportId);
 	}
 }

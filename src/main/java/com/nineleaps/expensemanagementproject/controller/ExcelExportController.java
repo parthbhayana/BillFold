@@ -1,16 +1,14 @@
 package com.nineleaps.expensemanagementproject.controller;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
+
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +22,7 @@ public class ExcelExportController {
 	
 	
 	@GetMapping("/excel")
-	public void generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+	public ResponseEntity<String> generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 	@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception{
 		
 		response.setContentType("application/octet-stream");
@@ -37,6 +35,7 @@ public class ExcelExportController {
 		excelservice.generateExcelAndSendEmail(response,startDate, endDate);
 		
 		response.flushBuffer();
+		return ResponseEntity.ok("Mail sent successfully!");
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.management.AttributeNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
@@ -84,7 +86,7 @@ public class ReportsController {
 
 	@PostMapping("/submitReport/{reportId}")
 	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail,
-			HttpServletResponse response) throws AttributeNotFoundException {
+			HttpServletResponse response) throws AttributeNotFoundException, FileNotFoundException, MessagingException {
 		System.out.print(
 				"---------------------------------------------------------------------------------" + managerMail);
 		try {
