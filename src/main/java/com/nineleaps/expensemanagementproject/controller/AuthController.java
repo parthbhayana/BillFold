@@ -46,7 +46,7 @@ public class AuthController {
 		    
 		    	
 		    
-		    @GetMapping("/verifyEmployee")
+		    @GetMapping("/verifyemployee")
 		    public String getUserByEmail(String emailToVerify) {
 		        Employee user=userServices.getUserByEmail(emailToVerify);
 		        if(user!=null) {
