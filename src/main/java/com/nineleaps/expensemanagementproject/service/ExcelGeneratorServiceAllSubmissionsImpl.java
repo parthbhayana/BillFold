@@ -71,11 +71,11 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 			row.createCell(3).setCellValue("Report Id");
 			row.createCell(4).setCellValue("Report Name");
 			row.createCell(5).setCellValue("submitted on");
-			row.createCell(6).setCellValue("Appproved  on");
-			row.createCell(7).setCellValue("Approved by");
-			row.createCell(8).setCellValue("Total Amount(INR)");
-			row.createCell(9).setCellValue("Status");
-
+			row.createCell(6).setCellValue("Month");
+			row.createCell(7).setCellValue("Appproved  on");
+			row.createCell(8).setCellValue("Approved by");
+			row.createCell(9).setCellValue("Total Amount(INR)");
+			row.createCell(10).setCellValue("Status");
 			int dataRowIndex = 1;
 			int sl = 1;
 
@@ -92,15 +92,19 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 					Employee employee = expense.getEmployee();
 					dataRow.createCell(2).setCellValue(employee.getFirstName() + " " + employee.getLastName());
 					dataRow.createCell(3).setCellValue(report.getReportId());
-					dataRow.createCell(4).setCellValue(report.getReportTitle());
-					dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
+					dataRow.createCell(4).setCellValue(report.getReportTitle());			
+					dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());				
+					LocalDate submittedDate = report.getDateSubmitted();
+					String monthName = submittedDate.getMonth().toString();
+					dataRow.createCell(6).setCellValue(monthName);
+					
 					LocalDate managerActionDate = report.getManagerActionDate();
 					if (managerActionDate != null) {
-						dataRow.createCell(6).setCellValue(managerActionDate.toString());
+						dataRow.createCell(7).setCellValue(managerActionDate.toString());
 					}
-					dataRow.createCell(7).setCellValue(report.getManagerEmail());
-					dataRow.createCell(8).setCellValue(report.getTotalAmountINR());
-					dataRow.createCell(9).setCellValue("Pending/Reimbursed");
+					dataRow.createCell(8).setCellValue(report.getManagerEmail());
+					dataRow.createCell(9).setCellValue(report.getTotalAmountINR());
+					dataRow.createCell(10).setCellValue("Pending/Reimbursed");
 
 					dataRowIndex++;
 					sl++;
@@ -126,11 +130,11 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 			row.createCell(3).setCellValue("Report Id");
 			row.createCell(4).setCellValue("Report Name");
 			row.createCell(5).setCellValue("submitted on");
-			row.createCell(6).setCellValue("Appproved  on");
-			row.createCell(7).setCellValue("Approved by");
-			row.createCell(8).setCellValue("Total Amount(INR)");
-			row.createCell(9).setCellValue("Status");
-
+			row.createCell(6).setCellValue("Month");
+			row.createCell(7).setCellValue("Appproved  on");
+			row.createCell(8).setCellValue("Approved by");
+			row.createCell(9).setCellValue("Total Amount(INR)");
+			row.createCell(10).setCellValue("Status");
 			int dataRowIndex = 1;
 			int sl = 1;
 
@@ -149,13 +153,17 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 						dataRow.createCell(3).setCellValue(report.getReportId());
 						dataRow.createCell(4).setCellValue(report.getReportTitle());
 						dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
+						LocalDate submittedDate = report.getDateSubmitted();
+						String monthName = submittedDate.getMonth().toString();
+						dataRow.createCell(6).setCellValue(monthName);
+						
 						LocalDate managerActionDate = report.getManagerActionDate();
 						if (managerActionDate != null) {
-							dataRow.createCell(6).setCellValue(managerActionDate.toString());
+							dataRow.createCell(7).setCellValue(managerActionDate.toString());
 						}
-						dataRow.createCell(7).setCellValue(report.getManagerEmail());
-						dataRow.createCell(8).setCellValue(report.getTotalAmountINR());
-						dataRow.createCell(9).setCellValue("Pending");
+						dataRow.createCell(8).setCellValue(report.getManagerEmail());
+						dataRow.createCell(9).setCellValue(report.getTotalAmountINR());
+						dataRow.createCell(10).setCellValue("Pending");
 
 						dataRowIndex++;
 						sl++;
@@ -181,11 +189,12 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 			row.createCell(3).setCellValue("Report Id");
 			row.createCell(4).setCellValue("Report Name");
 			row.createCell(5).setCellValue("submitted on");
-			row.createCell(6).setCellValue("Appproved  on");
-			row.createCell(7).setCellValue("Approved by");
-			row.createCell(8).setCellValue("Total Amount(INR)");
-			row.createCell(9).setCellValue("Status");
-
+			row.createCell(6).setCellValue("Month");
+			row.createCell(7).setCellValue("Appproved  on");
+			row.createCell(8).setCellValue("Approved by");
+			row.createCell(9).setCellValue("Total Amount(INR)");
+			row.createCell(10).setCellValue("Status");
+		
 			int dataRowIndex = 1;
 			int sl = 1;
 			for (Reports report : reportlist) {
@@ -203,13 +212,18 @@ public class ExcelGeneratorServiceAllSubmissionsImpl {
 						dataRow.createCell(3).setCellValue(report.getReportId());
 						dataRow.createCell(4).setCellValue(report.getReportTitle());
 						dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
+						LocalDate submittedDate = report.getDateSubmitted();
+						String monthName = submittedDate.getMonth().toString();
+						dataRow.createCell(6).setCellValue(monthName);
+						
 						LocalDate managerActionDate = report.getManagerActionDate();
 						if (managerActionDate != null) {
-							dataRow.createCell(6).setCellValue(managerActionDate.toString());
+							dataRow.createCell(7).setCellValue(managerActionDate.toString());
 						}
-						dataRow.createCell(7).setCellValue(report.getManagerEmail());
-						dataRow.createCell(8).setCellValue(report.getTotalAmountINR());
-						dataRow.createCell(9).setCellValue("Reimbursed");
+						dataRow.createCell(8).setCellValue(report.getManagerEmail());
+						dataRow.createCell(9).setCellValue(report.getTotalAmountINR());
+						dataRow.createCell(10).setCellValue("Reimbursed");
+						
 
 						dataRowIndex++;
 						sl++;
