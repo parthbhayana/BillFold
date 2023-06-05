@@ -47,8 +47,18 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 	private static final int CHART_IMAGE_WIDTH = 640;
 	private static final int CHART_IMAGE_HEIGHT = 480;
 
-	public boolean generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate)
+	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate)
 			throws Exception {
+		
+		@SuppressWarnings("unused")
+		List<Category> categories = catfinrepo.findAll();
+		HashMap<String, Float> categoryAmountMap = CategoryTotalAmount(startDate, endDate);
+
+		if (categoryAmountMap.isEmpty()) {
+			return "No data available for the selected period.So, Email can't be sent!";
+		}
+
+
 
 		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
 		generateExcel(excelStream, startDate, endDate);
@@ -56,7 +66,12 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 
 		boolean emailsent = sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
-		return emailsent;
+		if (emailsent) {
+	        return "Email sent successfully!";
+	    } 
+		else {
+			return "Email not sent";
+		}
 	}
 
 	@SuppressWarnings("unchecked")

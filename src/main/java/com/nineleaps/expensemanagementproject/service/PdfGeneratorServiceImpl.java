@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,12 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.lowagie.text.Document;
+import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
-import com.lowagie.text.Table;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
@@ -39,18 +46,31 @@ public class PdfGeneratorServiceImpl {
 	public byte[] generatePdf(Long reportId) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Document document = new Document(PageSize.A4);
-		PdfWriter.getInstance(document, baos);
+		PdfWriter writer = PdfWriter.getInstance(document, baos);
+		BorderPageEventHandler eventHandler = new BorderPageEventHandler();
+		writer.setPageEvent(eventHandler);
 		document.open();
+
+		PdfContentByte canvas = writer.getDirectContent();
+		Rectangle pageSize = document.getPageSize();
+		float borderWidth = 5;
+		canvas.rectangle(pageSize.getLeft() + borderWidth, pageSize.getBottom() + borderWidth,
+				pageSize.getWidth() - 2 * borderWidth, pageSize.getHeight() - 2 * borderWidth);
+		canvas.stroke();
+
 		Font fontHeader = FontFactory.getFont(FontFactory.TIMES_BOLD);
 		fontHeader.setSize(22);
 		Paragraph headerParagraph = new Paragraph("EXPENSE REPORT - BILLFOLD", fontHeader);
 		headerParagraph.setAlignment(Paragraph.ALIGN_CENTER);
-		Table table = new Table(4);
-		table.setWidth(100);
-		table.addCell("Date");
-		table.addCell("Merchant");
-		table.addCell("Description");
-		table.addCell("Amount");
+		PdfPTable table = new PdfPTable(4);
+		table.setWidthPercentage(100);
+
+		Font font = FontFactory.getFont(FontFactory.TIMES, 14);
+
+		table.addCell(getCenterAlignedCell("Date", font));
+		table.addCell(getCenterAlignedCell("Merchant", font));
+		table.addCell(getCenterAlignedCell("Description", font));
+		table.addCell(getCenterAlignedCell("Amount", font));
 		Font fontParagraph = FontFactory.getFont(FontFactory.TIMES);
 		fontParagraph.setSize(14);
 		Reports report = reportsRepository.findById(reportId).get();
@@ -62,10 +82,10 @@ public class PdfGeneratorServiceImpl {
 		}
 		float total = 0;
 		for (Expense expense : expenses) {
-			table.addCell(expense.getDate().toString());
-			table.addCell(expense.getMerchantName());
-			table.addCell(expense.getDescription());
-			table.addCell(expense.getAmount().toString());
+			table.addCell(getCenterAlignedCells(expense.getDate().toString(), font));
+			table.addCell(getCenterAlignedCells(expense.getMerchantName(), font));
+			table.addCell(getCenterAlignedCells(expense.getDescription(), font));
+			table.addCell(getCenterAlignedCells(expense.getAmount().toString(), font));
 			total += expense.getAmount();
 		}
 		Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES);
@@ -82,9 +102,30 @@ public class PdfGeneratorServiceImpl {
 		fontParagraph12.setSize(14);
 		Paragraph pdfParagraph02 = new Paragraph("Employee Email : " + employee.getEmployeeEmail(), fontParagraph);
 		pdfParagraph02.setAlignment(Paragraph.ALIGN_LEFT);
+
+		Paragraph emptyParagraph = new Paragraph(" ");
+		
+		Paragraph emptyParagraph01 = new Paragraph(" ");
+		Paragraph emptyParagraph02 = new Paragraph(" ");
+
+		Font fontParagraph13 = FontFactory.getFont(FontFactory.TIMES);
+		fontParagraph13.setSize(14);
+		Paragraph pdfParagraph03 = new Paragraph("Report Titile : " + report.getReportTitle());
+		pdfParagraph03.setAlignment(Paragraph.ALIGN_LEFT);
+
+		Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES);
+		fontParagraph14.setSize(14);
+		Paragraph pdfParagraph04 = new Paragraph("Report Description : " + report.getReportDescription());
+		pdfParagraph04.setAlignment(Paragraph.ALIGN_LEFT);
+
 		document.add(headerParagraph);
+		document.add(emptyParagraph01);
+		document.add(emptyParagraph02);
+		document.add(pdfParagraph03);
+		document.add(pdfParagraph04);
 		document.add(pdfParagraph);
 		document.add(pdfParagraph02);
+		document.add(emptyParagraph);
 		document.add(table);
 		document.add(pdfParagraph01);
 		for (Expense expense : expenses) {
@@ -102,6 +143,24 @@ public class PdfGeneratorServiceImpl {
 		return baos.toByteArray();
 	}
 
+	private PdfPCell getCenterAlignedCell(String content, Font font) {
+		PdfPCell cell = new PdfPCell(new Phrase(content, font));
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		cell.setPadding(5);
+		cell.setBackgroundColor(new Color(211, 211, 211));
+		return cell;
+	}
+
+	private PdfPCell getCenterAlignedCells(String content, Font font) {
+		PdfPCell cell = new PdfPCell(new Phrase(content, font));
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		cell.setPadding(5);
+
+		return cell;
+	}
+
 	public void export(Long reportId, HttpServletResponse response) throws IOException {
 		byte[] pdfBytes = generatePdf(reportId);
 		Reports report = reportsRepository.findById(reportId).get();
@@ -117,5 +176,18 @@ public class PdfGeneratorServiceImpl {
 		outputStream.write(pdfBytes);
 		outputStream.flush();
 		outputStream.close();
+	}
+
+	private class BorderPageEventHandler extends PdfPageEventHelper {
+		@Override
+		public void onEndPage(PdfWriter writer, Document document) {
+			PdfContentByte canvas = writer.getDirectContent();
+			Rectangle pageSize = document.getPageSize();
+			float borderWidth = 5;
+			canvas.rectangle(pageSize.getLeft() + borderWidth, pageSize.getBottom() + borderWidth,
+					pageSize.getWidth() - 2 * borderWidth, pageSize.getHeight() - 2 * borderWidth);
+			canvas.stroke();
+		}
+
 	}
 }

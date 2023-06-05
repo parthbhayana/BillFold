@@ -12,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceCategoryBreakupImpl;
-
-
 
 @RestController
 public class ExcelExportCategoryController {
@@ -34,10 +31,15 @@ public class ExcelExportCategoryController {
 
 		response.setHeader(headerKey, headerValue);
 		
-		excelservice.generateExcelAndSendEmail(response,startDate, endDate);
+		String result=excelservice.generateExcelAndSendEmail(response,startDate, endDate);
 		
-		response.flushBuffer();
-		return ResponseEntity.ok("Mail sent successfully!");
+		if (result.equals("Email sent successfully!")) {
+			response.flushBuffer();
+			return ResponseEntity.ok(result);
+		} else if (result.equals("No data available for the selected period.So, Email can't be sent!")) {
+			return ResponseEntity.ok(result);
+		} else {
+			return ResponseEntity.badRequest().body(result);
+		}
 	}
-
 }

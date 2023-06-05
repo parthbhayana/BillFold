@@ -42,6 +42,12 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 
 	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
 			StatusExcel status) throws Exception {
+		
+		List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
+
+		if (reportlist.isEmpty()) {
+			return "No data available for the selected period.So, Email can't be sent!";
+		}
 
 		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
 		generateExcel(excelStream, startDate, endDate, status);
@@ -51,9 +57,10 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 				"Please find the attached Excel report.", excelBytes, "report.xls");
 		if (emailsent) {
 	        return "Email sent successfully!";
-	    } else {
-	        return "Failed to send email.";
-	    }
+	    } 
+		else {
+			return "Email not sent";
+		}
 	}
 
 	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate,

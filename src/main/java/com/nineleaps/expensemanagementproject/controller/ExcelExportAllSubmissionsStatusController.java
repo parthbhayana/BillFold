@@ -28,22 +28,22 @@ public class ExcelExportAllSubmissionsStatusController {
 
 	@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,@RequestParam StatusExcel status) throws Exception{
 		
-		response.setContentType("application/octet-stream");
-		
+		String fileName = "Billfold_All_Submissions_Status.xls";
 		String headerKey = "Content-Disposition";
-		String headerValue = "attachment;filename=Category wise Expense Analytics.xls";
+		String headerValue = "attachment; filename=" + fileName;
 
+		response.setContentType("application/vnd.ms-excel");
 		response.setHeader(headerKey, headerValue);
-		
-		excelserviceallsubmissions.generateExcelAndSendEmail(response,startDate, endDate,status);
-		
-		response.flushBuffer();
 
+		String result = excelserviceallsubmissions.generateExcelAndSendEmail(response, startDate, endDate, status);
 
-		return ResponseEntity.ok("Mail sent successfully!");
-
+		if (result.equals("Email sent successfully!")) {
+			response.flushBuffer();
+			return ResponseEntity.ok(result);
+		} else if (result.equals("No data available for the selected period.So, Email can't be sent!")) {
+			return ResponseEntity.ok(result);
+		} else {
+			return ResponseEntity.badRequest().body(result);
+		}
 	}
-
 }
-
-
