@@ -6,46 +6,34 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import javax.mail.*;
-import javax.mail.internet.*;
 import java.util.Properties;
 import javax.servlet.http.HttpServletResponse;
-
 import javax.activation.DataSource;
-
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
-
-
-
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
-
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.hssf.usermodel.*;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
-
 import org.jfree.data.general.DefaultPieDataset;
 import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Expense;
-
 import com.nineleaps.expensemanagementproject.repository.CategoryFinanceRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
 @Service
-public class ExcelGeneratorServiceImpl {
+public class ExcelGeneratorServiceCategoryBreakupImpl {
 
 	@Autowired
 	private CategoryFinanceRepository catfinrepo;
@@ -186,6 +174,7 @@ public class ExcelGeneratorServiceImpl {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			@SuppressWarnings("unused")
 			Properties properties = new Properties();
 	       
 	        

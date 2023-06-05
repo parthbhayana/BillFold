@@ -12,16 +12,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineleaps.expensemanagementproject.entity.StatusExcel;
-import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceAllSubmissionsImpl;
+
+import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceAllSubmissionsStatusImpl;
 
 @RestController
-public class ExcelExportAllSubmissions {
+public class ExcelExportAllSubmissionsStatusController {
 	@Autowired
-	private ExcelGeneratorServiceAllSubmissionsImpl excelserviceallsubmissions;
+	private ExcelGeneratorServiceAllSubmissionsStatusImpl excelserviceallsubmissions;
 	
 	
 	
-	@GetMapping("/excel/allsubmissions")
+	@GetMapping("/excel/allsubmissionsstatus")
 
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 

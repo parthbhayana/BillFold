@@ -43,7 +43,7 @@ public class PdfGeneratorServiceImpl {
 		document.open();
 		Font fontHeader = FontFactory.getFont(FontFactory.TIMES_BOLD);
 		fontHeader.setSize(22);
-		Paragraph headerParagraph = new Paragraph("EXPENSE REPORT", fontHeader);
+		Paragraph headerParagraph = new Paragraph("EXPENSE REPORT - BILLFOLD", fontHeader);
 		headerParagraph.setAlignment(Paragraph.ALIGN_CENTER);
 		Table table = new Table(4);
 		table.setWidth(100);
@@ -112,7 +112,7 @@ public class PdfGeneratorServiceImpl {
 		fileOutputStream.flush();
 		fileOutputStream.close();
 		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + "expense_report.pdf" + "\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + "expense_report_BillFold.pdf" + "\"");
 		ServletOutputStream outputStream = response.getOutputStream();
 		outputStream.write(pdfBytes);
 		outputStream.flush();
