@@ -29,7 +29,7 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
 
-public class ExcelGeneratorServiceAllSubmissionsImpl {
+public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 
 	@Autowired
 	private ReportsRepository reportRepo;

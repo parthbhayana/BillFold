@@ -13,15 +13,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceImpl;
+import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceCategoryBreakupImpl;
+
+
 
 @RestController
-public class ExcelExportController {
+public class ExcelExportCategoryController {
 	@Autowired
-	private ExcelGeneratorServiceImpl excelservice;
+	private ExcelGeneratorServiceCategoryBreakupImpl excelservice;
 	
 	
-	@GetMapping("/excel")
+	@GetMapping("/excel/categorybreakup")
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 	@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception{
 		
