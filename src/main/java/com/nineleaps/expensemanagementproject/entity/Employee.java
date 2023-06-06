@@ -34,12 +34,6 @@ public class Employee {
 	@Column(name = "emp_mail")
 	private String employeeEmail;
 
-	@Column(name = "designation")
-	private String designation;
-
-	@Column(name = "manager_mail")
-	private String reportingManagerEmail;
-
 	@Column(name = "is_finance_admin", nullable = true)
 	@ApiModelProperty(hidden = true)
 	private Boolean isFinanceAdmin = false;
@@ -61,21 +55,17 @@ public class Employee {
 	}
 
 	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
-			String designation, String reportingManagerEmail, Boolean isFinanceAdmin, String imageUrl, Boolean isHidden,
-			List<Expense> expenseList) {
+			Boolean isFinanceAdmin, String imageUrl, Boolean isHidden, List<Expense> expenseList) {
 		super();
 		this.employeeId = employeeId;
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
 		this.employeeEmail = employeeEmail;
-		this.designation = designation;
-		this.reportingManagerEmail = reportingManagerEmail;
 		this.isFinanceAdmin = isFinanceAdmin;
 		this.imageUrl = imageUrl;
 		this.isHidden = isHidden;
 		this.expenseList = expenseList;
-
 	}
 
 	public Long getEmployeeId() {
@@ -116,22 +106,6 @@ public class Employee {
 
 	public void setEmployeeEmail(String employeeEmail) {
 		this.employeeEmail = employeeEmail;
-	}
-
-	public String getDesignation() {
-		return designation;
-	}
-
-	public void setDesignation(String designation) {
-		this.designation = designation;
-	}
-
-	public String getReportingManagerEmail() {
-		return reportingManagerEmail;
-	}
-
-	public void setReportingManagerEmail(String reportingManagerEmail) {
-		this.reportingManagerEmail = reportingManagerEmail;
 	}
 
 	public Boolean getIsFinanceAdmin() {

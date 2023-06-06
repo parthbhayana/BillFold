@@ -5,8 +5,6 @@ import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
-
-
 import java.io.FileNotFoundException;
 
 import java.util.List;
@@ -28,10 +26,6 @@ public class EmailServiceImpl implements IEmailService {
 
 	@Autowired
 	private IExpenseService expenseService;
-	
-	
-	
-	
 
 	private final JavaMailSender javaMailSender;
 
@@ -47,9 +41,9 @@ public class EmailServiceImpl implements IEmailService {
 		if (!expenseList.isEmpty()) {
 			Expense expense = expenseList.get(0);
 			Employee employee = expense.getEmployee();
-			   MimeMessage message = javaMailSender.createMimeMessage();
-			   MimeMessageHelper eMail = new MimeMessageHelper(message, true);
-			
+			MimeMessage message = javaMailSender.createMimeMessage();
+			MimeMessageHelper eMail = new MimeMessageHelper(message, true);
+
 			eMail.setFrom("karthikdemoemail@gmail.com");
 			eMail.setTo(report.getManagerEmail());
 			eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
@@ -60,15 +54,15 @@ public class EmailServiceImpl implements IEmailService {
 					+ employee.getLastName() + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: "
 					+ report.getTotalAmountINR() + " INR"
 					+ "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
-					+ "\n\nThis is an automated message. Please do not reply to this email." + "Please view the following attachments"+"\n\nThanks!");
-			 
-			    byte[] fileData = report.getPdfFile();
-			  
-			ByteArrayDataSource dataSource = new ByteArrayDataSource(fileData,  "application/pdf");
+					+ "\n\nThis is an automated message. Please do not reply to this email." + "\n\nThanks!");
+
+			byte[] fileData = report.getPdfFile();
+
+			ByteArrayDataSource dataSource = new ByteArrayDataSource(fileData, "application/pdf");
 			eMail.addAttachment("Document.pdf", dataSource);
 			javaMailSender.send(message);
-			//this.javaMailSender.send(eMail);
-		} else  {
+			// this.javaMailSender.send(eMail);
+		} else {
 			throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
 		}
 	}

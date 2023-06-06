@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.Reports;
-import com.nineleaps.expensemanagementproject.entity.StatusExcel;
 
 public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
