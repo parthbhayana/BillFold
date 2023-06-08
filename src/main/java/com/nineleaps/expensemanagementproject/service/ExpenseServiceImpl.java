@@ -77,16 +77,6 @@ public class ExpenseServiceImpl implements IExpenseService {
 		return expRepository.findById(expenseId).get();
 	}
 
-//	@Override
-//	public Expense updateExpense(Long reportId, Long employeeId) {
-//		Expense exp = getExpenseById(employeeId);
-//		Reports report = reportServices.getReportById(reportId);
-//		if (exp != null) {
-//			exp.setReports(report);
-//		}
-//		return expRepository.save(exp);
-//	}
-	
 	@Override
 	public Expense updateExpense(Long reportId, Long employeeId) {
 		Expense exp = getExpenseById(employeeId);
@@ -100,17 +90,6 @@ public class ExpenseServiceImpl implements IExpenseService {
 		}
 		return expRepository.save(exp);
 	}
-
-//	@Override
-//	public Expense updateSupportingDocument( String supportingDoc, Long expenseId) {
-//
-//		Expense exp = getExpenseById(expenseId);
-//		if (exp != null) {
-//			exp.setSupportingDocument(supportingDoc);
-//		}
-//		expRepository.save(exp);
-//		return null;
-//	}
 
 	@Override
 	public void deleteExpenseById(Long expenseId) {
@@ -136,7 +115,6 @@ public class ExpenseServiceImpl implements IExpenseService {
 		expense.setDate(newExpense.getDate());
 		expense.setAmount(newExpense.getAmount());
 		expense.setDescription(newExpense.getDescription());
-		// expense.setCategory(newExpense.getCategory());
 		expense.setSupportingDocuments(newExpense.getSupportingDocuments());
 		return expRepository.save(expense);
 	}

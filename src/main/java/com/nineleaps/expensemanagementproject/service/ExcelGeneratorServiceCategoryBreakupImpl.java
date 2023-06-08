@@ -49,7 +49,7 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 
 	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate)
 			throws Exception {
-		
+
 		@SuppressWarnings("unused")
 		List<Category> categories = catfinrepo.findAll();
 		HashMap<String, Float> categoryAmountMap = CategoryTotalAmount(startDate, endDate);
@@ -58,8 +58,6 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 			return "No data available for the selected period.So, Email can't be sent!";
 		}
 
-
-
 		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
 		generateExcel(excelStream, startDate, endDate);
 		byte[] excelBytes = excelStream.toByteArray();
@@ -67,9 +65,8 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 		boolean emailsent = sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
 		if (emailsent) {
-	        return "Email sent successfully!";
-	    } 
-		else {
+			return "Email sent successfully!";
+		} else {
 			return "Email not sent";
 		}
 	}
@@ -185,14 +182,12 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 
 	private boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
 			String attachmentFilename) {
-		
+
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			@SuppressWarnings("unused")
 			Properties properties = new Properties();
-	       
-	        
 
 			helper.setTo(toEmail);
 			helper.setSubject(subject);
@@ -202,12 +197,12 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 			helper.addAttachment(attachmentFilename, attachment);
 
 			mailSender.send(message);
-			
+
 			return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 			return false;
 
 		}

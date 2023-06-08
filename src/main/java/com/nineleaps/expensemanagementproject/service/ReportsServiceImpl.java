@@ -55,9 +55,7 @@ public class ReportsServiceImpl implements IReportsService {
 	@Override
 	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids) {
 		Employee emp = empServices.getEmployeeDetailsById(employeeId);
-//		String managerEmail = emp.getReportingManagerEmail();
 		String employeeEmail = emp.getEmployeeEmail();
-//		newReport.setManagerEmail(managerEmail);
 		newReport.setEmployeeMail(employeeEmail);
 		LocalDate today = LocalDate.now();
 		newReport.setDateCreated(today);

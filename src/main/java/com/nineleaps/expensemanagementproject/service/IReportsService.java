@@ -50,10 +50,8 @@ public interface IReportsService {
 
 	public Reports removeExpenseFromReport(Long reportId, List<Long> expenseIds);
 
-
-
 	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
-			List<Long> addExpenseIds,List<Long> removeExpenseIds);
+			List<Long> addExpenseIds, List<Long> removeExpenseIds);
 
 	public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
 			LocalDate endDate);

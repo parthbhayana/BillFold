@@ -12,22 +12,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineleaps.expensemanagementproject.entity.StatusExcel;
-
 import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceAllSubmissionsStatusImpl;
 
 @RestController
 public class ExcelExportAllSubmissionsStatusController {
 	@Autowired
 	private ExcelGeneratorServiceAllSubmissionsStatusImpl excelserviceallsubmissions;
-	
-	
-	
-	@GetMapping("/excel/allsubmissionsstatus")
 
-	public ResponseEntity<String> generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+	@GetMapping("/excel/all_submissions_status")
 
-	@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,@RequestParam StatusExcel status) throws Exception{
-		
+	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
+			@RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+
+			@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+			@RequestParam StatusExcel status) throws Exception {
+
 		String fileName = "Billfold_All_Submissions_Status.xls";
 		String headerKey = "Content-Disposition";
 		String headerValue = "attachment; filename=" + fileName;

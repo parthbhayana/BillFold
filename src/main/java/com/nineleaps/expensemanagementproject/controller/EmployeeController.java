@@ -21,52 +21,51 @@ public class EmployeeController {
 
 	@Autowired
 	private IEmployeeService employeeService;
-	
+
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
-	@GetMapping("/listemployee")
+
+	@GetMapping("/list_employee")
 	public List<Employee> getAllEmployeeDetails() {
 		return employeeService.getAllEmployeeDetails();
 	}
 
-	@PostMapping("/insertemployee")
+	@PostMapping("/insert_employee")
 	public Employee save(@RequestBody Employee employeeentiry) {
 		return employeeService.saveEmployeeDetails(employeeentiry);
 	}
 
-	@PutMapping("/updateemployee/{employee_Id}")
-	public Employee updateEmployee(@RequestBody Employee newemployee, @PathVariable("employee_Id") Long employeeId) {
+	@PutMapping("/update_employee/{employee_id}")
+	public Employee updateEmployee(@RequestBody Employee newemployee, @PathVariable("employee_id") Long employeeId) {
 		return employeeService.updateEmployeeDetails(newemployee, employeeId);
 
 	}
 
-	@GetMapping("/findemployee/{employee_Id}")
-	public Employee getEmployeeById(@PathVariable("employee_Id") Long employeeId) {
+	@GetMapping("/find_employee/{employee_id}")
+	public Employee getEmployeeById(@PathVariable("employee_id") Long employeeId) {
 		return employeeService.getEmployeeDetailsById(employeeId);
 
 	}
 
-	@DeleteMapping("/deleteemployee/{employee_Id}")
+	@DeleteMapping("/delete_employee/{employee_id}")
 	public void deleteEmployeeById(@PathVariable("employee_id") Long employeeId) {
 		employeeService.deleteEmployeeDetailsById(employeeId);
 	}
-	
-	@PostMapping("/hideemployee/{empId}")
+
+	@PostMapping("/hide_employee/{employee_id}")
 	public void hideEmployee(@PathVariable Long empId) {
 		employeeService.hideEmployee(empId);
 	}
-	
-	@PostMapping("/setfinanceadmin")
+
+	@PostMapping("/set_finance_admin")
 	public Employee setFinanceAdmin(@RequestParam Long empId) {
 		Boolean isAdmin = true;
 		Employee emp = employeeService.getEmployeeDetailsById(empId);
 		emp.setIsFinanceAdmin(isAdmin);
 		return employeeRepository.save(emp);
 	}
-	
-	@GetMapping("/isadmin")
-//	@GetMapping("/isadmin/{empId}")
+
+	@GetMapping("/is_admin")
 	public void isFinanceAdmin(@RequestParam Long empId) {
 		employeeService.isFinanceAdmin(empId);
 	}

@@ -42,7 +42,7 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 
 	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
 			StatusExcel status) throws Exception {
-		
+
 		List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
 
 		if (reportlist.isEmpty()) {
@@ -56,9 +56,8 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 		boolean emailsent = sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
 		if (emailsent) {
-	        return "Email sent successfully!";
-	    } 
-		else {
+			return "Email sent successfully!";
+		} else {
 			return "Email not sent";
 		}
 	}
@@ -99,12 +98,12 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 					Employee employee = expense.getEmployee();
 					dataRow.createCell(2).setCellValue(employee.getFirstName() + " " + employee.getLastName());
 					dataRow.createCell(3).setCellValue(report.getReportId());
-					dataRow.createCell(4).setCellValue(report.getReportTitle());			
-					dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());				
+					dataRow.createCell(4).setCellValue(report.getReportTitle());
+					dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
 					LocalDate submittedDate = report.getDateSubmitted();
 					String monthName = submittedDate.getMonth().toString();
 					dataRow.createCell(6).setCellValue(monthName);
-					
+
 					LocalDate managerActionDate = report.getManagerActionDate();
 					if (managerActionDate != null) {
 						dataRow.createCell(7).setCellValue(managerActionDate.toString());
@@ -117,11 +116,8 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 					sl++;
 				}
 			}
-
-			// ServletOutputStream ops = response.getOutputStream();
 			workbook.write(excelStream);
 			workbook.close();
-			// ops.close();
 
 		}
 
@@ -163,7 +159,7 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 						LocalDate submittedDate = report.getDateSubmitted();
 						String monthName = submittedDate.getMonth().toString();
 						dataRow.createCell(6).setCellValue(monthName);
-						
+
 						LocalDate managerActionDate = report.getManagerActionDate();
 						if (managerActionDate != null) {
 							dataRow.createCell(7).setCellValue(managerActionDate.toString());
@@ -177,11 +173,8 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 					}
 				}
 			}
-			// ServletOutputStream ops = response.getOutputStream();
 			workbook.write(excelStream);
 			workbook.close();
-			// ops.close();
-
 		}
 
 		if (status == StatusExcel.REIMBURSED) {
@@ -201,7 +194,7 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 			row.createCell(8).setCellValue("Approved by");
 			row.createCell(9).setCellValue("Total Amount(INR)");
 			row.createCell(10).setCellValue("Status");
-		
+
 			int dataRowIndex = 1;
 			int sl = 1;
 			for (Reports report : reportlist) {
@@ -222,7 +215,7 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 						LocalDate submittedDate = report.getDateSubmitted();
 						String monthName = submittedDate.getMonth().toString();
 						dataRow.createCell(6).setCellValue(monthName);
-						
+
 						LocalDate managerActionDate = report.getManagerActionDate();
 						if (managerActionDate != null) {
 							dataRow.createCell(7).setCellValue(managerActionDate.toString());
@@ -230,19 +223,14 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 						dataRow.createCell(8).setCellValue(report.getManagerEmail());
 						dataRow.createCell(9).setCellValue(report.getTotalAmountINR());
 						dataRow.createCell(10).setCellValue("Reimbursed");
-						
 
 						dataRowIndex++;
 						sl++;
 					}
 				}
 			}
-
-			// ServletOutputStream ops = response.getOutputStream();
 			workbook.write(excelStream);
 			workbook.close();
-//			ops.close();
-
 		}
 	}
 

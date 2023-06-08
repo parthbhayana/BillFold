@@ -6,8 +6,6 @@ import com.nineleaps.expensemanagementproject.entity.Expense;
 
 public interface IExpenseService {
 
-	// public Expense addExpense(Expense expense, Long employeeid);
-
 	public List<Expense> getAllExpenses();
 
 	public Expense getExpenseById(Long expenseId);
@@ -16,7 +14,7 @@ public interface IExpenseService {
 
 	public Expense updateExpense(Long reportId, Long employeeId);
 
-	void deleteExpenseById(Long expenseId);
+	public void deleteExpenseById(Long expenseId);
 
 	public List<Expense> getExpenseByEmployeeId(Long employeeId);
 
