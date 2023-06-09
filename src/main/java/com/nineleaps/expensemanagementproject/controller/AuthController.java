@@ -26,7 +26,7 @@ public class AuthController {
 	@Autowired
 	private IEmployeeService userServices;
 
-	@GetMapping("/verifyemployee")
+	@GetMapping("/verify_employee")
 	public String getUserByEmail(String emailToVerify) {
 		Employee user = userServices.getUserByEmail(emailToVerify);
 		if (user != null) {

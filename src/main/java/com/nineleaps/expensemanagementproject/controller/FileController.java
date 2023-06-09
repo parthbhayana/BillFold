@@ -22,7 +22,7 @@ public class FileController {
 	@Value("${project.document}")
 	private String path;
 
-	@PostMapping("/upload/{expenseid}")
+	@PostMapping("/upload/{expense_id}")
 	public ResponseEntity<FileResponse> fileUpload(@RequestParam("document") MultipartFile document,
 			@PathVariable(name = "expenseid") Long expenseid) {
 		String fileName = null;

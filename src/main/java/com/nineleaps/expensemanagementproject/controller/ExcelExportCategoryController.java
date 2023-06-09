@@ -1,8 +1,6 @@
 package com.nineleaps.expensemanagementproject.controller;
 
-
 import java.time.LocalDate;
-
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,21 +16,21 @@ import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceCateg
 public class ExcelExportCategoryController {
 	@Autowired
 	private ExcelGeneratorServiceCategoryBreakupImpl excelservice;
-	
-	
-	@GetMapping("/excel/categorybreakup")
-	public ResponseEntity<String> generateExcelReport(HttpServletResponse response, @RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-	@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception{
-		
+
+	@GetMapping("/excel/category_breakup")
+	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
+			@RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
+
 		response.setContentType("application/octet-stream");
-		
+
 		String headerKey = "Content-Disposition";
 		String headerValue = "attachment;filename=Category wise Expense Analytics.xls";
 
 		response.setHeader(headerKey, headerValue);
-		
-		String result=excelservice.generateExcelAndSendEmail(response,startDate, endDate);
-		
+
+		String result = excelservice.generateExcelAndSendEmail(response, startDate, endDate);
+
 		if (result.equals("Email sent successfully!")) {
 			response.flushBuffer();
 			return ResponseEntity.ok(result);

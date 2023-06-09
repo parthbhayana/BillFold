@@ -45,33 +45,27 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public Employee getEmployeeByEmail(String emailToVerify) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Employee getUserByEmail(String emailToVerify) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<Employee> getAllUser() {
-		// TODO Auto-generated method stub
 		return employeerepository.findAll();
 	}
 
 	@Override
 	public Employee insertuser(Employee newUser) {
-		// TODO Auto-generated method stub
 		return employeerepository.save(newUser);
 	}
 
 	@Override
 	public Employee findByEmailId(String emailId) {
-		// TODO Auto-generated method stub
 		return employeerepository.findByEmployeeEmail(emailId);
-//		return null;
 	}
 
 	@Override
@@ -86,12 +80,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	public Boolean isFinanceAdmin(Long empId) {
 		Employee emp = getEmployeeDetailsById(empId);
 		Boolean isAdmin = emp.getIsFinanceAdmin();
-//		if(isAdmin == true) {
-//			return true;
-//		}
-//		else {
-//			return false;
-//		}
 		return isAdmin;
 	}
 

@@ -18,6 +18,7 @@ public class FileServiceImpl implements IFileService {
 	@Autowired
 	private IExpenseService expenseServices;
 
+	@SuppressWarnings("unused")
 	@Override
 	public String uploadDocument(String path, MultipartFile file, Long expenseId) throws IOException {
 		// File name

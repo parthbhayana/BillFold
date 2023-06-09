@@ -61,7 +61,6 @@ public class EmailServiceImpl implements IEmailService {
 			ByteArrayDataSource dataSource = new ByteArrayDataSource(fileData, "application/pdf");
 			eMail.addAttachment("Document.pdf", dataSource);
 			javaMailSender.send(message);
-			// this.javaMailSender.send(eMail);
 		} else {
 			throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
 		}
