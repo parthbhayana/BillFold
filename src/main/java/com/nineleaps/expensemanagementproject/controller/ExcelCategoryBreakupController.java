@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceCategoryBreakupImpl;
 
 @RestController
-public class ExcelExportCategoryController {
+public class ExcelCategoryBreakupController {
 	@Autowired
 	private ExcelGeneratorServiceCategoryBreakupImpl excelservice;
 

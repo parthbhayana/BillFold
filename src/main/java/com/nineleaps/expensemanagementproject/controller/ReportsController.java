@@ -43,18 +43,18 @@ public class ReportsController {
 	}
 
 	@GetMapping("/get_by_report_id/{report_id}")
-	public Reports getReportByReportId(@PathVariable Long reportId) {
-		return reportsService.getReportById(reportId);
+	public Reports getReportByReportId(@PathVariable Long report_id) {
+		return reportsService.getReportById(report_id);
 	}
 
 	@GetMapping("/get_report_by_employee_id/{employee_id}")
-	public List<Reports> getReportByEmpId(@PathVariable Long employeeId) {
-		return reportsService.getReportByEmpId(employeeId);
+	public List<Reports> getReportByEmpId(@PathVariable Long employee_id) {
+		return reportsService.getReportByEmpId(employee_id);
 	}
 
 	@GetMapping("/get_reports_submitted_to_user/{manager_email}")
-	public List<Reports> getReportsSubmittedToUser(@PathVariable String managerEmail) {
-		return reportsService.getReportsSubmittedToUser(managerEmail);
+	public List<Reports> getReportsSubmittedToUser(@PathVariable String manager_email) {
+		return reportsService.getReportsSubmittedToUser(manager_email);
 	}
 
 	@GetMapping("/get_all_submitted_reports")
@@ -68,23 +68,18 @@ public class ReportsController {
 	}
 
 	@PostMapping("/add_report/{employee_id}")
-	public Reports addReport(@RequestBody Reports newReport, @PathVariable Long employeeId,
+	public Reports addReport(@RequestBody Reports newReport, @PathVariable Long employee_id,
 			@RequestParam ArrayList<Long> expenseIds) {
-		return reportsService.addReport(newReport, employeeId, expenseIds);
+		return reportsService.addReport(newReport, employee_id, expenseIds);
 	}
 
 	@PatchMapping("/add_expense_to_report/{report_id}")
-	public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
-		return reportsService.addExpenseToReport(reportId, expenseIds);
-	}
-
-	@PatchMapping("/remove_expenses_from_report/{report_id}")
-	public Reports removeExpenseFromReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
-		return reportsService.removeExpenseFromReport(reportId, expenseIds);
+	public Reports addExpensesToReport(@PathVariable Long report_id, @RequestParam ArrayList<Long> expenseIds) {
+		return reportsService.addExpenseToReport(report_id, expenseIds);
 	}
 
 	@PostMapping("/submit_report/{report_id}")
-	public void submitReport(@PathVariable Long reportId, @RequestParam String managerMail,
+	public void submitReport(@PathVariable Long report_id, @RequestParam String managerMail,
 			HttpServletResponse response) throws AttributeNotFoundException, FileNotFoundException, MessagingException {
 		try {
 
@@ -94,9 +89,9 @@ public class ReportsController {
 			String headerKey = "Content-Disposition";
 			String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
 			response.setHeader(headerKey, headerValue);
-			pdfGeneratorService.export(reportId, response);
+			pdfGeneratorService.export(report_id, response);
 
-			reportsService.submitReport(reportId, managerMail);
+			reportsService.submitReport(report_id, managerMail);
 			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {
 
@@ -113,58 +108,53 @@ public class ReportsController {
 			}
 			e.printStackTrace();
 		}
-		reportsService.submitReport(reportId, managerMail);
-	}
-
-	@PostMapping("/update_report/{report_id}")
-	public Reports updateReport(@RequestBody Reports report, @PathVariable Long reportId) {
-		return reportsService.updateReport(report, reportId);
+		reportsService.submitReport(report_id, managerMail);
 	}
 
 	@PatchMapping("/edit_report/{report_id}")
-	public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
+	public List<Reports> editReport(@PathVariable Long report_id, @RequestParam String reportTitle,
 			@RequestParam String reportDescription, @RequestParam ArrayList<Long> addExpenseIds,
 			@RequestParam ArrayList<Long> removeExpenseIds) {
-		return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
+		return reportsService.editReport(report_id, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
 	}
 
 	@PostMapping("/approve_report_by_manager/{report_id}")
-	public void approveReportbymanager(@PathVariable Long reportId,
+	public void approveReportbymanager(@PathVariable Long report_id,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		reportsService.approveReportByManager(reportId, Comments);
+		reportsService.approveReportByManager(report_id, Comments);
 	}
 
 	@PostMapping("/reject_report_by_manager/{report_id}")
-	public void rejectReportbymanager(@PathVariable Long reportId,
+	public void rejectReportbymanager(@PathVariable Long report_id,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		reportsService.rejectReportByManager(reportId, Comments);
+		reportsService.rejectReportByManager(report_id, Comments);
 	}
 
 	@PostMapping("/approve_report_by_finance/{report_id}")
-	public void approveReportbyfinance(@PathVariable Long reportId,
+	public void approveReportbyfinance(@PathVariable Long report_id,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		reportsService.approveReportByFinance(reportId, Comments);
+		reportsService.approveReportByFinance(report_id, Comments);
 	}
 
 	@PostMapping("/reject_report_by_finance/{report_id}")
-	public void rejectReportbyfinance(@PathVariable Long reportId,
+	public void rejectReportbyfinance(@PathVariable Long report_id,
 			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		reportsService.rejectReportByFinance(reportId, Comments);
+		reportsService.rejectReportByFinance(report_id, Comments);
 	}
 
 	@PostMapping("/hide_report/{report_id}")
-	public void hideReport(@PathVariable Long reportId) {
-		reportsService.hideReport(reportId);
+	public void hideReport(@PathVariable Long report_id) {
+		reportsService.hideReport(report_id);
 	}
 
 	@GetMapping("/get_total_amount_inr_by_report_id")
-	public float totalAmountINR(@RequestParam Long reportId) {
-		return reportsService.totalamountINR(reportId);
+	public float totalAmountINR(@RequestParam Long report_id) {
+		return reportsService.totalamountINR(report_id);
 	}
 
 	@GetMapping("/get_total_amount_currency_by_report_id")
-	public float totalAmountCurrency(@RequestParam Long reportId) {
-		return reportsService.totalamountCurrency(reportId);
+	public float totalAmountCurrency(@RequestParam Long report_id) {
+		return reportsService.totalamountCurrency(report_id);
 	}
 
 	@GetMapping("/get_reports_in_date_range")
