@@ -17,7 +17,7 @@ public class CurrencyExchangeServiceImpl implements ICurrencyExchange {
 
 		String baseURL = "https://api.freecurrencyapi.com/v1/latest?apikey=0bM6MPvQNZk9vZmlzY3t8MCs30rcROub0soX77mB&currencies=INR&base_currency=";
 		String apiURL = baseURL + baseCurrency;
-
+		
 		double exchangeValue = 0;
 		try {
 			URL url = new URL(apiURL);
@@ -38,9 +38,7 @@ public class CurrencyExchangeServiceImpl implements ICurrencyExchange {
 				JsonNode dataNode = rootNode.get("data");
 				if (dataNode != null && dataNode.has("INR")) {
 					exchangeValue = dataNode.get("INR").asDouble();
-
 				} else {
-
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

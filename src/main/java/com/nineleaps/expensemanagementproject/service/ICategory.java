@@ -19,7 +19,7 @@ public interface ICategory {
 	public Category updateCategoryFinance(Category categoryfinance);
 
 	public void hideCategory(Long categoryId);
-	
-	public HashMap<String,Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate);
-	
+
+	public HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate);
+
 }

@@ -14,10 +14,10 @@ public interface IEmployeeService {
 
 	public void deleteEmployeeDetailsById(Long empId);
 
-	public Employee updateEmployeeDetails(Employee employeeentity,Long employeeId);
+	public Employee updateEmployeeDetails(Employee employeeentity, Long employeeId);
 
 	public Employee getEmployeeByEmail(String emailToVerify);
-	
+
 	public void hideEmployee(Long empId);
 
 	public Employee getUserByEmail(String emailToVerify);
@@ -27,6 +27,6 @@ public interface IEmployeeService {
 	public Employee insertuser(Employee newUser);
 
 	public Employee findByEmailId(String emailId);
-	
+
 	public Boolean isFinanceAdmin(Long empId);
 }

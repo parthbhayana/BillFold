@@ -23,26 +23,27 @@ import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 public class UserController {
 	@Autowired
 	private IEmployeeService userService;
+	@SuppressWarnings("unused")
 	@Autowired
 	private JwtUtil jwtUtil;
 	private String email;
 	JSONObject responseJson;
 
-	@GetMapping("/listtheuser")
+	@GetMapping("/list_the_user")
 	public List<Employee> getAllUserDtls() {
 		return userService.getAllUser();
 	}
 
-	@GetMapping("/getprofiledata")
+	@SuppressWarnings("unchecked")
+	@GetMapping("/get_profile_data")
 	public ResponseEntity<?> sendData() {
-
 		Employee employee1 = userService.findByEmailId(email);
 		System.out.println(employee1.getEmployeeEmail());
 		Long employeeId = employee1.getEmployeeId();
-
 		String email = employee1.getEmployeeEmail();
 		String First_name = employee1.getFirstName();
 		String Last_name = employee1.getLastName();
+		@SuppressWarnings("unused")
 		String Full_name = First_name + " " + Last_name;
 		String imageUrl = employee1.getImageUrl();
 		JSONObject responseJson = new JSONObject();
@@ -51,28 +52,21 @@ public class UserController {
 		responseJson.put("lastName", Last_name);
 		responseJson.put("imageUrl", imageUrl);
 		responseJson.put("email", email);
-
 		return ResponseEntity.ok(responseJson);
 
 	}
 
-	@PostMapping("/theprofile")
+	@PostMapping("/the_profile")
 	public void insertuser(@RequestBody Employee newUser, HttpServletResponse response) {
 		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());
-
 		if (employee == null) {
 			userService.insertuser(newUser);
 			System.out.println(newUser.getEmployeeEmail());
 			email = newUser.getEmployeeEmail();
 			System.out.println("new user email" + email);
-
 		} else {
-
 			email = employee.getEmployeeEmail();
 			System.out.println(email);
-
 		}
-
 	}
-
 }

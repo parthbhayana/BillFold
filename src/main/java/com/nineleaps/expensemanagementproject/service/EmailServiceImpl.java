@@ -4,10 +4,19 @@ import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
+
+import java.io.FileNotFoundException;
+
 import java.util.List;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 @Service
 public class EmailServiceImpl implements IEmailService {
@@ -18,21 +27,23 @@ public class EmailServiceImpl implements IEmailService {
 	@Autowired
 	private IExpenseService expenseService;
 
-	private final JavaMailSender mailSender;
+	private final JavaMailSender javaMailSender;
 
 	public EmailServiceImpl(JavaMailSender mailSender) {
-		this.mailSender = mailSender;
+		this.javaMailSender = mailSender;
 	}
 
 	@Override
-	public void managerNotification(Long reportId) {
+	public void managerNotification(Long reportId) throws MessagingException, FileNotFoundException {
 		Reports report = reportsService.getReportById(reportId);
 		List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
 
 		if (!expenseList.isEmpty()) {
 			Expense expense = expenseList.get(0);
 			Employee employee = expense.getEmployee();
-			SimpleMailMessage eMail = new SimpleMailMessage();
+			MimeMessage message = javaMailSender.createMimeMessage();
+			MimeMessageHelper eMail = new MimeMessageHelper(message, true);
+
 			eMail.setFrom("karthikdemoemail@gmail.com");
 			eMail.setTo(report.getManagerEmail());
 			eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
@@ -45,7 +56,11 @@ public class EmailServiceImpl implements IEmailService {
 					+ "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
 					+ "\n\nThis is an automated message. Please do not reply to this email." + "\n\nThanks!");
 
-			this.mailSender.send(eMail);
+			byte[] fileData = report.getPdfFile();
+
+			ByteArrayDataSource dataSource = new ByteArrayDataSource(fileData, "application/pdf");
+			eMail.addAttachment("Document.pdf", dataSource);
+			javaMailSender.send(message);
 		} else {
 			throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
 		}
@@ -72,7 +87,7 @@ public class EmailServiceImpl implements IEmailService {
 					+ "\n\nThank you for your understanding and cooperation." + "\n\nBest Regards," + "\nBillFold"
 					+ "\n\nThis is an automated message. Please do not reply to this email.");
 
-			this.mailSender.send(eMail);
+			this.javaMailSender.send(eMail);
 		} else {
 			throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
 		}
@@ -99,7 +114,7 @@ public class EmailServiceImpl implements IEmailService {
 					+ "\n\nBest Regards," + "\nBillFold"
 					+ "\n\nThis is an automated message. Please do not reply to this email.");
 
-			this.mailSender.send(eMail);
+			this.javaMailSender.send(eMail);
 		} else {
 			throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
 		}
@@ -127,7 +142,7 @@ public class EmailServiceImpl implements IEmailService {
 					+ "\n\nBest Regards," + "\nBillFold"
 					+ "\n\nThis is an automated message. Please do not reply to this email.");
 
-			this.mailSender.send(eMail);
+			this.javaMailSender.send(eMail);
 		} else {
 			throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
 		}
@@ -154,7 +169,7 @@ public class EmailServiceImpl implements IEmailService {
 					+ "\n\nThank you for your understanding and cooperation." + "\n\nBest Regards," + "\nBillFold"
 					+ "\n\nThis is an automated message. Please do not reply to this email.");
 
-			this.mailSender.send(email);
+			this.javaMailSender.send(email);
 		} else {
 			throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
 		}

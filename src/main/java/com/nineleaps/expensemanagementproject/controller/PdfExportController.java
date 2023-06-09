@@ -16,8 +16,8 @@ public class PdfExportController {
 	@Autowired
 	PdfGeneratorServiceImpl pdfGeneratorService;
 
-	@GetMapping("/openpdf/export/{reportId}")
-	public void createPDF(@PathVariable("reportId") Long reportId, HttpServletResponse response) throws IOException {
+	@GetMapping("/openpdf/export/{report_id}")
+	public void createPDF(@PathVariable("report-id") Long reportId, HttpServletResponse response) throws IOException {
 		response.setContentType("application/pdf");
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());

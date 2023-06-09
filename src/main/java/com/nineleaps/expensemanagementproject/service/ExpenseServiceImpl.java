@@ -22,22 +22,22 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 @Service
 public class ExpenseServiceImpl implements IExpenseService {
 	@Autowired
-	private ExpenseRepository expRepository;
+	private ExpenseRepository expenseRepository;
 
 	@Autowired
-	private EmployeeRepository empRepository;
+	private EmployeeRepository employeeRepository;
 
 	@Autowired
-	private IEmployeeService employeeSERVICES;
+	private IEmployeeService employeeService;
 
 	@Autowired
-	private CategoryFinanceRepository catrepository;
+	private CategoryFinanceRepository categoryRepository;
 
 	@Autowired
 	private IReportsService reportServices;
 
 	@Autowired
-	private ReportsRepository reportsRepo;
+	private ReportsRepository reportsRepository;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -48,8 +48,8 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Transactional
 	@Override
 	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
-		Employee empDetails = employeeSERVICES.getEmployeeDetailsById(employeeid);
-		Category catfin = catrepository.findById(catId).get();
+		Employee empDetails = employeeService.getEmployeeDetailsById(employeeid);
+		Category catfin = categoryRepository.findById(catId).get();
 		LocalDate today = LocalDate.now();
 		LocalTime now = LocalTime.now();
 		expense.setEmployee(empDetails);
@@ -59,34 +59,24 @@ public class ExpenseServiceImpl implements IExpenseService {
 		expense.setCatDescription(mergedCategoryFinance.getCatDescription());
 		expense.setDate(today);
 		expense.setTime(now);
-		expRepository.save(expense);
+		expenseRepository.save(expense);
 		String curr = expense.getCurrency();
 		double rate = CurrencyExchange.getExchangeRate(curr);
 		double amountininr = expense.getAmount() * rate;
 		expense.setAmountINR((float) amountininr);
-		return expRepository.save(expense);
+		return expenseRepository.save(expense);
 	}
 
 	@Override
 	public List<Expense> getAllExpenses() {
-		return expRepository.findAll();
+		return expenseRepository.findAll();
 	}
 
 	@Override
 	public Expense getExpenseById(Long expenseId) {
-		return expRepository.findById(expenseId).get();
+		return expenseRepository.findById(expenseId).get();
 	}
 
-//	@Override
-//	public Expense updateExpense(Long reportId, Long employeeId) {
-//		Expense exp = getExpenseById(employeeId);
-//		Reports report = reportServices.getReportById(reportId);
-//		if (exp != null) {
-//			exp.setReports(report);
-//		}
-//		return expRepository.save(exp);
-//	}
-	
 	@Override
 	public Expense updateExpense(Long reportId, Long employeeId) {
 		Expense exp = getExpenseById(employeeId);
@@ -98,76 +88,91 @@ public class ExpenseServiceImpl implements IExpenseService {
 			exp.setIsReported(reportedStatus);
 			exp.setReportTitle(reportTitle);
 		}
-		return expRepository.save(exp);
+		return expenseRepository.save(exp);
 	}
-
-//	@Override
-//	public Expense updateSupportingDocument( String supportingDoc, Long expenseId) {
-//
-//		Expense exp = getExpenseById(expenseId);
-//		if (exp != null) {
-//			exp.setSupportingDocument(supportingDoc);
-//		}
-//		expRepository.save(exp);
-//		return null;
-//	}
 
 	@Override
 	public void deleteExpenseById(Long expenseId) {
-		expRepository.deleteById(expenseId);
+		expenseRepository.deleteById(expenseId);
 	}
 
 	@Override
 	public List<Expense> getExpenseByEmployeeId(Long employeeId) {
-		Employee employee = empRepository.findById(employeeId).get();
-		return expRepository.findByEmployee(employee);
+		Employee employee = employeeRepository.findById(employeeId).get();
+		return expenseRepository.findByEmployee(employee);
 	}
 
 	@Override
 	public Expense updateSupportingDocument(String supportingDoc, Long expenseId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Expense updateExpenses(Expense newExpense, Long expenseId) {
 		Expense expense = getExpenseById(expenseId);
-		expense.setMerchantName(newExpense.getMerchantName());
-		expense.setDate(newExpense.getDate());
-		expense.setAmount(newExpense.getAmount());
-		expense.setDescription(newExpense.getDescription());
-		// expense.setCategory(newExpense.getCategory());
-		expense.setSupportingDocuments(newExpense.getSupportingDocuments());
-		return expRepository.save(expense);
+		if(expense.getIsHidden()!=true)
+		{
+			expense.setMerchantName(newExpense.getMerchantName());
+			expense.setDate(newExpense.getDate());
+			expense.setAmount(newExpense.getAmount());
+			expense.setDescription(newExpense.getDescription());
+			expense.setSupportingDocuments(newExpense.getSupportingDocuments());
+			LocalDate today = LocalDate.now();
+			LocalTime now = LocalTime.now();
+			expense.setDate(today);
+			expense.setTime(now);
+			expense.setCurrency(newExpense.getCurrency());
+			expenseRepository.save(expense);
+			String curr = expense.getCurrency();
+			double rate = CurrencyExchange.getExchangeRate(curr);
+			double amountininr = expense.getAmount() * rate;
+			expense.setAmountINR((float) amountininr);
+			expenseRepository.save(expense);
+		}
+		if(expense.getIsHidden()==true) {
+			throw new IllegalStateException("Expense " + expenseId + " does not exist!");
+		}
+		return expenseRepository.save(expense);
 	}
 
 	@Override
 	public List<Expense> getExpensesByEmployeeId(Long employeeId) {
-		Employee employee = empRepository.findById(employeeId).get();
-		return expRepository.findByEmployeeAndIsReported(employee, false);
+		Employee employee = employeeRepository.findById(employeeId).get();
+		return expenseRepository.findByEmployeeAndIsReported(employee, false);
 	}
 
 	@Override
 	public Expense removeTaggedExpense(Long expenseId) {
-		Expense exp = expRepository.findById(expenseId).get();
+		Expense exp = expenseRepository.findById(expenseId).get();
 		boolean removeExpense = false;
-		exp.setIsReported(removeExpense);
-		exp.setReports(null);
-		return expRepository.save(exp);
+		if(exp.getIsHidden()!=true) {
+			exp.setIsReported(removeExpense);
+			exp.setReports(null);
+			return expenseRepository.save(exp);
+		}
+		if(exp.getIsHidden()==true) {
+			throw new IllegalStateException("Expense " + expenseId + " does not exist!");
+		}
+		return expenseRepository.save(exp);
 	}
 
 	@Override
 	public List<Expense> getExpenseByReportId(Long reportId) {
-		Reports report = reportsRepo.findById(reportId).get();
-		return expRepository.findByReports(report);
+		Reports report = reportsRepository.findById(reportId).get();
+		return expenseRepository.findByReports(report);
 	}
 
 	@Override
 	public void hideExpense(Long expId) {
 		Boolean hidden = true;
 		Expense exp = getExpenseById(expId);
-		exp.setIsHidden(hidden);
-		expRepository.save(exp);
+		if (exp.getIsReported() != true) {
+			exp.setIsHidden(hidden);
+		}
+		if (exp.getIsReported() == true) {
+			throw new IllegalStateException(
+					"Cannot delete expense " + expId + " as it is reported in Report: " + exp.getReportTitle());
+		}
+		expenseRepository.save(exp);
 	}
-
 }

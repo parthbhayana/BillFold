@@ -79,7 +79,7 @@ public class Expense {
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JoinColumn(name = "fk_empid")
+	@JoinColumn(name = "emp_id")
 	private Employee employee;
 
 	@JsonIgnore

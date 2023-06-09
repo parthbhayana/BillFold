@@ -2,6 +2,6 @@ package com.nineleaps.expensemanagementproject.service;
 
 public interface ICurrencyExchange {
 
-	double getExchangeRate(String baseCurrency);
+	public double getExchangeRate(String baseCurrency);
 
 }

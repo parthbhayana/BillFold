@@ -64,7 +64,6 @@ public class CategoryServiceImpl implements ICategory {
 
 	@Override
 	public HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
-//		List<Expense> expenseList = expRepo.findByDateBetween(startDate, endDate);
 		List<Expense> expenseList = expRepo.findByDateBetweenAndIsReported(startDate, endDate, true);
 		HashMap<String, Float> categoryAmountMap = new HashMap<>();
 
