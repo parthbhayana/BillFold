@@ -43,7 +43,7 @@ public class ReportsController {
 	}
 
 	@GetMapping("/get_by_report_id/{report_id}")
-	public Reports getReportByReportId(@PathVariable("report_id") Long reportId) {
+	public Reports getReportByReportId(@PathVariable Long reportId) {
 		return reportsService.getReportById(reportId);
 	}
 
@@ -53,7 +53,7 @@ public class ReportsController {
 	}
 
 	@GetMapping("/get_reports_submitted_to_user/{manager_email}")
-	public List<Reports> getReportsSubmittedToUser(@PathVariable("manager_email") String managerEmail) {
+	public List<Reports> getReportsSubmittedToUser(@PathVariable String managerEmail) {
 		return reportsService.getReportsSubmittedToUser(managerEmail);
 	}
 
@@ -68,7 +68,7 @@ public class ReportsController {
 	}
 
 	@PostMapping("/add_report/{employee_id}")
-	public Reports addReport(@RequestBody Reports newReport, @PathVariable("employee_id") Long employeeId,
+	public Reports addReport(@RequestBody Reports newReport, @PathVariable Long employeeId,
 			@RequestParam ArrayList<Long> expenseIds) {
 		return reportsService.addReport(newReport, employeeId, expenseIds);
 	}
