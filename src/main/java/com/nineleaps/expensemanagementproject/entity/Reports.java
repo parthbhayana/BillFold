@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -101,6 +102,7 @@ public class Reports {
 	@Enumerated(EnumType.STRING)
 	private ManagerApprovalStatus managerapprovalstatus;// = ManagerApprovalStatus.PENDING;
 
+	@Lob
 	@Column(name = "pdf_file", nullable = true)
 	@ApiModelProperty(hidden = true)
 	private byte[] pdfFile;
