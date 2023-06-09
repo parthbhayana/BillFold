@@ -15,7 +15,7 @@ import com.nineleaps.expensemanagementproject.entity.StatusExcel;
 import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceAllSubmissionsStatusImpl;
 
 @RestController
-public class ExcelExportAllSubmissionsStatusController {
+public class ExcelReportsController {
 	@Autowired
 	private ExcelGeneratorServiceAllSubmissionsStatusImpl excelserviceallsubmissions;
 

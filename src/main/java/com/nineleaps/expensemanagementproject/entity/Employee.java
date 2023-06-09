@@ -19,6 +19,7 @@ public class Employee {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(hidden = true)
 	@Column(name = "emp_Id")
 	private Long employeeId;
 
