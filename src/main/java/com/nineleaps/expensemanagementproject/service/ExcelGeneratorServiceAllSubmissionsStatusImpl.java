@@ -53,7 +53,7 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 		generateExcel(excelStream, startDate, endDate, status);
 		byte[] excelBytes = excelStream.toByteArray();
 
-		boolean emailsent = sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
+		boolean emailsent = sendEmailWithAttachment("chiragscopy1@gmail.com", "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
 		if (emailsent) {
 	        return "Email sent successfully!";

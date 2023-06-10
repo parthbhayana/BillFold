@@ -55,14 +55,21 @@ public class Employee {
 	@JsonIgnore
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
 	private List<Expense> expenseList = new ArrayList<>();
+	
+	@Column(name="has_role")
+	private String role="EMPLOYEE";
 
 	public Employee() {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
+
+
 	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
 			String designation, String reportingManagerEmail, Boolean isFinanceAdmin, String imageUrl, Boolean isHidden,
-			List<Expense> expenseList) {
+			List<Expense> expenseList, String role) {
 		super();
 		this.employeeId = employeeId;
 		this.firstName = firstName;
@@ -75,7 +82,7 @@ public class Employee {
 		this.imageUrl = imageUrl;
 		this.isHidden = isHidden;
 		this.expenseList = expenseList;
-
+		this.role = role;
 	}
 
 	public Long getEmployeeId() {
@@ -164,6 +171,13 @@ public class Employee {
 
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;
+	}
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }

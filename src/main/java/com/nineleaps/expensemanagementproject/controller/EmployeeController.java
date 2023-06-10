@@ -59,10 +59,12 @@ public class EmployeeController {
 	
 	@PostMapping("/setfinanceadmin")
 	public Employee setFinanceAdmin(@RequestParam Long empId) {
-		Boolean isAdmin = true;
-		Employee emp = employeeService.getEmployeeDetailsById(empId);
-		emp.setIsFinanceAdmin(isAdmin);
-		return employeeRepository.save(emp);
+	String admin = "FINANCE_ADMIN";
+	boolean isAdmin=true;
+	Employee emp = employeeService.getEmployeeDetailsById(empId);
+	emp.setRole(admin);
+	emp.setIsFinanceAdmin(isAdmin);
+	return employeeRepository.save(emp);
 	}
 	
 	@GetMapping("/isadmin")
