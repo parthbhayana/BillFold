@@ -34,6 +34,10 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	private Long reportId;
 
+	@Column(name = "employee_id") // ,nullable = false
+	@ApiModelProperty(hidden = true)
+	private Long employeeId;
+
 	@Column(name = "report_title", nullable = false)
 	private String reportTitle;
 
@@ -116,13 +120,14 @@ public class Reports {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Reports(Long reportId, String reportTitle, String reportDescription, String managerComments,
+	public Reports(Long reportId, Long employeeId, String reportTitle, String reportDescription, String managerComments,
 			String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail,
-			LocalDate dateSubmitted, LocalDate dateCreated, LocalDate dateApproved, LocalDate dateReimbursed,
+			LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate, LocalDate financeActionDate,
 			String currency, float totalAmountINR, float totalAmountCurrency, Boolean isHidden,
 			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
 		super();
 		this.reportId = reportId;
+		this.employeeId = employeeId;
 		this.reportTitle = reportTitle;
 		this.reportDescription = reportDescription;
 		this.managerComments = managerComments;
@@ -132,8 +137,8 @@ public class Reports {
 		this.managerEmail = managerEmail;
 		this.dateSubmitted = dateSubmitted;
 		this.dateCreated = dateCreated;
-		this.managerActionDate = dateApproved;
-		this.financeActionDate = dateReimbursed;
+		this.managerActionDate = managerActionDate;
+		this.financeActionDate = financeActionDate;
 		this.currency = currency;
 		this.totalAmountINR = totalAmountINR;
 		this.totalAmountCurrency = totalAmountCurrency;
@@ -149,6 +154,14 @@ public class Reports {
 
 	public void setReportId(Long reportId) {
 		this.reportId = reportId;
+	}
+
+	public Long getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getReportTitle() {
