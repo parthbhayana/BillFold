@@ -99,7 +99,8 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Override
 	public List<Expense> getExpenseByEmployeeId(Long employeeId) {
 		Employee employee = employeeRepository.findById(employeeId).get();
-		return expenseRepository.findByEmployee(employee);
+//		return expenseRepository.findByEmployee(employee);
+		return expenseRepository.findByEmployeeAndIsHidden(employee, false);
 	}
 
 	@Override
@@ -159,7 +160,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Override
 	public List<Expense> getExpenseByReportId(Long reportId) {
 		Reports report = reportsRepository.findById(reportId).get();
-		return expenseRepository.findByReports(report);
+		return expenseRepository.findByReportsAndIsHidden(report,false);
 	}
 
 	@Override
