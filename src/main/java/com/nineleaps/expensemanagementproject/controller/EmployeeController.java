@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.entity.Employee;
-import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 
 @RestController
@@ -21,9 +20,6 @@ public class EmployeeController {
 
 	@Autowired
 	private IEmployeeService employeeService;
-
-	@Autowired
-	private EmployeeRepository employeeRepository;
 
 	@GetMapping("/list_employee")
 	public List<Employee> getAllEmployeeDetails() {
@@ -58,11 +54,8 @@ public class EmployeeController {
 	}
 
 	@PostMapping("/set_finance_admin")
-	public Employee setFinanceAdmin(@RequestParam Long empId) {
-		Boolean isAdmin = true;
-		Employee emp = employeeService.getEmployeeDetailsById(empId);
-		emp.setIsFinanceAdmin(isAdmin);
-		return employeeRepository.save(emp);
+	public void setFinanceAdmin(@RequestParam Long empId) {
+		 employeeService.setFinanceAdmin(empId);
 	}
 
 	@GetMapping("/is_admin")

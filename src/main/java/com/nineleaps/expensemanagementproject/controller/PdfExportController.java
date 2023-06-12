@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImpl;
+import com.nineleaps.expensemanagementproject.service.IPdfGeneratorService;
+
 
 @Controller
 public class PdfExportController {
 	@Autowired
-	PdfGeneratorServiceImpl pdfGeneratorService;
+	IPdfGeneratorService pdfGeneratorService;
 
 	@GetMapping("/openpdf/export/{report_id}")
 	public void createPDF(@PathVariable("report-id") Long reportId, HttpServletResponse response) throws IOException {

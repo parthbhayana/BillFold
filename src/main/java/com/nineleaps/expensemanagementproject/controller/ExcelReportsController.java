@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineleaps.expensemanagementproject.entity.StatusExcel;
-import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceAllSubmissionsStatusImpl;
+import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsService;
 
 @RestController
 public class ExcelReportsController {
 	@Autowired
-	private ExcelGeneratorServiceAllSubmissionsStatusImpl excelserviceallsubmissions;
+	private IExcelGeneratorReportsService excelserviceallsubmissions;
 
 	@GetMapping("/excel/all_submissions_status")
 
