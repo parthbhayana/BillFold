@@ -19,7 +19,7 @@ public interface IReportsService {
 	public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
 			List<Long> addExpenseIds, List<Long> removeExpenseIds);
 
-	public List<Reports> getReportByEmpId(Long employeeId);
+	public List<Reports> getReportByEmpId(Long employeeId, String request);
 
 	public Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
