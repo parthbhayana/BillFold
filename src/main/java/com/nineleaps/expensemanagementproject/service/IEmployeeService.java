@@ -29,4 +29,6 @@ public interface IEmployeeService {
 	public Employee findByEmailId(String emailId);
 
 	public Boolean isFinanceAdmin(Long empId);
+
+	public void setFinanceAdmin(Long empId);
 }
