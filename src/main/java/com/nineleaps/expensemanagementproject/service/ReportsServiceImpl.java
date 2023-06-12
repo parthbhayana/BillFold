@@ -59,6 +59,7 @@ public class ReportsServiceImpl implements IReportsService {
 		newReport.setEmployeeMail(employeeEmail);
 		LocalDate today = LocalDate.now();
 		newReport.setDateCreated(today);
+		newReport.setEmployeeId(employeeId);
 		String currency = null;
 		if (!expenseids.isEmpty()) {
 			Long firstExpenseId = expenseids.get(0);
@@ -141,7 +142,7 @@ public class ReportsServiceImpl implements IReportsService {
 		Reports re = getReportById(reportId);
 		re.setTotalAmountINR(totalamountINR(reportId));
 		re.setTotalAmountCurrency(totalamountCurrency(reportId));
-		return getReportByEmpId(empId);
+		return getReportByEmpId(empId, "drafts");
 	}
 
 	@Override
@@ -167,16 +168,22 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public List<Reports> getReportByEmpId(Long employeeId) {
-		List<Expense> expense = expenseServices.getExpenseByEmployeeId(employeeId);
-		List<Reports> report = new ArrayList<>();
-		for (Expense expense2 : expense) {
-			if (expense2.getReports() != null) {
-				report.add(expense2.getReports());
-			}
+	public List<Reports> getReportByEmpId(Long employeeId, String request) {
+		switch (request) {
+		case "drafts":
+			return reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(employeeId, false, false);
+		case "submitted":
+			return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
+					ManagerApprovalStatus.PENDING, true, false);
+		case "rejected":
+			return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
+					ManagerApprovalStatus.REJECTED, true, false);
+		case "approved":
+			return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
+					ManagerApprovalStatus.APPROVED, true, false);
+		default:
+			throw new IllegalArgumentException("Enter a valid request !");
 		}
-		List<Reports> reportWithoutDuplicates = report.stream().distinct().collect(Collectors.toList());
-		return reportWithoutDuplicates;
 	}
 
 	@Override
@@ -372,7 +379,6 @@ public class ReportsServiceImpl implements IReportsService {
 		}
 		report.setIsHidden(hidden);
 		reportsRepository.save(report);
-
 	}
 
 	@Override

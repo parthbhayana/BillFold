@@ -13,10 +13,14 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
 	List<Expense> findByReports(Reports reports);
+	
+	List<Expense> findByReportsAndIsHidden(Reports reports, Boolean b);
 
 	Optional<Expense> findReportByEmployee(Long fkEmpId);
 
 	List<Expense> findByEmployee(Employee employee);
+	
+	List<Expense> findByEmployeeAndIsHidden(Employee employee, Boolean b);
 
 	List<Expense> findByEmployeeAndIsReported(Employee employee, boolean b);
 
