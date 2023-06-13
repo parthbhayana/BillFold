@@ -94,4 +94,13 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		
 	}
 
+	@Override
+	public Employee insertUser(Employee newUser) {
+		// TODO Auto-generated method stub
+		return employeeRepository.save(newUser);
+		
+	}
+	
+	
+
 }

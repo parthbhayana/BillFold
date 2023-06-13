@@ -31,4 +31,6 @@ public interface IEmployeeService {
 	public Boolean isFinanceAdmin(Long empId);
 
 	public void setFinanceAdmin(Long empId);
+
+	public Employee insertUser(Employee newUser);
 }
