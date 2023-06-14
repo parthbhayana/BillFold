@@ -91,7 +91,7 @@ public class Expense {
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "category_id")
-	private Category categoryfinance;
+	private Category category;
 
 	public Expense() {
 
@@ -100,7 +100,7 @@ public class Expense {
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalTime time, String currency, Long amount,
 			float amountINR, String description, String catDescription, Boolean isReported, Boolean isHidden,
 			String reportTitle, byte[] supportingDocuments, Employee employee, Reports reports,
-			Category categoryfinance) {
+			Category category) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
@@ -117,7 +117,7 @@ public class Expense {
 		this.supportingDocuments = supportingDocuments;
 		this.employee = employee;
 		this.reports = reports;
-		this.categoryfinance = categoryfinance;
+		this.category = category;
 	}
 
 	public Long getExpenseId() {
@@ -225,11 +225,11 @@ public class Expense {
 	}
 
 	public Category getCategoryfinance() {
-		return categoryfinance;
+		return category;
 	}
 
 	public void setCategoryfinance(Category categoryfinance) {
-		this.categoryfinance = categoryfinance;
+		this.category = categoryfinance;
 	}
 
 	public String getReportTitle() {

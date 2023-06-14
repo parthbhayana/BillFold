@@ -34,7 +34,7 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	private Long reportId;
 
-	@Column(name = "employee_id") // ,nullable = false
+	@Column(name = "employee_id") 
 	@ApiModelProperty(hidden = true)
 	private Long employeeId;
 
@@ -117,7 +117,7 @@ public class Reports {
 	private List<Expense> expenseList = new ArrayList<>();
 
 	public Reports() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public Reports(Long reportId, Long employeeId, String reportTitle, String reportDescription, String managerComments,
