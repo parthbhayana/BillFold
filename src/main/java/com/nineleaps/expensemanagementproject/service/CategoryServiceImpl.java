@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.repository.CategoryFinanceRepository;
+import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
 @Service
 public class CategoryServiceImpl implements ICategory {
 
 	@Autowired
-	CategoryFinanceRepository catfinrepository;
+	CategoryRepository catfinrepository;
 
 	@Autowired
 	ExpenseRepository expRepo;
@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements ICategory {
 
 		for (Expense expense : expenseList) {
 			Category category = expense.getCategoryfinance();
-			String categoryName = category.getCatDescription();
+			String categoryName = category.getCategoryDescription();
 			Float amt = expense.getAmountINR();
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Float previousAmt = categoryAmountMap.get(categoryName);

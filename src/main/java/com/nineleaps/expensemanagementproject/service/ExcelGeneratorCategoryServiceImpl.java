@@ -28,18 +28,23 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import com.nineleaps.expensemanagementproject.entity.Category;
+import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.repository.CategoryFinanceRepository;
+import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
 @Service
 public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategoryService {
 
 	@Autowired
-	private CategoryFinanceRepository catfinrepo;
+	private CategoryRepository categoryRepository;
 
 	@Autowired
-	private ExpenseRepository expRepo;
+	private ExpenseRepository expenseRepository;
+	
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -52,7 +57,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 			throws Exception {
 
 		@SuppressWarnings("unused")
-		List<Category> categories = catfinrepo.findAll();
+		List<Category> categories = categoryRepository.findAll();
 		HashMap<String, Float> categoryAmountMap = CategoryTotalAmount(startDate, endDate);
 
 		if (categoryAmountMap.isEmpty()) {
@@ -62,8 +67,15 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
 		generateExcel(excelStream, startDate, endDate);
 		byte[] excelBytes = excelStream.toByteArray();
+		
+		Employee financeadmin=employeeRepository.findByRole("FINANCE_ADMIN");
+		
+		if(financeadmin==null)
+		{
+			return "finance admin not found";
+		}
 
-		boolean emailsent = sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
+		boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
 		if (emailsent) {
 			return "Email sent successfully!";
@@ -77,7 +89,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate)
 			throws Exception {
 
-		List<Category> categories = catfinrepo.findAll();
+		List<Category> categories = categoryRepository.findAll();
 		HashMap<String, Float> categoryAmountMap = CategoryTotalAmount(startDate, endDate);
 
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -95,9 +107,9 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		for (Category category : categories) {
 			HSSFRow dataRow = sheet.createRow(dataRowIndex);
 			dataRow.createCell(0).setCellValue(sl);
-			dataRow.createCell(1).setCellValue(category.getCatDescription());
+			dataRow.createCell(1).setCellValue(category.getCategoryDescription());
 
-			String categoryName = category.getCatDescription();
+			String categoryName = category.getCategoryDescription();
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Float totalAmount = categoryAmountMap.get(categoryName);
 				dataRow.createCell(2).setCellValue(totalAmount);
@@ -112,7 +124,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		dataRowIndex = 1;
 		for (Category category : categories) {
 			HSSFRow dataRow = sheet.getRow(dataRowIndex);
-			String categoryName = category.getCatDescription();
+			String categoryName = category.getCategoryDescription();
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Float totalAmount = categoryAmountMap.get(categoryName);
 				float percentage = (totalAmount / totalAmountSum) * 100;
@@ -126,7 +138,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		@SuppressWarnings("rawtypes")
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		for (Category category : categories) {
-			String categoryName = category.getCatDescription();
+			String categoryName = category.getCategoryDescription();
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Float totalAmount = categoryAmountMap.get(categoryName);
 				dataset.setValue(categoryName, totalAmount);
@@ -166,12 +178,12 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 
 	@Override
 	public HashMap<String, Float> CategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
-		List<Expense> expenseList = expRepo.findByDateBetween(startDate, endDate);
+		List<Expense> expenseList = expenseRepository.findByDateBetween(startDate, endDate);
 		HashMap<String, Float> categoryAmountMap = new HashMap<>();
 
 		for (Expense expense : expenseList) {
 			Category category = expense.getCategoryfinance();
-			String categoryName = category.getCatDescription();
+			String categoryName = category.getCategoryDescription();
 			Float amt = expense.getAmountINR();
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Float previousAmt = categoryAmountMap.get(categoryName);
