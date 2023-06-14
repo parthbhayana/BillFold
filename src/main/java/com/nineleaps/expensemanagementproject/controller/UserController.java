@@ -31,42 +31,47 @@ public class UserController {
         return userService.getAllUser();
     }
 
-    @SuppressWarnings("unchecked")
-    @GetMapping("/get_profile_data")
-    public ResponseEntity<?> sendData() {
-        Employee employee1 = userService.findByEmailId(email);
-        System.out.println(employee1.getEmployeeEmail());
-        Long employeeId = employee1.getEmployeeId();
-        String email = employee1.getEmployeeEmail();
-        String First_name = employee1.getFirstName();
-        String Last_name = employee1.getLastName();
-        @SuppressWarnings("unused")
-        String Full_name = First_name + " " + Last_name;
-        String imageUrl = employee1.getImageUrl();
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("employeeId", employeeId);
-        responseJson.put("firstName", First_name);
-        responseJson.put("lastName", Last_name);
-        responseJson.put("imageUrl", imageUrl);
-        responseJson.put("email", email);
-        return ResponseEntity.ok(responseJson);
-    }
+	
+	@GetMapping("/get_profile_data")
+	public ResponseEntity<?> sendData() {
+		Employee employee1 = userService.findByEmailId(email);
+		System.out.println(employee1.getEmployeeEmail());
+		Long employeeId = employee1.getEmployeeId();
+		String email = employee1.getEmployeeEmail();
+		String First_name = employee1.getFirstName();
+		String Last_name = employee1.getLastName();
+		@SuppressWarnings("unused")
+		String Full_name = First_name + " " + Last_name;
+		String imageUrl = employee1.getImageUrl();
+		JSONObject responseJson = new JSONObject();
+		responseJson.put("employeeId", employeeId);
+		responseJson.put("firstName", First_name);
+		responseJson.put("lastName", Last_name);
+		responseJson.put("imageUrl", imageUrl);
+		responseJson.put("email", email);
+		return ResponseEntity.ok(responseJson);
+	}
 
-    @PostMapping("/the_profile")
-    public ResponseEntity<?> insertUser(@RequestBody Employee newUser, HttpServletResponse response) {
-        Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());
-        if (employee == null) {
-            userService.insertUser(newUser);
-            employee = userService.findByEmailId(newUser.getEmployeeEmail());
-            System.out.println(employee.getEmployeeEmail());
-            email = employee.getEmployeeEmail();
-            System.out.println("new user email" + email);
-        } else {
-            email = employee.getEmployeeEmail();
-            System.out.println(email);
-        }
-        System.out.println(employee.getEmployeeId());
-        return jwtUtil.generateToken(email, employee.getEmployeeId(),
-                employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
-    }
+	@PostMapping("/the_profile")
+	public ResponseEntity<?> insertUser(@RequestBody Employee newUser, HttpServletResponse response) {
+		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());
+		if (employee == null) {
+			userService.insertUser(newUser);
+			employee = userService.findByEmailId(newUser.getEmployeeEmail());
+			System.out.println(employee.getEmployeeEmail());
+			email = employee.getEmployeeEmail();
+			System.out.println("new user email" + email);
+			System.out.println(employee.getEmployeeId());
+			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),
+				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
+			return tokenResponse;
+		} else {
+			email = employee.getEmployeeEmail();
+			System.out.println(email);
+			System.out.println(employee.getEmployeeId());
+			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),
+				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
+			return tokenResponse;
+		}
+	}
 }
