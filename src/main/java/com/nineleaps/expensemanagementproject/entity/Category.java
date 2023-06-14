@@ -41,7 +41,7 @@ public class Category {
 	private Boolean isHidden = false;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "categoryfinance", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private List<Expense> expenseList = new ArrayList<>();
 
