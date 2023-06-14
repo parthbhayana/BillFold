@@ -29,7 +29,7 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
 
-public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
+public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsService {
 
 	@Autowired
 	private ReportsRepository reportRepo;
@@ -40,6 +40,7 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 	@Autowired
 	private IExpenseService expenseService;
 
+	@Override
 	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
 			StatusExcel status) throws Exception {
 
@@ -62,6 +63,7 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 		}
 	}
 
+	@Override
 	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate,
 			StatusExcel status) throws Exception {
 
@@ -234,7 +236,8 @@ public class ExcelGeneratorServiceAllSubmissionsStatusImpl {
 		}
 	}
 
-	private boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
+	@Override
+	public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
 			String attachmentFilename) {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();

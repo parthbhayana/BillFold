@@ -33,7 +33,7 @@ import com.nineleaps.expensemanagementproject.repository.CategoryFinanceReposito
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
 @Service
-public class ExcelGeneratorServiceCategoryBreakupImpl {
+public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategoryService {
 
 	@Autowired
 	private CategoryFinanceRepository catfinrepo;
@@ -47,6 +47,7 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 	private static final int CHART_IMAGE_WIDTH = 640;
 	private static final int CHART_IMAGE_HEIGHT = 480;
 
+	@Override
 	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate)
 			throws Exception {
 
@@ -72,6 +73,7 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate)
 			throws Exception {
 
@@ -148,6 +150,7 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 		workbook.close();
 	}
 
+	@Override
 	public int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException {
 		@SuppressWarnings("unused")
 		BufferedImage chartImage = chart.createBufferedImage(width, height);
@@ -161,6 +164,7 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 		}
 	}
 
+	@Override
 	public HashMap<String, Float> CategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
 		List<Expense> expenseList = expRepo.findByDateBetween(startDate, endDate);
 		HashMap<String, Float> categoryAmountMap = new HashMap<>();
@@ -180,7 +184,8 @@ public class ExcelGeneratorServiceCategoryBreakupImpl {
 
 	}
 
-	private boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
+	@Override
+	public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
 			String attachmentFilename) {
 
 		try {
