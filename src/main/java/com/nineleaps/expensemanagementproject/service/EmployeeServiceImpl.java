@@ -11,26 +11,26 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Autowired
-	private EmployeeRepository employeerepository;
+	private EmployeeRepository employeeRepository;
 
 	@Override
 	public List<Employee> getAllEmployeeDetails() {
-		return employeerepository.findAll();
+		return employeeRepository.findAll();
 	}
 
 	@Override
 	public Employee saveEmployeeDetails(Employee employeedetailsEntity) {
-		return employeerepository.save(employeedetailsEntity);
+		return employeeRepository.save(employeedetailsEntity);
 	}
 
 	@Override
 	public Employee getEmployeeDetailsById(Long empId) {
-		return employeerepository.findById(empId).get();
+		return employeeRepository.findById(empId).get();
 	}
 
 	@Override
 	public void deleteEmployeeDetailsById(Long empId) {
-		employeerepository.deleteById(empId);
+		employeeRepository.deleteById(empId);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		employee.setFirstName(newemployee.getFirstName());
 		employee.setLastName(newemployee.getLastName());
 		employee.setMiddleName(newemployee.getMiddleName());
-		return employeerepository.save(employee);
+		return employeeRepository.save(employee);
 	}
 
 	@Override
@@ -55,17 +55,17 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public List<Employee> getAllUser() {
-		return employeerepository.findAll();
+		return employeeRepository.findAll();
 	}
 
 	@Override
 	public Employee insertuser(Employee newUser) {
-		return employeerepository.save(newUser);
+		return employeeRepository.save(newUser);
 	}
 
 	@Override
 	public Employee findByEmailId(String emailId) {
-		return employeerepository.findByEmployeeEmail(emailId);
+		return employeeRepository.findByEmployeeEmail(emailId);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		Boolean hidden = true;
 		Employee emp = getEmployeeDetailsById(empId);
 		emp.setIsHidden(hidden);
-		employeerepository.save(emp);
+		employeeRepository.save(emp);
 	}
 
 	@Override
@@ -82,5 +82,25 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		Boolean isAdmin = emp.getIsFinanceAdmin();
 		return isAdmin;
 	}
+
+	@Override
+	public void setFinanceAdmin(Long empId) {
+		Boolean isAdmin = true;
+		String role="FINANCE_ADMIN";
+		Employee emp = getEmployeeDetailsById(empId);
+		emp.setIsFinanceAdmin(isAdmin);
+		emp.setRole(role);
+		employeeRepository.save(emp);
+		
+	}
+
+	@Override
+	public Employee insertUser(Employee newUser) {
+		// TODO Auto-generated method stub
+		return employeeRepository.save(newUser);
+		
+	}
+	
+	
 
 }

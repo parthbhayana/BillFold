@@ -10,12 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.nineleaps.expensemanagementproject.service.ExcelGeneratorServiceCategoryBreakupImpl;
+import com.nineleaps.expensemanagementproject.service.IExcelGeneratorCategoryService;
 
 @RestController
 public class ExcelCategoryBreakupController {
 	@Autowired
-	private ExcelGeneratorServiceCategoryBreakupImpl excelservice;
+	private IExcelGeneratorCategoryService excelservice;
 
 	@GetMapping("/excel/category_breakup")
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
