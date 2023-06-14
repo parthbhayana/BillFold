@@ -2,6 +2,7 @@ package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +18,18 @@ import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 @RestController
 @RequestMapping()
 public class UserController {
-	@Autowired
-	private IEmployeeService userService;
-	@SuppressWarnings("unused")
-	@Autowired
-	private JwtUtil jwtUtil;
-	private String email;
-	JSONObject responseJson;
+    @Autowired
+    private IEmployeeService userService;
+    @SuppressWarnings("unused")
+    @Autowired
+    private JwtUtil jwtUtil;
+    private String email;
+    JSONObject responseJson;
 
-	@GetMapping("/list_the_user")
-	public List<Employee> getAllUserDtls() {
-		return userService.getAllUser();
-	}
+    @GetMapping("/list_the_user")
+    public List<Employee> getAllUserDtls() {
+        return userService.getAllUser();
+    }
 
 	
 	@GetMapping("/get_profile_data")
