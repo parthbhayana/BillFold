@@ -92,6 +92,7 @@ public class ReportsController {
 			pdfGeneratorService.export(report_id, response);
 
 			reportsService.submitReport(report_id, managerMail);
+			System.out.println("bla");
 			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {
 

@@ -30,7 +30,7 @@ public class UserController {
 		return userService.getAllUser();
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	@GetMapping("/get_profile_data")
 	public ResponseEntity<?> sendData() {
 		Employee employee1 = userService.findByEmailId(email);
@@ -61,15 +61,15 @@ public class UserController {
 			email = employee.getEmployeeEmail();
 			System.out.println("new user email" + email);
 			System.out.println(employee.getEmployeeId());
-			ResponseEntity<?> tokenResponse = jwtUtil.generateToken(email, employee.getEmployeeId(),
-					employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
+			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),
+				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
 			return tokenResponse;
 		} else {
 			email = employee.getEmployeeEmail();
 			System.out.println(email);
 			System.out.println(employee.getEmployeeId());
-			ResponseEntity<?> tokenResponse = jwtUtil.generateToken(email, employee.getEmployeeId(),
-					employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
+			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),
+				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
 			return tokenResponse;
 		}
 	}
