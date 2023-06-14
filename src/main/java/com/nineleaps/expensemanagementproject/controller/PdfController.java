@@ -13,7 +13,7 @@ import com.nineleaps.expensemanagementproject.service.IPdfGeneratorService;
 
 
 @Controller
-public class PdfExportController {
+public class PdfController {
 	@Autowired
 	IPdfGeneratorService pdfGeneratorService;
 

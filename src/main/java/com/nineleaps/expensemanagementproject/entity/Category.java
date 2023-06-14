@@ -25,12 +25,12 @@ public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cat_Id")
+	@Column(name = "category_id")
 	@ApiModelProperty(hidden = true)
-	private Long catId;
+	private Long categoryId;
 
 	@Column(name = "category_name")
-	private String catDescription;
+	private String categoryDescription;
 
 	@Column(name = "category_total")
 	@ApiModelProperty(hidden = true)
@@ -46,31 +46,33 @@ public class Category {
 	private List<Expense> expenseList = new ArrayList<>();
 
 	public Category() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
-	public Category(Long catId, String catDescription, long categoryTotal, Boolean isHidden) {
+	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden) {
 		super();
-		this.catId = catId;
-		this.catDescription = catDescription;
+		this.categoryId = categoryId;
+		this.categoryDescription = categoryDescription;
 		this.categoryTotal = categoryTotal;
 		this.isHidden = isHidden;
 	}
 
-	public Long getCatId() {
-		return catId;
+	
+
+	public Long getCategoryId() {
+		return categoryId;
 	}
 
-	public void setCatId(Long catId) {
-		this.catId = catId;
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	public String getCatDescription() {
-		return catDescription;
+	public String getCategoryDescription() {
+		return categoryDescription;
 	}
 
-	public void setCatDescription(String catDescription) {
-		this.catDescription = catDescription;
+	public void setCategoryDescription(String categoryDescription) {
+		this.categoryDescription = categoryDescription;
 	}
 
 	public long getCategoryTotal() {

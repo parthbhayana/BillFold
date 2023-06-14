@@ -69,30 +69,34 @@ public class ReportsController {
 
 	@PostMapping("/add_report/{employee_id}")
 	public Reports addReport(@RequestBody Reports newReport, @PathVariable Long employee_id,
-			@RequestParam ArrayList<Long> expenseIds) {
-		return reportsService.addReport(newReport, employee_id, expenseIds);
+			@RequestParam ArrayList<Long> expense_ids) {
+		return reportsService.addReport(newReport, employee_id, expense_ids);
 	}
 
 	@PatchMapping("/add_expense_to_report/{report_id}")
-	public Reports addExpensesToReport(@PathVariable Long report_id, @RequestParam ArrayList<Long> expenseIds) {
-		return reportsService.addExpenseToReport(report_id, expenseIds);
+	public Reports addExpensesToReport(@PathVariable Long report_id, @RequestParam ArrayList<Long> expense_ids) {
+		return reportsService.addExpenseToReport(report_id, expense_ids);
 	}
 
 	@PostMapping("/submit_report/{report_id}")
-	public void submitReport(@PathVariable Long report_id, @RequestParam String managerMail,
+	public void submitReport(@PathVariable Long report_id, @RequestParam String manager_email,
 			HttpServletResponse response) throws AttributeNotFoundException, FileNotFoundException, MessagingException {
 		try {
 
 			response.setContentType("application/pdf");
+			System.out.println("1    "+response.getContentType());
 			DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+			System.out.println("2       "+dateFormatter);
 			String currentDateTime = dateFormatter.format(new Date());
+			System.out.println("3    "+currentDateTime);
 			String headerKey = "Content-Disposition";
 			String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
 			response.setHeader(headerKey, headerValue);
+			
 			pdfGeneratorService.export(report_id, response);
-
-			reportsService.submitReport(report_id, managerMail);
-			System.out.println("bla");
+            
+			reportsService.submitReport(report_id, manager_email);
+		
 			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {
 
@@ -109,38 +113,38 @@ public class ReportsController {
 			}
 			e.printStackTrace();
 		}
-		reportsService.submitReport(report_id, managerMail);
+		reportsService.submitReport(report_id, manager_email);
 	}
 
 	@PatchMapping("/edit_report/{report_id}")
-	public List<Reports> editReport(@PathVariable Long report_id, @RequestParam String reportTitle,
-			@RequestParam String reportDescription, @RequestParam ArrayList<Long> addExpenseIds,
-			@RequestParam ArrayList<Long> removeExpenseIds) {
-		return reportsService.editReport(report_id, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
+	public List<Reports> editReport(@PathVariable Long report_id, @RequestParam String report_title,
+			@RequestParam String report_description, @RequestParam ArrayList<Long> add_expense_ids,
+			@RequestParam ArrayList<Long> remove_expense_ids) {
+		return reportsService.editReport(report_id, report_title, report_description, add_expense_ids, remove_expense_ids);
 	}
 
 	@PostMapping("/approve_report_by_manager/{report_id}")
 	public void approveReportbymanager(@PathVariable Long report_id,
-			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		reportsService.approveReportByManager(report_id, Comments);
+			@RequestParam(value = "comments", defaultValue = "null") String comments) {
+		reportsService.approveReportByManager(report_id, comments);
 	}
 
 	@PostMapping("/reject_report_by_manager/{report_id}")
 	public void rejectReportbymanager(@PathVariable Long report_id,
-			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		reportsService.rejectReportByManager(report_id, Comments);
+			@RequestParam(value = "comments", defaultValue = "null") String comments) {
+		reportsService.rejectReportByManager(report_id, comments);
 	}
 
 	@PostMapping("/approve_report_by_finance/{report_id}")
 	public void approveReportbyfinance(@PathVariable Long report_id,
-			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		reportsService.approveReportByFinance(report_id, Comments);
+			@RequestParam(value = "comments", defaultValue = "null") String comments) {
+		reportsService.approveReportByFinance(report_id, comments);
 	}
 
 	@PostMapping("/reject_report_by_finance/{report_id}")
 	public void rejectReportbyfinance(@PathVariable Long report_id,
-			@RequestParam(value = "Comments", defaultValue = "null") String Comments) {
-		reportsService.rejectReportByFinance(report_id, Comments);
+			@RequestParam(value = "comments", defaultValue = "null") String comments) {
+		reportsService.rejectReportByFinance(report_id, comments);
 	}
 
 	@PostMapping("/hide_report/{report_id}")
@@ -160,22 +164,22 @@ public class ReportsController {
 
 	@GetMapping("/get_reports_in_date_range")
 	public List<Reports> getReportsInDateRange(
-			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-		return reportsService.getReportsInDateRange(startDate, endDate);
+			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start_date,
+			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end_date) {
+		return reportsService.getReportsInDateRange(start_date, end_date);
 	}
 
 	@GetMapping("/get_reports_submitted_to_user_in_date_range")
 	public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
-			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-		return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate);
+			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start_date,
+			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end_date) {
+		return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, start_date, end_date);
 	}
 
 	@GetMapping("/get_amount_of_reports_in_date_range")
 	public String getAmountOfReportsInDateRange(
-			@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-			@RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-		return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
+			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start_date,
+			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end_date) {
+		return reportsService.getAmountOfReportsInDateRange(start_date, end_date);
 	}
 }

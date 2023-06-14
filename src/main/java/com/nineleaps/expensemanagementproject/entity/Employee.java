@@ -20,7 +20,7 @@ public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(hidden = true)
-	@Column(name = "emp_Id")
+	@Column(name = "employee_Id")
 	private Long employeeId;
 
 	@Column(name = "first_name")

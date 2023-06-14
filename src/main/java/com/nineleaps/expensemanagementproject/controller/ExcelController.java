@@ -12,19 +12,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nineleaps.expensemanagementproject.entity.StatusExcel;
+import com.nineleaps.expensemanagementproject.service.IExcelGeneratorCategoryService;
 import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsService;
 
 @RestController
-public class ExcelReportsController {
+public class ExcelController {
+	@Autowired
+	private IExcelGeneratorCategoryService excelservice;
+	
 	@Autowired
 	private IExcelGeneratorReportsService excelserviceallsubmissions;
 
+	@GetMapping("/excel/category_breakup")
+	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
+			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
+
+		response.setContentType("application/octet-stream");
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment;filename=Category wise Expense Analytics.xls";
+
+		response.setHeader(headerKey, headerValue);
+
+		String result = excelservice.generateExcelAndSendEmail(response, startDate, endDate);
+
+		if (result.equals("Email sent successfully!")) {
+			response.flushBuffer();
+			return ResponseEntity.ok(result);
+		} else if (result.equals("No data available for the selected period.So, Email can't be sent!")) {
+			return ResponseEntity.ok(result);
+		} else {
+			return ResponseEntity.badRequest().body(result);
+		}
+	}
+	
+	
 	@GetMapping("/excel/all_submissions_status")
 
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
-			@RequestParam("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 
-			@RequestParam("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
 			@RequestParam StatusExcel status) throws Exception {
 
 		String fileName = "Billfold_All_Submissions_Status.xls";
