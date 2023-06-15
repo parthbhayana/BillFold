@@ -1,6 +1,8 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
@@ -11,9 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nineleaps.expensemanagementproject.config.JwtUtil;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequestMapping()
@@ -26,16 +32,20 @@ public class UserController {
     private String email;
     JSONObject responseJson;
 
-    @GetMapping("/list_the_user")
+    @GetMapping("/listTheUser")
     public List<Employee> getAllUserDtls() {
         return userService.getAllUser();
     }
 
 	
 	@SuppressWarnings("unchecked")
-	@GetMapping("/get_profile_data")
-	public ResponseEntity<?> sendData() {
-		Employee employee1 = userService.findByEmailId(email);
+	@GetMapping("/getProfileData")
+	public ResponseEntity<?> sendData(HttpServletRequest request) {
+		String authorisationHeader = request.getHeader(AUTHORIZATION);
+		String token = authorisationHeader.substring("Bearer ".length());
+		DecodedJWT decodedAccessToken = JWT.decode(token);
+        String employeeEmailFromToken = decodedAccessToken.getSubject();
+		Employee employee1 = userService.findByEmailId(employeeEmailFromToken);
 		System.out.println(employee1.getEmployeeEmail());
 		Long employeeId = employee1.getEmployeeId();
 		String email = employee1.getEmployeeEmail();
@@ -53,7 +63,7 @@ public class UserController {
 		return ResponseEntity.ok(responseJson);
 	}
 
-	@PostMapping("/the_profile")
+	@PostMapping("/theProfile")
 	public ResponseEntity<?> insertUser(@RequestBody Employee newUser, HttpServletResponse response) {
 		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());
 		if (employee == null) {

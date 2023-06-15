@@ -20,38 +20,38 @@ public class CategoryController {
 	@Autowired
 	private ICategory categoryService;
 
-	@PostMapping("/insert_category")
+	@PostMapping("/insertCategory")
 	public Category saveExpense(@RequestBody Category categoryfinance) {
 		return categoryService.addCategoryFinances(categoryfinance);
 	}
 
-	@GetMapping("/show_all_categories")
+	@GetMapping("/showAllCategories")
 	public List<Category> getAllCategoryFinances() {
 		return categoryService.getAllCategoryFinances();
 	}
 
-	@GetMapping("/find_category/{category_id}")
-	public Category getCategoryFinanceById(@PathVariable("category_id") Long category_id) {
-		return categoryService.getCategoryFinanceById(category_id);
+	@GetMapping("/findCategory/{categoryId}")
+	public Category getCategoryFinanceById(@PathVariable("categoryId") Long categoryId) {
+		return categoryService.getCategoryFinanceById(categoryId);
 	}
 
-	@PutMapping("/update_category/{category_id}")
-	public Category updateCategoryFinance(@PathVariable("category_id") Long category_id, @RequestBody Category categoryfinance) {
-		Category catfin = categoryService.getCategoryFinanceById(category_id);
-		catfin.setCategoryDescription(categoryfinance.getCategoryDescription());
-		return categoryService.updateCategoryFinance(catfin);
+	@PutMapping("/updateCategory/{categoryId}")
+	public Category updateCategoryFinance(@PathVariable Long categoryId, @RequestBody Category newCategory) {
+		Category category = categoryService.getCategoryFinanceById(categoryId);
+		category.setCategoryDescription(newCategory.getCategoryDescription());
+		return categoryService.updateCategoryFinance(category);
 	}
 
-	@PostMapping("/hide_category/{category_id}")
+	@PostMapping("/hideCategory/{categoryId}")
 	public void hideCategory(@PathVariable Long categoryId) {
 		categoryService.hideCategory(categoryId);
 	}
 
-	@GetMapping("/category_total_amount")
+	@GetMapping("/categoryTotalAmount")
 	public HashMap<String, Float> getCategoryTotalAmount(
-			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start_date,
-			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end_date)
+			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate)
 	{
-		return categoryService.getCategoryTotalAmount(start_date, end_date);
+		return categoryService.getCategoryTotalAmount(startDate, endDate);
 	}
 }
