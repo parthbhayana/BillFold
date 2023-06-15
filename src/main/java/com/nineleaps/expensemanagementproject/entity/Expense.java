@@ -58,7 +58,7 @@ public class Expense {
 
 	@Column(name = "category")
 	@ApiModelProperty(hidden = true)
-	private String catDescription;
+	private String categoryDescription;
 
 	@Column(name = "is_reported", nullable = true)
 	@ApiModelProperty(hidden = true)
@@ -79,7 +79,7 @@ public class Expense {
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JoinColumn(name = "emp_id")
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
 
 	@JsonIgnore
@@ -109,7 +109,7 @@ public class Expense {
 		this.amount = amount;
 		this.amountINR = amountINR;
 		this.description = description;
-		this.catDescription = catDescription;
+		this.categoryDescription = categoryDescription;
 		this.isReported = isReported;
 		this.isHidden = isHidden;
 		this.reportTitle = reportTitle;
@@ -175,12 +175,12 @@ public class Expense {
 		this.description = description;
 	}
 
-	public String getCatDescription() {
-		return catDescription;
+	public String getCategoryDescription() {
+		return categoryDescription;
 	}
 
-	public void setCatDescription(String catDescription) {
-		this.catDescription = catDescription;
+	public void setCategoryDescription(String categoryDescription) {
+		this.categoryDescription = categoryDescription;
 	}
 
 	public Boolean getIsReported() {

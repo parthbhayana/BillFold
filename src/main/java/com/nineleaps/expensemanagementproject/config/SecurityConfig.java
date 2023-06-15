@@ -29,7 +29,7 @@ public class SecurityConfig {
                                 .antMatchers("/getExpenseByEmployeeId/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
                                 .antMatchers("/updateCategory/{categoryId}").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/showAllCategories").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/hideCategory/{categoryId}").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/hideCategory/{categoryId}", "/categoryTotalAmount").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/categoryTotalAmount").hasAuthority("FINANCE_ADMIN").antMatchers("/insertCategory")
                                 .hasAuthority("FINANCE_ADMIN").antMatchers("/currencyList")
                                 .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/insertExpenses/{employeeId}")

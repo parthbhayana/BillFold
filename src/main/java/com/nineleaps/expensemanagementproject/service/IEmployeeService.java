@@ -8,29 +8,31 @@ public interface IEmployeeService {
 
 	public List<Employee> getAllEmployeeDetails();
 
-	public Employee saveEmployeeDetails(Employee employeedetailsEntiry);
+	public Employee saveEmployeeDetails(Employee employee);
 
-	public Employee getEmployeeDetailsById(Long empId);
+	public Employee getEmployeeDetailsById(Long employeeId);
 
-	public void deleteEmployeeDetailsById(Long empId);
+	public void deleteEmployeeDetailsById(Long employeeId);
 
-	public Employee updateEmployeeDetails(Employee employeeentity, Long employeeId);
+	public Employee updateEmployeeDetails(Employee newemployee, Long employeeId);
 
 	public Employee getEmployeeByEmail(String emailToVerify);
 
-	public void hideEmployee(Long empId);
+	public void hideEmployee(Long employeeId);
 
 	public Employee getUserByEmail(String emailToVerify);
 
 	public List<Employee> getAllUser();
 
-	public Employee insertuser(Employee newUser);
+	public Employee insertUser(Employee newUser);
+
+	Employee insertuser(Employee newUser);
 
 	public Employee findByEmailId(String emailId);
 
-	public Boolean isFinanceAdmin(Long empId);
+	public void isFinanceAdmin(Long employeeId);
 
-	public void setFinanceAdmin(Long empId);
+	public void setFinanceAdmin(Long employeeId);
 
-	public Employee insertUser(Employee newUser);
+
 }

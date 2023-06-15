@@ -32,7 +32,7 @@ public class Employee {
 	@Column(name = "last_name")
 	private String lastName;
 
-	@Column(name = "emp_mail")
+	@Column(name = "employee_mail")
 	private String employeeEmail;
 
 	@Column(name = "is_finance_admin", nullable = true)
