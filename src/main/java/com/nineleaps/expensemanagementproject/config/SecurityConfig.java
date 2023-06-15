@@ -26,7 +26,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .antMatchers("/get_profile_data").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
                                 .antMatchers("/get_expense_by_employee_id/{employee_id}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/update_category/{catid}").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/update_category/{category_id}").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/show_all_categories").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
                                 .antMatchers("/hide_category/{category_id}").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/category_total_amount").hasAuthority("FINANCE_ADMIN").antMatchers("/insert_category")
@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/hide_report/{report_id}")
                                 .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/get_reports_in_date_range")
                                 .hasAuthority("FINANCE_ADMIN").antMatchers("/openpdf/export/{report_id}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/excel/all_submissions_status")
+                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/excel/reports")
                                 .hasAuthority("FINANCE_ADMIN").antMatchers("/excel/category_breakup").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/get_reports_submitted_to_user_in_date_range").hasAuthority("FINANCE_ADMIN")
                 );
