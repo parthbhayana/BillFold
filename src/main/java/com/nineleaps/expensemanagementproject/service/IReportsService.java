@@ -35,9 +35,9 @@ public interface IReportsService {
 
 	public List<Reports> getAllSubmittedReports();
 
-	public List<Reports> getReportsSubmittedToUser(String managerEmail);
+	public List<Reports> getReportsSubmittedToUser(String managerEmail, String request);
 
-	public List<Reports> getAllReportsApprovedByManager();
+	public List<Reports> getAllReportsApprovedByManager(String request);
 
 	public void hideReport(Long reportId);
 

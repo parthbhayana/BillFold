@@ -182,7 +182,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		HashMap<String, Float> categoryAmountMap = new HashMap<>();
 
 		for (Expense expense : expenseList) {
-			Category category = expense.getCategoryfinance();
+			Category category = expense.getCategory();
 			String categoryName = category.getCategoryDescription();
 			Float amt = expense.getAmountINR();
 			if (categoryAmountMap.containsKey(categoryName)) {

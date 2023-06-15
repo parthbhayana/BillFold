@@ -53,9 +53,9 @@ public class ExpenseServiceImpl implements IExpenseService {
 		LocalDate today = LocalDate.now();
 		LocalTime now = LocalTime.now();
 		expense.setEmployee(empDetails);
-		expense.setCategoryfinance(catfin);
+		expense.setCategory(catfin);
 		Category mergedCategoryFinance = entityManager.merge(catfin);
-		expense.setCategoryfinance(mergedCategoryFinance);
+		expense.setCategory(mergedCategoryFinance);
 		expense.setCatDescription(mergedCategoryFinance.getCategoryDescription());
 		expense.setDate(today);
 		expense.setTime(now);
