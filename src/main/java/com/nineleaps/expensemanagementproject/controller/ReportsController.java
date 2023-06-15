@@ -53,8 +53,8 @@ public class ReportsController {
 	}
 
 	@GetMapping("/getReportsSubmittedToUser/{managerEmail}")
-	public List<Reports> getReportsSubmittedToUser(@PathVariable String managerEmail) {
-		return reportsService.getReportsSubmittedToUser(managerEmail);
+	public List<Reports> getReportsSubmittedToUser(@PathVariable String managerEmail, @RequestParam String request) {
+		return reportsService.getReportsSubmittedToUser(managerEmail, request);
 	}
 
 	@GetMapping("/getAllSubmittedReports")
@@ -63,8 +63,8 @@ public class ReportsController {
 	}
 
 	@GetMapping("/getAllReportsApprovedByManager")
-	public List<Reports> getAllReportsApprovedByManager() {
-		return reportsService.getAllReportsApprovedByManager();
+	public List<Reports> getAllReportsApprovedByManager(@RequestParam String request) {
+		return reportsService.getAllReportsApprovedByManager(request);
 	}
 
 	@PostMapping("/addReport/{employeeId}")
