@@ -99,8 +99,7 @@ public class Expense {
 
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalTime time, String currency, Long amount,
 			float amountINR, String description, String catDescription, Boolean isReported, Boolean isHidden,
-			String reportTitle, byte[] supportingDocuments, Employee employee, Reports reports,
-			Category category) {
+			String reportTitle, byte[] supportingDocuments, Employee employee, Reports reports, Category category) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;

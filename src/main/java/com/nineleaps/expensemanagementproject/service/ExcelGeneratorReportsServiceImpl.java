@@ -25,6 +25,7 @@ import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.entity.StatusExcel;
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
@@ -32,19 +33,22 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsService {
 
 	@Autowired
-	private ReportsRepository reportRepo;
+	private ReportsRepository reportRepository;
 
 	@Autowired
 	private JavaMailSender mailSender;
 
 	@Autowired
 	private IExpenseService expenseService;
+	
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
 	@Override
 	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
 			StatusExcel status) throws Exception {
 
-		List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
+		List<Reports> reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);
 
 		if (reportlist.isEmpty()) {
 			return "No data available for the selected period.So, Email can't be sent!";
@@ -53,8 +57,14 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
 		generateExcel(excelStream, startDate, endDate, status);
 		byte[] excelBytes = excelStream.toByteArray();
+		
+		Employee financeadmin=employeeRepository.findByRole("FINANCE_ADMIN");
+		if(financeadmin==null)
+		{
+			throw new IllegalStateException ("Finance admin cannot found. So, Email can't be send");
+		}
 
-		boolean emailsent = sendEmailWithAttachment("arjntomr9611@gmail.com", "BillFold:Excel Report",
+		boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
 				"Please find the attached Excel report.", excelBytes, "report.xls");
 		if (emailsent) {
 			return "Email sent successfully!";
@@ -68,7 +78,7 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 			StatusExcel status) throws Exception {
 
 		if (status == StatusExcel.ALL) {
-			List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
+			List<Reports> reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Pending_Reimbursed");
 			HSSFRow row = sheet.createRow(0);
@@ -124,7 +134,7 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 		}
 
 		if (status == StatusExcel.PENDING) {
-			List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
+			List<Reports> reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Pending");
 			HSSFRow row = sheet.createRow(0);
@@ -180,7 +190,7 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 		}
 
 		if (status == StatusExcel.REIMBURSED) {
-			List<Reports> reportlist = reportRepo.findByDateSubmittedBetween(startDate, endDate);
+			List<Reports> reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Reimbursed");
 			HSSFRow row = sheet.createRow(0);
