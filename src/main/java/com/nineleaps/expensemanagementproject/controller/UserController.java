@@ -32,14 +32,14 @@ public class UserController {
     private String email;
     JSONObject responseJson;
 
-    @GetMapping("/list_the_user")
+    @GetMapping("/listTheUser")
     public List<Employee> getAllUserDtls() {
         return userService.getAllUser();
     }
 
 	
 	@SuppressWarnings("unchecked")
-	@GetMapping("/get_profile_data")
+	@GetMapping("/getProfileData")
 	public ResponseEntity<?> sendData(HttpServletRequest request) {
 		String authorisationHeader = request.getHeader(AUTHORIZATION);
 		String token = authorisationHeader.substring("Bearer ".length());
@@ -63,7 +63,7 @@ public class UserController {
 		return ResponseEntity.ok(responseJson);
 	}
 
-	@PostMapping("/the_profile")
+	@PostMapping("/theProfile")
 	public ResponseEntity<?> insertUser(@RequestBody Employee newUser, HttpServletResponse response) {
 		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());
 		if (employee == null) {

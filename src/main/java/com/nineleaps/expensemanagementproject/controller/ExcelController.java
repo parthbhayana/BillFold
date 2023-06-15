@@ -23,7 +23,7 @@ public class ExcelController {
 	@Autowired
 	private IExcelGeneratorReportsService excelServiceReports;
 
-	@GetMapping("/excel/category_breakup")
+	@GetMapping("/excel/categoryBreakup")
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
 			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
@@ -48,7 +48,7 @@ public class ExcelController {
 	}
 	
 	
-	@GetMapping("/excel/all_reports")
+	@GetMapping("/excel/allReports")
 
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
 			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,

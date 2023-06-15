@@ -51,6 +51,45 @@ public class ReportsServiceImpl implements IReportsService {
         return optionalReport.orElseThrow(() -> new RuntimeException("Report not found"));
     }
 
+	@Override
+	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseIds) {
+		Employee emp = employeeServices.getEmployeeDetailsById(employeeId);
+		String employeeEmail = emp.getEmployeeEmail();
+		newReport.setEmployeeMail(employeeEmail);
+		LocalDate today = LocalDate.now();
+		newReport.setDateCreated(today);
+		newReport.setEmployeeId(employeeId);
+		String currency = null;
+		if (!expenseIds.isEmpty()) {
+			Long firstExpenseId = expenseIds.get(0);
+			Expense ep = expenseRepository.getExpenseByexpenseId(firstExpenseId);
+			currency = ep.getCurrency();
+		}
+		newReport.setCurrency(currency);
+		reportsRepository.save(newReport);
+		Long id = newReport.getReportId();
+		List<Expense> expp = expenseRepository.findAllById(expenseIds);
+		float amt = 0;
+		for (Expense expense2 : expp) {
+			amt += expense2.getAmountINR();
+		}
+		newReport.setTotalAmountINR(amt);
+		float amtCurrency = 0;
+		for (Expense expense2 : expp) {
+			amtCurrency += expense2.getAmount();
+		}
+		newReport.setTotalAmountCurrency(amtCurrency);
+		addExpenseToReport(id, expenseIds);
+		String reportTitle = newReport.getReportTitle();
+		List<Expense> exp = expenseServices.getExpenseByReportId(id);
+		for (Expense exp2 : exp) {
+			if (exp != null) {
+				exp2.setReportTitle(reportTitle);
+				expenseRepository.save(exp2);
+			}
+		}
+		return reportsRepository.save(newReport);
+	}
     @Override
     public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids) {
         Employee emp = employeeServices.getEmployeeDetailsById(employeeId);

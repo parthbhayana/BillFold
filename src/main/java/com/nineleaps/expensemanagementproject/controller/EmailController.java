@@ -15,7 +15,7 @@ public class EmailController {
 	@Autowired
 	private IEmailService emailService;
 
-	@PostMapping("/send_email/{employee_id}")
+	@PostMapping("/sendEmail/{employeeId}")
 	public void sendEmail(@RequestParam Long reportId) throws FileNotFoundException, MessagingException {
 		emailService.managerNotification(reportId);
 	}
