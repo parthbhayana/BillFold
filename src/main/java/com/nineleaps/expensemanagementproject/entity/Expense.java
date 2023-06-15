@@ -224,12 +224,12 @@ public class Expense {
 		this.reports = reports;
 	}
 
-	public Category getCategoryfinance() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategoryfinance(Category categoryfinance) {
-		this.category = categoryfinance;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public String getReportTitle() {
