@@ -34,7 +34,7 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	private Long reportId;
 
-	@Column(name = "employee_id") // ,nullable = false
+	@Column(name = "employee_id") 
 	@ApiModelProperty(hidden = true)
 	private Long employeeId;
 
@@ -114,10 +114,10 @@ public class Reports {
 	@JsonIgnore
 	@OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	private List<Expense> expenseList = new ArrayList<>();
+	private final List<Expense> expenseList = new ArrayList<>();
 
 	public Reports() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public Reports(Long reportId, Long employeeId, String reportTitle, String reportDescription, String managerComments,

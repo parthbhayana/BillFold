@@ -18,10 +18,10 @@ import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsServ
 @RestController
 public class ExcelController {
 	@Autowired
-	private IExcelGeneratorCategoryService excelservice;
+	private IExcelGeneratorCategoryService excelService;
 	
 	@Autowired
-	private IExcelGeneratorReportsService excelserviceallsubmissions;
+	private IExcelGeneratorReportsService excelServiceReports;
 
 	@GetMapping("/excel/categoryBreakup")
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
@@ -35,7 +35,7 @@ public class ExcelController {
 
 		response.setHeader(headerKey, headerValue);
 
-		String result = excelservice.generateExcelAndSendEmail(response, startDate, endDate);
+		String result = excelService.generateExcelAndSendEmail(response, startDate, endDate);
 
 		if (result.equals("Email sent successfully!")) {
 			response.flushBuffer();
@@ -63,7 +63,7 @@ public class ExcelController {
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader(headerKey, headerValue);
 
-		String result = excelserviceallsubmissions.generateExcelAndSendEmail(response, startDate, endDate, status);
+		String result = excelServiceReports.generateExcelAndSendEmail(response, startDate, endDate, status);
 
 		if (result.equals("Email sent successfully!")) {
 			response.flushBuffer();

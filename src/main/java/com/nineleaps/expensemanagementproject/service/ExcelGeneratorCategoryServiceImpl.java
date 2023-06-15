@@ -72,7 +72,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		
 		if(financeadmin==null)
 		{
-			return "finance admin not found";
+			throw new IllegalStateException ("finance admin not found");
 		}
 
 		boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
@@ -182,7 +182,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		HashMap<String, Float> categoryAmountMap = new HashMap<>();
 
 		for (Expense expense : expenseList) {
-			Category category = expense.getCategoryfinance();
+			Category category = expense.getCategory();
 			String categoryName = category.getCategoryDescription();
 			Float amt = expense.getAmountINR();
 			if (categoryAmountMap.containsKey(categoryName)) {

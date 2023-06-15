@@ -1,6 +1,8 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
@@ -11,9 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nineleaps.expensemanagementproject.config.JwtUtil;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequestMapping()
@@ -34,8 +40,12 @@ public class UserController {
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping("/getProfileData")
-	public ResponseEntity<?> sendData() {
-		Employee employee1 = userService.findByEmailId(email);
+	public ResponseEntity<?> sendData(HttpServletRequest request) {
+		String authorisationHeader = request.getHeader(AUTHORIZATION);
+		String token = authorisationHeader.substring("Bearer ".length());
+		DecodedJWT decodedAccessToken = JWT.decode(token);
+        String employeeEmailFromToken = decodedAccessToken.getSubject();
+		Employee employee1 = userService.findByEmailId(employeeEmailFromToken);
 		System.out.println(employee1.getEmployeeEmail());
 		Long employeeId = employee1.getEmployeeId();
 		String email = employee1.getEmployeeEmail();

@@ -31,11 +31,11 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @RestController
 public class ReportsController {
 
-	@Autowired
-	private IReportsService reportsService;
+    @Autowired
+    private IReportsService reportsService;
 
-	@Autowired
-	PdfGeneratorServiceImpl pdfGeneratorService;
+    @Autowired
+    PdfGeneratorServiceImpl pdfGeneratorService;
 
 	@GetMapping("/getAllReports")
 	public List<Reports> getAllReports() {
