@@ -114,7 +114,7 @@ public class Reports {
 	@JsonIgnore
 	@OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	private List<Expense> expenseList = new ArrayList<>();
+	private final List<Expense> expenseList = new ArrayList<>();
 
 	public Reports() {
 		// TODO Auto-generated constructor stub

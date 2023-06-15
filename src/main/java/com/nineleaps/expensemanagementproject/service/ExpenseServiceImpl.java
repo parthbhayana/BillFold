@@ -14,7 +14,7 @@ import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
-import com.nineleaps.expensemanagementproject.repository.CategoryFinanceRepository;
+import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
@@ -31,7 +31,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 	private IEmployeeService employeeService;
 
 	@Autowired
-	private CategoryFinanceRepository categoryRepository;
+	private CategoryRepository categoryRepository;
 
 	@Autowired
 	private IReportsService reportServices;
@@ -53,10 +53,10 @@ public class ExpenseServiceImpl implements IExpenseService {
 		LocalDate today = LocalDate.now();
 		LocalTime now = LocalTime.now();
 		expense.setEmployee(empDetails);
-		expense.setCategoryfinance(catfin);
+		expense.setCategory(catfin);
 		Category mergedCategoryFinance = entityManager.merge(catfin);
-		expense.setCategoryfinance(mergedCategoryFinance);
-		expense.setCatDescription(mergedCategoryFinance.getCatDescription());
+		expense.setCategory(mergedCategoryFinance);
+		expense.setCatDescription(mergedCategoryFinance.getCategoryDescription());
 		expense.setDate(today);
 		expense.setTime(now);
 		expenseRepository.save(expense);
@@ -99,7 +99,6 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Override
 	public List<Expense> getExpenseByEmployeeId(Long employeeId) {
 		Employee employee = employeeRepository.findById(employeeId).get();
-//		return expenseRepository.findByEmployee(employee);
 		return expenseRepository.findByEmployeeAndIsHidden(employee, false);
 	}
 

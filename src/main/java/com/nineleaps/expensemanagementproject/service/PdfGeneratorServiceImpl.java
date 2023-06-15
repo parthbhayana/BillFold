@@ -308,6 +308,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		fileOutputStream.close();
 		response.setContentType("application/pdf");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + "expense_report_BillFold.pdf" + "\"");
+		response.setContentLength(pdfBytes.length);
 		ServletOutputStream outputStream = response.getOutputStream();
 		outputStream.write(pdfBytes);
 		outputStream.flush();

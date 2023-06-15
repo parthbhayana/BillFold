@@ -32,6 +32,7 @@ public class UserController {
     }
 
 	
+	@SuppressWarnings("unchecked")
 	@GetMapping("/get_profile_data")
 	public ResponseEntity<?> sendData() {
 		Employee employee1 = userService.findByEmailId(email);

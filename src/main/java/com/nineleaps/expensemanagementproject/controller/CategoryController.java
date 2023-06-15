@@ -31,14 +31,14 @@ public class CategoryController {
 	}
 
 	@GetMapping("/find_category/{category_id}")
-	public Category getCategoryFinanceById(@PathVariable("category_id") Long catId) {
-		return categoryService.getCategoryFinanceById(catId);
+	public Category getCategoryFinanceById(@PathVariable("category_id") Long category_id) {
+		return categoryService.getCategoryFinanceById(category_id);
 	}
 
 	@PutMapping("/update_category/{category_id}")
-	public Category updateCategoryFinance(@PathVariable("category_id") Long catId, @RequestBody Category categoryfinance) {
-		Category catfin = categoryService.getCategoryFinanceById(catId);
-		catfin.setCatDescription(categoryfinance.getCatDescription());
+	public Category updateCategoryFinance(@PathVariable("category_id") Long category_id, @RequestBody Category categoryfinance) {
+		Category catfin = categoryService.getCategoryFinanceById(category_id);
+		catfin.setCategoryDescription(categoryfinance.getCategoryDescription());
 		return categoryService.updateCategoryFinance(catfin);
 	}
 
