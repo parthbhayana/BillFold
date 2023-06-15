@@ -20,12 +20,12 @@ public class CurrencyController {
 	@Autowired
 	CurrencyExchangeServiceImpl currencyExchange;
 
-	@GetMapping("/currency_list")
+	@GetMapping("/currencyList")
 	public List<String> getCurrency() {
 		return Arrays.stream(Currency.values()).map(Enum::name).collect(Collectors.toList());
 	}
 
-	@PostMapping("/get_exchange_rate/{base_currency}")
+	@PostMapping("/getExchangeRate/{baseCurrency}")
 	public double getExchangeRate(@PathVariable String baseCurrency) throws IOException {
 		return currencyExchange.getExchangeRate(baseCurrency);
 	}

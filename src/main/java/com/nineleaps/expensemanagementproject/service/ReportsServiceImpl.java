@@ -53,7 +53,7 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids) {
+	public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseIds) {
 		Employee emp = employeeServices.getEmployeeDetailsById(employeeId);
 		String employeeEmail = emp.getEmployeeEmail();
 		newReport.setEmployeeMail(employeeEmail);
@@ -61,15 +61,15 @@ public class ReportsServiceImpl implements IReportsService {
 		newReport.setDateCreated(today);
 		newReport.setEmployeeId(employeeId);
 		String currency = null;
-		if (!expenseids.isEmpty()) {
-			Long firstExpenseId = expenseids.get(0);
+		if (!expenseIds.isEmpty()) {
+			Long firstExpenseId = expenseIds.get(0);
 			Expense ep = expenseRepository.getExpenseByexpenseId(firstExpenseId);
 			currency = ep.getCurrency();
 		}
 		newReport.setCurrency(currency);
 		reportsRepository.save(newReport);
 		Long id = newReport.getReportId();
-		List<Expense> expp = expenseRepository.findAllById(expenseids);
+		List<Expense> expp = expenseRepository.findAllById(expenseIds);
 		float amt = 0;
 		for (Expense expense2 : expp) {
 			amt += expense2.getAmountINR();
@@ -80,7 +80,7 @@ public class ReportsServiceImpl implements IReportsService {
 			amtCurrency += expense2.getAmount();
 		}
 		newReport.setTotalAmountCurrency(amtCurrency);
-		addExpenseToReport(id, expenseids);
+		addExpenseToReport(id, expenseIds);
 		String reportTitle = newReport.getReportTitle();
 		List<Expense> exp = expenseServices.getExpenseByReportId(id);
 		for (Expense exp2 : exp) {
