@@ -11,10 +11,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtUtil {
-	private static final String SECRET_KEY = "secret";
-   
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 10; 
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30; 
+    private static final String SECRET_KEY = "67c3f3e463358fb9cb3fb8538e04c05b6c1707563df66d2fb8a990ee04b22019";
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 10;
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 30;
 
     public ResponseEntity<?> generateTokens(String emailId, Long employeeId, String name, String imageUrl, String role,
                                             HttpServletResponse response) {
@@ -53,8 +52,8 @@ public class JwtUtil {
     }
 
     private static class TokenResponse {
-        private String accessToken;
-        private String refreshToken;
+        private final String accessToken;
+        private final String refreshToken;
 
         public TokenResponse(String accessToken, String refreshToken) {
             this.accessToken = accessToken;
@@ -62,12 +61,12 @@ public class JwtUtil {
         }
 
         @SuppressWarnings("unused")
-		public String getAccessToken() {
+        public String getAccessToken() {
             return accessToken;
         }
 
         @SuppressWarnings("unused")
-		public String getRefreshToken() {
+        public String getRefreshToken() {
             return refreshToken;
         }
     }

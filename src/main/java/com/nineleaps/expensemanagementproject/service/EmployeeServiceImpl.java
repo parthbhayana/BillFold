@@ -10,96 +10,94 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 @Service
 public class EmployeeServiceImpl implements IEmployeeService {
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-	@Override
-	public List<Employee> getAllEmployeeDetails() {
-		return employeeRepository.findAll();
-	}
+    @Override
+    public List<Employee> getAllEmployeeDetails() {
+        return employeeRepository.findAll();
+    }
 
-	@Override
-	public Employee saveEmployeeDetails(Employee employee) {
-		return employeeRepository.save(employee);
-	}
+    @Override
+    public Employee saveEmployeeDetails(Employee employee) {
+        return employeeRepository.save(employee);
+    }
 
-	@Override
-	public Employee getEmployeeDetailsById(Long employeeId) {
-		return employeeRepository.findById(employeeId).get();
-	}
+    @Override
+    public Employee getEmployeeDetailsById(Long employeeId) {
+        return employeeRepository.findById(employeeId).get();
+    }
 
-	@Override
-	public void deleteEmployeeDetailsById(Long employeeId) {
-		employeeRepository.deleteById(employeeId);
-	}
+    @Override
+    public void deleteEmployeeDetailsById(Long employeeId) {
+        employeeRepository.deleteById(employeeId);
+    }
 
-	@Override
-	public Employee updateEmployeeDetails(Employee newemployee, Long employeeId) {
-		Employee employee = getEmployeeDetailsById(employeeId);
-		employee.setEmployeeEmail(newemployee.getEmployeeEmail());
-		employee.setFirstName(newemployee.getFirstName());
-		employee.setLastName(newemployee.getLastName());
-		employee.setMiddleName(newemployee.getMiddleName());
-		return employeeRepository.save(employee);
-	}
+    @Override
+    public Employee updateEmployeeDetails(Employee newemployee, Long employeeId) {
+        Employee employee = getEmployeeDetailsById(employeeId);
+        employee.setEmployeeEmail(newemployee.getEmployeeEmail());
+        employee.setFirstName(newemployee.getFirstName());
+        employee.setLastName(newemployee.getLastName());
+        employee.setMiddleName(newemployee.getMiddleName());
+        return employeeRepository.save(employee);
+    }
 
-	@Override
-	public Employee getEmployeeByEmail(String emailToVerify) {
-		return null;
-	}
+    @Override
+    public Employee getEmployeeByEmail(String emailToVerify) {
+        return null;
+    }
 
-	@Override
-	public Employee getUserByEmail(String emailToVerify) {
-		return null;
-	}
+    @Override
+    public Employee getUserByEmail(String emailToVerify) {
+        return null;
+    }
 
-	@Override
-	public List<Employee> getAllUser() {
-		return employeeRepository.findAll();
-	}
+    @Override
+    public List<Employee> getAllUser() {
+        return employeeRepository.findAll();
+    }
 
-	@Override
-	public Employee insertuser(Employee newUser) {
-		return employeeRepository.save(newUser);
-	}
+    @Override
+    public Employee insertuser(Employee newUser) {
+        return employeeRepository.save(newUser);
+    }
 
-	@Override
-	public Employee findByEmailId(String emailId) {
-		return employeeRepository.findByEmployeeEmail(emailId);
-	}
+    @Override
+    public Employee findByEmailId(String emailId) {
+        return employeeRepository.findByEmployeeEmail(emailId);
+    }
 
-	@Override
-	public void hideEmployee(Long employeeId) {
-		Boolean hidden = true;
-		Employee employee = getEmployeeDetailsById(employeeId);
-		employee.setIsHidden(hidden);
-		employeeRepository.save(employee);
-	}
+    @Override
+    public void hideEmployee(Long employeeId) {
+        Boolean hidden = true;
+        Employee employee = getEmployeeDetailsById(employeeId);
+        employee.setIsHidden(hidden);
+        employeeRepository.save(employee);
+    }
 
-	@Override
-	public void isFinanceAdmin(Long employeeId) {
-		Employee employee = getEmployeeDetailsById(employeeId);
-		Boolean isAdmin = employee.getIsFinanceAdmin();
-	}
+    @Override
+    public void isFinanceAdmin(Long employeeId) {
+        Employee employee = getEmployeeDetailsById(employeeId);
+        Boolean isAdmin = employee.getIsFinanceAdmin();
+    }
 
-	@Override
-	public void setFinanceAdmin(Long employeeId) {
-		Boolean isAdmin = true;
-		String role="FINANCE_ADMIN";
-		Employee employee = getEmployeeDetailsById(employeeId);
-		employee.setIsFinanceAdmin(isAdmin);
-		employee.setRole(role);
-		employeeRepository.save(employee);
-		
-	}
+    @Override
+    public void setFinanceAdmin(Long employeeId) {
+        Boolean isAdmin = true;
+        String role = "FINANCE_ADMIN";
+        Employee employee = getEmployeeDetailsById(employeeId);
+        employee.setIsFinanceAdmin(isAdmin);
+        employee.setRole(role);
+        employeeRepository.save(employee);
 
-	@Override
-	public Employee insertUser(Employee newUser) {
+    }
 
-		return employeeRepository.save(newUser);
-		
-	}
-	
-	
+    @Override
+    public Employee insertUser(Employee newUser) {
+        return employeeRepository.save(newUser);
+
+    }
+
 
 }
