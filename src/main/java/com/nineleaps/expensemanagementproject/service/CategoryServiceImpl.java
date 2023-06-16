@@ -14,32 +14,33 @@ import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
 @Service
-public class CategoryServiceImpl implements ICategory {
+public class CategoryServiceImpl implements ICategoryService {
 
 	@Autowired
-	CategoryRepository catfinrepository;
+	CategoryRepository categoryRepository;
 
 	@Autowired
-	ExpenseRepository expRepo;
+	ExpenseRepository expenseRepository;
 
 	@Override
-	public void deleteCategoryFinanceById(Long catId) {
-		catfinrepository.deleteById(catId);
+	public void deleteCategoryById(Long categoryId) {
+		categoryRepository.deleteById(categoryId);
 	}
 
 	@Override
-	public Category updateCategoryFinance(Category categoryfinance) {
-		return catfinrepository.save(categoryfinance);
+	public Category updateCategory(Category category)
+	{
+		return categoryRepository.save(category);
 	}
 
 	@Override
-	public Category getCategoryFinanceById(Long catId) {
-		return catfinrepository.findById(catId).get();
+	public Category getCategoryById(Long categoryId) {
+		return categoryRepository.findById(categoryId).get();
 	}
 
 	@Override
-	public List<Category> getAllCategoryFinances() {
-		List<Category> category = catfinrepository.findAll();
+	public List<Category> getAllCategories() {
+		List<Category> category = categoryRepository.findAll();
 		List<Category> nondeletedcategories = new ArrayList<>();
 		for (Category cat2 : category) {
 			if (cat2.getIsHidden() != true) {
@@ -50,21 +51,21 @@ public class CategoryServiceImpl implements ICategory {
 	}
 
 	@Override
-	public Category addCategoryFinances(Category categoryfinance) {
-		return catfinrepository.save(categoryfinance);
+	public Category addCategory(Category category) {
+		return categoryRepository.save(category);
 	}
 
 	@Override
 	public void hideCategory(Long categoryId) {
 		Boolean hidden = true;
-		Category category = getCategoryFinanceById(categoryId);
+		Category category = getCategoryById(categoryId);
 		category.setIsHidden(hidden);
-		catfinrepository.save(category);
+		categoryRepository.save(category);
 	}
 
 	@Override
 	public HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
-		List<Expense> expenseList = expRepo.findByDateBetweenAndIsReported(startDate, endDate, true);
+		List<Expense> expenseList = expenseRepository.findByDateBetweenAndIsReported(startDate, endDate, true);
 		HashMap<String, Float> categoryAmountMap = new HashMap<>();
 
 		for (Expense expense : expenseList) {

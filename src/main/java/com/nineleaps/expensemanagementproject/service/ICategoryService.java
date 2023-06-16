@@ -6,17 +6,17 @@ import java.util.List;
 
 import com.nineleaps.expensemanagementproject.entity.Category;
 
-public interface ICategory {
+public interface ICategoryService {
 
-	void deleteCategoryFinanceById(Long catId);
+	void deleteCategoryById(Long categoryId);
 
-	public Category getCategoryFinanceById(Long catId);
+	public Category getCategoryById(Long categoryId);
 
-	public List<Category> getAllCategoryFinances();
+	public List<Category> getAllCategories();
 
-	public Category addCategoryFinances(Category categoryfinance);
+	public Category addCategory(Category category);
 
-	public Category updateCategoryFinance(Category categoryfinance);
+	public Category updateCategory(Category category);
 
 	public void hideCategory(Long categoryId);
 

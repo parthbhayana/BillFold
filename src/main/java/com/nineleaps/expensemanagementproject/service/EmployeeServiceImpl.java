@@ -19,18 +19,18 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
-	public Employee saveEmployeeDetails(Employee employeedetailsEntity) {
-		return employeeRepository.save(employeedetailsEntity);
+	public Employee saveEmployeeDetails(Employee employee) {
+		return employeeRepository.save(employee);
 	}
 
 	@Override
-	public Employee getEmployeeDetailsById(Long empId) {
-		return employeeRepository.findById(empId).get();
+	public Employee getEmployeeDetailsById(Long employeeId) {
+		return employeeRepository.findById(employeeId).get();
 	}
 
 	@Override
-	public void deleteEmployeeDetailsById(Long empId) {
-		employeeRepository.deleteById(empId);
+	public void deleteEmployeeDetailsById(Long employeeId) {
+		employeeRepository.deleteById(employeeId);
 	}
 
 	@Override
@@ -69,34 +69,33 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
-	public void hideEmployee(Long empId) {
+	public void hideEmployee(Long employeeId) {
 		Boolean hidden = true;
-		Employee emp = getEmployeeDetailsById(empId);
-		emp.setIsHidden(hidden);
-		employeeRepository.save(emp);
+		Employee employee = getEmployeeDetailsById(employeeId);
+		employee.setIsHidden(hidden);
+		employeeRepository.save(employee);
 	}
 
 	@Override
-	public Boolean isFinanceAdmin(Long empId) {
-		Employee emp = getEmployeeDetailsById(empId);
-		Boolean isAdmin = emp.getIsFinanceAdmin();
-		return isAdmin;
+	public void isFinanceAdmin(Long employeeId) {
+		Employee employee = getEmployeeDetailsById(employeeId);
+		Boolean isAdmin = employee.getIsFinanceAdmin();
 	}
 
 	@Override
-	public void setFinanceAdmin(Long empId) {
+	public void setFinanceAdmin(Long employeeId) {
 		Boolean isAdmin = true;
 		String role="FINANCE_ADMIN";
-		Employee emp = getEmployeeDetailsById(empId);
-		emp.setIsFinanceAdmin(isAdmin);
-		emp.setRole(role);
-		employeeRepository.save(emp);
+		Employee employee = getEmployeeDetailsById(employeeId);
+		employee.setIsFinanceAdmin(isAdmin);
+		employee.setRole(role);
+		employeeRepository.save(employee);
 		
 	}
 
 	@Override
 	public Employee insertUser(Employee newUser) {
-		// TODO Auto-generated method stub
+
 		return employeeRepository.save(newUser);
 		
 	}

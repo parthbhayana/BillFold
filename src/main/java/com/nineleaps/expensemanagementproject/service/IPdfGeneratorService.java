@@ -17,6 +17,5 @@ public interface IPdfGeneratorService {
 
 	PdfPCell getCenterAlignedCells(String content, Font font);
 
-	byte[] fetchImageAsByteArray(String imageUrl) throws IOException;
 
 }

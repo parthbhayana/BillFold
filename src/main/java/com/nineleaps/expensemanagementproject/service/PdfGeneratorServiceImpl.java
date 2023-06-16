@@ -189,16 +189,6 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		Paragraph pdfParagraph04 = new Paragraph(report.getReportDescription(), fontParagraph14);
 		pdfParagraph04.setAlignment(Paragraph.ALIGN_LEFT);
 
-		String imageUrl = employee.getImageUrl();
-		byte[] imageBytes = fetchImageAsByteArray(imageUrl);
-		Image employeePhoto = Image.getInstance(imageBytes);
-		float imageX = PageSize.A4.getWidth() - document.rightMargin() - employeePhoto.getScaledWidth();
-		float imageY = document.top() - 150f;
-		float desiredWidth = employeePhoto.getWidth() * 0.6f;
-		float desiredHeight = employeePhoto.getHeight() * 0.6f;
-
-		employeePhoto.scaleToFit(desiredWidth, desiredHeight);
-		employeePhoto.setAbsolutePosition(imageX, imageY);
 
 		String qrCodeData = "Employee Email=" + employee.getEmployeeEmail() + " " + "Employee Name="
 				+ employee.getFirstName() + " " + "TotalAmount=" + currencyChunk + totalChunk;
@@ -248,7 +238,6 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		document.add(lineSeparator);
 		document.add(historyTitle);
 		document.add(historyContent);
-		document.add(employeePhoto);
 		document.add(qrCodeImage);
 
 		document.newPage();
@@ -313,20 +302,6 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		outputStream.write(pdfBytes);
 		outputStream.flush();
 		outputStream.close();
-	}
-
-	@Override
-	public byte[] fetchImageAsByteArray(String imageUrl) throws IOException {
-		URL url = new URL(imageUrl);
-		try (InputStream inputStream = url.openStream();
-				ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = inputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, bytesRead);
-			}
-			return outputStream.toByteArray();
-		}
 	}
 
 }
