@@ -20,7 +20,7 @@ public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(hidden = true)
-	@Column(name = "employee_Id")
+	@Column(name = "employee_id")
 	private Long employeeId;
 
 	@Column(name = "first_name")
@@ -32,14 +32,14 @@ public class Employee {
 	@Column(name = "last_name")
 	private String lastName;
 
-	@Column(name = "emp_mail")
+	@Column(name = "employee_email")
 	private String employeeEmail;
 
-	@Column(name = "is_finance_admin", nullable = true)
+	@Column(name = "is_admin", nullable = true)
 	@ApiModelProperty(hidden = true)
 	private Boolean isFinanceAdmin = false;
 
-	@Column(name = "employee_image_url")
+	@Column(name = "image_url")
 	@ApiModelProperty(hidden = true)
 	private String imageUrl;
 
@@ -51,7 +51,8 @@ public class Employee {
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
 	private List<Expense> expenseList = new ArrayList<>();
 	
-	@Column(name="has_role")
+	@Column(name="role")
+	@ApiModelProperty(hidden = true)
 	private String role="EMPLOYEE";
 
 	public Employee() {

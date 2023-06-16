@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            System.out.println("Access token" + token);
+            System.out.println("Access token " + token);
             if (jwtUtil.validateToken(token)) {
                 Claims claims = jwtUtil.getClaimsFromToken(token);
                 System.out.println(claims);

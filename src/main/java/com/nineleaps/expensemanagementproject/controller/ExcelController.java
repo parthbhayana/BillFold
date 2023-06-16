@@ -23,10 +23,10 @@ public class ExcelController {
 	@Autowired
 	private IExcelGeneratorReportsService excelServiceReports;
 
-	@GetMapping("/excel/category_breakup")
+	@GetMapping("/excel/categoryBreakup")
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
-			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
 
 		response.setContentType("application/octet-stream");
 
@@ -48,12 +48,12 @@ public class ExcelController {
 	}
 	
 	
-	@GetMapping("/excel/all_reports")
+	@GetMapping("/excel/allReports")
 
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
-			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 
-			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
 			@RequestParam StatusExcel status) throws Exception {
 
 		String fileName = "Billfold_All_Submissions_Status.xls";

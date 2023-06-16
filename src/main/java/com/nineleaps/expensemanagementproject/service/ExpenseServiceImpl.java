@@ -47,16 +47,16 @@ public class ExpenseServiceImpl implements IExpenseService {
 
 	@Transactional
 	@Override
-	public Expense addExpense(Expense expense, Long employeeid, Long catId) {
-		Employee empDetails = employeeService.getEmployeeDetailsById(employeeid);
-		Category catfin = categoryRepository.findById(catId).get();
+	public Expense addExpense(Expense expense, Long employeeId, Long categoryId) {
+		Employee employee = employeeService.getEmployeeDetailsById(employeeId);
+		Category category = categoryRepository.findById(categoryId).get();
 		LocalDate today = LocalDate.now();
 		LocalTime now = LocalTime.now();
-		expense.setEmployee(empDetails);
-		expense.setCategory(catfin);
-		Category mergedCategoryFinance = entityManager.merge(catfin);
-		expense.setCategory(mergedCategoryFinance);
-		expense.setCatDescription(mergedCategoryFinance.getCategoryDescription());
+		expense.setEmployee(employee);
+		expense.setCategory(category);
+		Category mergedCategory = entityManager.merge(category);
+		expense.setCategory(mergedCategory);
+		expense.setCategoryDescription(mergedCategory.getCategoryDescription());
 		expense.setDate(today);
 		expense.setTime(now);
 		expenseRepository.save(expense);
@@ -79,16 +79,16 @@ public class ExpenseServiceImpl implements IExpenseService {
 
 	@Override
 	public Expense updateExpense(Long reportId, Long employeeId) {
-		Expense exp = getExpenseById(employeeId);
+		Expense expense = getExpenseById(employeeId);
 		Reports report = reportServices.getReportById(reportId);
 		String reportTitle = report.getReportTitle();
 		boolean reportedStatus = true;
-		if (exp != null) {
-			exp.setReports(report);
-			exp.setIsReported(reportedStatus);
-			exp.setReportTitle(reportTitle);
+		if (expense != null) {
+			expense.setReports(report);
+			expense.setIsReported(reportedStatus);
+			expense.setReportTitle(reportTitle);
 		}
-		return expenseRepository.save(exp);
+		return expenseRepository.save(expense);
 	}
 
 	@Override
@@ -143,17 +143,17 @@ public class ExpenseServiceImpl implements IExpenseService {
 
 	@Override
 	public Expense removeTaggedExpense(Long expenseId) {
-		Expense exp = expenseRepository.findById(expenseId).get();
+		Expense expense = expenseRepository.findById(expenseId).get();
 		boolean removeExpense = false;
-		if(exp.getIsHidden()!=true) {
-			exp.setIsReported(removeExpense);
-			exp.setReports(null);
-			return expenseRepository.save(exp);
+		if(expense.getIsHidden()!=true) {
+			expense.setIsReported(removeExpense);
+			expense.setReports(null);
+			return expenseRepository.save(expense);
 		}
-		if(exp.getIsHidden()==true) {
+		if(expense.getIsHidden()==true) {
 			throw new IllegalStateException("Expense " + expenseId + " does not exist!");
 		}
-		return expenseRepository.save(exp);
+		return expenseRepository.save(expense);
 	}
 
 	@Override
@@ -165,14 +165,14 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Override
 	public void hideExpense(Long expId) {
 		Boolean hidden = true;
-		Expense exp = getExpenseById(expId);
-		if (exp.getIsReported() != true) {
-			exp.setIsHidden(hidden);
+		Expense expense = getExpenseById(expId);
+		if (expense.getIsReported() != true) {
+			expense.setIsHidden(hidden);
 		}
-		if (exp.getIsReported() == true) {
+		if (expense.getIsReported() == true) {
 			throw new IllegalStateException(
-					"Cannot delete expense " + expId + " as it is reported in Report: " + exp.getReportTitle());
+					"Cannot delete expense " + expId + " as it is reported in Report: " + expense.getReportTitle());
 		}
-		expenseRepository.save(exp);
+		expenseRepository.save(expense);
 	}
 }

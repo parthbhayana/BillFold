@@ -175,13 +175,12 @@ public class ReportsServiceImpl implements IReportsService {
             case "approved":
                 return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.APPROVED, true, false);
             default:
-                throw new IllegalArgumentException("Enter a valid request !");
+                throw new IllegalArgumentException("Enter a valid request !" + request);
         }
     }
 
     @Override
     public List<Reports> getReportsSubmittedToUser(String managerEmail, String request) {
-
         switch (request) {
             case "approved":
                 return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail, ManagerApprovalStatus.APPROVED, true, false);
@@ -208,23 +207,13 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public List<Reports> getAllReportsApprovedByManager(String request) {
-/*
-        List<Reports> Reports = reportsRepository.findAll();
-        List<Reports> ReportsApprovedByManager = new ArrayList<>();
-        for (Reports reports2 : Reports) {
-            if (reports2.getIsSubmitted() && reports2.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
-                ReportsApprovedByManager.add(reports2);
-            }
-        }
-        return ReportsApprovedByManager;
-*/
         switch (request) {
             case "approved":
                 return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);
             case "rejected":
                 return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false);
             case "pending":
-                reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false);
+                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false);
             default:
                 throw new IllegalArgumentException("Enter a valid request !");
         }

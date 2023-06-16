@@ -13,45 +13,45 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.entity.Category;
-import com.nineleaps.expensemanagementproject.service.ICategory;
+import com.nineleaps.expensemanagementproject.service.ICategoryService;
 
 @RestController
 public class CategoryController {
 	@Autowired
-	private ICategory categoryService;
+	private ICategoryService categoryService;
 
-	@PostMapping("/insert_category")
-	public Category saveExpense(@RequestBody Category categoryfinance) {
-		return categoryService.addCategoryFinances(categoryfinance);
+	@PostMapping("/insertCategory")
+	public Category addCategory(@RequestBody Category category) {
+		return categoryService.addCategory(category);
 	}
 
-	@GetMapping("/show_all_categories")
-	public List<Category> getAllCategoryFinances() {
-		return categoryService.getAllCategoryFinances();
+	@GetMapping("/showAllCategories")
+	public List<Category> getAllCategory() {
+		return categoryService.getAllCategories();
 	}
 
-	@GetMapping("/find_category/{category_id}")
-	public Category getCategoryFinanceById(@PathVariable("category_id") Long category_id) {
-		return categoryService.getCategoryFinanceById(category_id);
+	@GetMapping("/findCategory/{categoryId}")
+	public Category getCategoryById(@PathVariable("categoryId") Long categoryId) {
+		return categoryService.getCategoryById(categoryId);
 	}
 
-	@PutMapping("/update_category/{category_id}")
-	public Category updateCategoryFinance(@PathVariable("category_id") Long category_id, @RequestBody Category categoryfinance) {
-		Category catfin = categoryService.getCategoryFinanceById(category_id);
-		catfin.setCategoryDescription(categoryfinance.getCategoryDescription());
-		return categoryService.updateCategoryFinance(catfin);
+	@PutMapping("/updateCategory/{categoryId}")
+	public Category updateCategory(@PathVariable Long categoryId, @RequestBody Category newCategory) {
+		Category category = categoryService.getCategoryById(categoryId);
+		category.setCategoryDescription(newCategory.getCategoryDescription());
+		return categoryService.updateCategory(category);
 	}
 
-	@PostMapping("/hide_category/{category_id}")
+	@PostMapping("/hideCategory/{categoryId}")
 	public void hideCategory(@PathVariable Long categoryId) {
 		categoryService.hideCategory(categoryId);
 	}
 
-	@GetMapping("/category_total_amount")
+	@GetMapping("/categoryTotalAmount")
 	public HashMap<String, Float> getCategoryTotalAmount(
-			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start_date,
-			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end_date)
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate)
 	{
-		return categoryService.getCategoryTotalAmount(start_date, end_date);
+		return categoryService.getCategoryTotalAmount(startDate, endDate);
 	}
 }
