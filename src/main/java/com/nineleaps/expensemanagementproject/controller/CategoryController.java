@@ -49,8 +49,8 @@ public class CategoryController {
 
 	@GetMapping("/categoryTotalAmount")
 	public HashMap<String, Float> getCategoryTotalAmount(
-			@RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-			@RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate)
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate)
 	{
 		return categoryService.getCategoryTotalAmount(startDate, endDate);
 	}

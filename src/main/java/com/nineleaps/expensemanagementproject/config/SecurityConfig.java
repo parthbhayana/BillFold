@@ -21,39 +21,47 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-ui/**", "/configuration/security",
-                                        "/swagger-ui.html", "/webjars/**")
-                                .permitAll()
+                                .antMatchers(AUTH_WHITELIST).permitAll()
                                 .antMatchers("/theProfile").permitAll()
                                 .antMatchers("/getProfileData").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
                                 .antMatchers("/getExpenseByEmployeeId/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
                                 .antMatchers("/updateCategory/{categoryId}").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/showAllCategories").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
                                 .antMatchers("/hideCategory/{categoryId}").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/categoryTotalAmount").hasAuthority("FINANCE_ADMIN").antMatchers("/insertCategory")
-                                .hasAuthority("FINANCE_ADMIN").antMatchers("/currencyList")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/insertExpenses/{employeeId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/getExpenseByReportId/{reportId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/getReportByEmployeeId/{employeeId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/addReport/{employeeId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/getReportsSubmittedToUser/{managerEmail}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/getAllReportsApprovedByManager")
-                                .hasAuthority("FINANCE_ADMIN").antMatchers("/submitReport/{reportId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/approveReportByFinance/{reportId}")
-                                .hasAuthority("FINANCE_ADMIN").antMatchers("/approveReportByManager/{reportId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/rejectReportByFinance/{reportId}")
-                                .hasAuthority("FINANCE_ADMIN").antMatchers("/rejectReportByManager/{reportId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/updateExpenses/{expenseId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/editReport/{reportId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/hideExpense/{expenseId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/hideReport/{reportId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/getReportsInDateRange")
-                                .hasAuthority("FINANCE_ADMIN").antMatchers("/openpdf/export/{reportId}")
-                                .hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN").antMatchers("/excel/reports")
-                                .hasAuthority("FINANCE_ADMIN").antMatchers("/excel/categoryBreakup").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/categoryTotalAmount").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/insertCategory").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/currencyList").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/insertExpenses/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/getExpenseByReportId/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/getReportByEmployeeId/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/addReport/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/getReportsSubmittedToUser/{managerEmail}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/getAllReportsApprovedByManager").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/submitReport/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/approveReportByFinance/{reportId}").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/approveReportByManager/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/rejectReportByFinance/{reportId}").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/rejectReportByManager/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/updateExpenses/{expenseId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/editReport/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/hideExpense/{expenseId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/hideReport/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/getReportsInDateRange").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/openpdf/export/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
+                                .antMatchers("/excel/reports").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/excel/categoryBreakup").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/getReportsSubmittedToUserInDateRange").hasAuthority("FINANCE_ADMIN")
                 );
         return http.build();
     }
+
+    private static final String[] AUTH_WHITELIST = {
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/v2/api-docs/**",
+            "/swagger-resources/**",
+            "/api/v1/auth/**",
+            "/v3/api-docs/.yaml",
+            "/swagger-ui.html"
+    };
 }
