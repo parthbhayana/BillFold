@@ -3,12 +3,16 @@ package com.nineleaps.expensemanagementproject.service;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import java.io.IOException;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +43,9 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Autowired
     private IEmailService emailService;
+
+    @Autowired
+    private IPdfGeneratorService pdfGeneratorService;
 
     @Override
     public List<Reports> getAllReports() {
@@ -219,8 +226,9 @@ public class ReportsServiceImpl implements IReportsService {
         }
     }
 
+
     @Override
-    public Reports submitReport(Long reportId, String managerMail) throws FileNotFoundException, MessagingException {
+    public void submitReport(Long reportId, String managerMail,HttpServletResponse response) throws MessagingException ,FileNotFoundException,IOException {
         boolean submissionStatus = true;
         ManagerApprovalStatus pending = ManagerApprovalStatus.PENDING;
         Reports re = getReportById(reportId);
@@ -239,8 +247,6 @@ public class ReportsServiceImpl implements IReportsService {
             re.setTotalAmountCurrency(totalamountCurrency(reportId));
             re.setManagerEmail(managerMail);
             reportsRepository.save(re);
-            // Email Functionality Integration
-            emailService.managerNotification(reportId);
             try {
                 String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
                 decodedEmail = decodedEmail.replace("=", "");
@@ -248,8 +254,20 @@ public class ReportsServiceImpl implements IReportsService {
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
             }
+            response.setContentType("application/pdf");
+            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+            String currentDateTime = dateFormatter.format(new Date());
+            String headerKey = "Content-Disposition";
+            String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+            response.setHeader(headerKey, headerValue);
+            try {
+                pdfGeneratorService.export(reportId, response);
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+            emailService.managerNotification(reportId);
         }
-        return reportsRepository.save(re);
     }
 
     @Override

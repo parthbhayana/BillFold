@@ -203,9 +203,6 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
-			@SuppressWarnings("unused")
-			Properties properties = new Properties();
-
 			helper.setTo(toEmail);
 			helper.setSubject(subject);
 			helper.setText(body);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -78,36 +79,14 @@ public class ReportsController {
         return reportsService.addExpenseToReport(reportId, expenseIds);
     }
 
-    @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId, @RequestParam String managerEmail,
-                             HttpServletResponse response) throws AttributeNotFoundException, FileNotFoundException, MessagingException {
-        try {
-            response.setContentType("application/pdf");
-            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-            String currentDateTime = dateFormatter.format(new Date());
-            String headerKey = "Content-Disposition";
-            String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
-            response.setHeader(headerKey, headerValue);
-            pdfGeneratorService.export(reportId, response);
-            reportsService.submitReport(reportId, managerEmail);
-            response.setStatus(HttpServletResponse.SC_OK);
-        } catch (Exception e) {
 
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            try {
-                response.getWriter().write("Error exporting PDF");
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            try {
-                response.getWriter().flush();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        }
-        reportsService.submitReport(reportId, managerEmail);
+    @PostMapping("/submitReport/{reportId}")
+    public void submitReport(@PathVariable Long reportId, @RequestParam String managerEmail,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
+
+        reportsService.submitReport(reportId, managerEmail,response);
     }
+
+
 
     @PatchMapping("/editReport/{reportId}")
     public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
@@ -157,22 +136,22 @@ public class ReportsController {
 
     @GetMapping("/getReportsInDateRange")
     public List<Reports> getReportsInDateRange(
-            @RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return reportsService.getReportsInDateRange(startDate, endDate);
     }
 
     @GetMapping("/getReportsSubmittedToUserInDateRange")
     public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
-                                                              @RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                              @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate);
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
     public String getAmountOfReportsInDateRange(
-            @RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
     }
 }

@@ -106,7 +106,7 @@ public class Reports {
 	@Enumerated(EnumType.STRING)
 	private ManagerApprovalStatus managerapprovalstatus;// = ManagerApprovalStatus.PENDING;
 
-	@Lob
+    @Lob
 	@Column(name = "pdf_file", nullable = true)
 	@ApiModelProperty(hidden = true)
 	private byte[] pdfFile;
