@@ -89,7 +89,20 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Employee employee = getEmployeeDetailsById(employeeId);
         employee.setIsFinanceAdmin(isAdmin);
         employee.setRole(role);
+
         employeeRepository.save(employee);
+
+        List<Employee> emp=employeeRepository.findAll();
+        Boolean isAdmins=false;
+        String roles="EMPLOYEE";
+        for(Employee emp1:emp)
+        {
+            if(emp1.getEmployeeId() == employeeId)
+                continue;
+            emp1.setIsFinanceAdmin(isAdmins);
+            emp1.setRole(roles);
+            employeeRepository.save(emp1);
+        }
 
     }
 
