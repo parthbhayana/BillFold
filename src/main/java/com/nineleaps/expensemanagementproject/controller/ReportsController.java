@@ -144,8 +144,8 @@ public class ReportsController {
     @GetMapping("/getReportsSubmittedToUserInDateRange")
     public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate);
+                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam String request) {
+        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate,request);
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
