@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class Employee {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
 	@Column(name = "employee_id")
 	private Long employeeId;

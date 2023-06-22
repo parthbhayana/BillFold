@@ -33,6 +33,9 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
 	List<Reports> findByManagerEmailAndDateSubmittedBetween(String managerEmail, LocalDate startDate,
 			LocalDate endDate);
+	
+	List<Reports> findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(String managerEmail, LocalDate startDate,
+			LocalDate endDate, ManagerApprovalStatus managerStatus, Boolean a, Boolean b);
 
 	List<Reports> findByDateSubmittedBetween(LocalDate startDate, LocalDate endDate);
 
