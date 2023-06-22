@@ -52,5 +52,5 @@ public interface IReportsService {
 	public String getAmountOfReportsInDateRange(LocalDate startDate, LocalDate endDate);
 
 	public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
-			LocalDate endDate);
+			LocalDate endDate, String request);
 }
