@@ -44,7 +44,7 @@ public class EmailServiceImpl implements IEmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper eMail = new MimeMessageHelper(message, true);
 
-            eMail.setFrom("karthikdemoemail@gmail.com");
+            eMail.setFrom("billfoldjsr@gmail.com");
             eMail.setTo(report.getManagerEmail());
             eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
             eMail.setText(employee.getFirstName() + " " + employee.getLastName()
@@ -75,7 +75,7 @@ public class EmailServiceImpl implements IEmailService {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
             SimpleMailMessage eMail = new SimpleMailMessage();
-            eMail.setFrom("karthikdemoemail@gmail.com");
+            eMail.setFrom("billfoldjsr@gmail.com");
             eMail.setTo(report.getManagerEmail());
             eMail.setSubject("[REJECTED] Expense Report: " + report.getReportTitle());
             eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
@@ -102,7 +102,7 @@ public class EmailServiceImpl implements IEmailService {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
             SimpleMailMessage eMail = new SimpleMailMessage();
-            eMail.setFrom("karthikdemoemail@gmail.com");
+            eMail.setFrom("billfoldjsr@gmail.com");
             eMail.setTo(employee.getEmployeeEmail());
             eMail.setSubject("[APPROVED] Expense Report: " + report.getReportTitle());
             eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
@@ -129,7 +129,7 @@ public class EmailServiceImpl implements IEmailService {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
             SimpleMailMessage eMail = new SimpleMailMessage();
-            eMail.setFrom("karthikdemoemail@gmail.com");
+            eMail.setFrom("billfoldjsr@gmail.com");
             eMail.setTo(employee.getEmployeeEmail());
             eMail.setSubject("[REIMBURSED] Expense Report: " + report.getReportTitle());
             eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
@@ -157,7 +157,7 @@ public class EmailServiceImpl implements IEmailService {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
             SimpleMailMessage email = new SimpleMailMessage();
-            email.setFrom("karthikdemoemail@gmail.com");
+            email.setFrom("billfoldjsr@gmail.com");
             email.setTo(employee.getEmployeeEmail());
             email.setSubject("[REJECTED] Expense Report: " + report.getReportTitle());
             email.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","

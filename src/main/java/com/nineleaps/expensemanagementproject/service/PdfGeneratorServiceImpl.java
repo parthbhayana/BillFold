@@ -240,9 +240,12 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		document.add(historyContent);
 		document.add(qrCodeImage);
 
+
 		document.newPage();
 		for (Expense expense : expenses) {
-			if (expense.getSupportingDocuments() != null) {
+			if(expense.getSupportingDocuments()==null)
+				continue;
+			if (expense.getSupportingDocuments() != null ) {
 				byte[] imageData = expense.getSupportingDocuments();
 				InputStream in = new ByteArrayInputStream(imageData);
 				BufferedImage bufferedImage = ImageIO.read(in);
