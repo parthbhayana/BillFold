@@ -259,6 +259,10 @@ public class ReportsServiceImpl implements IReportsService {
             re.setDateSubmitted(today);
             re.setTotalAmountINR(totalamountINR(reportId));
             re.setTotalAmountCurrency(totalamountCurrency(reportId));
+            //Fetching employee ID
+            Long employeeId = re.getEmployeeId();
+            Employee employee = employeeServices.getEmployeeById(employeeId);
+            re.setManagerEmail(employee.getManagerEmail());
             reportsRepository.save(re);
 //			try {
 //				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
