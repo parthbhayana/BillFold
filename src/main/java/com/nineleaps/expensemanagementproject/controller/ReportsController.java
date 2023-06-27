@@ -107,10 +107,10 @@ public class ReportsController {
         reportsService.rejectReportByManager(reportId, comments);
     }
 
-    @PostMapping("/approveReportByFinance/{reportId}")
-    public void approveReportByFinance(@PathVariable Long reportId,
+    @PostMapping("/approveReportByFinance")
+    public void reimburseReportByFinance( @RequestParam ArrayList<Long> reportIds,
                                        @RequestParam(value = "comments", defaultValue = "null") String comments) {
-        reportsService.approveReportByFinance(reportId, comments);
+        reportsService.reimburseReportByFinance(reportIds, comments);
     }
 
     @PostMapping("/rejectReportByFinance/{reportId}")

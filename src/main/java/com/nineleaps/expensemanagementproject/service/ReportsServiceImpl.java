@@ -325,26 +325,28 @@ public class ReportsServiceImpl implements IReportsService {
 	}
 
 	@Override
-	public void approveReportByFinance(Long reportId, String comments) {
+	public void reimburseReportByFinance(ArrayList<Long> reportIds, String comments) {
 		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REIMBURSED;
-		Reports re = getReportById(reportId);
-		if (!re.getIsSubmitted()) {
-			throw new IllegalStateException("Report " + reportId + " is not Submitted!");
-		}
-		if (re == null || re.getIsHidden()) {
-			throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
-		}
-		if (re != null && !re.getIsHidden() && re.getIsSubmitted()
-				&& re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
+		LocalDate today = LocalDate.now();
+		for (Long reportId : reportIds) {
+			Reports re = getReportById(reportId);
+			if (re == null || re.getIsHidden()) {
+				throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
+			}
+			if (!re.getIsSubmitted()) {
+				throw new IllegalStateException("Report " + reportId + " is not submitted!");
+			}
+
+			if (re.getManagerapprovalstatus() != ManagerApprovalStatus.APPROVED) {
+				throw new IllegalStateException("Report " + reportId + " is not approved by the manager!");
+			}
 			re.setFinanceapprovalstatus(approvalStatus);
 			re.setFinanceComments(comments);
-			LocalDate today = LocalDate.now();
 			re.setFinanceActionDate(today);
 			reportsRepository.save(re);
 			emailService.financeReimbursedNotification(reportId);
 		}
 	}
-
 	@Override
 	public void rejectReportByFinance(Long reportId, String comments) {
 		FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECTED;
