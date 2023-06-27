@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -31,7 +32,7 @@ public interface IReportsService {
 
 	public void rejectReportByManager(Long reportId, String comments);
 
-	public void approveReportByFinance(Long reportId, String comments);
+
 
 	public void rejectReportByFinance(Long reportId, String comments);
 
@@ -53,4 +54,6 @@ public interface IReportsService {
 
 	public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
 			LocalDate endDate, String request);
+
+	public void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
 }

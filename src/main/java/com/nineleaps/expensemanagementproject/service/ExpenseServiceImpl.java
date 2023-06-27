@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.entity.Category;
@@ -69,6 +70,13 @@ public class ExpenseServiceImpl implements IExpenseService {
 
 	@Override
 	public List<Expense> getAllExpenses() {
+		LocalDate sixtyDaysAgo = LocalDate.now().minusDays(60);
+		List<Expense> unreportedExpenses = expenseRepository.findByIsReportedAndDateBefore(false, sixtyDaysAgo);
+		for(Expense expense:unreportedExpenses)
+		{
+			expense.setIsHidden(true);
+			expenseRepository.save(expense);
+		}
 		return expenseRepository.findAll();
 	}
 
@@ -175,4 +183,5 @@ public class ExpenseServiceImpl implements IExpenseService {
 		}
 		expenseRepository.save(expense);
 	}
+
 }
