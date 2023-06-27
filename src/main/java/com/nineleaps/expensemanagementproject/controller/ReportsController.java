@@ -81,9 +81,9 @@ public class ReportsController {
 
 
     @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId, @RequestParam String managerEmail,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
+    public void submitReport(@PathVariable Long reportId,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
 
-        reportsService.submitReport(reportId, managerEmail,response);
+        reportsService.submitReport(reportId,response);
     }
 
 

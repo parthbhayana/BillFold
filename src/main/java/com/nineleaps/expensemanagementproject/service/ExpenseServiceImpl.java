@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.entity.Category;
@@ -49,7 +48,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 	@Transactional
 	@Override
 	public Expense addExpense(Expense expense, Long employeeId, Long categoryId) {
-		Employee employee = employeeService.getEmployeeDetailsById(employeeId);
+		Employee employee = employeeService.getEmployeeById(employeeId);
 		Category category = categoryRepository.findById(categoryId).get();
 		LocalDate today = LocalDate.now();
 		LocalTime now = LocalTime.now();

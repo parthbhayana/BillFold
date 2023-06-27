@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,48 +19,52 @@ import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 @RequestMapping("/employee")
 public class EmployeeController {
 
-	@Autowired
-	private IEmployeeService employeeService;
+    @Autowired
+    private IEmployeeService employeeService;
 
-	@GetMapping("/listEmployee")
-	public List<Employee> getAllEmployeeDetails() {
-		return employeeService.getAllEmployeeDetails();
-	}
+    @GetMapping("/listEmployee")
+    public List<Employee> getAllEmployeeDetails() {
+        return employeeService.getAllEmployeeDetails();
+    }
 
-	@PostMapping("/insertEmployee")
-	public Employee save(@RequestBody Employee employee) {
-		return employeeService.saveEmployeeDetails(employee);
-	}
+    @PostMapping("/insertEmployee")
+    public Employee save(@RequestBody Employee employee) {
+        return employeeService.saveEmployeeDetails(employee);
+    }
 
-	@PutMapping("/updateEmployee/{employeeId}")
-	public Employee updateEmployee(@RequestBody Employee employee, @PathVariable Long employeeId) {
-		return employeeService.updateEmployeeDetails(employee, employeeId);
+    @PutMapping("/updateEmployee/{employeeId}")
+    public Employee updateEmployee(@RequestBody Employee employee, @PathVariable Long employeeId) {
+        return employeeService.updateEmployeeDetails(employee, employeeId);
+    }
 
-	}
+    @PostMapping("/additionalEmployeeDetails")
+    public void additionalEmployeeDetails(@RequestParam Long employeeId, @RequestParam String officialEmployeeId, @RequestParam String managerEmail, @RequestParam Long mobileNumber) {
+        employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber);
+    }
 
-	@GetMapping("/findEmployee/{employeeId}")
-	public Employee getEmployeeById(@PathVariable Long employeeId) {
-		return employeeService.getEmployeeDetailsById(employeeId);
+    @GetMapping("/findEmployee/{employeeId}")
+    public Employee getEmployeeById(@PathVariable Long employeeId) {
+        return employeeService.getEmployeeById(employeeId);
 
-	}
+    }
 
-	@DeleteMapping("/deleteEmployee/{employeeId}")
-	public void deleteEmployeeById(@PathVariable Long employeeId) {
-		employeeService.deleteEmployeeDetailsById(employeeId);
-	}
+    @DeleteMapping("/deleteEmployee/{employeeId}")
+    public void deleteEmployeeById(@PathVariable Long employeeId) {
+        employeeService.deleteEmployeeDetailsById(employeeId);
+    }
 
-	@PostMapping("/hideEmployee/{employeeId}")
-	public void hideEmployee(@PathVariable Long employeeId) {
-		employeeService.hideEmployee(employeeId);
-	}
+    @PostMapping("/hideEmployee/{employeeId}")
+    public void hideEmployee(@PathVariable Long employeeId) {
+        employeeService.hideEmployee(employeeId);
+    }
 
-	@PostMapping("/setFinanceAdmin")
-	public void setFinanceAdmin(@RequestParam Long employeeId) {
-		 employeeService.setFinanceAdmin(employeeId);
-	}
+    @PostMapping("/setFinanceAdmin")
+    public void setFinanceAdmin(@RequestParam Long employeeId) {
+        employeeService.setFinanceAdmin(employeeId);
+    }
 
-	@GetMapping("/isAdmin")
-	public void isFinanceAdmin(@RequestParam Long employeeId) {
-		employeeService.isFinanceAdmin(employeeId);
-	}
+    @GetMapping("/isAdmin")
+    public void isFinanceAdmin(@RequestParam Long employeeId) {
+        employeeService.isFinanceAdmin(employeeId);
+    }
 }

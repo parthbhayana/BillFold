@@ -27,7 +27,7 @@ public interface IReportsService {
 	public Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
 
-    public void submitReport(Long reportId, String managerMail,HttpServletResponse response) throws MessagingException,FileNotFoundException, IOException;
+    public void submitReport(Long reportId,HttpServletResponse response) throws MessagingException,FileNotFoundException, IOException;
 	public void approveReportByManager(Long reportId, String comments);
 
 	public void rejectReportByManager(Long reportId, String comments);
