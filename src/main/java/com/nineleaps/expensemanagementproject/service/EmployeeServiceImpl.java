@@ -24,7 +24,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
     }
 
     @Override
-    public Employee getEmployeeDetailsById(Long employeeId) {
+    public Employee getEmployeeById(Long employeeId) {
         return employeeRepository.findById(employeeId).get();
     }
 
@@ -35,12 +35,21 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     public Employee updateEmployeeDetails(Employee newemployee, Long employeeId) {
-        Employee employee = getEmployeeDetailsById(employeeId);
+        Employee employee = getEmployeeById(employeeId);
         employee.setEmployeeEmail(newemployee.getEmployeeEmail());
         employee.setFirstName(newemployee.getFirstName());
         employee.setLastName(newemployee.getLastName());
         employee.setMiddleName(newemployee.getMiddleName());
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public void additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail, Long mobileNumber) {
+        Employee employee = getEmployeeById(employeeId);
+        employee.setOfficialEmployeeId(officialEmployeeId);
+        employee.setManagerEmail(managerEmail);
+        employee.setMobileNumber(mobileNumber);
+        employeeRepository.save(employee);
     }
 
     @Override
@@ -71,14 +80,14 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public void hideEmployee(Long employeeId) {
         Boolean hidden = true;
-        Employee employee = getEmployeeDetailsById(employeeId);
+        Employee employee = getEmployeeById(employeeId);
         employee.setIsHidden(hidden);
         employeeRepository.save(employee);
     }
 
     @Override
     public void isFinanceAdmin(Long employeeId) {
-        Employee employee = getEmployeeDetailsById(employeeId);
+        Employee employee = getEmployeeById(employeeId);
         Boolean isAdmin = employee.getIsFinanceAdmin();
     }
 
@@ -86,18 +95,17 @@ public class EmployeeServiceImpl implements IEmployeeService {
     public void setFinanceAdmin(Long employeeId) {
         Boolean isAdmin = true;
         String role = "FINANCE_ADMIN";
-        Employee employee = getEmployeeDetailsById(employeeId);
+        Employee employee = getEmployeeById(employeeId);
         employee.setIsFinanceAdmin(isAdmin);
         employee.setRole(role);
 
         employeeRepository.save(employee);
 
-        List<Employee> emp=employeeRepository.findAll();
-        Boolean isAdmins=false;
-        String roles="EMPLOYEE";
-        for(Employee emp1:emp)
-        {
-            if(emp1.getEmployeeId() == employeeId)
+        List<Employee> emp = employeeRepository.findAll();
+        Boolean isAdmins = false;
+        String roles = "EMPLOYEE";
+        for (Employee emp1 : emp) {
+            if (emp1.getEmployeeId() == employeeId)
                 continue;
             emp1.setIsFinanceAdmin(isAdmins);
             emp1.setRole(roles);
@@ -105,6 +113,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         }
 
     }
+
 
     @Override
     public Employee insertUser(Employee newUser) {

@@ -120,7 +120,7 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 					if (managerActionDate != null) {
 						dataRow.createCell(7).setCellValue(managerActionDate.toString());
 					}
-					dataRow.createCell(8).setCellValue(report.getManagerEmail());
+					dataRow.createCell(8).setCellValue(employee.getManagerEmail());
 					dataRow.createCell(9).setCellValue(report.getTotalAmountINR());
 					dataRow.createCell(10).setCellValue("Pending/Reimbursed");
 
@@ -176,7 +176,7 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 						if (managerActionDate != null) {
 							dataRow.createCell(7).setCellValue(managerActionDate.toString());
 						}
-						dataRow.createCell(8).setCellValue(report.getManagerEmail());
+						dataRow.createCell(8).setCellValue(employee.getManagerEmail());
 						dataRow.createCell(9).setCellValue(report.getTotalAmountINR());
 						dataRow.createCell(10).setCellValue("Pending");
 
@@ -232,7 +232,7 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 						if (managerActionDate != null) {
 							dataRow.createCell(7).setCellValue(managerActionDate.toString());
 						}
-						dataRow.createCell(8).setCellValue(report.getManagerEmail());
+						dataRow.createCell(8).setCellValue(employee.getManagerEmail());
 						dataRow.createCell(9).setCellValue(report.getTotalAmountINR());
 						dataRow.createCell(10).setCellValue("Reimbursed");
 
