@@ -17,8 +17,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 
 @Entity
@@ -71,106 +71,4 @@ public class Employee {
     @Column(name = "role")
     @ApiModelProperty(hidden = true)
     private String role = "EMPLOYEE";
-
-
-//	public Employee() {
-//	}
-//
-//	public Employee(Long employeeId, String firstName, String middleName, String lastName, String employeeEmail,
-//			Boolean isFinanceAdmin, String imageUrl, Boolean isHidden, List<Expense> expenseList,String role) {
-//		super();
-//		this.employeeId = employeeId;
-//		this.firstName = firstName;
-//		this.middleName = middleName;
-//		this.lastName = lastName;
-//		this.employeeEmail = employeeEmail;
-//		this.isFinanceAdmin = isFinanceAdmin;
-//		this.imageUrl = imageUrl;
-//		this.isHidden = isHidden;
-//		this.expenseList = expenseList;
-//		this.role=role;
-//	}
-//
-//	public Long getEmployeeId() {
-//		return employeeId;
-//	}
-//
-//	public void setEmployeeId(Long employeeId) {
-//		this.employeeId = employeeId;
-//	}
-//
-//	public String getFirstName() {
-//		return firstName;
-//	}
-//
-//	public void setFirstName(String firstName) {
-//		this.firstName = firstName;
-//	}
-//
-//	public String getMiddleName() {
-//		return middleName;
-//	}
-//
-//	public void setMiddleName(String middleName) {
-//		this.middleName = middleName;
-//	}
-//
-//	public String getLastName() {
-//		return lastName;
-//	}
-//
-//	public void setLastName(String lastName) {
-//		this.lastName = lastName;
-//	}
-//
-//	public String getEmployeeEmail() {
-//		return employeeEmail;
-//	}
-//
-//	public void setEmployeeEmail(String employeeEmail) {
-//		this.employeeEmail = employeeEmail;
-//	}
-//
-//	public Boolean getIsFinanceAdmin() {
-//		return isFinanceAdmin;
-//	}
-//
-//	public void setIsFinanceAdmin(Boolean isFinanceAdmin) {
-//		this.isFinanceAdmin = isFinanceAdmin;
-//	}
-//
-//	public Boolean getIsHidden() {
-//		return isHidden;
-//	}
-//
-//	public void setIsHidden(Boolean isHidden) {
-//		this.isHidden = isHidden;
-//	}
-//
-//	public String getImageUrl() {
-//		return imageUrl;
-//	}
-//
-//	public void setImageUrl(String imageUrl) {
-//		this.imageUrl = imageUrl;
-//	}
-//
-//	public List<Expense> getExpenseList() {
-//		return expenseList;
-//	}
-//
-//	public void setExpenseList(List<Expense> expenseList) {
-//		this.expenseList = expenseList;
-//	}
-//
-//	public String getRole() {
-//		return role;
-//	}
-//
-//	public void setRole(String role) {
-//		this.role = role;
-//	}
-
-
-
 }

@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -19,34 +22,38 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModelProperty;
 
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Data
+
 @Entity
 @Table(name = "category")
 public class Category {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "category_id")
-	@ApiModelProperty(hidden = true)
-	private Long categoryId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
+    @ApiModelProperty(hidden = true)
+    private Long categoryId;
 
-	@Column(name = "category_name")
-	private String categoryDescription;
+    @Column(name = "category_name")
+    private String categoryDescription;
 
-	@Column(name = "category_total")
-	@ApiModelProperty(hidden = true)
-	private long categoryTotal;
+    @Column(name = "category_total")
+    @ApiModelProperty(hidden = true)
+    private long categoryTotal;
 
-	@Column(name = "is_hidden", nullable = true)
-	@ApiModelProperty(hidden = true)
-	private Boolean isHidden = false;
+    @Column(name = "is_hidden", nullable = true)
+    @ApiModelProperty(hidden = true)
+    private Boolean isHidden = false;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	private List<Expense> expenseList = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private List<Expense> expenseList = new ArrayList<>();
 
 	public Category() {
-		
+
 	}
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden) {
@@ -57,7 +64,7 @@ public class Category {
 		this.isHidden = isHidden;
 	}
 
-	
+
 
 	public Long getCategoryId() {
 		return categoryId;

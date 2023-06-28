@@ -12,9 +12,9 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 
 public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
-	Reports getReportByReportId(Long employeeid);
+	Reports getReportByReportId(Long reportId);
 
-	Optional<Reports> findById(Long id);
+	Optional<Reports> findById(Long reportId);
 
 	List<Reports> getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(Long employeeId,
 			ManagerApprovalStatus managerStatus, Boolean a, Boolean b);
@@ -38,5 +38,7 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 			LocalDate endDate, ManagerApprovalStatus managerStatus, Boolean a, Boolean b);
 
 	List<Reports> findByDateSubmittedBetween(LocalDate startDate, LocalDate endDate);
+
+
 
 }

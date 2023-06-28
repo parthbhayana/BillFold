@@ -101,8 +101,7 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
-                                    List<Long> addExpenseIds, List<Long> removeExpenseIds) {
+    public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription, List<Long> addExpenseIds, List<Long> removeExpenseIds) {
         Long empId = null;
         Reports report = getReportById(reportId);
         if (report == null || report.getIsHidden()) {
@@ -128,8 +127,7 @@ public class ReportsServiceImpl implements IReportsService {
             for (Long expenseid : addExpenseIds) {
                 Expense expense = expenseServices.getExpenseById(expenseid);
                 if (expense.getIsReported()) {
-                    throw new IllegalStateException(
-                            "Expense with ID " + expenseid + " is already reported in another report!");
+                    throw new IllegalStateException("Expense with ID " + expenseid + " is already reported in another report!");
                 }
                 if (report != null && !expense.getIsReported()) {
                     expenseServices.updateExpense(reportId, expenseid);
@@ -162,8 +160,7 @@ public class ReportsServiceImpl implements IReportsService {
         for (Long expenseid : expenseids) {
             Expense expense = expenseServices.getExpenseById(expenseid);
             if (expense.getIsReported()) {
-                throw new IllegalStateException(
-                        "Expense with ID " + expenseid + " is already reported in another report!");
+                throw new IllegalStateException("Expense with ID " + expenseid + " is already reported in another report!");
             }
             if (report != null && !expense.getIsReported()) {
                 expenseServices.updateExpense(reportId, expenseid);
@@ -181,14 +178,11 @@ public class ReportsServiceImpl implements IReportsService {
             case "drafts":
                 return reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(employeeId, false, false);
             case "submitted":
-                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
-                        ManagerApprovalStatus.PENDING, true, false);
+                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.PENDING, true, false);
             case "rejected":
-                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
-                        ManagerApprovalStatus.REJECTED, true, false);
+                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.REJECTED, true, false);
             case "approved":
-                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
-                        ManagerApprovalStatus.APPROVED, true, false);
+                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.APPROVED, true, false);
             default:
                 throw new IllegalArgumentException("Enter a valid request !" + request);
         }
@@ -198,14 +192,11 @@ public class ReportsServiceImpl implements IReportsService {
     public List<Reports> getReportsSubmittedToUser(String managerEmail, String request) {
         switch (request) {
             case "approved":
-                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                        ManagerApprovalStatus.APPROVED, true, false);
+                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail, ManagerApprovalStatus.APPROVED, true, false);
             case "rejected":
-                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                        ManagerApprovalStatus.REJECTED, true, false);
+                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail, ManagerApprovalStatus.REJECTED, true, false);
             case "pending":
-                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                        ManagerApprovalStatus.PENDING, true, false);
+                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail, ManagerApprovalStatus.PENDING, true, false);
             default:
                 throw new IllegalArgumentException("Enter a valid request !");
         }
@@ -227,22 +218,18 @@ public class ReportsServiceImpl implements IReportsService {
     public List<Reports> getAllReportsApprovedByManager(String request) {
         switch (request) {
             case "approved":
-                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
-                        ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);
+                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);
             case "rejected":
-                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
-                        ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false);
+                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false);
             case "pending":
-                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
-                        ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false);
+                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false);
             default:
                 throw new IllegalArgumentException("Enter a valid request !");
         }
     }
 
     @Override
-    public void submitReport(Long reportId, HttpServletResponse response)
-            throws MessagingException, FileNotFoundException, IOException {
+    public void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, FileNotFoundException, IOException {
         boolean submissionStatus = true;
         ManagerApprovalStatus pending = ManagerApprovalStatus.PENDING;
         Reports re = getReportById(reportId);
@@ -283,9 +270,6 @@ public class ReportsServiceImpl implements IReportsService {
 
                 e.printStackTrace();
             }
-            //Fetching employee id
-            Long employeeId = re.getEmployeeId();
-            Employee employee = employeeServices.getEmployeeById(employeeId);
             if (employee.getManagerEmail() == null) {
                 throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
             }
@@ -370,8 +354,7 @@ public class ReportsServiceImpl implements IReportsService {
         if (re == null || re.getIsHidden()) {
             throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
         }
-        if (re != null && !re.getIsHidden() && re.getIsSubmitted()
-                && re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
+        if (re != null && !re.getIsHidden() && re.getIsSubmitted() && re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
             re.setFinanceapprovalstatus(approvalStatus);
             re.setFinanceComments(comments);
             LocalDate today = LocalDate.now();
@@ -423,25 +406,19 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate) {
+
         return reportsRepository.findByDateSubmittedBetween(startDate, endDate);
     }
 
     @Override
-    public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
-                                                              LocalDate endDate, String request) {
+    public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate, LocalDate endDate, String request) {
         switch (request) {
             case "approved":
-                return reportsRepository
-                        .findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
-                                managerEmail, startDate, endDate, ManagerApprovalStatus.APPROVED, true, false);
+                return reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.APPROVED, true, false);
             case "rejected":
-                return reportsRepository
-                        .findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
-                                managerEmail, startDate, endDate, ManagerApprovalStatus.REJECTED, true, false);
+                return reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.REJECTED, true, false);
             case "pending":
-                return reportsRepository
-                        .findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
-                                managerEmail, startDate, endDate, ManagerApprovalStatus.PENDING, true, false);
+                return reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.PENDING, true, false);
             default:
                 throw new IllegalArgumentException("Enter a valid request !");
         }
