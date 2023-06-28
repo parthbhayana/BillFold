@@ -45,7 +45,7 @@ public class EmailServiceImpl implements IEmailService {
             MimeMessageHelper eMail = new MimeMessageHelper(message, true);
 
             eMail.setFrom("billfoldjsr@gmail.com");
-            eMail.setTo(report.getManagerEmail());
+            eMail.setTo(employee.getManagerEmail());
             eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
             eMail.setText(employee.getFirstName() + " " + employee.getLastName()
                     + " has submitted you a report for approval. As a designated approver, we kindly request your prompt attention to review and take necessary action on the report."
@@ -76,7 +76,7 @@ public class EmailServiceImpl implements IEmailService {
             Employee employee = expense.getEmployee();
             SimpleMailMessage eMail = new SimpleMailMessage();
             eMail.setFrom("billfoldjsr@gmail.com");
-            eMail.setTo(report.getManagerEmail());
+            eMail.setTo(employee.getManagerEmail());
             eMail.setSubject("[REJECTED] Expense Report: " + report.getReportTitle());
             eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
                     + "\n\nWe regret to inform you that your expense report has been rejected by your manager. The details of the rejection are as follows:"

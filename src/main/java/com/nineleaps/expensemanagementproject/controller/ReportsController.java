@@ -81,9 +81,9 @@ public class ReportsController {
 
 
     @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId, @RequestParam String managerEmail,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
+    public void submitReport(@PathVariable Long reportId,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
 
-        reportsService.submitReport(reportId, managerEmail,response);
+        reportsService.submitReport(reportId,response);
     }
 
 
@@ -107,10 +107,10 @@ public class ReportsController {
         reportsService.rejectReportByManager(reportId, comments);
     }
 
-    @PostMapping("/approveReportByFinance/{reportId}")
-    public void approveReportByFinance(@PathVariable Long reportId,
+    @PostMapping("/approveReportByFinance")
+    public void reimburseReportByFinance( @RequestParam ArrayList<Long> reportIds,
                                        @RequestParam(value = "comments", defaultValue = "null") String comments) {
-        reportsService.approveReportByFinance(reportId, comments);
+        reportsService.reimburseReportByFinance(reportIds, comments);
     }
 
     @PostMapping("/rejectReportByFinance/{reportId}")
