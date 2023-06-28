@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,5 +67,15 @@ public class EmployeeController {
     @GetMapping("/isAdmin")
     public void isFinanceAdmin(@RequestParam Long employeeId) {
         employeeService.isFinanceAdmin(employeeId);
+    }
+
+    @GetMapping("/getEmployeeDetails")
+    public Optional<Employee> getEmployeeDetails(@RequestParam Long employeeId) {
+        return employeeService.getEmployeeDetails(employeeId);
+    }
+
+    @PostMapping("/editEmployeeDetails")
+    public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId) {
+        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId);
     }
 }

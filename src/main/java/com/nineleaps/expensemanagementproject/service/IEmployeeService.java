@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.nineleaps.expensemanagementproject.entity.Employee;
 
@@ -36,4 +37,7 @@ public interface IEmployeeService {
 
     public void additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail, Long mobileNumber);
 
+    public Optional<Employee> getEmployeeDetails(Long employeeId);
+
+    public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId);
 }

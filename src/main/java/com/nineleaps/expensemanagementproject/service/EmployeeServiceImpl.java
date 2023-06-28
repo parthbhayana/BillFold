@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,20 @@ public class EmployeeServiceImpl implements IEmployeeService {
         employee.setOfficialEmployeeId(officialEmployeeId);
         employee.setManagerEmail(managerEmail);
         employee.setMobileNumber(mobileNumber);
+        employeeRepository.save(employee);
+    }
+
+    @Override
+    public Optional<Employee> getEmployeeDetails(Long employeeId) {
+        return employeeRepository.findById(employeeId);
+    }
+
+    @Override
+    public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId) {
+        Employee employee = getEmployeeById(employeeId);
+        employee.setManagerEmail(managerEmail);
+        employee.setMobileNumber(mobileNumber);
+        employee.setOfficialEmployeeId(officialEmployeeId);
         employeeRepository.save(employee);
     }
 
