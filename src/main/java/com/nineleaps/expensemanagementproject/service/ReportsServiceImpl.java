@@ -1,8 +1,6 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -14,15 +12,12 @@ import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
+import com.nineleaps.expensemanagementproject.entity.*;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nineleaps.expensemanagementproject.entity.Employee;
-import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
-import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
-import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
@@ -146,8 +141,8 @@ public class ReportsServiceImpl implements IReportsService {
             }
         }
         Reports re = getReportById(reportId);
-        re.setTotalAmountINR(totalamountINR(reportId));
-        re.setTotalAmountCurrency(totalamountCurrency(reportId));
+        re.setTotalAmountINR(totalAmountINR(reportId));
+        re.setTotalAmountCurrency(totalAmountCurrency(reportId));
         return getReportByEmpId(empId, "drafts");
     }
 
@@ -167,8 +162,8 @@ public class ReportsServiceImpl implements IReportsService {
             }
         }
         Reports re = getReportById(reportId);
-        re.setTotalAmountINR(totalamountINR(reportId));
-        re.setTotalAmountCurrency(totalamountCurrency(reportId));
+        re.setTotalAmountINR(totalAmountINR(reportId));
+        re.setTotalAmountCurrency(totalAmountCurrency(reportId));
         return reportsRepository.save(re);
     }
 
@@ -244,8 +239,8 @@ public class ReportsServiceImpl implements IReportsService {
             re.setManagerapprovalstatus(pending);
             LocalDate today = LocalDate.now();
             re.setDateSubmitted(today);
-            re.setTotalAmountINR(totalamountINR(reportId));
-            re.setTotalAmountCurrency(totalamountCurrency(reportId));
+            re.setTotalAmountINR(totalAmountINR(reportId));
+            re.setTotalAmountCurrency(totalAmountCurrency(reportId));
             //Fetching employee ID
             Long employeeId = re.getEmployeeId();
             Employee employee = employeeServices.getEmployeeById(employeeId);
@@ -365,7 +360,7 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public float totalamountINR(Long reportId) {
+    public float totalAmountINR(Long reportId) {
         Reports report = reportsRepository.findById(reportId).get();
         List<Expense> expenses = expenseRepository.findByReports(report);
 
@@ -377,7 +372,7 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public float totalamountCurrency(Long reportId) {
+    public float totalAmountCurrency(Long reportId) {
         Reports report = reportsRepository.findById(reportId).get();
         List<Expense> expenses = expenseRepository.findByReports(report);
 
@@ -386,6 +381,16 @@ public class ReportsServiceImpl implements IReportsService {
             amtCurrency += expense2.getAmount();
         }
         return amtCurrency;
+    }
+
+    @Override
+    public float totalApprovedAmount(Long reportId) {
+        List<Expense> expenseList = expenseRepository.findByReportIdAndManagerApprovalStatusExpenseAndIsReportedAndIsHidden(reportId, ManagerApprovalStatusExpense.APPROVED,true,false);
+        float totalApprovedAmount = 0;
+        for(Expense expense2 : expenseList){
+            totalApprovedAmount += expense2.getAmountApproved();
+        }
+        return totalApprovedAmount;
     }
 
     @Override
@@ -406,7 +411,6 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate) {
-
         return reportsRepository.findByDateSubmittedBetween(startDate, endDate);
     }
 
@@ -433,5 +437,6 @@ public class ReportsServiceImpl implements IReportsService {
         }
         return (total + " INR");
     }
+
 
 }

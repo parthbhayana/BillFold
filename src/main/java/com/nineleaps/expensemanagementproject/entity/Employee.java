@@ -2,14 +2,7 @@ package com.nineleaps.expensemanagementproject.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
@@ -63,6 +56,16 @@ public class Employee {
     @Column(name = "is_hidden", nullable = true)
     @ApiModelProperty(hidden = true)
     private Boolean isHidden = false;
+
+    @Column(name = "finance_approval_status", nullable = true)
+    @ApiModelProperty(hidden = true)
+    @Enumerated(EnumType.STRING)
+    private FinanceApprovalStatus financeapprovalstatus;// = FinanceApprovalStatus.PENDING;
+
+    @Column(name = "manager_approval_status", nullable = true)
+    @ApiModelProperty(hidden = true)
+    @Enumerated(EnumType.STRING)
+    private ManagerApprovalStatusExpense managerApprovalStatusExpense;// = ManagerApprovalStatus.PENDING;
 
     @JsonIgnore
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)

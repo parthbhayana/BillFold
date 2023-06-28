@@ -78,6 +78,10 @@ public class Expense {
     @ApiModelProperty(hidden = true)
     private String reportTitle;
 
+    @Column(name = "amount_approved")
+    @ApiModelProperty(hidden = true)
+    private float amountApproved;
+
     @Lob
     @Column(name = "supporting_documents", nullable = true)
     private byte[] supportingDocuments;
