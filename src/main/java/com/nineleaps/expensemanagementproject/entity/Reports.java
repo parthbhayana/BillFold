@@ -17,20 +17,12 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModelProperty;
-
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 
 @Entity
 @Table(name = "reports")
@@ -124,7 +116,6 @@ public class Reports {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private final List<Expense> expenseList = new ArrayList<>();
 
-/*
     public Reports() {
 
     }
@@ -312,6 +303,4 @@ public class Reports {
     public void setPdfFile(byte[] pdfFile) {
         this.pdfFile = pdfFile;
     }
-*/
-
 }

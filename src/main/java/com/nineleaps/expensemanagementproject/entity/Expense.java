@@ -25,8 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModelProperty;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 
 @Entity
@@ -43,7 +43,6 @@ public class Expense {
     private String merchantName;
 
     @Column(name = "date", nullable = false)
-    @ApiModelProperty(hidden = true)
     private LocalDate date;
 
     @Column(name = "created_time")
@@ -99,157 +98,4 @@ public class Expense {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
-
-//    public Expense() {
-//
-//    }
-//
-//    public Expense(Long expenseId, String merchantName, LocalDate date, LocalTime time, String currency, Long amount, float amountINR, String description, String categoryDescription, Boolean isReported, Boolean isHidden, String reportTitle, byte[] supportingDocuments, Employee employee, Reports reports, Category category) {
-//        super();
-//        this.expenseId = expenseId;
-//        this.merchantName = merchantName;
-//        this.date = date;
-//        this.time = time;
-//        this.currency = currency;
-//        this.amount = amount;
-//        this.amountINR = amountINR;
-//        this.description = description;
-//        this.categoryDescription = categoryDescription;
-//        this.isReported = isReported;
-//        this.isHidden = isHidden;
-//        this.reportTitle = reportTitle;
-//        this.supportingDocuments = supportingDocuments;
-//        this.employee = employee;
-//        this.reports = reports;
-//        this.category = category;
-//    }
-//
-//    public Long getExpenseId() {
-//        return expenseId;
-//    }
-//
-//    public void setExpenseId(Long expenseId) {
-//        this.expenseId = expenseId;
-//    }
-//
-//    public String getMerchantName() {
-//        return merchantName;
-//    }
-//
-//    public void setMerchantName(String merchantName) {
-//        this.merchantName = merchantName;
-//    }
-//
-//    public LocalDate getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(LocalDate date) {
-//        this.date = date;
-//    }
-//
-//    public LocalTime getTime() {
-//        return time;
-//    }
-//
-//    public void setTime(LocalTime time) {
-//        this.time = time;
-//    }
-//
-//    public String getCurrency() {
-//        return currency;
-//    }
-//
-//    public void setCurrency(String currency) {
-//        this.currency = currency;
-//    }
-//
-//    public Long getAmount() {
-//        return amount;
-//    }
-//
-//    public void setAmount(Long amount) {
-//        this.amount = amount;
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
-//
-//    public String getCategoryDescription() {
-//        return categoryDescription;
-//    }
-//
-//    public void setCategoryDescription(String categoryDescription) {
-//        this.categoryDescription = categoryDescription;
-//    }
-//
-//    public Boolean getIsReported() {
-//        return isReported;
-//    }
-//
-//    public void setIsReported(Boolean isReported) {
-//        this.isReported = isReported;
-//    }
-//
-//    public Boolean getIsHidden() {
-//        return isHidden;
-//    }
-//
-//    public void setIsHidden(Boolean isHidden) {
-//        this.isHidden = isHidden;
-//    }
-//
-//    public byte[] getSupportingDocuments() {
-//        return supportingDocuments;
-//    }
-//
-//    public void setSupportingDocuments(byte[] supportingDocuments) {
-//        this.supportingDocuments = supportingDocuments;
-//    }
-//
-//    public Employee getEmployee() {
-//        return employee;
-//    }
-//
-//    public void setEmployee(Employee employee) {
-//        this.employee = employee;
-//    }
-//
-//    public Reports getReports() {
-//        return reports;
-//    }
-//
-//    public void setReports(Reports reports) {
-//        this.reports = reports;
-//    }
-//
-//    public Category getCategory() {
-//        return category;
-//    }
-//
-//    public void setCategory(Category category) {
-//        this.category = category;
-//    }
-//
-//    public String getReportTitle() {
-//        return reportTitle;
-//    }
-//
-//    public void setReportTitle(String reportTitle) {
-//        this.reportTitle = reportTitle;
-//    }
-//
-//    public float getAmountINR() {
-//        return amountINR;
-//    }
-//
-//    public void setAmountINR(float amountINR) {
-//        this.amountINR = amountINR;
-//    }
-
 }

@@ -26,8 +26,8 @@ public class CurrencyController {
 	}
 
 	@PostMapping("/getExchangeRate/{baseCurrency}")
-	public double getExchangeRate(@PathVariable String baseCurrency) throws IOException {
-		return currencyExchange.getExchangeRate(baseCurrency);
+	public double getExchangeRate(@PathVariable String baseCurrency, @PathVariable String date) throws IOException {
+		return currencyExchange.getExchangeRate(baseCurrency,date);
 	}
 
 }
