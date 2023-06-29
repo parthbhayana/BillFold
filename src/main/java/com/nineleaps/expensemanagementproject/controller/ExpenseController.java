@@ -69,7 +69,7 @@ public class ExpenseController {
 	}
 
 	@PostMapping("/setPartialApprovedAmount")
-	public void setPartialApprovedAmount(@RequestParam Long expenseId, @RequestParam float approvedAmount){
+	public void setPartialApprovedAmount(@RequestParam Long expenseId, @RequestParam Float approvedAmount){
 		Expense expense = expenseService.getExpenseById(expenseId);
 		expense.setAmountApproved(approvedAmount);
 		expenseRepository.save(expense);

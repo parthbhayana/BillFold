@@ -13,8 +13,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 	
 	List<Expense> findByReportsAndIsHidden(Reports reports, Boolean b);
 
-	List<Expense> findByReportIdAndManagerApprovalStatusAndIsReportedAndIsHidden(Long reportId, ManagerApprovalStatusExpense managerStatus, Boolean a, Boolean b);
-
+	List<Expense> findExpenseByReportsAndIsReportedAndIsHidden(Reports report, Boolean a, Boolean b);
+	
 	Optional<Expense> findReportByEmployee(Long fkEmpId);
 
 	List<Expense> findByEmployee(Employee employee);
