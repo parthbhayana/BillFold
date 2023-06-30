@@ -1,126 +1,106 @@
 package com.nineleaps.expensemanagementproject.entity;
-
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.annotations.ApiModelProperty;
-
 @Entity
 @Table(name = "reports")
 public class Reports {
-
     @Id
     @Column(name = "report_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(hidden = true)
     private Long reportId;
-
     @Column(name = "employee_id")
     @ApiModelProperty(hidden = true)
     private Long employeeId;
-
     @Column(name = "report_title", nullable = false)
     private String reportTitle;
-
     @Column(name = "report_description")
     private String reportDescription;
-
     @Column(name = "manager_comments")
     @ApiModelProperty(hidden = true)
     private String managerComments;
-
     @Column(name = "finance_comments")
     @ApiModelProperty(hidden = true)
     private String financeComments;
-
     @Column(name = "is_submitted", nullable = true)
     @ApiModelProperty(hidden = true)
     private Boolean isSubmitted = false;
-
     @Column(name = "employee_mail", nullable = true)
     @ApiModelProperty(hidden = true)
     private String employeeMail;
-
     @Column(name = "date_submitted")
     @ApiModelProperty(hidden = true)
     private LocalDate dateSubmitted;
-
     @Column(name = "date_created")
     @ApiModelProperty(hidden = true)
     private LocalDate dateCreated;
-
     @Column(name = "date_manager_action")
     @ApiModelProperty(hidden = true)
     private LocalDate managerActionDate;
-
     @Column(name = "date_finance_action")
     @ApiModelProperty(hidden = true)
     private LocalDate financeActionDate;
-
     @Column(name = "currency")
     @ApiModelProperty(hidden = true)
     private String currency;
-
     @Column(name = "total_amount_INR")
     @ApiModelProperty(hidden = true)
     private float totalAmountINR;
-
     @Column(name = "total_amount_currency")
     @ApiModelProperty(hidden = true)
     private float totalAmountCurrency;
-
     @Column(name = "is_hidden", nullable = true)
     @ApiModelProperty(hidden = true)
     private Boolean isHidden = false;
-
     @Column(name = "manager_email")
     @ApiModelProperty(hidden = true)
     private String managerEmail;
-
+    @Column(name = "manager_review_time")
+    @ApiModelProperty(hidden = true)
+    private Duration managerReviewTime;
     @Column(name = "finance_approval_status", nullable = true)
     @ApiModelProperty(hidden = true)
     @Enumerated(EnumType.STRING)
     private FinanceApprovalStatus financeapprovalstatus;// = FinanceApprovalStatus.PENDING;
-
     @Column(name = "manager_approval_status", nullable = true)
     @ApiModelProperty(hidden = true)
     @Enumerated(EnumType.STRING)
     private ManagerApprovalStatus managerapprovalstatus;// = ManagerApprovalStatus.PENDING;
-
     @Lob
     @Column(name = "pdf_file", nullable = true)
     @ApiModelProperty(hidden = true)
     private byte[] pdfFile;
-
     @JsonIgnore
     @OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private final List<Expense> expenseList = new ArrayList<>();
 
     public Reports() {
-
     }
 
-    public Reports(Long reportId, Long employeeId, String reportTitle, String reportDescription, String managerComments, String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail, LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate, LocalDate financeActionDate, String currency, float totalAmountINR, float totalAmountCurrency, Boolean isHidden, FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+    public Reports(Long reportId, Long employeeId, String reportTitle, String reportDescription, String managerComments,
+                   String financeComments, Boolean isSubmitted, String employeeMail, LocalDate dateSubmitted,
+                   LocalDate dateCreated, LocalDate managerActionDate, LocalDate financeActionDate, String currency,
+                   float totalAmountINR, float totalAmountCurrency, Boolean isHidden, String managerEmail,
+                   Duration managerReviewTime, FinanceApprovalStatus financeapprovalstatus,
+                   ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
         super();
         this.reportId = reportId;
         this.employeeId = employeeId;
@@ -130,7 +110,6 @@ public class Reports {
         this.financeComments = financeComments;
         this.isSubmitted = isSubmitted;
         this.employeeMail = employeeMail;
-        this.managerEmail = managerEmail;
         this.dateSubmitted = dateSubmitted;
         this.dateCreated = dateCreated;
         this.managerActionDate = managerActionDate;
@@ -139,6 +118,8 @@ public class Reports {
         this.totalAmountINR = totalAmountINR;
         this.totalAmountCurrency = totalAmountCurrency;
         this.isHidden = isHidden;
+        this.managerEmail = managerEmail;
+        this.managerReviewTime = managerReviewTime;
         this.financeapprovalstatus = financeapprovalstatus;
         this.managerapprovalstatus = managerapprovalstatus;
         this.pdfFile = pdfFile;
@@ -208,14 +189,6 @@ public class Reports {
         this.employeeMail = employeeMail;
     }
 
-    public String getManagerEmail() {
-        return managerEmail;
-    }
-
-    public void setManagerEmail(String managerEmail) {
-        this.managerEmail = managerEmail;
-    }
-
     public LocalDate getDateSubmitted() {
         return dateSubmitted;
     }
@@ -278,6 +251,22 @@ public class Reports {
 
     public void setIsHidden(Boolean isHidden) {
         this.isHidden = isHidden;
+    }
+
+    public String getManagerEmail() {
+        return managerEmail;
+    }
+
+    public void setManagerEmail(String managerEmail) {
+        this.managerEmail = managerEmail;
+    }
+
+    public Duration getManagerReviewTime() {
+        return managerReviewTime;
+    }
+
+    public void setManagerReviewTime(Duration managerReviewTime) {
+        this.managerReviewTime = managerReviewTime;
     }
 
     public FinanceApprovalStatus getFinanceapprovalstatus() {

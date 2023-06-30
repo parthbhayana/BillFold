@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.service;
 import java.util.List;
 
 import com.nineleaps.expensemanagementproject.entity.Expense;
+import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatusExpense;
 
 public interface IExpenseService {
 
@@ -30,4 +31,5 @@ public interface IExpenseService {
 
 	public void hideExpense(Long expId);
 
+    void updateExpenseApprovalStatus(Long expenseId, ManagerApprovalStatusExpense approvalStatus);
 }

@@ -14,15 +14,11 @@ import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nineleaps.expensemanagementproject.entity.*;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nineleaps.expensemanagementproject.entity.Employee;
-import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
-import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
-import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
@@ -99,6 +95,8 @@ public class ReportsServiceImpl implements IReportsService {
         }
         return reportsRepository.save(newReport);
     }
+
+
 
     @Override
     public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription, List<Long> addExpenseIds, List<Long> removeExpenseIds) {
@@ -251,13 +249,7 @@ public class ReportsServiceImpl implements IReportsService {
             Employee employee = employeeServices.getEmployeeById(employeeId);
             re.setManagerEmail(employee.getManagerEmail());
             reportsRepository.save(re);
-//			try {
-//				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
-//				decodedEmail = decodedEmail.replace("=", "");
-//				re.setManagerEmail(decodedEmail);
-//			} catch (UnsupportedEncodingException e) {
-//				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
-//			}
+
             response.setContentType("application/pdf");
             DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
             String currentDateTime = dateFormatter.format(new Date());
@@ -433,5 +425,21 @@ public class ReportsServiceImpl implements IReportsService {
         }
         return (total + " INR");
     }
+
+    @Override
+    public void updateExpenseApprovalStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds) {
+        if (approveExpenseIds != null && !approveExpenseIds.isEmpty()) {
+            for (Long expenseId : approveExpenseIds) {
+                expenseServices.updateExpenseApprovalStatus(expenseId, ManagerApprovalStatusExpense.APPROVED);
+            }
+        }
+        if (rejectExpenseIds != null && !rejectExpenseIds.isEmpty()) {
+            for (Long expenseId : rejectExpenseIds) {
+                expenseServices.updateExpenseApprovalStatus(expenseId, ManagerApprovalStatusExpense.REJECTED);
+            }
+        }
+    }
+
+
 
 }

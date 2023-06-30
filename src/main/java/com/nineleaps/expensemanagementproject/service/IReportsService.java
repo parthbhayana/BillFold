@@ -56,4 +56,7 @@ public interface IReportsService {
 			LocalDate endDate, String request);
 
 	public void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
+
+
+	void updateExpenseApprovalStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds);
 }

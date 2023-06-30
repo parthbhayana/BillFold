@@ -1,0 +1,5 @@
+
+Л
+java:S1319:"iThe type of "reportIds" should be an interface such as "List" rather than the implementation "ArrayList".(ЩЈЩƒш€€€€8£втЅП1
+У
+java:S1130"xRemove the declaration of thrown exception 'java.io.FileNotFoundException' which is a subclass of 'java.io.IOException'.(Ў№ъящ€€€€
