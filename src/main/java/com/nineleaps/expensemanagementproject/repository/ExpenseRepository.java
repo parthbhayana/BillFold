@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.nineleaps.expensemanagementproject.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.nineleaps.expensemanagementproject.entity.Employee;
@@ -31,4 +32,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 	List<Expense> findByDateBetweenAndIsReported(LocalDate startDate, LocalDate endDate, Boolean bool);
 
     List<Expense> findByIsReportedAndDateBefore(boolean b, LocalDate sixtyDaysAgo);
+
+    List<Expense> findByIsReported(boolean b);
+
+	List<Expense> findByCategoryAndIsReported(Category category, boolean b);
 }

@@ -1,0 +1,31 @@
+
+a
+java:S1192\"FDefine a constant instead of duplicating this literal "Month" 3 times.(ÙÉ•áıÿÿÿÿ
+d
+java:S1192W"ODefine a constant instead of duplicating this literal "Employee Email" 3 times.(ì‚Ë
+d
+java:S1192X"NDefine a constant instead of duplicating this literal "Employee Name" 3 times.(—æ¯Í
+c
+java:S1192["MDefine a constant instead of duplicating this literal "submitted on" 3 times.(‹åÕ
+g
+java:S1192^"LDefine a constant instead of duplicating this literal "Approved by" 3 times.(‰Á™şûÿÿÿÿ
+g
+java:S1192Z"LDefine a constant instead of duplicating this literal "Report Name" 3 times.(ûåŠïûÿÿÿÿ
+]
+java:S1192`"GDefine a constant instead of duplicating this literal "Status" 3 times.(Øÿœ‚
+e
+java:S1192Y"JDefine a constant instead of duplicating this literal "Report Id" 3 times.(éÍ‰ˆşÿÿÿÿ
+]
+java:S1192V"GDefine a constant instead of duplicating this literal "Sl.no." 3 times.(¯¡¤Í
+i
+java:S1192]"NDefine a constant instead of duplicating this literal "Appproved  on" 3 times.(²şùşûÿÿÿÿ
+h
+java:S1192_"RDefine a constant instead of duplicating this literal "Total Amount(INR)" 3 times.(¢óÈ„
+m
+java:S2095Â"JUse try-with-resources or close this "HSSFWorkbook" in a "finally" clause.(ĞÅ±Ìøÿÿÿÿ8®òŞ´1
+m
+java:S2095Š"JUse try-with-resources or close this "HSSFWorkbook" in a "finally" clause.(ĞÅ±Ìøÿÿÿÿ8®òŞ´1
+h
+java:S3776M"RRefactor this method to reduce its Cognitive Complexity from 40 to the 15 allowed.(¡ÊÎµ
+İ
+java:S6541M"ÆA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 150 to 64, Complexity from 15 to 14, Nesting Level from 5 to 2, Number of Variables from 49 to 6.(¡ÊÎµ

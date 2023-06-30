@@ -3,18 +3,14 @@ package com.nineleaps.expensemanagementproject.service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import com.nineleaps.expensemanagementproject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nineleaps.expensemanagementproject.entity.Category;
-import com.nineleaps.expensemanagementproject.entity.Employee;
-import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
@@ -176,5 +172,15 @@ public class ExpenseServiceImpl implements IExpenseService {
         }
         expenseRepository.save(expense);
     }
-
+	@Override
+	public void updateExpenseApprovalStatus(Long expenseId, ManagerApprovalStatusExpense approvalStatus) {
+		Expense expense = getExpenseById(expenseId);
+		if (expense == null || expense.getReports() == null) {
+			throw new IllegalArgumentException("Expense with ID " + expenseId + " does not exist");
+		}
+		if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING.PENDING) {
+			expense.setManagerApprovalStatusExpense(approvalStatus);
+			expenseRepository.save(expense);
+		}
+	}
 }
