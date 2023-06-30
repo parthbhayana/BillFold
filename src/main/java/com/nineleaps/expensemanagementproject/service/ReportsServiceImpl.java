@@ -106,10 +106,13 @@ public class ReportsServiceImpl implements IReportsService {
                                     List<Long> addExpenseIds, List<Long> removeExpenseIds) {
         Long empId = null;
         Reports report = getReportById(reportId);
+        if(report.getIsSubmitted()){
+            throw new IllegalStateException("Can not edit Report with ReportId:" + reportId + " as it is already submitted!");
+        }
         if (report == null || report.getIsHidden()) {
             throw new NullPointerException("Report with ID " + reportId + " does not exist!");
         }
-        if (report != null && !report.getIsHidden()) {
+        if ((report != null && !report.getIsHidden()) || (report.getIsSubmitted() && report.getManagerapprovalstatus() == ManagerApprovalStatus.ACTION_REQUIRED)) {
             report.setReportTitle(reportTitle);
             report.setReportDescription(reportDescription);
             reportsRepository.save(report);
@@ -245,7 +248,6 @@ public class ReportsServiceImpl implements IReportsService {
     public void submitReport(Long reportId, HttpServletResponse response)
             throws MessagingException, FileNotFoundException, IOException {
         boolean submissionStatus = true;
-        ManagerApprovalStatus pending = ManagerApprovalStatus.PENDING;
         Reports re = getReportById(reportId);
         if (re == null || re.getIsHidden()) {
             throw new NullPointerException("Report with ID " + reportId + " does not exist!");
@@ -255,9 +257,8 @@ public class ReportsServiceImpl implements IReportsService {
         }
         if (re != null && re.getIsSubmitted() != submissionStatus) {
             re.setIsSubmitted(submissionStatus);
-            re.setManagerapprovalstatus(pending);
-            LocalDateTime today = LocalDateTime.now();
-            re.setDateSubmitted(today);
+            re.setManagerapprovalstatus(ManagerApprovalStatus.PENDING);
+            re.setDateSubmitted(LocalDateTime.now());
             re.setTotalAmountINR(totalAmountINR(reportId));
             re.setTotalAmountCurrency(totalAmountCurrency(reportId));
             // Fetching employee ID
@@ -294,6 +295,7 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public void approveReportByManager(Long reportId, String comments) {
+        //Update Expenses Status-Todo
         ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.APPROVED;
         FinanceApprovalStatus pending = FinanceApprovalStatus.PENDING;
         Reports re = getReportById(reportId);
@@ -470,12 +472,14 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, String reviewTime) {
         Reports report = getReportById(reportId);
-        report.setManagerReviewTime(reviewTime);
         if (report.getIsHidden()) {
             throw new IllegalStateException("Report with ID " + reportId + " does not exist!");
         }
         if (report == null) {
             throw new NullPointerException("Report with ID " + reportId + " does not contain any expenses!");
+        }
+        if(!report.getIsSubmitted()){
+            throw new IllegalStateException("Report with ID " + reportId + " is not submitted!");
         }
         for (Long expenseId : approveExpenseIds) {
             Expense expense = expenseServices.getExpenseById(expenseId);
@@ -499,6 +503,17 @@ public class ReportsServiceImpl implements IReportsService {
                 expenseRepository.save(expense);
 
             }
+        }
+        report.setManagerReviewTime(reviewTime);
+        //Changing Report Status
+        //If all the expenses are approved then report status will be "APPROVED!"
+        if(rejectExpenseIds.isEmpty()){
+            report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
+        }
+        //If any expense is rejected report will go back to employee for changes
+        if(!rejectExpenseIds.isEmpty()){
+            report.setManagerapprovalstatus(ManagerApprovalStatus.ACTION_REQUIRED);
+            report.setIsSubmitted(false);
         }
         reportsRepository.save(report);
     }

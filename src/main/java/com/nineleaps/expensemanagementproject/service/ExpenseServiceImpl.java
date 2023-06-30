@@ -2,9 +2,7 @@ package com.nineleaps.expensemanagementproject.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -114,18 +112,15 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Override
     public Expense updateExpenses(Expense newExpense, Long expenseId) {
         Expense expense = getExpenseById(expenseId);
-        if (!expense.getIsHidden()) {
+        if ((!expense.getIsHidden() && !expense.getIsReported()) || ((expense.getIsReported()) && (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED) ) ) {
             expense.setMerchantName(newExpense.getMerchantName());
             expense.setDate(newExpense.getDate());
             expense.setAmount(newExpense.getAmount());
             expense.setDescription(newExpense.getDescription());
             expense.setSupportingDocuments(newExpense.getSupportingDocuments());
-            LocalDate today = LocalDate.now();
             LocalDateTime now = LocalDateTime.now();
-            expense.setDate(today);
             expense.setDateCreated(now);
             expense.setCurrency(newExpense.getCurrency());
-            expenseRepository.save(expense);
             String curr = expense.getCurrency();
             String date = expense.getDate().toString();
             double rate = CurrencyExchange.getExchangeRate(curr, date);
@@ -135,6 +130,9 @@ public class ExpenseServiceImpl implements IExpenseService {
         }
         if (expense.getIsHidden()) {
             throw new IllegalStateException("Expense " + expenseId + " does not exist!");
+        }
+        if(expense.getIsReported() && ((expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.APPROVED) || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PARTIALLY_APPROVED))){
+            throw new IllegalStateException("Can not edit Expense with ExpenseId:" + expenseId + " as it is already reported!");
         }
         return expenseRepository.save(expense);
     }
