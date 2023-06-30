@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +9,10 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import com.nineleaps.expensemanagementproject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nineleaps.expensemanagementproject.entity.Category;
-import com.nineleaps.expensemanagementproject.entity.Employee;
-import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
@@ -51,8 +49,8 @@ public class ExpenseServiceImpl implements IExpenseService {
     public Expense addExpense(Expense expense, Long employeeId, Long categoryId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
         expense.setEmployee(employee);
-        LocalTime now = LocalTime.now();
-        expense.setTime(now);
+        LocalDateTime now = LocalDateTime.now();
+        expense.setDateCreated(now);
         String curr = expense.getCurrency();
         String date = expense.getDate().toString();
         double rate = CurrencyExchange.getExchangeRate(curr, date);
@@ -92,6 +90,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setReports(report);
             expense.setIsReported(reportedStatus);
             expense.setReportTitle(reportTitle);
+            expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
         }
         return expenseRepository.save(expense);
     }
@@ -122,9 +121,9 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setDescription(newExpense.getDescription());
             expense.setSupportingDocuments(newExpense.getSupportingDocuments());
             LocalDate today = LocalDate.now();
-            LocalTime now = LocalTime.now();
+            LocalDateTime now = LocalDateTime.now();
             expense.setDate(today);
-            expense.setTime(now);
+            expense.setDateCreated(now);
             expense.setCurrency(newExpense.getCurrency());
             expenseRepository.save(expense);
             String curr = expense.getCurrency();
@@ -172,9 +171,8 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setIsHidden(hidden);
         }
         if (expense.getIsReported()) {
-            throw new IllegalStateException("Cannot delete expense " + expId + " as it is reported in Report: " + expense.getReportTitle());
+            throw new IllegalStateException("Cannot delete expense " + expId + " as it is already reported in Report: " + expense.getReportTitle());
         }
         expenseRepository.save(expense);
     }
-
 }

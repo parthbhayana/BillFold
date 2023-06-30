@@ -1,7 +1,7 @@
 package com.nineleaps.expensemanagementproject.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
@@ -30,7 +30,7 @@ public class Expense {
 
 	@Column(name = "created_time")
 	@ApiModelProperty(hidden = true)
-	private LocalTime time;
+	private LocalDateTime dateCreated;
 
 	@Column(name = "currency")
 	private String currency;
@@ -100,16 +100,17 @@ public class Expense {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Expense(Long expenseId, String merchantName, LocalDate date, LocalTime time, String currency, Long amount,
-			float amountINR, String description, String categoryDescription, Boolean isReported, Boolean isHidden,
-			String reportTitle, Float amountApproved, FinanceApprovalStatus financeApprovalStatusExpense,
+	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
+			Long amount, float amountINR, String description, String categoryDescription, Boolean isReported,
+			Boolean isHidden, String reportTitle, Float amountApproved,
+			FinanceApprovalStatus financeApprovalStatusExpense,
 			ManagerApprovalStatusExpense managerApprovalStatusExpense, byte[] supportingDocuments, Employee employee,
 			Reports reports, Category category) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
-		this.time = time;
+		this.dateCreated = dateCreated;
 		this.currency = currency;
 		this.amount = amount;
 		this.amountINR = amountINR;
@@ -151,12 +152,12 @@ public class Expense {
 		this.date = date;
 	}
 
-	public LocalTime getTime() {
-		return time;
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
 	}
 
-	public void setTime(LocalTime time) {
-		this.time = time;
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
 	public String getCurrency() {

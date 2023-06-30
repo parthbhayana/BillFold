@@ -1,6 +1,6 @@
 package com.nineleaps.expensemanagementproject.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,279 +28,339 @@ import io.swagger.annotations.ApiModelProperty;
 @Table(name = "reports")
 public class Reports {
 
-    @Id
-    @Column(name = "report_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @ApiModelProperty(hidden = true)
-    private Long reportId;
+	@Id
+	@Column(name = "report_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@ApiModelProperty(hidden = true)
+	private Long reportId;
 
-    @Column(name = "employee_id")
-    @ApiModelProperty(hidden = true)
-    private Long employeeId;
+	@Column(name = "employee_id")
+	@ApiModelProperty(hidden = true)
+	private Long employeeId;
 
-    @Column(name = "report_title", nullable = false)
-    private String reportTitle;
+	@Column(name = "employee_name")
+	@ApiModelProperty(hidden = true)
+	private String employeeName;
 
-    @Column(name = "report_description")
-    private String reportDescription;
+	@Column(name = "official_employee_id")
+	@ApiModelProperty(hidden = true)
+	private String officialEmployeeId;
 
-    @Column(name = "manager_comments")
-    @ApiModelProperty(hidden = true)
-    private String managerComments;
+	@Column(name = "report_title", nullable = false)
+	private String reportTitle;
 
-    @Column(name = "finance_comments")
-    @ApiModelProperty(hidden = true)
-    private String financeComments;
+	@Column(name = "report_description")
+	private String reportDescription;
 
-    @Column(name = "is_submitted", nullable = true)
-    @ApiModelProperty(hidden = true)
-    private Boolean isSubmitted = false;
+	@Column(name = "manager_comments")
+	@ApiModelProperty(hidden = true)
+	private String managerComments;
 
-    @Column(name = "employee_mail", nullable = true)
-    @ApiModelProperty(hidden = true)
-    private String employeeMail;
+	@Column(name = "finance_comments")
+	@ApiModelProperty(hidden = true)
+	private String financeComments;
 
-    @Column(name = "date_submitted")
-    @ApiModelProperty(hidden = true)
-    private LocalDate dateSubmitted;
+	@Column(name = "is_submitted", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private Boolean isSubmitted = false;
 
-    @Column(name = "date_created")
-    @ApiModelProperty(hidden = true)
-    private LocalDate dateCreated;
+	@Column(name = "employee_mail", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private String employeeMail;
 
-    @Column(name = "date_manager_action")
-    @ApiModelProperty(hidden = true)
-    private LocalDate managerActionDate;
+	@Column(name = "date_submitted")
+	@ApiModelProperty(hidden = true)
+	private LocalDateTime dateSubmitted;
 
-    @Column(name = "date_finance_action")
-    @ApiModelProperty(hidden = true)
-    private LocalDate financeActionDate;
+	@Column(name = "date_created")
+	@ApiModelProperty(hidden = true)
+	private LocalDateTime dateCreated;
 
-    @Column(name = "currency")
-    @ApiModelProperty(hidden = true)
-    private String currency;
+	@Column(name = "date_manager_action")
+	@ApiModelProperty(hidden = true)
+	private LocalDateTime managerActionDate;
 
-    @Column(name = "total_amount_INR")
-    @ApiModelProperty(hidden = true)
-    private float totalAmountINR;
+	@Column(name = "date_finance_action")
+	@ApiModelProperty(hidden = true)
+	private LocalDateTime financeActionDate;
 
-    @Column(name = "total_amount_currency")
-    @ApiModelProperty(hidden = true)
-    private float totalAmountCurrency;
+	@Column(name = "currency")
+	@ApiModelProperty(hidden = true)
+	private String currency;
 
-    @Column(name = "is_hidden", nullable = true)
-    @ApiModelProperty(hidden = true)
-    private Boolean isHidden = false;
+	@Column(name = "total_amount_INR")
+	@ApiModelProperty(hidden = true)
+	private float totalAmountINR;
 
-    @Column(name = "manager_email")
-    @ApiModelProperty(hidden = true)
-    private String managerEmail;
+	@Column(name = "total_amount_currency")
+	@ApiModelProperty(hidden = true)
+	private float totalAmountCurrency;
 
-    @Column(name = "finance_approval_status", nullable = true)
-    @ApiModelProperty(hidden = true)
-    @Enumerated(EnumType.STRING)
-    private FinanceApprovalStatus financeapprovalstatus;// = FinanceApprovalStatus.PENDING;
+	@Column(name = "is_hidden", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private Boolean isHidden = false;
 
-    @Column(name = "manager_approval_status", nullable = true)
-    @ApiModelProperty(hidden = true)
-    @Enumerated(EnumType.STRING)
-    private ManagerApprovalStatus managerapprovalstatus;// = ManagerApprovalStatus.PENDING;
+	@Column(name = "manager_email")
+	@ApiModelProperty(hidden = true)
+	private String managerEmail;
 
-    @Lob
-    @Column(name = "pdf_file", nullable = true)
-    @ApiModelProperty(hidden = true)
-    private byte[] pdfFile;
+	@Column(name = "manager_review_time")
+	@ApiModelProperty(hidden = true)
+	private String managerReviewTime;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private final List<Expense> expenseList = new ArrayList<>();
+	@Column(name = "finance_approval_status", nullable = true)
+	@ApiModelProperty(hidden = true)
+	@Enumerated(EnumType.STRING)
+	private FinanceApprovalStatus financeapprovalstatus;// = FinanceApprovalStatus.PENDING;
 
-    public Reports() {
+	@Column(name = "manager_approval_status", nullable = true)
+	@ApiModelProperty(hidden = true)
+	@Enumerated(EnumType.STRING)
+	private ManagerApprovalStatus managerapprovalstatus;// = ManagerApprovalStatus.PENDING;
 
-    }
+	@Lob
+	@Column(name = "pdf_file", nullable = true)
+	@ApiModelProperty(hidden = true)
+	private byte[] pdfFile;
 
-    public Reports(Long reportId, Long employeeId, String reportTitle, String reportDescription, String managerComments, String financeComments, Boolean isSubmitted, String employeeMail, String managerEmail, LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate, LocalDate financeActionDate, String currency, float totalAmountINR, float totalAmountCurrency, Boolean isHidden, FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
-        super();
-        this.reportId = reportId;
-        this.employeeId = employeeId;
-        this.reportTitle = reportTitle;
-        this.reportDescription = reportDescription;
-        this.managerComments = managerComments;
-        this.financeComments = financeComments;
-        this.isSubmitted = isSubmitted;
-        this.employeeMail = employeeMail;
-        this.managerEmail = managerEmail;
-        this.dateSubmitted = dateSubmitted;
-        this.dateCreated = dateCreated;
-        this.managerActionDate = managerActionDate;
-        this.financeActionDate = financeActionDate;
-        this.currency = currency;
-        this.totalAmountINR = totalAmountINR;
-        this.totalAmountCurrency = totalAmountCurrency;
-        this.isHidden = isHidden;
-        this.financeapprovalstatus = financeapprovalstatus;
-        this.managerapprovalstatus = managerapprovalstatus;
-        this.pdfFile = pdfFile;
-    }
+	@JsonIgnore
+	@OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	private final List<Expense> expenseList = new ArrayList<>();
 
-    public Long getReportId() {
-        return reportId;
-    }
+	public Reports() {
 
-    public void setReportId(Long reportId) {
-        this.reportId = reportId;
-    }
+	}
 
-    public Long getEmployeeId() {
-        return employeeId;
-    }
+	public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
+			String reportDescription, String managerComments, String financeComments, Boolean isSubmitted,
+			String employeeMail, LocalDateTime dateSubmitted, LocalDateTime dateCreated,
+			LocalDateTime managerActionDate, LocalDateTime financeActionDate, String currency, float totalAmountINR,
+			float totalAmountCurrency, Boolean isHidden, String managerEmail, String managerReviewTime,
+			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+		this.reportId = reportId;
+		this.employeeId = employeeId;
+		this.employeeName = employeeName;
+		this.officialEmployeeId = officialEmployeeId;
+		this.reportTitle = reportTitle;
+		this.reportDescription = reportDescription;
+		this.managerComments = managerComments;
+		this.financeComments = financeComments;
+		this.isSubmitted = isSubmitted;
+		this.employeeMail = employeeMail;
+		this.dateSubmitted = dateSubmitted;
+		this.dateCreated = dateCreated;
+		this.managerActionDate = managerActionDate;
+		this.financeActionDate = financeActionDate;
+		this.currency = currency;
+		this.totalAmountINR = totalAmountINR;
+		this.totalAmountCurrency = totalAmountCurrency;
+		this.isHidden = isHidden;
+		this.managerEmail = managerEmail;
+		this.managerReviewTime = managerReviewTime;
+		this.financeapprovalstatus = financeapprovalstatus;
+		this.managerapprovalstatus = managerapprovalstatus;
+		this.pdfFile = pdfFile;
+	}
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
+	public Long getReportId() {
+		return reportId;
+	}
 
-    public String getReportTitle() {
-        return reportTitle;
-    }
+	public void setReportId(Long reportId) {
+		this.reportId = reportId;
+	}
 
-    public void setReportTitle(String reportTitle) {
-        this.reportTitle = reportTitle;
-    }
+	public Long getEmployeeId() {
+		return employeeId;
+	}
 
-    public String getReportDescription() {
-        return reportDescription;
-    }
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
+	}
 
-    public void setReportDescription(String reportDescription) {
-        this.reportDescription = reportDescription;
-    }
+	public String getEmployeeName() {
+		return employeeName;
+	}
 
-    public String getManagerComments() {
-        return managerComments;
-    }
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
 
-    public void setManagerComments(String managerComments) {
-        this.managerComments = managerComments;
-    }
+	public String getOfficialEmployeeId() {
+		return officialEmployeeId;
+	}
 
-    public String getFinanceComments() {
-        return financeComments;
-    }
+	public void setOfficialEmployeeId(String officialEmployeeId) {
+		this.officialEmployeeId = officialEmployeeId;
+	}
 
-    public void setFinanceComments(String financeComments) {
-        this.financeComments = financeComments;
-    }
+	public Boolean getSubmitted() {
+		return isSubmitted;
+	}
 
-    public Boolean getIsSubmitted() {
-        return isSubmitted;
-    }
+	public void setSubmitted(Boolean submitted) {
+		isSubmitted = submitted;
+	}
 
-    public void setIsSubmitted(Boolean isSubmitted) {
-        this.isSubmitted = isSubmitted;
-    }
+	public Boolean getHidden() {
+		return isHidden;
+	}
 
-    public String getEmployeeMail() {
-        return employeeMail;
-    }
+	public void setHidden(Boolean hidden) {
+		isHidden = hidden;
+	}
 
-    public void setEmployeeMail(String employeeMail) {
-        this.employeeMail = employeeMail;
-    }
+	public String getReportTitle() {
+		return reportTitle;
+	}
 
-    public String getManagerEmail() {
-        return managerEmail;
-    }
+	public void setReportTitle(String reportTitle) {
+		this.reportTitle = reportTitle;
+	}
 
-    public void setManagerEmail(String managerEmail) {
-        this.managerEmail = managerEmail;
-    }
+	public String getReportDescription() {
+		return reportDescription;
+	}
 
-    public LocalDate getDateSubmitted() {
-        return dateSubmitted;
-    }
+	public void setReportDescription(String reportDescription) {
+		this.reportDescription = reportDescription;
+	}
 
-    public void setDateSubmitted(LocalDate dateSubmitted) {
-        this.dateSubmitted = dateSubmitted;
-    }
+	public String getManagerComments() {
+		return managerComments;
+	}
 
-    public LocalDate getDateCreated() {
-        return dateCreated;
-    }
+	public void setManagerComments(String managerComments) {
+		this.managerComments = managerComments;
+	}
 
-    public void setDateCreated(LocalDate dateCreated) {
-        this.dateCreated = dateCreated;
-    }
+	public String getFinanceComments() {
+		return financeComments;
+	}
 
-    public LocalDate getManagerActionDate() {
-        return managerActionDate;
-    }
+	public void setFinanceComments(String financeComments) {
+		this.financeComments = financeComments;
+	}
 
-    public void setManagerActionDate(LocalDate managerActionDate) {
-        this.managerActionDate = managerActionDate;
-    }
+	public Boolean getIsSubmitted() {
+		return isSubmitted;
+	}
 
-    public LocalDate getFinanceActionDate() {
-        return financeActionDate;
-    }
+	public void setIsSubmitted(Boolean isSubmitted) {
+		this.isSubmitted = isSubmitted;
+	}
 
-    public void setFinanceActionDate(LocalDate financeActionDate) {
-        this.financeActionDate = financeActionDate;
-    }
+	public String getEmployeeMail() {
+		return employeeMail;
+	}
 
-    public String getCurrency() {
-        return currency;
-    }
+	public void setEmployeeMail(String employeeMail) {
+		this.employeeMail = employeeMail;
+	}
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
+	public LocalDateTime getDateSubmitted() {
+		return dateSubmitted;
+	}
 
-    public float getTotalAmountINR() {
-        return totalAmountINR;
-    }
+	public void setDateSubmitted(LocalDateTime dateSubmitted) {
+		this.dateSubmitted = dateSubmitted;
+	}
 
-    public void setTotalAmountINR(float totalAmountINR) {
-        this.totalAmountINR = totalAmountINR;
-    }
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
+	}
 
-    public float getTotalAmountCurrency() {
-        return totalAmountCurrency;
-    }
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
+	}
 
-    public void setTotalAmountCurrency(float totalAmountCurrency) {
-        this.totalAmountCurrency = totalAmountCurrency;
-    }
+	public LocalDateTime getManagerActionDate() {
+		return managerActionDate;
+	}
 
-    public Boolean getIsHidden() {
-        return isHidden;
-    }
+	public void setManagerActionDate(LocalDateTime managerActionDate) {
+		this.managerActionDate = managerActionDate;
+	}
 
-    public void setIsHidden(Boolean isHidden) {
-        this.isHidden = isHidden;
-    }
+	public LocalDateTime getFinanceActionDate() {
+		return financeActionDate;
+	}
 
-    public FinanceApprovalStatus getFinanceapprovalstatus() {
-        return financeapprovalstatus;
-    }
+	public void setFinanceActionDate(LocalDateTime financeActionDate) {
+		this.financeActionDate = financeActionDate;
+	}
 
-    public void setFinanceapprovalstatus(FinanceApprovalStatus financeapprovalstatus) {
-        this.financeapprovalstatus = financeapprovalstatus;
-    }
+	public String getCurrency() {
+		return currency;
+	}
 
-    public ManagerApprovalStatus getManagerapprovalstatus() {
-        return managerapprovalstatus;
-    }
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 
-    public void setManagerapprovalstatus(ManagerApprovalStatus managerapprovalstatus) {
-        this.managerapprovalstatus = managerapprovalstatus;
-    }
+	public float getTotalAmountINR() {
+		return totalAmountINR;
+	}
 
-    public byte[] getPdfFile() {
-        return pdfFile;
-    }
+	public void setTotalAmountINR(float totalAmountINR) {
+		this.totalAmountINR = totalAmountINR;
+	}
 
-    public void setPdfFile(byte[] pdfFile) {
-        this.pdfFile = pdfFile;
-    }
+	public float getTotalAmountCurrency() {
+		return totalAmountCurrency;
+	}
+
+	public void setTotalAmountCurrency(float totalAmountCurrency) {
+		this.totalAmountCurrency = totalAmountCurrency;
+	}
+
+	public Boolean getIsHidden() {
+		return isHidden;
+	}
+
+	public void setIsHidden(Boolean isHidden) {
+		this.isHidden = isHidden;
+	}
+
+	public String getManagerEmail() {
+		return managerEmail;
+	}
+
+	public void setManagerEmail(String managerEmail) {
+		this.managerEmail = managerEmail;
+	}
+
+	public String getManagerReviewTime() {
+		return managerReviewTime;
+	}
+
+	public void setManagerReviewTime(String managerReviewTime) {
+		this.managerReviewTime = managerReviewTime;
+	}
+
+	public FinanceApprovalStatus getFinanceapprovalstatus() {
+		return financeapprovalstatus;
+	}
+
+	public void setFinanceapprovalstatus(FinanceApprovalStatus financeapprovalstatus) {
+		this.financeapprovalstatus = financeapprovalstatus;
+	}
+
+	public ManagerApprovalStatus getManagerapprovalstatus() {
+		return managerapprovalstatus;
+	}
+
+	public void setManagerapprovalstatus(ManagerApprovalStatus managerapprovalstatus) {
+		this.managerapprovalstatus = managerapprovalstatus;
+	}
+
+	public byte[] getPdfFile() {
+		return pdfFile;
+	}
+
+	public void setPdfFile(byte[] pdfFile) {
+		this.pdfFile = pdfFile;
+	}
+
 }
