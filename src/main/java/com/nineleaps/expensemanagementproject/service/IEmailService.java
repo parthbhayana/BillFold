@@ -1,19 +1,21 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import javax.mail.MessagingException;
 
 public interface IEmailService {
 
-	public void managerNotification(Long reportId) throws MessagingException, FileNotFoundException;
+	void managerNotification(Long reportId) throws MessagingException, FileNotFoundException;
 
-	public void userApprovedNotification(Long reportId);
+	void userApprovedNotification(Long reportId);
 
-	public void userRejectedNotification(Long reportId);
+	void userRejectedNotification(Long reportId);
 
-	public void financeReimbursedNotification(Long reportId);
+	void financeReimbursedNotification(Long reportId);
 
-	public void financeRejectedNotification(Long reportId);
+	void financeRejectedNotification(Long reportId);
 
+	void reminderMailToEmployee(List<Long> expenseIds);
 }
