@@ -1,6 +1,8 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
+
+import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,9 @@ import com.nineleaps.expensemanagementproject.service.IExpenseService;
 public class ExpenseController {
 	@Autowired
 	private IExpenseService expenseService;
+
+    @Autowired
+    private ExpenseRepository expenseRepository;
 
 	@PostMapping("/insertExpenses/{employeeId}")
 	public Expense saveExpense(@RequestBody Expense expense, @PathVariable Long employeeId, @RequestParam Long categoryId) {
@@ -63,4 +68,10 @@ public class ExpenseController {
 		expenseService.hideExpense(expenseId);
 	}
 
+	@PostMapping("/setPartialApprovedAmount")
+	public void setPartialApprovedAmount(@RequestParam Long expenseId, @RequestParam Float approvedAmount){
+		Expense expense = expenseService.getExpenseById(expenseId);
+		expense.setAmountApproved(approvedAmount);
+		expenseRepository.save(expense);
+	}
 }

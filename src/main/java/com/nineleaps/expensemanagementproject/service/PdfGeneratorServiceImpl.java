@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -187,11 +188,11 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		historyContent.setAlignment(Element.ALIGN_LEFT);
 		historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
 
-		LocalDate dateCreated = report.getDateCreated();
-		LocalDate dateSubmitted = report.getDateSubmitted();
+		LocalDateTime dateTimeCreated = report.getDateCreated();
+		LocalDateTime dateSubmitted = report.getDateSubmitted();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
 
-		String createdMessage = "Report Created on:\n" + dateCreated.format(formatter);
+		String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);
 		historyContent.add(createdMessage);
 		historyContent.add(Chunk.NEWLINE);
 

@@ -2,16 +2,11 @@ package com.nineleaps.expensemanagementproject.controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.mail.MessagingException;
-import javax.management.AttributeNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,12 +124,12 @@ public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestPara
 
     @GetMapping("/getTotalAmountInrByReportId")
     public float totalAmountINR(@RequestParam Long reportId) {
-        return reportsService.totalamountINR(reportId);
+        return reportsService.totalAmountINR(reportId);
     }
 
     @GetMapping("/getTotalAmountCurrencyByReportId")
     public float totalAmountCurrency(@RequestParam Long reportId) {
-        return reportsService.totalamountCurrency(reportId);
+        return reportsService.totalAmountCurrency(reportId);
     }
 
     @GetMapping("/getReportsInDateRange")
@@ -156,5 +151,14 @@ public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestPara
         return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
     }
 
+    @GetMapping("/getTotalApprovedAmount")
+    public float totalApprovedAmount(Long reportId) {
+        return reportsService.totalApprovedAmount(reportId);
+    }
 
+    @PostMapping("/updateExpenseApprovalStatus/{reportId}")
+    public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestParam List<Long> approveExpenseIds, @RequestParam List<Long> rejectExpenseIds, @RequestParam String reviewTime)
+    {
+        reportsService.updateExpenseStatus(reportId,approveExpenseIds,rejectExpenseIds,reviewTime);
+    }
 }

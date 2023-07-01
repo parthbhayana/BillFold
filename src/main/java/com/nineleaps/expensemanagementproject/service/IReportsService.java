@@ -44,9 +44,11 @@ public interface IReportsService {
 
 	public void hideReport(Long reportId);
 
-	public float totalamountINR(Long reportId);
+	public float totalAmountINR(Long reportId);
 
-	public float totalamountCurrency(Long reportId);
+	public float totalAmountCurrency(Long reportId);
+
+	public float totalApprovedAmount(Long reportId);
 
 	public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate);
 
@@ -57,6 +59,8 @@ public interface IReportsService {
 
 	public void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
 
+	public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, String reviewTime);
 
-	void updateExpenseApprovalStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds);
+
+
 }

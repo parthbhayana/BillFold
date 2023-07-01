@@ -1,8 +1,11 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,10 @@ public class CategoryServiceImpl implements ICategoryService {
 				nondeletedcategories.add(cat2);
 			}
 		}
+		Instant timestamp = Instant.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String formattedTimestamp = formatter.format(timestamp);
+		System.out.println("Timestamp: " + formattedTimestamp);
 		return nondeletedcategories;
 	}
 
@@ -80,63 +87,4 @@ public class CategoryServiceImpl implements ICategoryService {
 		}
 		return categoryAmountMap;
 	}
-
-	@Override
-	public HashMap<String, Float> getCategoryTotalAmountByYearAndCategory(Long categoryId) {
-		Category category = getCategoryById(categoryId);
-		Map<String, Float> categoryAmountMap = new HashMap<>();
-
-		if (category != null) {
-			List<Expense> expenseList = expenseRepository.findByCategoryAndIsReported(category, true);
-
-			for (Expense expense : expenseList) {
-				LocalDate expenseDate = expense.getDate();
-				String year = String.valueOf(expenseDate.getYear());
-				Float amount = expense.getAmountINR();
-
-				if (categoryAmountMap.containsKey(year)) {
-					Float previousAmount = categoryAmountMap.get(year);
-					categoryAmountMap.put(year, previousAmount + amount);
-				} else {
-					categoryAmountMap.put(year, amount);
-				}
-			}
-		}
-
-		return (HashMap<String, Float>) categoryAmountMap;
-	}
-
-
-
-	@Override
-	public HashMap<String, Float> getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year) {
-		Category category = getCategoryById(categoryId);
-		HashMap<String, Float> categoryAmountMap = new HashMap<>();
-
-		if (category != null) {
-			List<Expense> expenseList = expenseRepository.findByCategoryAndIsReported(category, true);
-
-			for (Expense expense : expenseList) {
-				LocalDate expenseDate = expense.getDate();
-				if (expenseDate.getYear() == year) {
-					String month = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
-					Float amount = expense.getAmountINR();
-
-					if (categoryAmountMap.containsKey(month)) {
-						Float previousAmount = categoryAmountMap.get(month);
-						categoryAmountMap.put(month, previousAmount + amount);
-					} else {
-						categoryAmountMap.put(month, amount);
-					}
-				}
-			}
-		}
-
-		return categoryAmountMap;
-	}
-
-
 }
-
-
-
