@@ -1,6 +1,6 @@
 package com.nineleaps.expensemanagementproject.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,19 +70,19 @@ public class Reports {
 
 	@Column(name = "date_submitted")
 	@ApiModelProperty(hidden = true)
-	private LocalDateTime dateSubmitted;
+	private LocalDate dateSubmitted;
 
 	@Column(name = "date_created")
 	@ApiModelProperty(hidden = true)
-	private LocalDateTime dateCreated;
+	private LocalDate dateCreated;
 
 	@Column(name = "date_manager_action")
 	@ApiModelProperty(hidden = true)
-	private LocalDateTime managerActionDate;
+	private LocalDate managerActionDate;
 
 	@Column(name = "date_finance_action")
 	@ApiModelProperty(hidden = true)
-	private LocalDateTime financeActionDate;
+	private LocalDate financeActionDate;
 
 	@Column(name = "currency")
 	@ApiModelProperty(hidden = true)
@@ -134,10 +134,11 @@ public class Reports {
 
 	public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
 			String reportDescription, String managerComments, String financeComments, Boolean isSubmitted,
-			String employeeMail, LocalDateTime dateSubmitted, LocalDateTime dateCreated,
-			LocalDateTime managerActionDate, LocalDateTime financeActionDate, String currency, float totalAmountINR,
-			float totalAmountCurrency, Boolean isHidden, String managerEmail, String managerReviewTime,
+			String employeeMail, LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate,
+			LocalDate financeActionDate, String currency, float totalAmountINR, float totalAmountCurrency,
+			Boolean isHidden, String managerEmail, String managerReviewTime,
 			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+		super();
 		this.reportId = reportId;
 		this.employeeId = employeeId;
 		this.employeeName = employeeName;
@@ -195,22 +196,6 @@ public class Reports {
 		this.officialEmployeeId = officialEmployeeId;
 	}
 
-	public Boolean getSubmitted() {
-		return isSubmitted;
-	}
-
-	public void setSubmitted(Boolean submitted) {
-		isSubmitted = submitted;
-	}
-
-	public Boolean getHidden() {
-		return isHidden;
-	}
-
-	public void setHidden(Boolean hidden) {
-		isHidden = hidden;
-	}
-
 	public String getReportTitle() {
 		return reportTitle;
 	}
@@ -259,35 +244,35 @@ public class Reports {
 		this.employeeMail = employeeMail;
 	}
 
-	public LocalDateTime getDateSubmitted() {
+	public LocalDate getDateSubmitted() {
 		return dateSubmitted;
 	}
 
-	public void setDateSubmitted(LocalDateTime dateSubmitted) {
+	public void setDateSubmitted(LocalDate dateSubmitted) {
 		this.dateSubmitted = dateSubmitted;
 	}
 
-	public LocalDateTime getDateCreated() {
+	public LocalDate getDateCreated() {
 		return dateCreated;
 	}
 
-	public void setDateCreated(LocalDateTime dateCreated) {
+	public void setDateCreated(LocalDate dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
-	public LocalDateTime getManagerActionDate() {
+	public LocalDate getManagerActionDate() {
 		return managerActionDate;
 	}
 
-	public void setManagerActionDate(LocalDateTime managerActionDate) {
+	public void setManagerActionDate(LocalDate managerActionDate) {
 		this.managerActionDate = managerActionDate;
 	}
 
-	public LocalDateTime getFinanceActionDate() {
+	public LocalDate getFinanceActionDate() {
 		return financeActionDate;
 	}
 
-	public void setFinanceActionDate(LocalDateTime financeActionDate) {
+	public void setFinanceActionDate(LocalDate financeActionDate) {
 		this.financeActionDate = financeActionDate;
 	}
 

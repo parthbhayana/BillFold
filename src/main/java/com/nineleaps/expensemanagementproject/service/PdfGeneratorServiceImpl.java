@@ -16,9 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.google.zxing.BarcodeFormat;
@@ -58,6 +62,10 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 	ReportsRepository reportsRepository;
 	@Autowired
 	EmployeeRepository employeeRepository;
+	@Autowired
+	private JavaMailSender mailSender;
+
+
 
 	@Override
 	public byte[] generatePdf(Long reportId) throws IOException {
@@ -85,6 +93,12 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		writer.setPageEvent(event);
 
 		document.open();
+		Font fontheader01=FontFactory.getFont(FontFactory.TIMES);
+		fontheader01.setSize(14);
+		Paragraph headerParagraph01=new Paragraph("Report_id: "+reportId,fontheader01);
+		headerParagraph01.setAlignment(Paragraph.ALIGN_LEFT);
+
+
 		Font fontHeader = FontFactory.getFont(FontFactory.TIMES);
 		fontHeader.setSize(22);
 		Paragraph headerParagraph = new Paragraph("BillFold - Expense Report", fontHeader);
@@ -292,20 +306,37 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 	@Override
 	public void export(Long reportId, HttpServletResponse response) throws IOException {
 		byte[] pdfBytes = generatePdf(reportId);
-		Reports report = reportsRepository.findById(reportId).get();
-		report.setPdfFile(pdfBytes);
-		reportsRepository.save(report);
-		FileOutputStream fileOutputStream = new FileOutputStream("expense_report.pdf");
-		fileOutputStream.write(pdfBytes);
-		fileOutputStream.flush();
-		fileOutputStream.close();
+
+//		MimeMessage message = mailSender.createMimeMessage();
+//		try {
+//			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//			helper.setFrom("sender@example.com");
+//			helper.setTo("recipient@example.com");
+//			helper.setSubject("Expense Report");
+//
+//			// Attach the PDF to the email
+//			MimeBodyPart pdfAttachment = new MimeBodyPart();
+//			pdfAttachment.setContent(pdfBytes, "application/pdf");
+//			pdfAttachment.setFileName("expense_report.pdf");
+//
+//			MimeMultipart multipart = new MimeMultipart();
+//			multipart.addBodyPart(pdfAttachment);
+//
+//			// Set the content of the email
+//			message.setContent(multipart);
+//
+//			// Send the email
+//			mailSender.send(message);
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//		}
 		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + "expense_report_BillFold.pdf" + "\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"expense_report_BillFold.pdf\"");
 		response.setContentLength(pdfBytes.length);
 		ServletOutputStream outputStream = response.getOutputStream();
 		outputStream.write(pdfBytes);
 		outputStream.flush();
 		outputStream.close();
 	}
+	}
 
-}

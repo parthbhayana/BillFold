@@ -1,0 +1,11 @@
+
+a
+java:S2184"FCast one of the operands of this multiplication operation to a "long".(ÁðÐÆûÿÿÿÿ
+T
+java:S1172"9Remove these unused method parameters "name", "imageUrl".(”«Þâûÿÿÿÿ
+A
+java:S1452"&Remove usage of generic wildcard type.(”«Þâûÿÿÿÿ
+C
+java:S1128".Remove this unused import 'java.util.HashSet'.(Ê‚êX
+E
+java:S1128"*Remove this unused import 'java.util.Set'.(ö²„¤þÿÿÿÿ

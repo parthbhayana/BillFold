@@ -51,6 +51,9 @@ public class SecurityConfig {
                                 .antMatchers("/excel/reports").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/excel/categoryBreakup").hasAuthority("FINANCE_ADMIN")
                                 .antMatchers("/getReportsSubmittedToUserInDateRange").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/totalReimbursedMonthly/{categoryId}").hasAuthority("FINANCE_ADMIN")
+                                .antMatchers("/totalReimbursedYearly/{categoryId}").hasAuthority("FINANCE_ADMIN")
+
                 );
         return http.build();
     }
