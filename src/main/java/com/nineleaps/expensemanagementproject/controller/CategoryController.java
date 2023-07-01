@@ -18,6 +18,7 @@ import com.nineleaps.expensemanagementproject.service.ICategoryService;
 
 @RestController
 public class CategoryController {
+
     @Autowired
     private ICategoryService categoryService;
 
@@ -78,9 +79,5 @@ public class CategoryController {
     }
 
 }
-
-
-
-
 
 

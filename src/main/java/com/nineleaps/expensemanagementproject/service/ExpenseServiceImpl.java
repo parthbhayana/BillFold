@@ -1,7 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -47,8 +47,8 @@ public class ExpenseServiceImpl implements IExpenseService {
     public Expense addExpense(Expense expense, Long employeeId, Long categoryId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
         expense.setEmployee(employee);
-        LocalTime now = LocalTime.now();
-        expense.setTime(now);
+        LocalDateTime now = LocalDateTime.now();
+        expense.setDateCreated(now);
         String curr = expense.getCurrency();
         String date = expense.getDate().toString();
         double rate = CurrencyExchange.getExchangeRate(curr, date);
@@ -88,6 +88,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setReports(report);
             expense.setIsReported(reportedStatus);
             expense.setReportTitle(reportTitle);
+            expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
         }
         return expenseRepository.save(expense);
     }
@@ -111,18 +112,15 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Override
     public Expense updateExpenses(Expense newExpense, Long expenseId) {
         Expense expense = getExpenseById(expenseId);
-        if (!expense.getIsHidden()) {
+        if ((!expense.getIsHidden() && !expense.getIsReported()) || ((expense.getIsReported()) && (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED) ) ) {
             expense.setMerchantName(newExpense.getMerchantName());
             expense.setDate(newExpense.getDate());
             expense.setAmount(newExpense.getAmount());
             expense.setDescription(newExpense.getDescription());
             expense.setSupportingDocuments(newExpense.getSupportingDocuments());
-            LocalDate today = LocalDate.now();
-            LocalTime now = LocalTime.now();
-            expense.setDate(today);
-            expense.setTime(now);
+            LocalDateTime now = LocalDateTime.now();
+            expense.setDateCreated(now);
             expense.setCurrency(newExpense.getCurrency());
-            expenseRepository.save(expense);
             String curr = expense.getCurrency();
             String date = expense.getDate().toString();
             double rate = CurrencyExchange.getExchangeRate(curr, date);
@@ -132,6 +130,9 @@ public class ExpenseServiceImpl implements IExpenseService {
         }
         if (expense.getIsHidden()) {
             throw new IllegalStateException("Expense " + expenseId + " does not exist!");
+        }
+        if(expense.getIsReported() && ((expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.APPROVED) || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PARTIALLY_APPROVED))){
+            throw new IllegalStateException("Can not edit Expense with ExpenseId:" + expenseId + " as it is already reported!");
         }
         return expenseRepository.save(expense);
     }
@@ -168,19 +169,8 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setIsHidden(hidden);
         }
         if (expense.getIsReported()) {
-            throw new IllegalStateException("Cannot delete expense " + expId + " as it is reported in Report: " + expense.getReportTitle());
+            throw new IllegalStateException("Cannot delete expense " + expId + " as it is already reported in Report: " + expense.getReportTitle());
         }
         expenseRepository.save(expense);
     }
-	@Override
-	public void updateExpenseApprovalStatus(Long expenseId, ManagerApprovalStatusExpense approvalStatus) {
-		Expense expense = getExpenseById(expenseId);
-		if (expense == null || expense.getReports() == null) {
-			throw new IllegalArgumentException("Expense with ID " + expenseId + " does not exist");
-		}
-		if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING.PENDING) {
-			expense.setManagerApprovalStatusExpense(approvalStatus);
-			expenseRepository.save(expense);
-		}
-	}
 }

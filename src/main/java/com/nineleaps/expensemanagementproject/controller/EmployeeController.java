@@ -39,8 +39,8 @@ public class EmployeeController {
     }
 
     @PostMapping("/additionalEmployeeDetails")
-    public void additionalEmployeeDetails(@RequestParam Long employeeId, @RequestParam String officialEmployeeId, @RequestParam String managerEmail, @RequestParam Long mobileNumber) {
-        employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber);
+    public Optional<Employee> additionalEmployeeDetails(@RequestParam Long employeeId, @RequestParam String officialEmployeeId, @RequestParam String managerEmail, @RequestParam Long mobileNumber) {
+        return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber);
     }
 
     @GetMapping("/findEmployee/{employeeId}")

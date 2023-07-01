@@ -2,16 +2,11 @@ package com.nineleaps.expensemanagementproject.controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.mail.MessagingException;
-import javax.management.AttributeNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
 import com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImpl;
@@ -77,11 +73,7 @@ public class ReportsController {
     public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
         return reportsService.addExpenseToReport(reportId, expenseIds);
     }
-@PostMapping("/updateExpenseApprovalStatus/{reportId}")
-public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestParam List<Long> approveExpenseIds, @RequestParam List<Long> rejectExpenseIds )
-{
-    reportsService.updateExpenseApprovalStatus(reportId,approveExpenseIds,rejectExpenseIds);
-}
+
 
     @PostMapping("/submitReport/{reportId}")
     public void submitReport(@PathVariable Long reportId,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
@@ -112,7 +104,7 @@ public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestPara
 
     @PostMapping("/approveReportByFinance")
     public void reimburseReportByFinance( @RequestParam ArrayList<Long> reportIds,
-                                       @RequestParam(value = "comments", defaultValue = "null") String comments) {
+                                          @RequestParam(value = "comments", defaultValue = "null") String comments) {
         reportsService.reimburseReportByFinance(reportIds, comments);
     }
 
@@ -129,12 +121,12 @@ public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestPara
 
     @GetMapping("/getTotalAmountInrByReportId")
     public float totalAmountINR(@RequestParam Long reportId) {
-        return reportsService.totalamountINR(reportId);
+        return reportsService.totalAmountINR(reportId);
     }
 
     @GetMapping("/getTotalAmountCurrencyByReportId")
     public float totalAmountCurrency(@RequestParam Long reportId) {
-        return reportsService.totalamountCurrency(reportId);
+        return reportsService.totalAmountCurrency(reportId);
     }
 
     @GetMapping("/getReportsInDateRange")
@@ -152,9 +144,20 @@ public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestPara
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
-    public String getAmountOfReportsInDateRange(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+    public String getAmountOfReportsInDateRange(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
     }
 
+    @GetMapping("/getTotalApprovedAmount")
+    public float totalApprovedAmount(Long reportId) {
+        return reportsService.totalApprovedAmount(reportId);
+    }
 
+    @PostMapping("/updateExpenseApprovalStatus/{reportId}")
+    public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestParam List<Long> approveExpenseIds, @RequestParam List<Long> rejectExpenseIds, @RequestParam String reviewTime)
+    {
+        reportsService.updateExpenseStatus(reportId,approveExpenseIds,rejectExpenseIds,reviewTime);
+    }
 }

@@ -34,4 +34,5 @@ public interface ICategoryService {
 	HashMap<String, Object> getYearlyCategoryAnalyticsForAllCategories();
 
 	HashMap<String,Object> getMonthlyCategoryAnalyticsForAllCategories(Long year);
+
 }
