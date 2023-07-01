@@ -36,4 +36,13 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     List<Expense> findByIsReported(boolean b);
 
 	List<Expense> findByCategoryAndIsReported(Category category, boolean b);
+
+	List<Expense> findByCategory(Category category);
+
+
+
+	Employee findEmployeeByExpenseId(Long expenseId);
+
+
+
 }
