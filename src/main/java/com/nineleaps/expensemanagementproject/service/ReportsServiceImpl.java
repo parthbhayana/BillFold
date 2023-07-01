@@ -65,9 +65,7 @@ public class ReportsServiceImpl implements IReportsService {
         newReport.setManagerEmail(managerEmail);
         newReport.setEmployeeName(employeeName);
         newReport.setOfficialEmployeeId(officialEmployeeId);
-        LocalDateTime today = LocalDateTime.now();
-        System.out.println("----------------@@@@@@@@@---------------" + today);
-        newReport.setDateCreated(today);
+        newReport.setDateCreated(LocalDate.now());
         newReport.setEmployeeId(employeeId);
         String currency = null;
         if (!expenseids.isEmpty()) {
@@ -258,7 +256,7 @@ public class ReportsServiceImpl implements IReportsService {
         if (re != null && re.getIsSubmitted() != submissionStatus) {
             re.setIsSubmitted(submissionStatus);
             re.setManagerapprovalstatus(ManagerApprovalStatus.PENDING);
-            re.setDateSubmitted(LocalDateTime.now());
+            re.setDateSubmitted(LocalDate.now());
             re.setTotalAmountINR(totalAmountINR(reportId));
             re.setTotalAmountCurrency(totalAmountCurrency(reportId));
             // Fetching employee ID
@@ -296,8 +294,6 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public void approveReportByManager(Long reportId, String comments) {
         //Update Expenses Status-Todo
-        ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.APPROVED;
-        FinanceApprovalStatus pending = FinanceApprovalStatus.PENDING;
         Reports re = getReportById(reportId);
         if (!re.getIsSubmitted()) {
             throw new IllegalStateException("Report " + reportId + " is not Submitted!");
@@ -306,11 +302,10 @@ public class ReportsServiceImpl implements IReportsService {
             throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
         }
         if (re != null && !re.getIsHidden() && re.getIsSubmitted()) {
-            re.setManagerapprovalstatus(approvalStatus);
+            re.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
             re.setManagerComments(comments);
-            re.setFinanceapprovalstatus(pending);
-            LocalDateTime today = LocalDateTime.now();
-            re.setManagerActionDate(today);
+            re.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
+            re.setManagerActionDate(LocalDate.now());
             reportsRepository.save(re);
             emailService.userApprovedNotification(reportId);
         }
@@ -329,8 +324,7 @@ public class ReportsServiceImpl implements IReportsService {
         if (re != null && !re.getIsHidden() && re.getIsSubmitted()) {
             re.setManagerapprovalstatus(approvalStatus);
             re.setManagerComments(comments);
-            LocalDateTime today = LocalDateTime.now();
-            re.setManagerActionDate(today);
+            re.setManagerActionDate(LocalDate.now());
             reportsRepository.save(re);
             emailService.userRejectedNotification(reportId);
         }
@@ -339,7 +333,6 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public void reimburseReportByFinance(ArrayList<Long> reportIds, String comments) {
         FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REIMBURSED;
-        LocalDateTime today = LocalDateTime.now();
         for (Long reportId : reportIds) {
             Reports re = getReportById(reportId);
             if (re == null || re.getIsHidden()) {
@@ -354,7 +347,7 @@ public class ReportsServiceImpl implements IReportsService {
             }
             re.setFinanceapprovalstatus(approvalStatus);
             re.setFinanceComments(comments);
-            re.setFinanceActionDate(today);
+            re.setFinanceActionDate(LocalDate.now());
             reportsRepository.save(re);
             emailService.financeReimbursedNotification(reportId);
         }
@@ -374,8 +367,7 @@ public class ReportsServiceImpl implements IReportsService {
                 && re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
             re.setFinanceapprovalstatus(approvalStatus);
             re.setFinanceComments(comments);
-            LocalDateTime today = LocalDateTime.now();
-            re.setFinanceActionDate(today);
+            re.setFinanceActionDate(LocalDate.now());
             reportsRepository.save(re);
             emailService.financeRejectedNotification(reportId);
         }
@@ -509,11 +501,15 @@ public class ReportsServiceImpl implements IReportsService {
         //If all the expenses are approved then report status will be "APPROVED!"
         if(rejectExpenseIds.isEmpty()){
             report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
+            report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
         }
         //If any expense is rejected report will go back to employee for changes
         if(!rejectExpenseIds.isEmpty()){
             report.setManagerapprovalstatus(ManagerApprovalStatus.ACTION_REQUIRED);
             report.setIsSubmitted(false);
+        }
+        if(approveExpenseIds.isEmpty()){
+            report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
         }
         reportsRepository.save(report);
     }
