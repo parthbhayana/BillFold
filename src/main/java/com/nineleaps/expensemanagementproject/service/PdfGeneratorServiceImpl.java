@@ -188,8 +188,8 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		historyContent.setAlignment(Element.ALIGN_LEFT);
 		historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
 
-		LocalDateTime dateTimeCreated = report.getDateCreated();
-		LocalDateTime dateSubmitted = report.getDateSubmitted();
+		LocalDate dateTimeCreated = report.getDateCreated();
+		LocalDate dateSubmitted = report.getDateSubmitted();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
 
 		String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);

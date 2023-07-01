@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
 import com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImpl;
@@ -72,11 +73,7 @@ public class ReportsController {
     public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
         return reportsService.addExpenseToReport(reportId, expenseIds);
     }
-@PostMapping("/updateExpenseApprovalStatus/{reportId}")
-public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestParam List<Long> approveExpenseIds, @RequestParam List<Long> rejectExpenseIds )
-{
-    reportsService.updateExpenseApprovalStatus(reportId,approveExpenseIds,rejectExpenseIds);
-}
+
 
     @PostMapping("/submitReport/{reportId}")
     public void submitReport(@PathVariable Long reportId,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
@@ -107,7 +104,7 @@ public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestPara
 
     @PostMapping("/approveReportByFinance")
     public void reimburseReportByFinance( @RequestParam ArrayList<Long> reportIds,
-                                       @RequestParam(value = "comments", defaultValue = "null") String comments) {
+                                          @RequestParam(value = "comments", defaultValue = "null") String comments) {
         reportsService.reimburseReportByFinance(reportIds, comments);
     }
 
@@ -147,7 +144,9 @@ public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestPara
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
-    public String getAmountOfReportsInDateRange(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+    public String getAmountOfReportsInDateRange(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
     }
 

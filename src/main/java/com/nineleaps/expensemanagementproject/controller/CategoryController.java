@@ -3,11 +3,8 @@ package com.nineleaps.expensemanagementproject.controller;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,15 +54,4 @@ public class CategoryController {
 	{
 		return categoryService.getCategoryTotalAmount(startDate, endDate);
 	}
-	@GetMapping("/totalReimbursedYearly/{categoryId}")
-	public HashMap<String, Float> getCategoryTotalAmountByYearAndCategory(@PathVariable Long categoryId) {
-		return categoryService.getCategoryTotalAmountByYearAndCategory(categoryId);
-	}
-
-	@GetMapping("/totalReimbursedMonthly/{categoryId}")
-	public HashMap<String, Float> getCategoryTotalAmountByMonthAndCategory(@PathVariable Long categoryId,
-																		   @RequestParam Long year) {
-		return categoryService.getCategoryTotalAmountByMonthAndCategory(categoryId, year);
-	}
 }
-
