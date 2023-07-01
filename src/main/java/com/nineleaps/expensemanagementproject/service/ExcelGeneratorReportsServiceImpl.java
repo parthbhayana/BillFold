@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 
 import java.time.LocalDate;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.activation.DataSource;
@@ -113,11 +112,11 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 					dataRow.createCell(3).setCellValue(report.getReportId());
 					dataRow.createCell(4).setCellValue(report.getReportTitle());
 					dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
-					LocalDateTime submittedDate = report.getDateSubmitted();
+					LocalDate submittedDate = report.getDateSubmitted();
 					String monthName = submittedDate.getMonth().toString();
 					dataRow.createCell(6).setCellValue(monthName);
 
-					LocalDateTime managerActionDate = report.getManagerActionDate();
+					LocalDate managerActionDate = report.getManagerActionDate();
 					if (managerActionDate != null) {
 						dataRow.createCell(7).setCellValue(managerActionDate.toString());
 					}
@@ -169,11 +168,11 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 						dataRow.createCell(3).setCellValue(report.getReportId());
 						dataRow.createCell(4).setCellValue(report.getReportTitle());
 						dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
-						LocalDateTime submittedDate = report.getDateSubmitted();
+						LocalDate submittedDate = report.getDateSubmitted();
 						String monthName = submittedDate.getMonth().toString();
 						dataRow.createCell(6).setCellValue(monthName);
 
-						LocalDateTime managerActionDate = report.getManagerActionDate();
+						LocalDate managerActionDate = report.getManagerActionDate();
 						if (managerActionDate != null) {
 							dataRow.createCell(7).setCellValue(managerActionDate.toString());
 						}
@@ -225,11 +224,11 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 						dataRow.createCell(3).setCellValue(report.getReportId());
 						dataRow.createCell(4).setCellValue(report.getReportTitle());
 						dataRow.createCell(5).setCellValue(report.getDateSubmitted().toString());
-						LocalDateTime submittedDate = report.getDateSubmitted();
+						LocalDate submittedDate = report.getDateSubmitted();
 						String monthName = submittedDate.getMonth().toString();
 						dataRow.createCell(6).setCellValue(monthName);
 
-						LocalDateTime managerActionDate = report.getManagerActionDate();
+						LocalDate managerActionDate = report.getManagerActionDate();
 						if (managerActionDate != null) {
 							dataRow.createCell(7).setCellValue(managerActionDate.toString());
 						}
