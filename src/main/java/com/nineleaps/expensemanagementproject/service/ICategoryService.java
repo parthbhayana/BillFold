@@ -22,10 +22,4 @@ public interface ICategoryService {
 
 	public HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate);
 
-
-	HashMap<String, Float> getCategoryTotalAmountByYearAndCategory(Long categoryId);
-
-	HashMap<String, Float> getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year);
-
-
 }
