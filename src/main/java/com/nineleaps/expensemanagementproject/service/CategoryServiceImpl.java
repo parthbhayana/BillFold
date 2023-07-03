@@ -49,10 +49,6 @@ public class CategoryServiceImpl implements ICategoryService {
 				nondeletedcategories.add(cat2);
 			}
 		}
-		Instant timestamp = Instant.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String formattedTimestamp = formatter.format(timestamp);
-		System.out.println("Timestamp: " + formattedTimestamp);
 		return nondeletedcategories;
 	}
 

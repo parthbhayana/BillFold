@@ -65,10 +65,14 @@ public class Expense {
 	@ApiModelProperty(hidden = true)
 	private Float amountApproved;
 
+	@Column(name = "amount_approved_INR")
+	@ApiModelProperty(hidden = true)
+	private Double amountApprovedINR;
+
 	@Column(name = "finance_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private FinanceApprovalStatus financeApprovalStatusExpense;// = FinanceApprovalStatus.PENDING;
+	private FinanceApprovalStatus financeApprovalStatus;// = FinanceApprovalStatus.PENDING;
 
 	@Column(name = "manager_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
@@ -102,11 +106,9 @@ public class Expense {
 
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
 			Long amount, float amountINR, String description, String categoryDescription, Boolean isReported,
-			Boolean isHidden, String reportTitle, Float amountApproved,
-			FinanceApprovalStatus financeApprovalStatusExpense,
-			ManagerApprovalStatusExpense managerApprovalStatusExpense, byte[] supportingDocuments, Employee employee,
-			Reports reports, Category category) {
-		super();
+			Boolean isHidden, String reportTitle, Float amountApproved, Double amountApprovedINR,
+			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
+			byte[] supportingDocuments, Employee employee, Reports reports, Category category) {
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
@@ -120,7 +122,8 @@ public class Expense {
 		this.isHidden = isHidden;
 		this.reportTitle = reportTitle;
 		this.amountApproved = amountApproved;
-		this.financeApprovalStatusExpense = financeApprovalStatusExpense;
+		this.amountApprovedINR = amountApprovedINR;
+		this.financeApprovalStatus = financeApprovalStatus;
 		this.managerApprovalStatusExpense = managerApprovalStatusExpense;
 		this.supportingDocuments = supportingDocuments;
 		this.employee = employee;
@@ -232,12 +235,12 @@ public class Expense {
 		this.amountApproved = amountApproved;
 	}
 
-	public FinanceApprovalStatus getFinanceApprovalStatusExpense() {
-		return financeApprovalStatusExpense;
+	public FinanceApprovalStatus getFinanceApprovalStatus() {
+		return financeApprovalStatus;
 	}
 
-	public void setFinanceApprovalStatusExpense(FinanceApprovalStatus financeApprovalStatusExpense) {
-		this.financeApprovalStatusExpense = financeApprovalStatusExpense;
+	public void setFinanceApprovalStatus(FinanceApprovalStatus financeApprovalStatus) {
+		this.financeApprovalStatus = financeApprovalStatus;
 	}
 
 	public ManagerApprovalStatusExpense getManagerApprovalStatusExpense() {
@@ -280,4 +283,11 @@ public class Expense {
 		this.category = category;
 	}
 
+	public Double getAmountApprovedINR() {
+		return amountApprovedINR;
+	}
+
+	public void setAmountApprovedINR(Double amountApprovedINR) {
+		this.amountApprovedINR = amountApprovedINR;
+	}
 }

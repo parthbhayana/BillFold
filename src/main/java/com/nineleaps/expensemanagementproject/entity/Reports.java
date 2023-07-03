@@ -92,9 +92,17 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	private float totalAmountINR;
 
+	@Column(name = "total_approved_amount_INR")
+	@ApiModelProperty(hidden = true)
+	private float totalApprovedAmountINR;
+
 	@Column(name = "total_amount_currency")
 	@ApiModelProperty(hidden = true)
 	private float totalAmountCurrency;
+
+	@Column(name = "total_approved_amount_currency")
+	@ApiModelProperty(hidden = true)
+	private float totalApprovedAmountCurrency;
 
 	@Column(name = "is_hidden", nullable = true)
 	@ApiModelProperty(hidden = true)
@@ -135,9 +143,10 @@ public class Reports {
 	public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
 			String reportDescription, String managerComments, String financeComments, Boolean isSubmitted,
 			String employeeMail, LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate,
-			LocalDate financeActionDate, String currency, float totalAmountINR, float totalAmountCurrency,
-			Boolean isHidden, String managerEmail, String managerReviewTime,
-			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+			LocalDate financeActionDate, String currency, float totalAmountINR, float totalApprovedAmountINR,
+			float totalAmountCurrency, float totalApprovedAmountCurrency, Boolean isHidden, String managerEmail,
+			String managerReviewTime, FinanceApprovalStatus financeapprovalstatus,
+			ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
 		super();
 		this.reportId = reportId;
 		this.employeeId = employeeId;
@@ -155,7 +164,9 @@ public class Reports {
 		this.financeActionDate = financeActionDate;
 		this.currency = currency;
 		this.totalAmountINR = totalAmountINR;
+		this.totalApprovedAmountINR = totalApprovedAmountINR;
 		this.totalAmountCurrency = totalAmountCurrency;
+		this.totalApprovedAmountCurrency = totalApprovedAmountCurrency;
 		this.isHidden = isHidden;
 		this.managerEmail = managerEmail;
 		this.managerReviewTime = managerReviewTime;
@@ -292,12 +303,28 @@ public class Reports {
 		this.totalAmountINR = totalAmountINR;
 	}
 
+	public float getTotalApprovedAmountINR() {
+		return totalApprovedAmountINR;
+	}
+
+	public void setTotalApprovedAmountINR(float totalApprovedAmountINR) {
+		this.totalApprovedAmountINR = totalApprovedAmountINR;
+	}
+
 	public float getTotalAmountCurrency() {
 		return totalAmountCurrency;
 	}
 
 	public void setTotalAmountCurrency(float totalAmountCurrency) {
 		this.totalAmountCurrency = totalAmountCurrency;
+	}
+
+	public float getTotalApprovedAmountCurrency() {
+		return totalApprovedAmountCurrency;
+	}
+
+	public void setTotalApprovedAmountCurrency(float totalApprovedAmountCurrency) {
+		this.totalApprovedAmountCurrency = totalApprovedAmountCurrency;
 	}
 
 	public Boolean getIsHidden() {

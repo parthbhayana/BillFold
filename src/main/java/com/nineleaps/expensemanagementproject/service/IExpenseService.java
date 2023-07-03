@@ -32,4 +32,6 @@ public interface IExpenseService {
 
     public void hideExpense(Long expId);
 
+    public void setPartialAmountOfExpense(Long expenseId, Float approvedAmount);
+
 }
