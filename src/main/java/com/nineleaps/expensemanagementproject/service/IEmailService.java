@@ -18,4 +18,6 @@ public interface IEmailService {
 	void financeRejectedNotification(Long reportId);
 
 	void reminderMailToEmployee(List<Long> expenseIds);
+
+    void reminderMailToManager(List<Long> reportIds);
 }
