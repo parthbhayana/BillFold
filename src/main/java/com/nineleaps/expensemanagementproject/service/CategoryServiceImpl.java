@@ -3,9 +3,8 @@ package com.nineleaps.expensemanagementproject.service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.format.TextStyle;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -239,7 +238,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 	@Override
 	public HashMap<String, Float> getTotalAmountByYearForAllCategories() {
-		List<Expense> expenses = expenseRepository.findByIsReported(true);
+		List<Expense> expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);
 		HashMap<String, Float> result = new HashMap<>();
 
 		for (Expense expense : expenses) {
@@ -260,7 +259,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 	@Override
 	public HashMap<String, Float> getTotalAmountByMonthForAllCategories(Long year) {
-		List<Expense> expenses = expenseRepository.findByIsReported(true);
+		List<Expense> expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);
 		HashMap<String, Float> result = new HashMap<>();
 
 		for (Expense expense : expenses) {
@@ -282,7 +281,7 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 @Override
 	public HashMap<String, Float> getYearlyReimbursementRatioForAllCategories() {
-		List<Expense> expenses = expenseRepository.findByIsReported(true);
+		List<Expense> expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);
 		HashMap<String, Float> yearlyReimbursementRatioMap = new HashMap<>();
 
 		for (Expense expense : expenses) {
@@ -316,7 +315,7 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 @Override
 	public HashMap<String, Float> getMonthlyReimbursementRatioForAllCategories(Long year) {
-		List<Expense> expenses = expenseRepository.findByIsReported(true);
+		List<Expense> expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);
 		HashMap<String, Float> monthlyReimbursementRatioMap = new HashMap<>();
 
 		for (Expense expense : expenses) {

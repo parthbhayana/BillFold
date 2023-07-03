@@ -3,25 +3,19 @@ package com.nineleaps.expensemanagementproject.entity;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
@@ -118,10 +112,6 @@ public class Reports {
 	@Enumerated(EnumType.STRING)
 	private ManagerApprovalStatus managerapprovalstatus;// = ManagerApprovalStatus.PENDING;
 
-	@Lob
-	@Column(name = "pdf_file", nullable = true)
-	@ApiModelProperty(hidden = true)
-	private byte[] pdfFile;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
@@ -137,7 +127,7 @@ public class Reports {
 			String employeeMail, LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate,
 			LocalDate financeActionDate, String currency, float totalAmountINR, float totalAmountCurrency,
 			Boolean isHidden, String managerEmail, String managerReviewTime,
-			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+			FinanceApprovalStatus financeapprovalstatus, ManagerApprovalStatus managerapprovalstatus) {
 		super();
 		this.reportId = reportId;
 		this.employeeId = employeeId;
@@ -161,7 +151,7 @@ public class Reports {
 		this.managerReviewTime = managerReviewTime;
 		this.financeapprovalstatus = financeapprovalstatus;
 		this.managerapprovalstatus = managerapprovalstatus;
-		this.pdfFile = pdfFile;
+
 	}
 
 	public Long getReportId() {
@@ -340,12 +330,5 @@ public class Reports {
 		this.managerapprovalstatus = managerapprovalstatus;
 	}
 
-	public byte[] getPdfFile() {
-		return pdfFile;
-	}
-
-	public void setPdfFile(byte[] pdfFile) {
-		this.pdfFile = pdfFile;
-	}
 
 }

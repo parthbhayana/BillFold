@@ -2,6 +2,7 @@ package com.nineleaps.expensemanagementproject.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,6 +10,7 @@ import javax.transaction.Transactional;
 
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
@@ -41,6 +43,8 @@ public class ExpenseServiceImpl implements IExpenseService {
 
     @Autowired
     private ICurrencyExchange CurrencyExchange;
+    @Autowired
+    private IEmailService emailService;
 
     @Transactional
     @Override
@@ -112,7 +116,7 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Override
     public Expense updateExpenses(Expense newExpense, Long expenseId) {
         Expense expense = getExpenseById(expenseId);
-        if ((!expense.getIsHidden() && !expense.getIsReported()) || ((expense.getIsReported()) && (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED) ) ) {
+        if ((!expense.getIsHidden() && !expense.getIsReported()) || ((expense.getIsReported()) && (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED))) {
             expense.setMerchantName(newExpense.getMerchantName());
             expense.setDate(newExpense.getDate());
             expense.setAmount(newExpense.getAmount());
@@ -131,7 +135,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         if (expense.getIsHidden()) {
             throw new IllegalStateException("Expense " + expenseId + " does not exist!");
         }
-        if(expense.getIsReported() && ((expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.APPROVED) || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PARTIALLY_APPROVED))){
+        if (expense.getIsReported() && ((expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.APPROVED) || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PARTIALLY_APPROVED))) {
             throw new IllegalStateException("Can not edit Expense with ExpenseId:" + expenseId + " as it is already reported!");
         }
         return expenseRepository.save(expense);
@@ -172,5 +176,25 @@ public class ExpenseServiceImpl implements IExpenseService {
             throw new IllegalStateException("Cannot delete expense " + expId + " as it is already reported in Report: " + expense.getReportTitle());
         }
         expenseRepository.save(expense);
+    }
+
+    @Scheduled(cron = "0 0 15 * * *")
+    public void sendExpenseReminder() {
+        LocalDate currentDate = LocalDate.now();
+
+        List<Expense> expenseList = expenseRepository.findByIsReportedAndIsHidden(false,false);
+        List<Long> expenseIds = new ArrayList<>();
+
+        for (Expense expense : expenseList) {
+            LocalDate submissionDate = expense.getDate();
+            LocalDate expirationDate = submissionDate.plusDays(60);
+
+            if (currentDate.isAfter(expirationDate.minusDays(5)) && currentDate.isBefore(expirationDate)) {
+                expenseIds.add(expense.getExpenseId());
+            }
+        }
+
+
+        emailService.reminderMailToEmployee(expenseIds);
     }
 }

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
@@ -104,7 +105,7 @@ public class ReportsServiceImpl implements IReportsService {
                                     List<Long> addExpenseIds, List<Long> removeExpenseIds) {
         Long empId = null;
         Reports report = getReportById(reportId);
-        if(report.getIsSubmitted()){
+        if (report.getIsSubmitted()) {
             throw new IllegalStateException("Can not edit Report with ReportId:" + reportId + " as it is already submitted!");
         }
         if (report == null || report.getIsHidden()) {
@@ -470,7 +471,7 @@ public class ReportsServiceImpl implements IReportsService {
         if (report == null) {
             throw new NullPointerException("Report with ID " + reportId + " does not contain any expenses!");
         }
-        if(!report.getIsSubmitted()){
+        if (!report.getIsSubmitted()) {
             throw new IllegalStateException("Report with ID " + reportId + " is not submitted!");
         }
         for (Long expenseId : approveExpenseIds) {
@@ -499,18 +500,37 @@ public class ReportsServiceImpl implements IReportsService {
         report.setManagerReviewTime(reviewTime);
         //Changing Report Status
         //If all the expenses are approved then report status will be "APPROVED!"
-        if(rejectExpenseIds.isEmpty()){
+        if (rejectExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
             report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
         }
         //If any expense is rejected report will go back to employee for changes
-        if(!rejectExpenseIds.isEmpty()){
+        if (!rejectExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.ACTION_REQUIRED);
             report.setIsSubmitted(false);
         }
-        if(approveExpenseIds.isEmpty()){
+        if (approveExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
         }
         reportsRepository.save(report);
     }
+
+
+    @Scheduled(cron = "0 20 13 * * *")
+    public void sendReportNotApprovedByManagerReminder(){
+        LocalDate currentDate = LocalDate.now();
+
+        List<Reports> reportsList = reportsRepository.findBymanagerapprovalstatus(ManagerApprovalStatus.PENDING);
+        List<Long> reportIds = new ArrayList<>();
+        for (Reports report : reportsList) {
+            LocalDate submissionDate = report.getDateSubmitted();
+            LocalDate expirationDate = submissionDate.plusDays(60);
+
+            if (currentDate.isAfter(expirationDate.minusDays(5)) && currentDate.isBefore(expirationDate)) {
+                reportIds.add(report.getReportId());
+            }
+        }
+        emailService.reminderMailToEmployee(reportIds);
+    }
 }
+
