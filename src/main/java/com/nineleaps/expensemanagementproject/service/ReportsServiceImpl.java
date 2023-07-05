@@ -289,18 +289,6 @@ public class ReportsServiceImpl implements IReportsService {
             Employee employee = employeeServices.getEmployeeById(employeeId);
             re.setManagerEmail(employee.getManagerEmail());
             reportsRepository.save(re);
-            response.setContentType("application/pdf");
-            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
-            String currentDateTime = dateFormatter.format(new Date());
-            String headerKey = "Content-Disposition";
-            String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
-            response.setHeader(headerKey, headerValue);
-            try {
-                pdfGeneratorService.export(reportId, response);
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
             if (employee.getManagerEmail() == null) {
                 throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
             }
@@ -602,7 +590,7 @@ public class ReportsServiceImpl implements IReportsService {
                 reportIds.add(report.getReportId());
             }
         }
-        emailService.reminderMailToEmployee(reportIds);
+        emailService.reminderMailToManager(reportIds);
     }
 }
 

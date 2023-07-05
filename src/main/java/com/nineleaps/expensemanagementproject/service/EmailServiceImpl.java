@@ -211,8 +211,6 @@ public class EmailServiceImpl implements IEmailService {
         }
     }
 
-}
-
     public void reminderMailToEmployee(List<Long> expenseIds) {
         for (Long expenseId : expenseIds) {
             Optional<Expense> expense = expenseRepository.findById(expenseId);
@@ -223,29 +221,43 @@ public class EmailServiceImpl implements IEmailService {
                     SimpleMailMessage email = new SimpleMailMessage();
                     email.setFrom("billfold.noreply@gmail.com");
                     email.setTo(employeeEmail);
-                    email.setSubject("Reminder for Unreported Expense");
+                    email.setSubject("[ACTION REQUIRED] Expense Report Submission Reminder");
                     email.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
-                            + "\n\n");
+                            + "\n\nWe hope this email finds you well. We would like to remind you that you have not yet reported some of your expenses.It is important to submit your expense report in a timely manner to ensure accurate reimbursement and compliance with company policies."
+                            + "\n\nPlease note that if your expenses are not reported within 60 days from the end of the reporting period, they will not be eligible for reimbursement. Therefore, we kindly request you to submit your expense report by the submission deadline. This will allow us to review and process your expenses promptly."
+                            + "\n\nTo report your expenses, please access your BillFold account and follow the instructions provided. Ensure that all receipts and necessary supporting documents are attached for proper validation."
+                            + "\n\nIf you have any questions or need assistance with the expense reporting process, please reach out to our HR department or your manager. We are here to help and ensure a smooth reimbursement process for you."
+                            + "Thank you for your attention to this matter. Your cooperation in submitting your expense report within the specified deadline is greatly appreciated."
+                            + "\n\nBest Regards," + "\nBillFold"
+                            + "\n\nThis is an automated message. Please do not reply to this email.");
+
                     this.javaMailSender.send(email);
                 }
             }
         }
     }
-    @Override
-    public void reminderMailToManager(List<Long> reportIds)
-    {
-        for (Long reportId : reportIds) {
-            Optional<Reports> reports = reportsRepository.findById(reportId);
 
-                    String managerEmail = reports.get().getManagerEmail();
-                    SimpleMailMessage email = new SimpleMailMessage();
-                    email.setFrom("billfold.noreply@gmail.com");
-                    email.setTo(managerEmail);
-                    email.setSubject("Reminder for Unreported Expense");
-                    email.setText("Dear "  + ","
-                            + "\n\n");
-                    this.javaMailSender.send(email);
-                }
+    @Override
+    public void reminderMailToManager(List<Long> reportIds) {
+        for (Long reportId : reportIds) {
+            Optional<Reports> report = reportsRepository.findById(reportId);
+            Long employeeId = report.get().getEmployeeId();
+            Employee employee = employeeService.getEmployeeById(employeeId);
+            String managerEmail = employee.getManagerEmail();
+            SimpleMailMessage email = new SimpleMailMessage();
+            email.setFrom("billfold.noreply@gmail.com");
+            email.setTo(managerEmail);
+            email.setSubject("[REMINDER] Pending Action on Expense Reports");
+            email.setText("Dear " + employee.getManagerName() + ","
+                    + "\n\nThis is a friendly reminder that you have pending expense reports awaiting your action. The reports have been submitted more than 30 days ago and are still pending approval."
+                    + "\n\nPlease review and take appropriate action on the following report:"
+                    + "\n\n" + report.get().getReportTitle()
+                    + "\n\nTo take action on these reports, please log in to the BillFold app."
+                    + "\n\nThank you for your attention to this matter."
+                    + "\n\nBest Regards," + "\nBillFold"
+                    + "\n\nThis is an automated message. Please do not reply to this email.");
+            this.javaMailSender.send(email);
+        }
     }
 }
 

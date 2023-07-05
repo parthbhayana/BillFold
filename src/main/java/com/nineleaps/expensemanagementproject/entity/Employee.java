@@ -35,6 +35,9 @@ public class Employee {
 	@Column(name = "manager_email")
 	private String managerEmail;
 
+	@Column(name = "manager_name")
+	private String managerName;
+
 	@Column(name = "mobile_number")
 	private Long mobileNumber;
 
@@ -63,8 +66,8 @@ public class Employee {
 	}
 
 	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
-			String employeeEmail, String managerEmail, Long mobileNumber, Boolean isFinanceAdmin, String imageUrl,
-			Boolean isHidden, List<Expense> expenseList, String role) {
+			String employeeEmail, String managerEmail, String managerName, Long mobileNumber, Boolean isFinanceAdmin,
+			String imageUrl, Boolean isHidden, List<Expense> expenseList, String role) {
 		super();
 		this.employeeId = employeeId;
 		this.officialEmployeeId = officialEmployeeId;
@@ -73,6 +76,7 @@ public class Employee {
 		this.lastName = lastName;
 		this.employeeEmail = employeeEmail;
 		this.managerEmail = managerEmail;
+		this.managerName = managerName;
 		this.mobileNumber = mobileNumber;
 		this.isFinanceAdmin = isFinanceAdmin;
 		this.imageUrl = imageUrl;
@@ -135,6 +139,14 @@ public class Employee {
 
 	public void setManagerEmail(String managerEmail) {
 		this.managerEmail = managerEmail;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
 	}
 
 	public Long getMobileNumber() {
