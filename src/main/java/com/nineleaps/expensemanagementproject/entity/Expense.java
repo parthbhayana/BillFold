@@ -97,7 +97,7 @@ public class Expense {
 	private Category category;
 
 	public Expense() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,

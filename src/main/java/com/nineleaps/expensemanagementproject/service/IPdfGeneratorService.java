@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,13 +10,13 @@ import com.lowagie.text.pdf.PdfPCell;
 
 public interface IPdfGeneratorService {
 
-	public void export(Long reportId, HttpServletResponse response) throws IOException;
 
-	byte[] generatePdf(Long reportId) throws IOException;
+
 
 	PdfPCell getCenterAlignedCell(String content, Font font);
 
 	PdfPCell getCenterAlignedCells(String content, Font font);
 
 
+	void export(Long reportId, List<Long> expenses, HttpServletResponse response) throws IOException;
 }
