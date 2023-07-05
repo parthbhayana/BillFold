@@ -74,7 +74,7 @@ public class EmployeeController {
 
 	@PostMapping("/editEmployeeDetails")
 	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber,
-			String officialEmployeeId) {
-		employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId);
+			String officialEmployeeId, String managerName) {
+		employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName);
 	}
 }

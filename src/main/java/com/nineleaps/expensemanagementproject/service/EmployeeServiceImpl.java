@@ -63,11 +63,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber,
-			String officialEmployeeId) {
+			String officialEmployeeId, String managerName) {
 		Employee employee = getEmployeeById(employeeId);
 		employee.setManagerEmail(managerEmail);
 		employee.setMobileNumber(mobileNumber);
 		employee.setOfficialEmployeeId(officialEmployeeId);
+		employee.setManagerName(managerName);
 		employeeRepository.save(employee);
 	}
 

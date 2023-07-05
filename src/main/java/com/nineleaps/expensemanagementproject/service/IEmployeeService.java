@@ -38,5 +38,5 @@ public interface IEmployeeService {
 
 	public Optional<Employee> getEmployeeDetails(Long employeeId);
 
-	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId);
+	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName);
 }
