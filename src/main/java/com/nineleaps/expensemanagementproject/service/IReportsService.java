@@ -48,7 +48,9 @@ public interface IReportsService {
 
 	public float totalAmountCurrency(Long reportId);
 
-	public float totalApprovedAmount(Long reportId);
+	public float totalApprovedAmountCurrency(Long reportId);
+
+	public float totalApprovedAmountINR(Long reportId);
 
 	public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate);
 

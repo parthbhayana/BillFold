@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Autowired
     private IPdfGeneratorService pdfGeneratorService;
+
+    @Autowired
+    private ICurrencyExchange CurrencyExchange;
 
     @Override
     public List<Reports> getAllReports() {
@@ -78,6 +82,7 @@ public class ReportsServiceImpl implements IReportsService {
         reportsRepository.save(newReport);
         Long id = newReport.getReportId();
         List<Expense> expp = expenseRepository.findAllById(expenseids);
+        //Setting Amounts
         float amt = 0;
         for (Expense expense2 : expp) {
             amt += expense2.getAmountINR();
@@ -88,6 +93,19 @@ public class ReportsServiceImpl implements IReportsService {
             amtCurrency += expense2.getAmount();
         }
         newReport.setTotalAmountCurrency(amtCurrency);
+//        float approvedAmountCurrency = 0;
+//        for (Expense expense2 : expp) {
+//            approvedAmountCurrency += expense2.getAmountApproved();
+//        }
+//        System.out.println("@@@@@@@@@@@@@@" + approvedAmountCurrency + "!!");
+//        newReport.setTotalApprovedAmountCurrency(approvedAmountCurrency);
+//        float approvedAmountINR = 0;
+//        for (Expense expense2 : expp) {
+//            approvedAmountINR += expense2.getAmountApprovedINR();
+//        }
+//        System.out.println("@@@@@@@@@@@@@@" + approvedAmountINR + "!!");
+//        newReport.setTotalApprovedAmountINR(approvedAmountINR);
+
         addExpenseToReport(id, expenseids);
         String reportTitle = newReport.getReportTitle();
         List<Expense> exp = expenseServices.getExpenseByReportId(id);
@@ -153,6 +171,8 @@ public class ReportsServiceImpl implements IReportsService {
         Reports re = getReportById(reportId);
         re.setTotalAmountINR(totalAmountINR(reportId));
         re.setTotalAmountCurrency(totalAmountCurrency(reportId));
+        re.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
+        re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
         return getReportByEmpId(empId, "drafts");
     }
 
@@ -175,6 +195,8 @@ public class ReportsServiceImpl implements IReportsService {
         Reports re = getReportById(reportId);
         re.setTotalAmountINR(totalAmountINR(reportId));
         re.setTotalAmountCurrency(totalAmountCurrency(reportId));
+        re.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
+        re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
         return reportsRepository.save(re);
     }
 
@@ -251,39 +273,34 @@ public class ReportsServiceImpl implements IReportsService {
         if (re == null || re.getIsHidden()) {
             throw new NullPointerException("Report with ID " + reportId + " does not exist!");
         }
-        if (re != null && re.getIsSubmitted() == submissionStatus) {
+        if (re != null && re.getIsSubmitted() == submissionStatus && re.getManagerapprovalstatus() != ManagerApprovalStatus.REJECTED) {
             throw new IllegalStateException("Report with ID " + reportId + " is already submitted!");
         }
-        if (re != null && re.getIsSubmitted() != submissionStatus) {
+        if ((re != null && re.getIsSubmitted() != submissionStatus) || (re != null && re.getIsSubmitted() == true && re.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED)) {
             re.setIsSubmitted(submissionStatus);
             re.setManagerapprovalstatus(ManagerApprovalStatus.PENDING);
             re.setDateSubmitted(LocalDate.now());
             re.setTotalAmountINR(totalAmountINR(reportId));
             re.setTotalAmountCurrency(totalAmountCurrency(reportId));
+//            re.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
+//            re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
             // Fetching employee ID
             Long employeeId = re.getEmployeeId();
             Employee employee = employeeServices.getEmployeeById(employeeId);
             re.setManagerEmail(employee.getManagerEmail());
             reportsRepository.save(re);
-//			try {
-//				String decodedEmail = URLDecoder.decode(managerMail, "UTF-8");
-//				decodedEmail = decodedEmail.replace("=", "");
-//				re.setManagerEmail(decodedEmail);
-//			} catch (UnsupportedEncodingException e) {
-//				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
-//			}
-//            response.setContentType("application/pdf");
-//            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
-//            String currentDateTime = dateFormatter.format(new Date());
-//            String headerKey = "Content-Disposition";
-//            String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
-//            response.setHeader(headerKey, headerValue);
-//            try {
-//                pdfGeneratorService.export(reportId, response);
-//            } catch (IOException e) {
-//
-//                e.printStackTrace();
-//            }
+            response.setContentType("application/pdf");
+            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+            String currentDateTime = dateFormatter.format(new Date());
+            String headerKey = "Content-Disposition";
+            String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+            response.setHeader(headerKey, headerValue);
+            try {
+                pdfGeneratorService.export(reportId, response);
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
             if (employee.getManagerEmail() == null) {
                 throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
             }
@@ -294,7 +311,6 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public void approveReportByManager(Long reportId, String comments) {
-        //Update Expenses Status-Todo
         Reports re = getReportById(reportId);
         if (!re.getIsSubmitted()) {
             throw new IllegalStateException("Report " + reportId + " is not Submitted!");
@@ -309,6 +325,12 @@ public class ReportsServiceImpl implements IReportsService {
             re.setManagerActionDate(LocalDate.now());
             reportsRepository.save(re);
             emailService.userApprovedNotification(reportId);
+        }
+        //Update Expenses Status
+        List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+        for (Expense exp : expenseList) {
+            exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+            expenseRepository.save(exp);
         }
     }
 
@@ -328,6 +350,12 @@ public class ReportsServiceImpl implements IReportsService {
             re.setManagerActionDate(LocalDate.now());
             reportsRepository.save(re);
             emailService.userRejectedNotification(reportId);
+        }
+        //Update Expenses Status
+        List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+        for (Expense exp : expenseList) {
+            exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
+            expenseRepository.save(exp);
         }
     }
 
@@ -351,6 +379,12 @@ public class ReportsServiceImpl implements IReportsService {
             re.setFinanceActionDate(LocalDate.now());
             reportsRepository.save(re);
             emailService.financeReimbursedNotification(reportId);
+            //Update Expenses Status
+            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+            for (Expense exp : expenseList) {
+                exp.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+                expenseRepository.save(exp);
+            }
         }
     }
 
@@ -371,6 +405,11 @@ public class ReportsServiceImpl implements IReportsService {
             re.setFinanceActionDate(LocalDate.now());
             reportsRepository.save(re);
             emailService.financeRejectedNotification(reportId);
+            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+            for (Expense exp : expenseList) {
+                exp.setFinanceApprovalStatus(FinanceApprovalStatus.REJECTED);
+                expenseRepository.save(exp);
+            }
         }
     }
 
@@ -399,15 +438,29 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public float totalApprovedAmount(Long reportId) {
-        Reports report = getReportById(reportId);
-        List<Expense> expenseList = expenseRepository
-                .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
-        float totalApprovedAmount = 0;
-        for (Expense expense2 : expenseList) {
-            totalApprovedAmount += expense2.getAmountApproved();
-        }
-        return totalApprovedAmount;
+    public float totalApprovedAmountCurrency(Long reportId) {
+//        Reports report = getReportById(reportId);
+//        List<Expense> expenseList = expenseRepository
+//                .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
+//        float totalApprovedAmount = 0;
+//        for (Expense expense2 : expenseList) {
+//            totalApprovedAmount += expense2.getAmountApproved();
+//        }
+//        return totalApprovedAmount;
+        return 0;
+    }
+
+    @Override
+    public float totalApprovedAmountINR(Long reportId) {
+//        Reports report = getReportById(reportId);
+//        List<Expense> expenseList = expenseRepository
+//                .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
+//        float totalApprovedAmount = 0;
+//        for (Expense expense2 : expenseList) {
+//            totalApprovedAmount += expense2.getAmountApprovedINR();
+//        }
+//        return totalApprovedAmount;
+        return 0;
     }
 
     @Override
@@ -482,6 +535,14 @@ public class ReportsServiceImpl implements IReportsService {
             }
             if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
                 expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+                expense.setAmountApproved(Float.valueOf(expense.getAmount()));
+                //Setting Approved Amount INR
+                String curr = expense.getCurrency();
+                String date = expense.getDate().toString();
+                double rate = CurrencyExchange.getExchangeRate(curr, date);
+                System.out.println("Exchange Rate = " + rate);
+                double approvedAmountInInr = expense.getAmountApproved() * rate;
+                expense.setAmountApprovedINR(approvedAmountInInr);
                 expenseRepository.save(expense);
             }
         }
@@ -506,13 +567,24 @@ public class ReportsServiceImpl implements IReportsService {
         }
         //If any expense is rejected report will go back to employee for changes
         if (!rejectExpenseIds.isEmpty()) {
-            report.setManagerapprovalstatus(ManagerApprovalStatus.ACTION_REQUIRED);
+            report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED); //ACTION REQUIRED WAS HERE BEFORE
             report.setIsSubmitted(false);
         }
         if (approveExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
         }
         reportsRepository.save(report);
+        //Email Logic
+        //If total no of expense < approved + rejected then partial approved mail will sent otherwise genral mail wll
+        // be sent
+        List<Expense> expenseList = expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
+        if (expenseList.size() > approveExpenseIds.size() + rejectExpenseIds.size()) {
+            //Send Partial approval Email
+            emailService.userPartialApprovedExpensesNotification(reportId);
+        } else {
+            //send General Approved email
+            emailService.userApprovedNotification(reportId);
+        }
     }
 
 

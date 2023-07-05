@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,7 +72,6 @@ public class ExpenseController {
 	@PostMapping("/setPartialApprovedAmount")
 	public void setPartialApprovedAmount(@RequestParam Long expenseId, @RequestParam Float approvedAmount){
 		Expense expense = expenseService.getExpenseById(expenseId);
-		expense.setAmountApproved(approvedAmount);
-		expenseRepository.save(expense);
+		expenseService.setPartialAmountOfExpense(expenseId,approvedAmount);
 	}
 }

@@ -178,6 +178,22 @@ public class ExpenseServiceImpl implements IExpenseService {
         expenseRepository.save(expense);
     }
 
+    @Override
+    public void setPartialAmountOfExpense(Long expenseId, Float approvedAmount){
+        Expense expense = getExpenseById(expenseId);
+        expense.setAmountApproved(approvedAmount);
+        //Setting Approved Amount INR
+        float approvedAmountINR = 0;
+        String curr = expense.getCurrency();
+        String date = expense.getDate().toString();
+        double rate = CurrencyExchange.getExchangeRate(curr, date);
+        System.out.println("Exchange Rate = " + rate);
+        double approvedAmountInInr = expense.getAmountApproved() * rate;
+        expense.setAmountApprovedINR(approvedAmountInInr);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PARTIALLY_APPROVED);
+        //Call Email Functionality Here -ToDo
+        expenseRepository.save(expense);
+
     @Scheduled(cron = "0 0 15 * * *")
     public void sendExpenseReminder() {
         LocalDate currentDate = LocalDate.now();

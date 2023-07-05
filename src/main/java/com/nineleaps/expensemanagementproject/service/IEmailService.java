@@ -17,6 +17,8 @@ public interface IEmailService {
 
 	void financeRejectedNotification(Long reportId);
 
+	public void userPartialApprovedExpensesNotification(Long reportId);
+
 	void reminderMailToEmployee(List<Long> expenseIds);
 
     void reminderMailToManager(List<Long> reportIds);

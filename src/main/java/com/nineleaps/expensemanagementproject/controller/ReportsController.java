@@ -152,7 +152,7 @@ public class ReportsController {
 
     @GetMapping("/getTotalApprovedAmount")
     public float totalApprovedAmount(Long reportId) {
-        return reportsService.totalApprovedAmount(reportId);
+        return reportsService.totalApprovedAmountCurrency(reportId);
     }
 
     @PostMapping("/updateExpenseStatus/{reportId}")

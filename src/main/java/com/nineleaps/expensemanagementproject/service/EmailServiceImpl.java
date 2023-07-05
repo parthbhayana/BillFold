@@ -184,6 +184,35 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
+    public void userPartialApprovedExpensesNotification(Long reportId) {
+        Reports report = reportsService.getReportById(reportId);
+        List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
+
+        if (!expenseList.isEmpty()) {
+            Expense expense = expenseList.get(0);
+            Employee employee = expense.getEmployee();
+            SimpleMailMessage eMail = new SimpleMailMessage();
+            eMail.setFrom("billfoldjsr@gmail.com");
+            eMail.setTo(employee.getEmployeeEmail());
+            eMail.setSubject("[PARTIAL APPROVAL] Expense Report: " + report.getReportTitle());
+            eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
+                    + "\n\nCongratulations! Your expense report has been partially approved by your manager. The details of the partial approval are as follows:"
+                    + "\n\nReport Title: " + report.getReportTitle() + "\nApproval Date: " + report.getManagerActionDate()
+                    + ""
+                    + "\n\nPlease note that not all expenses have been approved. Some expenses are partially approved according to the company policy. Please login to your BillFold account for detailed information of your expense report."
+                    + "\n\nIf you have any questions or need further assistance, please feel free to contact your manager or the HR department."
+                    + "\n\nThank you for your cooperation and timely submission of the expense report."
+                    + "\n\nBest Regards," + "\nBillFold"
+                    + "\n\nThis is an automated message. Please do not reply to this email.");
+
+            this.javaMailSender.send(eMail);
+        } else {
+            throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
+        }
+    }
+
+}
+
     public void reminderMailToEmployee(List<Long> expenseIds) {
         for (Long expenseId : expenseIds) {
             Optional<Expense> expense = expenseRepository.findById(expenseId);
@@ -219,6 +248,4 @@ public class EmailServiceImpl implements IEmailService {
                 }
     }
 }
-
-
 
