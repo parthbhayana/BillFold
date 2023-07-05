@@ -122,7 +122,7 @@ public class ReportsServiceImpl implements IReportsService {
                                     List<Long> addExpenseIds, List<Long> removeExpenseIds) {
         Long empId = null;
         Reports report = getReportById(reportId);
-        if(report.getIsSubmitted()){
+        if (report.getIsSubmitted()) {
             throw new IllegalStateException("Can not edit Report with ReportId:" + reportId + " as it is already submitted!");
         }
         if (report == null || report.getIsHidden()) {
@@ -272,10 +272,10 @@ public class ReportsServiceImpl implements IReportsService {
         if (re == null || re.getIsHidden()) {
             throw new NullPointerException("Report with ID " + reportId + " does not exist!");
         }
-        if (re != null && re.getIsSubmitted() == submissionStatus && re.getManagerapprovalstatus()!=ManagerApprovalStatus.REJECTED) {
+        if (re != null && re.getIsSubmitted() == submissionStatus && re.getManagerapprovalstatus() != ManagerApprovalStatus.REJECTED) {
             throw new IllegalStateException("Report with ID " + reportId + " is already submitted!");
         }
-        if ((re != null && re.getIsSubmitted() != submissionStatus) || (re!=null && re.getIsSubmitted() == true && re.getManagerapprovalstatus()==ManagerApprovalStatus.REJECTED) ){
+        if ((re != null && re.getIsSubmitted() != submissionStatus) || (re != null && re.getIsSubmitted() == true && re.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED)) {
             re.setIsSubmitted(submissionStatus);
             re.setManagerapprovalstatus(ManagerApprovalStatus.PENDING);
             re.setDateSubmitted(LocalDate.now());
@@ -327,7 +327,7 @@ public class ReportsServiceImpl implements IReportsService {
         }
         //Update Expenses Status
         List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-        for(Expense exp: expenseList){
+        for (Expense exp : expenseList) {
             exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
             expenseRepository.save(exp);
         }
@@ -352,7 +352,7 @@ public class ReportsServiceImpl implements IReportsService {
         }
         //Update Expenses Status
         List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-        for(Expense exp: expenseList){
+        for (Expense exp : expenseList) {
             exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
             expenseRepository.save(exp);
         }
@@ -380,7 +380,7 @@ public class ReportsServiceImpl implements IReportsService {
             emailService.financeReimbursedNotification(reportId);
             //Update Expenses Status
             List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-            for(Expense exp: expenseList){
+            for (Expense exp : expenseList) {
                 exp.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
                 expenseRepository.save(exp);
             }
@@ -405,7 +405,7 @@ public class ReportsServiceImpl implements IReportsService {
             reportsRepository.save(re);
             emailService.financeRejectedNotification(reportId);
             List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-            for(Expense exp: expenseList){
+            for (Expense exp : expenseList) {
                 exp.setFinanceApprovalStatus(FinanceApprovalStatus.REJECTED);
                 expenseRepository.save(exp);
             }
@@ -523,7 +523,7 @@ public class ReportsServiceImpl implements IReportsService {
         if (report == null) {
             throw new NullPointerException("Report with ID " + reportId + " does not contain any expenses!");
         }
-        if(!report.getIsSubmitted()){
+        if (!report.getIsSubmitted()) {
             throw new IllegalStateException("Report with ID " + reportId + " is not submitted!");
         }
         for (Long expenseId : approveExpenseIds) {
@@ -560,18 +560,29 @@ public class ReportsServiceImpl implements IReportsService {
         report.setManagerReviewTime(reviewTime);
         //Changing Report Status
         //If all the expenses are approved then report status will be "APPROVED!"
-        if(rejectExpenseIds.isEmpty()){
+        if (rejectExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
             report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
         }
         //If any expense is rejected report will go back to employee for changes
-        if(!rejectExpenseIds.isEmpty()){
+        if (!rejectExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED); //ACTION REQUIRED WAS HERE BEFORE
             report.setIsSubmitted(false);
         }
-        if(approveExpenseIds.isEmpty()){
+        if (approveExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
         }
         reportsRepository.save(report);
+        //Email Logic
+        //If total no of expense < approved + rejected then partial approved mail will sent otherwise genral mail wll
+        // be sent
+        List<Expense> expenseList = expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
+        if (expenseList.size() > approveExpenseIds.size() + rejectExpenseIds.size()) {
+            //Send Partial approval Email
+            emailService.userPartialApprovedExpensesNotification(reportId);
+        } else {
+            //send General Approved email
+            emailService.userApprovedNotification(reportId);
+        }
     }
 }

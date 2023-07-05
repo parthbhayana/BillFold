@@ -16,4 +16,6 @@ public interface IEmailService {
 
 	public void financeRejectedNotification(Long reportId);
 
+	public void userPartialApprovedExpensesNotification(Long reportId);
+
 }
