@@ -40,5 +40,5 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 	List<Reports> findByDateSubmittedBetween(LocalDate startDate, LocalDate endDate);
 
 
-
+	List<Reports> findBymanagerapprovalstatus(ManagerApprovalStatus managerApprovalStatus);
 }

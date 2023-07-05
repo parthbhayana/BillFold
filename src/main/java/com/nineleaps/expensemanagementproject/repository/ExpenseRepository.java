@@ -30,4 +30,17 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 	List<Expense> findByDateBetweenAndIsReported(LocalDate startDate, LocalDate endDate, Boolean bool);
 
     List<Expense> findByIsReportedAndDateBefore(boolean b, LocalDate sixtyDaysAgo);
+
+
+  
+
+	List<Expense> findByCategoryAndIsReported(Category category, boolean b);
+
+	List<Expense> findByCategory(Category category);
+
+
+
+	Employee findEmployeeByExpenseId(Long expenseId);
+
+	List<Expense> findByIsReportedAndIsHidden(boolean b, boolean b1);
 }

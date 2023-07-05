@@ -18,6 +18,7 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
@@ -585,4 +586,23 @@ public class ReportsServiceImpl implements IReportsService {
             emailService.userApprovedNotification(reportId);
         }
     }
+
+
+    @Scheduled(cron = "0 20 13 * * *")
+    public void sendReportNotApprovedByManagerReminder(){
+        LocalDate currentDate = LocalDate.now();
+
+        List<Reports> reportsList = reportsRepository.findBymanagerapprovalstatus(ManagerApprovalStatus.PENDING);
+        List<Long> reportIds = new ArrayList<>();
+        for (Reports report : reportsList) {
+            LocalDate submissionDate = report.getDateSubmitted();
+            LocalDate expirationDate = submissionDate.plusDays(60);
+
+            if (currentDate.isAfter(expirationDate.minusDays(5)) && currentDate.isBefore(expirationDate)) {
+                reportIds.add(report.getReportId());
+            }
+        }
+        emailService.reminderMailToEmployee(reportIds);
+    }
 }
+

@@ -1,5 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
+import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
@@ -8,10 +10,10 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 import java.io.FileNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,9 +25,15 @@ public class EmailServiceImpl implements IEmailService {
 
     @Autowired
     private IReportsService reportsService;
+    @Autowired
+    private ExpenseRepository expenseRepository;
 
     @Autowired
     private IExpenseService expenseService;
+    @Autowired
+    private IEmployeeService employeeService;
+    @Autowired
+    private ReportsRepository reportsRepository;
 
     private final JavaMailSender javaMailSender;
 
@@ -204,3 +212,40 @@ public class EmailServiceImpl implements IEmailService {
     }
 
 }
+
+    public void reminderMailToEmployee(List<Long> expenseIds) {
+        for (Long expenseId : expenseIds) {
+            Optional<Expense> expense = expenseRepository.findById(expenseId);
+            if (expense != null) {
+                Employee employee = expense.get().getEmployee();
+                if (employee != null) {
+                    String employeeEmail = employee.getEmployeeEmail();
+                    SimpleMailMessage email = new SimpleMailMessage();
+                    email.setFrom("billfold.noreply@gmail.com");
+                    email.setTo(employeeEmail);
+                    email.setSubject("Reminder for Unreported Expense");
+                    email.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
+                            + "\n\n");
+                    this.javaMailSender.send(email);
+                }
+            }
+        }
+    }
+    @Override
+    public void reminderMailToManager(List<Long> reportIds)
+    {
+        for (Long reportId : reportIds) {
+            Optional<Reports> reports = reportsRepository.findById(reportId);
+
+                    String managerEmail = reports.get().getManagerEmail();
+                    SimpleMailMessage email = new SimpleMailMessage();
+                    email.setFrom("billfold.noreply@gmail.com");
+                    email.setTo(managerEmail);
+                    email.setSubject("Reminder for Unreported Expense");
+                    email.setText("Dear "  + ","
+                            + "\n\n");
+                    this.javaMailSender.send(email);
+                }
+    }
+}
+

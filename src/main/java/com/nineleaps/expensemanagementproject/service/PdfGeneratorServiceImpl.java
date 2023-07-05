@@ -5,24 +5,21 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.google.zxing.BarcodeFormat;
@@ -64,11 +61,11 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 	EmployeeRepository employeeRepository;
 	@Autowired
 	private JavaMailSender mailSender;
+	@Autowired
+	private IExpenseService expenseService;
 
 
-
-	@Override
-	public byte[] generatePdf(Long reportId) throws IOException {
+	public byte[] generatePdf(Long reportId, List<Long> expenseIds) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Document document = new Document(PageSize.A4);
 		@SuppressWarnings("unused")
@@ -115,19 +112,21 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		Reports report = reportsRepository.findById(reportId).get();
 		List<Expense> expenses = expenseRepository.findByReports(report);
 		Employee employee = null;
-		if (!expenses.isEmpty()) {
-			Expense firstExpense = expenses.get(0);
-			employee = employeeRepository.findById(firstExpense.getEmployee().getEmployeeId()).orElse(null);
+		if (!expenseIds.isEmpty()) {
+			Long firstExpense = expenseIds.get(0);
+			Expense firstExpenses=expenseService.getExpenseById(firstExpense);
+			employee = employeeRepository.findById(firstExpenses.getEmployee().getEmployeeId()).orElse(null);
 		}
 		float total = 0;
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MMM d, yyyy");
-		for (Expense expense : expenses) {
-			LocalDate dateCreated = expense.getDate();
+		for (Long expense : expenseIds) {
+			Expense expenseList=expenseService.getExpenseById(expense);
+			LocalDate dateCreated = expenseList.getDate();
 			table.addCell(getCenterAlignedCells(dateCreated.format(formatter1), font));
-			table.addCell(getCenterAlignedCells(expense.getMerchantName(), font));
-			table.addCell(getCenterAlignedCells(expense.getDescription(), font));
-			table.addCell(getCenterAlignedCells(expense.getAmount().toString(), font));
-			total += expense.getAmount();
+			table.addCell(getCenterAlignedCells(expenseList.getMerchantName(), font));
+			table.addCell(getCenterAlignedCells(expenseList.getDescription(), font));
+			table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
+			total += expenseList.getAmount();
 		}
 
 		Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES_BOLD);
@@ -180,24 +179,24 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		Paragraph emptyParagraph06 = new Paragraph(" ");
 		Paragraph emptyParagraph07 = new Paragraph(" ");
 		Paragraph emptyParagraph08 = new Paragraph(" ");
-		Paragraph historyTitle = new Paragraph("Report History and comments:",
-				FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
-		historyTitle.setAlignment(Element.ALIGN_LEFT);
-		historyTitle.setSpacingAfter(10);
-		Paragraph historyContent = new Paragraph();
-		historyContent.setAlignment(Element.ALIGN_LEFT);
-		historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
+//		Paragraph historyTitle = new Paragraph("Report History and comments:",
+//				FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
+//		historyTitle.setAlignment(Element.ALIGN_LEFT);
+//		historyTitle.setSpacingAfter(10);
+//		Paragraph historyContent = new Paragraph();
+//		historyContent.setAlignment(Element.ALIGN_LEFT);
+//		historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
 
-		LocalDate dateTimeCreated = report.getDateCreated();
-		LocalDate dateSubmitted = report.getDateSubmitted();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
-
-		String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);
-		historyContent.add(createdMessage);
-		historyContent.add(Chunk.NEWLINE);
-
-		String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
-		historyContent.add(submissionMessage);
+//		LocalDate dateTimeCreated = report.getDateCreated();
+//		LocalDate dateSubmitted = report.getDateSubmitted();
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
+//
+//		String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);
+//		historyContent.add(createdMessage);
+//		historyContent.add(Chunk.NEWLINE);
+//
+//		String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
+//		historyContent.add(submissionMessage);
 
 		Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
 		fontParagraph14.setSize(14);
@@ -251,17 +250,18 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		document.add(emptyParagraph06);
 		document.add(noteParagraph);
 		document.add(lineSeparator);
-		document.add(historyTitle);
-		document.add(historyContent);
+//		document.add(historyTitle);
+//		document.add(historyContent);
 		document.add(qrCodeImage);
 
 
 		document.newPage();
-		for (Expense expense : expenses) {
-			if(expense.getSupportingDocuments()==null)
+		for (Long expense : expenseIds) {
+			Expense expenseList=expenseService.getExpenseById(expense);
+			if(expenseList.getSupportingDocuments()==null)
 				continue;
-			if (expense.getSupportingDocuments() != null ) {
-				byte[] imageData = expense.getSupportingDocuments();
+			if (expenseList.getSupportingDocuments() != null ) {
+				byte[] imageData = expenseList.getSupportingDocuments();
 				InputStream in = new ByteArrayInputStream(imageData);
 				BufferedImage bufferedImage = ImageIO.read(in);
 				Image image = Image.getInstance(bufferedImage, null);
@@ -304,34 +304,15 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 	}
 
 	@Override
-	public void export(Long reportId, HttpServletResponse response) throws IOException {
-		byte[] pdfBytes = generatePdf(reportId);
-
-//		MimeMessage message = mailSender.createMimeMessage();
-//		try {
-//			MimeMessageHelper helper = new MimeMessageHelper(message, true);
-//			helper.setFrom("sender@example.com");
-//			helper.setTo("recipient@example.com");
-//			helper.setSubject("Expense Report");
-//
-//			// Attach the PDF to the email
-//			MimeBodyPart pdfAttachment = new MimeBodyPart();
-//			pdfAttachment.setContent(pdfBytes, "application/pdf");
-//			pdfAttachment.setFileName("expense_report.pdf");
-//
-//			MimeMultipart multipart = new MimeMultipart();
-//			multipart.addBodyPart(pdfAttachment);
-//
-//			// Set the content of the email
-//			message.setContent(multipart);
-//
-//			// Send the email
-//			mailSender.send(message);
-//		} catch (MessagingException e) {
-//			e.printStackTrace();
-//		}
+	public void export(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException {
 		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition", "attachment; filename=\"expense_report_BillFold.pdf\"");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+		response.setHeader(headerKey, headerValue);
+		byte[] pdfBytes = generatePdf(reportId,expenseIds);
+
 		response.setContentLength(pdfBytes.length);
 		ServletOutputStream outputStream = response.getOutputStream();
 		outputStream.write(pdfBytes);
