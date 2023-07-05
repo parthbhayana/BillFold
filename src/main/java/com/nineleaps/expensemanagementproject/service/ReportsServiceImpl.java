@@ -272,18 +272,18 @@ public class ReportsServiceImpl implements IReportsService {
 //			} catch (UnsupportedEncodingException e) {
 //				throw new RuntimeException("Error decoding email: " + e.getMessage(), e);
 //			}
-            response.setContentType("application/pdf");
-            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
-            String currentDateTime = dateFormatter.format(new Date());
-            String headerKey = "Content-Disposition";
-            String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
-            response.setHeader(headerKey, headerValue);
-            try {
-                pdfGeneratorService.export(reportId, response);
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
+//            response.setContentType("application/pdf");
+//            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+//            String currentDateTime = dateFormatter.format(new Date());
+//            String headerKey = "Content-Disposition";
+//            String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+//            response.setHeader(headerKey, headerValue);
+//            try {
+//                pdfGeneratorService.export(reportId, response);
+//            } catch (IOException e) {
+//
+//                e.printStackTrace();
+//            }
             if (employee.getManagerEmail() == null) {
                 throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
             }

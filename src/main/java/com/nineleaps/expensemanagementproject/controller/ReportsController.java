@@ -155,8 +155,8 @@ public class ReportsController {
         return reportsService.totalApprovedAmount(reportId);
     }
 
-    @PostMapping("/updateExpenseApprovalStatus/{reportId}")
-    public void updateExpenseApprovalStatus(@PathVariable Long reportId,@RequestParam List<Long> approveExpenseIds, @RequestParam List<Long> rejectExpenseIds, @RequestParam String reviewTime)
+    @PostMapping("/updateExpenseStatus/{reportId}")
+    public void updateExpenseStatus(@PathVariable Long reportId,@RequestParam List<Long> approveExpenseIds, @RequestParam List<Long> rejectExpenseIds, @RequestParam String reviewTime)
     {
         reportsService.updateExpenseStatus(reportId,approveExpenseIds,rejectExpenseIds,reviewTime);
     }
