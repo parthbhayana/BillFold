@@ -175,7 +175,7 @@ public class ReportsController {
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         String formattedJson = json.replaceAll("%22", "");
-        System.out.println("JSON:" + formattedJson);
+        System.out.println("JSON:" + json);
         try {
             Map<Long,Float> partialApprovedMap = new HashMap<>();
             List<Long> approvedIds = new ArrayList<>();

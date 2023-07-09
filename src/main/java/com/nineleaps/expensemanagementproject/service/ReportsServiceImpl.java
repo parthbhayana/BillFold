@@ -209,8 +209,14 @@ public class ReportsServiceImpl implements IReportsService {
                 return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
                         ManagerApprovalStatus.REJECTED, true, false);
             case "approved":
-                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
+                List<Reports> approvedList = reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
                         ManagerApprovalStatus.APPROVED, true, false);
+                List<Reports> partiallyApprovedList = reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
+                        ManagerApprovalStatus.PARTIALLY_APPROVED, true, false);
+                List<Reports> mergedList = new ArrayList<>();
+                mergedList.addAll(approvedList);
+                mergedList.addAll(partiallyApprovedList);
+                return mergedList;
             default:
                 throw new IllegalArgumentException("Enter a valid request !" + request);
         }
@@ -220,8 +226,14 @@ public class ReportsServiceImpl implements IReportsService {
     public List<Reports> getReportsSubmittedToUser(String managerEmail, String request) {
         switch (request) {
             case "approved":
-                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
+                List<Reports> approvedList = reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
                         ManagerApprovalStatus.APPROVED, true, false);
+                List<Reports> partiallyApprovedList = reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
+                        ManagerApprovalStatus.PARTIALLY_APPROVED, true, false);
+                List<Reports> mergedList = new ArrayList<>();
+                mergedList.addAll(approvedList);
+                mergedList.addAll(partiallyApprovedList);
+                return mergedList;
             case "rejected":
                 return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
                         ManagerApprovalStatus.REJECTED, true, false);
@@ -255,8 +267,14 @@ public class ReportsServiceImpl implements IReportsService {
                 return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false);
             case "pending":
-                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                List<Reports> approvedList = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false);
+                List<Reports> partiallyApprovedList = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                        ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.PENDING, true, false);
+                List<Reports> mergedList = new ArrayList<>();
+                mergedList.addAll(approvedList);
+                mergedList.addAll(partiallyApprovedList);
+                return mergedList;
             default:
                 throw new IllegalArgumentException("Enter a valid request !");
         }
