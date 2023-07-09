@@ -1,14 +1,20 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-
+import com.nineleaps.expensemanagementproject.entity.Expense;
+import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
+import com.nineleaps.expensemanagementproject.service.IExpenseService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
 import com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImpl;
@@ -31,7 +36,13 @@ public class ReportsController {
     private IReportsService reportsService;
 
     @Autowired
-    PdfGeneratorServiceImpl pdfGeneratorService;
+    private PdfGeneratorServiceImpl pdfGeneratorService;
+
+    @Autowired
+    private IExpenseService expenseService;
+
+    @Autowired
+    private ExpenseRepository expenseRepository;
 
     @GetMapping("/getAllReports")
     public List<Reports> getAllReports() {
@@ -76,11 +87,10 @@ public class ReportsController {
 
 
     @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
+    public void submitReport(@PathVariable Long reportId, HttpServletResponse response) throws MessagingException, FileNotFoundException, IOException {
 
-        reportsService.submitReport(reportId,response);
+        reportsService.submitReport(reportId, response);
     }
-
 
 
     @PatchMapping("/editReport/{reportId}")
@@ -103,8 +113,8 @@ public class ReportsController {
     }
 
     @PostMapping("/approveReportByFinance")
-    public void reimburseReportByFinance( @RequestParam ArrayList<Long> reportIds,
-                                          @RequestParam(value = "comments", defaultValue = "null") String comments) {
+    public void reimburseReportByFinance(@RequestParam ArrayList<Long> reportIds,
+                                         @RequestParam(value = "comments", defaultValue = "null") String comments) {
         reportsService.reimburseReportByFinance(reportIds, comments);
     }
 
@@ -140,7 +150,7 @@ public class ReportsController {
     public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam String request) {
-        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate,request);
+        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
@@ -155,9 +165,45 @@ public class ReportsController {
         return reportsService.totalApprovedAmountCurrency(reportId);
     }
 
+//    @PostMapping("/updateExpenseStatus/{reportId}")
+//    public void updateExpenseStatus(@PathVariable Long reportId,@RequestParam List<Long> approveExpenseIds, @RequestParam List<Long> rejectExpenseIds, @RequestParam String reviewTime)
+//    {
+//        reportsService.updateExpenseStatus(reportId,approveExpenseIds,rejectExpenseIds,reviewTime);
+//    }
+
     @PostMapping("/updateExpenseStatus/{reportId}")
-    public void updateExpenseStatus(@PathVariable Long reportId,@RequestParam List<Long> approveExpenseIds, @RequestParam List<Long> rejectExpenseIds, @RequestParam String reviewTime)
-    {
-        reportsService.updateExpenseStatus(reportId,approveExpenseIds,rejectExpenseIds,reviewTime);
+    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json) throws IOException, ParseException {
+        JSONParser parser = new JSONParser();
+        String formattedJson = json.replaceAll("%22", "");
+        System.out.println("JSON:" + formattedJson);
+        try {
+            Map<Long,Float> partialApprovedMap = new HashMap<>();
+            List<Long> approvedIds = new ArrayList<>();
+            List<Long> rejectedIds = new ArrayList<>();
+            JSONArray jsonArray = (JSONArray) parser.parse(formattedJson);
+            for (Object object : jsonArray) {
+                JSONObject jsonObject = (JSONObject) object;
+
+                long expenseId = (Long) jsonObject.get("expenseId");
+                float amountApproved = (Long) jsonObject.get("amountApproved");
+                String status = (String) jsonObject.get("status");
+
+                if(Objects.equals(status, "approved")){
+                    approvedIds.add(expenseId);
+                }
+                if(Objects.equals(status, "rejected")){
+                    rejectedIds.add(expenseId);
+                }
+                if(Objects.equals(status, "partiallyApproved")){
+                    partialApprovedMap.put(expenseId,amountApproved);
+                }
+                reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime);
+                System.out.println("amountApproved: " + amountApproved);
+                System.out.println("expenseId: " + expenseId);
+                System.out.println("status" + status);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

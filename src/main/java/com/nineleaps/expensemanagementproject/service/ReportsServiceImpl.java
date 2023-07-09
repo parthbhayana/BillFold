@@ -6,10 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
@@ -503,8 +500,80 @@ public class ReportsServiceImpl implements IReportsService {
         return (total + " INR");
     }
 
+//    @Override
+//    public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, String reviewTime) {
+//        Reports report = getReportById(reportId);
+//        if (report.getIsHidden()) {
+//            throw new IllegalStateException("Report with ID " + reportId + " does not exist!");
+//        }
+//        if (report == null) {
+//            throw new NullPointerException("Report with ID " + reportId + " does not contain any expenses!");
+//        }
+//        if (!report.getIsSubmitted()) {
+//            throw new IllegalStateException("Report with ID " + reportId + " is not submitted!");
+//        }
+//        for (Long expenseId : approveExpenseIds) {
+//            Expense expense = expenseServices.getExpenseById(expenseId);
+//            if (expense.getIsHidden()) {
+//                throw new IllegalStateException(
+//                        "Expense with ID " + expenseId + " does not exist!");
+//            }
+//            if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
+//                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+//                expense.setAmountApproved(Float.valueOf(expense.getAmount()));
+//                //Setting Approved Amount INR
+//                String curr = expense.getCurrency();
+//                String date = expense.getDate().toString();
+//                double rate = CurrencyExchange.getExchangeRate(curr, date);
+//                System.out.println("Exchange Rate = " + rate);
+//                double approvedAmountInInr = expense.getAmountApproved() * rate;
+//                expense.setAmountApprovedINR(approvedAmountInInr);
+//                expenseRepository.save(expense);
+//            }
+//        }
+//        for (Long expenseId : rejectExpenseIds) {
+//            Expense expense = expenseServices.getExpenseById(expenseId);
+//            if (expense.getIsHidden()) {
+//                throw new IllegalStateException(
+//                        "Expense with ID " + expenseId + " does not exist!");
+//            }
+//            if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
+//                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
+//                expenseRepository.save(expense);
+//
+//            }
+//        }
+//        report.setManagerReviewTime(reviewTime);
+//        //Changing Report Status
+//        //If all the expenses are approved then report status will be "APPROVED!"
+//        if (rejectExpenseIds.isEmpty()) {
+//            report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
+//            report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
+//        }
+//        //If any expense is rejected report will go back to employee for changes
+//        if (!rejectExpenseIds.isEmpty()) {
+//            report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED); //ACTION REQUIRED WAS HERE BEFORE
+//            report.setIsSubmitted(false);
+//        }
+//        if (approveExpenseIds.isEmpty()) {
+//            report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
+//        }
+//        reportsRepository.save(report);
+//        //Email Logic
+//        //If total no of expense < approved + rejected then partial approved mail will sent otherwise genral mail wll
+//        // be sent
+//        List<Expense> expenseList = expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
+//        if (expenseList.size() > approveExpenseIds.size() + rejectExpenseIds.size()) {
+//            //Send Partial approval Email
+//            emailService.userPartialApprovedExpensesNotification(reportId);
+//        } else {
+//            //send General Approved email
+//            emailService.userApprovedNotification(reportId);
+//        }
+//    }
+
     @Override
-    public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, String reviewTime) {
+    public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime) {
         Reports report = getReportById(reportId);
         if (report.getIsHidden()) {
             throw new IllegalStateException("Report with ID " + reportId + " does not exist!");
@@ -542,42 +611,53 @@ public class ReportsServiceImpl implements IReportsService {
             }
             if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
                 expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
+                expense.setAmountApproved(0F);
                 expenseRepository.save(expense);
 
             }
         }
+        for (Map.Entry<Long, Float> entry : partiallyApprovedMap.entrySet()) {
+            Long expId = entry.getKey();
+            Float amt = entry.getValue();
+            Expense expense = expenseServices.getExpenseById(expId);
+            expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PARTIALLY_APPROVED);
+            expense.setAmountApproved(amt);
+            expenseRepository.save(expense);
+            //Setting Approved Amount INR
+            String curr = expense.getCurrency();
+            String date = expense.getDate().toString();
+            double rate = CurrencyExchange.getExchangeRate(curr, date);
+            System.out.println("Exchange Rate = " + rate);
+            double approvedAmountInInr = expense.getAmountApproved() * rate;
+            expense.setAmountApprovedINR(approvedAmountInInr);
+            expenseRepository.save(expense);
+        }
         report.setManagerReviewTime(reviewTime);
         //Changing Report Status
-        //If all the expenses are approved then report status will be "APPROVED!"
-        if (rejectExpenseIds.isEmpty()) {
-            report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
-            report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
-        }
         //If any expense is rejected report will go back to employee for changes
         if (!rejectExpenseIds.isEmpty()) {
-            report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED); //ACTION REQUIRED WAS HERE BEFORE
-            report.setIsSubmitted(false);
-        }
-        if (approveExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
+            report.setIsSubmitted(false);
+            emailService.userRejectedNotification(reportId);
         }
-        reportsRepository.save(report);
-        //Email Logic
-        //If total no of expense < approved + rejected then partial approved mail will sent otherwise genral mail wll
-        // be sent
-        List<Expense> expenseList = expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
-        if (expenseList.size() > approveExpenseIds.size() + rejectExpenseIds.size()) {
-            //Send Partial approval Email
-            emailService.userPartialApprovedExpensesNotification(reportId);
-        } else {
-            //send General Approved email
+        //If all the expenses are approved then report status will be "APPROVED"
+        if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
+            report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
+            report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
             emailService.userApprovedNotification(reportId);
         }
+        //If any of the expenses are partially-approved then report status will be "PARTIALLY_APPROVED"
+        if (rejectExpenseIds.isEmpty() && !partiallyApprovedMap.isEmpty()) {
+            report.setManagerapprovalstatus(ManagerApprovalStatus.PARTIALLY_APPROVED);
+            report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
+            emailService.userPartialApprovedExpensesNotification(reportId);
+        }
+        reportsRepository.save(report);
     }
 
 
     @Scheduled(cron = "0 20 13 * * *")
-    public void sendReportNotApprovedByManagerReminder(){
+    public void sendReportNotApprovedByManagerReminder() {
         LocalDate currentDate = LocalDate.now();
 
         List<Reports> reportsList = reportsRepository.findBymanagerapprovalstatus(ManagerApprovalStatus.PENDING);

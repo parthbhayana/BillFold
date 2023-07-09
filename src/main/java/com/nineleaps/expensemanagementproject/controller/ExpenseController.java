@@ -18,60 +18,55 @@ import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
 @RestController
 public class ExpenseController {
-	@Autowired
-	private IExpenseService expenseService;
+    @Autowired
+    private IExpenseService expenseService;
 
     @Autowired
     private ExpenseRepository expenseRepository;
 
-	@PostMapping("/insertExpenses/{employeeId}")
-	public Expense saveExpense(@RequestBody Expense expense, @PathVariable Long employeeId, @RequestParam Long categoryId) {
-		return expenseService.addExpense(expense, employeeId, categoryId);
-	}
+    @PostMapping("/insertExpenses/{employeeId}")
+    public Expense saveExpense(@RequestBody Expense expense, @PathVariable Long employeeId, @RequestParam Long categoryId) {
+        return expenseService.addExpense(expense, employeeId, categoryId);
+    }
 
-	@GetMapping("/showAllExpenses")
-	public List<Expense> getAllExpenses() {
-		return expenseService.getAllExpenses();
-	}
+    @GetMapping("/showAllExpenses")
+    public List<Expense> getAllExpenses() {
+        return expenseService.getAllExpenses();
+    }
 
-	@GetMapping("/findExpense/{expenseId}")
-	public Expense getExpenseById(@PathVariable Long expenseId) {
-		return expenseService.getExpenseById(expenseId);
-	}
+    @GetMapping("/findExpense/{expenseId}")
+    public Expense getExpenseById(@PathVariable Long expenseId) {
+        return expenseService.getExpenseById(expenseId);
+    }
 
-	@PutMapping("/updateExpenses/{expenseId}")
-	public Expense updateExpenses(@RequestBody Expense newExpense, @PathVariable Long expenseId) {
-		return expenseService.updateExpenses(newExpense, expenseId);
-	}
+    @PutMapping("/updateExpenses/{expenseId}")
+    public Expense updateExpenses(@RequestBody Expense newExpense, @PathVariable Long expenseId) {
+        return expenseService.updateExpenses(newExpense, expenseId);
+    }
 
-	@GetMapping("/getExpenseByEmployeeId/{employeeId}")
-	public List<Expense> getExpenseByEmpId(@PathVariable Long employeeId) {
-		return expenseService.getExpenseByEmployeeId(employeeId);
-	}
+    @GetMapping("/getExpenseByEmployeeId/{employeeId}")
+    public List<Expense> getExpenseByEmpId(@PathVariable Long employeeId) {
+        return expenseService.getExpenseByEmployeeId(employeeId);
+    }
 
-	@GetMapping("/getExpenseByReportId/{reportId}")
-	public List<Expense> getExpenseByReportId(@PathVariable Long reportId) {
-		return expenseService.getExpenseByReportId(reportId);
-	}
+    @GetMapping("/getExpenseByReportId/{reportId}")
+    public List<Expense> getExpenseByReportId(@PathVariable Long reportId) {
+        return expenseService.getExpenseByReportId(reportId);
+    }
 
-	@PostMapping("/removeTaggedExpense/{expenseId}")
-	public Expense removeTaggedExpense(@PathVariable Long expenseId) {
-		return expenseService.removeTaggedExpense(expenseId);
-	}
+    @PostMapping("/removeTaggedExpense/{expenseId}")
+    public Expense removeTaggedExpense(@PathVariable Long expenseId) {
+        return expenseService.removeTaggedExpense(expenseId);
+    }
 
-	@GetMapping("/getUnreportedExpensesByEmployeeId/{employeeId}")
-	public List<Expense> getExpensesById(@PathVariable Long employeeId) {
-		return expenseService.getExpensesByEmployeeId(employeeId);
-	}
+    @GetMapping("/getUnreportedExpensesByEmployeeId/{employeeId}")
+    public List<Expense> getExpensesById(@PathVariable Long employeeId) {
+        return expenseService.getExpensesByEmployeeId(employeeId);
+    }
 
-	@PostMapping("/hideExpense/{expenseId}")
-	public void hideExpense(@PathVariable Long expenseId) {
-		expenseService.hideExpense(expenseId);
-	}
+    @PostMapping("/hideExpense/{expenseId}")
+    public void hideExpense(@PathVariable Long expenseId) {
+        expenseService.hideExpense(expenseId);
+    }
 
-	@PostMapping("/setPartialApprovedAmount")
-	public void setPartialApprovedAmount(@RequestParam Long expenseId, @RequestParam Float approvedAmount){
-		Expense expense = expenseService.getExpenseById(expenseId);
-		expenseService.setPartialAmountOfExpense(expenseId,approvedAmount);
-	}
 }
