@@ -1,3 +1,11 @@
-com/nineleaps/expensemanagementproject/EmployeeServiceImplTest.class
+com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusExpenseTest.class
+com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusTest.class
+com/nineleaps/expensemanagementproject/entity/ReportsTest.class
 com/nineleaps/expensemanagementproject/entity/CategoryTest.class
+com/nineleaps/expensemanagementproject/entity/ExpenseTest.class
+com/nineleaps/expensemanagementproject/entity/FinanceApprovalStatusTest.class
+com/nineleaps/expensemanagementproject/entity/CurrencyTest.class
 com/nineleaps/expensemanagementproject/ExpenseManagementProjectApplicationTests.class
+com/nineleaps/expensemanagementproject/entity/StatusExcelTest.class
+com/nineleaps/expensemanagementproject/EmployeeServiceImplTest.class
+com/nineleaps/expensemanagementproject/entity/EmployeeTest.class
