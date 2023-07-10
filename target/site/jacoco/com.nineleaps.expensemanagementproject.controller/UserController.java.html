@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.nineleaps.expensemanagementproject.config.JwtUtil;
+import com.nineleaps.expensemanagementproject.entity.Employee;
+import com.nineleaps.expensemanagementproject.service.IEmployeeService;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
+@RestController
+@RequestMapping()
+<span class="fc" id="L26">public class UserController {</span>
+    @Autowired
+    private IEmployeeService userService;
+    @SuppressWarnings(&quot;unused&quot;)
+    @Autowired
+    private JwtUtil jwtUtil;
+    private String email;
+    JSONObject responseJson;
+
+    @GetMapping(&quot;/listTheUser&quot;)
+    public List&lt;Employee&gt; getAllUserDtls() {
+<span class="nc" id="L37">        return userService.getAllUser();</span>
+    }
+
+	
+	@SuppressWarnings(&quot;unchecked&quot;)
+	@GetMapping(&quot;/getProfileData&quot;)
+	public ResponseEntity&lt;?&gt; sendData(HttpServletRequest request) {
+<span class="nc" id="L44">		String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
+<span class="nc" id="L45">		String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
+<span class="nc" id="L46">		DecodedJWT decodedAccessToken = JWT.decode(token);</span>
+<span class="nc" id="L47">        String employeeEmailFromToken = decodedAccessToken.getSubject();</span>
+<span class="nc" id="L48">		Employee employee1 = userService.findByEmailId(employeeEmailFromToken);</span>
+<span class="nc" id="L49">		System.out.println(employee1.getEmployeeEmail());</span>
+<span class="nc" id="L50">		Long employeeId = employee1.getEmployeeId();</span>
+<span class="nc" id="L51">		String email = employee1.getEmployeeEmail();</span>
+<span class="nc" id="L52">		String First_name = employee1.getFirstName();</span>
+<span class="nc" id="L53">		String Last_name = employee1.getLastName();</span>
+		@SuppressWarnings(&quot;unused&quot;)
+<span class="nc" id="L55">		String Full_name = First_name + &quot; &quot; + Last_name;</span>
+<span class="nc" id="L56">		String imageUrl = employee1.getImageUrl();</span>
+<span class="nc" id="L57">		JSONObject responseJson = new JSONObject();</span>
+<span class="nc" id="L58">		responseJson.put(&quot;employeeId&quot;, employeeId);</span>
+<span class="nc" id="L59">		responseJson.put(&quot;firstName&quot;, First_name);</span>
+<span class="nc" id="L60">		responseJson.put(&quot;lastName&quot;, Last_name);</span>
+<span class="nc" id="L61">		responseJson.put(&quot;imageUrl&quot;, imageUrl);</span>
+<span class="nc" id="L62">		responseJson.put(&quot;email&quot;, email);</span>
+<span class="nc" id="L63">		return ResponseEntity.ok(responseJson);</span>
+	}
+
+	@PostMapping(&quot;/theProfile&quot;)
+	public ResponseEntity&lt;?&gt; insertUser(@RequestBody Employee newUser, HttpServletResponse response) {
+<span class="nc" id="L68">		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		if (employee == null) {</span>
+<span class="nc" id="L70">			userService.insertUser(newUser);</span>
+<span class="nc" id="L71">			employee = userService.findByEmailId(newUser.getEmployeeEmail());</span>
+<span class="nc" id="L72">			System.out.println(employee.getEmployeeEmail());</span>
+<span class="nc" id="L73">			email = employee.getEmployeeEmail();</span>
+<span class="nc" id="L74">			System.out.println(&quot;new user email&quot; + email);</span>
+<span class="nc" id="L75">			System.out.println(employee.getEmployeeId());</span>
+<span class="nc" id="L76">			ResponseEntity&lt;?&gt; tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),</span>
+<span class="nc" id="L77">				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);</span>
+<span class="nc" id="L78">			return tokenResponse;</span>
+		} else {
+<span class="nc" id="L80">			email = employee.getEmployeeEmail();</span>
+<span class="nc" id="L81">			System.out.println(email);</span>
+<span class="nc" id="L82">			System.out.println(employee.getEmployeeId());</span>
+<span class="nc" id="L83">			ResponseEntity&lt;?&gt; tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),</span>
+<span class="nc" id="L84">				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);</span>
+<span class="nc" id="L85">			return tokenResponse;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

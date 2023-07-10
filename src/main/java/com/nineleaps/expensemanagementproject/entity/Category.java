@@ -46,7 +46,7 @@ public class Category {
 	private List<Expense> expenseList = new ArrayList<>();
 
 	public Category() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,

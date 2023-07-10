@@ -11,7 +11,6 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
@@ -455,29 +454,29 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public float totalApprovedAmountCurrency(Long reportId) {
-//        Reports report = getReportById(reportId);
-//        List<Expense> expenseList = expenseRepository
-//                .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
-//        float totalApprovedAmount = 0;
-//        for (Expense expense2 : expenseList) {
-//            totalApprovedAmount += expense2.getAmountApproved();
-//        }
-//        return totalApprovedAmount;
-       return 0;
+        Reports report = getReportById(reportId);
+        List<Expense> expenseList = expenseRepository
+                .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
+        float totalApprovedAmount = 0;
+        for (Expense expense2 : expenseList) {
+            totalApprovedAmount += expense2.getAmountApproved();
+        }
+        return totalApprovedAmount;
+//       return 0;
     }
 
 
     @Override
     public float totalApprovedAmountINR(Long reportId) {
-//        Reports report = getReportById(reportId);
-//        List<Expense> expenseList = expenseRepository
-//                .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
-//        float totalApprovedAmount = 0;
-//        for (Expense expense2 : expenseList) {
-//            totalApprovedAmount += expense2.getAmountApprovedINR();
-//        }
-//        return totalApprovedAmount;
-        return 0;
+        Reports report = getReportById(reportId);
+        List<Expense> expenseList = expenseRepository
+                .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
+        float totalApprovedAmount = 0;
+        for (Expense expense2 : expenseList) {
+            totalApprovedAmount += expense2.getAmountApprovedINR();
+        }
+        return totalApprovedAmount;
+//        return 0;
     }
 
     @Override
