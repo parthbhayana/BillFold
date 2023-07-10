@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Expense.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.entity</a> &gt; <span class="el_source">Expense.java</span></div><h1>Expense.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.entity;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import javax.persistence.*;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModelProperty;
+
+@Entity
+@Table(name = &quot;expense&quot;)
+public class Expense {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = &quot;expense_id&quot;, nullable = false)
+	@ApiModelProperty(hidden = true)
+	private Long expenseId;
+
+	@Column(name = &quot;merchant_Name&quot;, nullable = false)
+	private String merchantName;
+
+	@Column(name = &quot;date&quot;, nullable = false)
+	private LocalDate date;
+
+	@Column(name = &quot;created_time&quot;)
+	@ApiModelProperty(hidden = true)
+	private LocalDateTime dateCreated;
+
+	@Column(name = &quot;currency&quot;)
+	private String currency;
+
+	@Column(name = &quot;amount&quot;, nullable = false)
+	private Long amount;
+
+	@Column(name = &quot;amount_INR&quot;, nullable = false)
+	@ApiModelProperty(hidden = true)
+	private float amountINR;
+
+	@Column(name = &quot;description&quot;, nullable = false)
+	private String description;
+
+	@Column(name = &quot;category&quot;)
+	@ApiModelProperty(hidden = true)
+	private String categoryDescription;
+
+<span class="pc" id="L52">	@Column(name = &quot;is_reported&quot;, nullable = true)</span>
+	@ApiModelProperty(hidden = true)
+<span class="pc" id="L54">	private Boolean isReported = false;</span>
+
+<span class="pc" id="L56">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+	@ApiModelProperty(hidden = true)
+<span class="pc" id="L58">	private Boolean isHidden = false;</span>
+
+	@Column(name = &quot;report_title&quot;)
+	@ApiModelProperty(hidden = true)
+	private String reportTitle;
+
+	@Column(name = &quot;amount_approved&quot;)
+	@ApiModelProperty(hidden = true)
+	private Float amountApproved;
+
+	@Column(name = &quot;amount_approved_INR&quot;)
+	@ApiModelProperty(hidden = true)
+	private Double amountApprovedINR;
+
+	@Column(name = &quot;finance_approval_status&quot;, nullable = true)
+	@ApiModelProperty(hidden = true)
+	@Enumerated(EnumType.STRING)
+	private FinanceApprovalStatus financeApprovalStatus;// = FinanceApprovalStatus.PENDING;
+
+	@Column(name = &quot;manager_approval_status&quot;, nullable = true)
+	@ApiModelProperty(hidden = true)
+	@Enumerated(EnumType.STRING)
+	private ManagerApprovalStatusExpense managerApprovalStatusExpense;// = ManagerApprovalStatus.PENDING;
+
+	@Lob
+	@Column(name = &quot;supporting_documents&quot;, nullable = true)
+	private byte[] supportingDocuments;
+
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	@JoinColumn(name = &quot;employee_id&quot;)
+	private Employee employee;
+
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	@JoinColumn(name = &quot;report_id&quot;)
+	private Reports reports;
+
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = &quot;category_id&quot;)
+	private Category category;
+
+<span class="fc" id="L103">	public Expense() {</span>
+
+<span class="fc" id="L105">	}</span>
+
+	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
+			Long amount, float amountINR, String description, String categoryDescription, Boolean isReported,
+			Boolean isHidden, String reportTitle, Float amountApproved, Double amountApprovedINR,
+			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
+<span class="nc" id="L111">			byte[] supportingDocuments, Employee employee, Reports reports, Category category) {</span>
+<span class="nc" id="L112">		this.expenseId = expenseId;</span>
+<span class="nc" id="L113">		this.merchantName = merchantName;</span>
+<span class="nc" id="L114">		this.date = date;</span>
+<span class="nc" id="L115">		this.dateCreated = dateCreated;</span>
+<span class="nc" id="L116">		this.currency = currency;</span>
+<span class="nc" id="L117">		this.amount = amount;</span>
+<span class="nc" id="L118">		this.amountINR = amountINR;</span>
+<span class="nc" id="L119">		this.description = description;</span>
+<span class="nc" id="L120">		this.categoryDescription = categoryDescription;</span>
+<span class="nc" id="L121">		this.isReported = isReported;</span>
+<span class="nc" id="L122">		this.isHidden = isHidden;</span>
+<span class="nc" id="L123">		this.reportTitle = reportTitle;</span>
+<span class="nc" id="L124">		this.amountApproved = amountApproved;</span>
+<span class="nc" id="L125">		this.amountApprovedINR = amountApprovedINR;</span>
+<span class="nc" id="L126">		this.financeApprovalStatus = financeApprovalStatus;</span>
+<span class="nc" id="L127">		this.managerApprovalStatusExpense = managerApprovalStatusExpense;</span>
+<span class="nc" id="L128">		this.supportingDocuments = supportingDocuments;</span>
+<span class="nc" id="L129">		this.employee = employee;</span>
+<span class="nc" id="L130">		this.reports = reports;</span>
+<span class="nc" id="L131">		this.category = category;</span>
+<span class="nc" id="L132">	}</span>
+
+	public Long getExpenseId() {
+<span class="nc" id="L135">		return expenseId;</span>
+	}
+
+	public void setExpenseId(Long expenseId) {
+<span class="nc" id="L139">		this.expenseId = expenseId;</span>
+<span class="nc" id="L140">	}</span>
+
+	public String getMerchantName() {
+<span class="nc" id="L143">		return merchantName;</span>
+	}
+
+	public void setMerchantName(String merchantName) {
+<span class="nc" id="L147">		this.merchantName = merchantName;</span>
+<span class="nc" id="L148">	}</span>
+
+	public LocalDate getDate() {
+<span class="nc" id="L151">		return date;</span>
+	}
+
+	public void setDate(LocalDate date) {
+<span class="nc" id="L155">		this.date = date;</span>
+<span class="nc" id="L156">	}</span>
+
+	public LocalDateTime getDateCreated() {
+<span class="nc" id="L159">		return dateCreated;</span>
+	}
+
+	public void setDateCreated(LocalDateTime dateCreated) {
+<span class="nc" id="L163">		this.dateCreated = dateCreated;</span>
+<span class="nc" id="L164">	}</span>
+
+	public String getCurrency() {
+<span class="nc" id="L167">		return currency;</span>
+	}
+
+	public void setCurrency(String currency) {
+<span class="nc" id="L171">		this.currency = currency;</span>
+<span class="nc" id="L172">	}</span>
+
+	public Long getAmount() {
+<span class="nc" id="L175">		return amount;</span>
+	}
+
+	public void setAmount(Long amount) {
+<span class="nc" id="L179">		this.amount = amount;</span>
+<span class="nc" id="L180">	}</span>
+
+	public float getAmountINR() {
+<span class="nc" id="L183">		return amountINR;</span>
+	}
+
+	public void setAmountINR(float amountINR) {
+<span class="nc" id="L187">		this.amountINR = amountINR;</span>
+<span class="nc" id="L188">	}</span>
+
+	public String getDescription() {
+<span class="nc" id="L191">		return description;</span>
+	}
+
+	public void setDescription(String description) {
+<span class="nc" id="L195">		this.description = description;</span>
+<span class="nc" id="L196">	}</span>
+
+	public String getCategoryDescription() {
+<span class="nc" id="L199">		return categoryDescription;</span>
+	}
+
+	public void setCategoryDescription(String categoryDescription) {
+<span class="nc" id="L203">		this.categoryDescription = categoryDescription;</span>
+<span class="nc" id="L204">	}</span>
+
+	public Boolean getIsReported() {
+<span class="nc" id="L207">		return isReported;</span>
+	}
+
+	public void setIsReported(Boolean isReported) {
+<span class="nc" id="L211">		this.isReported = isReported;</span>
+<span class="nc" id="L212">	}</span>
+
+	public Boolean getIsHidden() {
+<span class="nc" id="L215">		return isHidden;</span>
+	}
+
+	public void setIsHidden(Boolean isHidden) {
+<span class="nc" id="L219">		this.isHidden = isHidden;</span>
+<span class="nc" id="L220">	}</span>
+
+	public String getReportTitle() {
+<span class="nc" id="L223">		return reportTitle;</span>
+	}
+
+	public void setReportTitle(String reportTitle) {
+<span class="nc" id="L227">		this.reportTitle = reportTitle;</span>
+<span class="nc" id="L228">	}</span>
+
+	public Float getAmountApproved() {
+<span class="nc" id="L231">		return amountApproved;</span>
+	}
+
+	public void setAmountApproved(Float amountApproved) {
+<span class="nc" id="L235">		this.amountApproved = amountApproved;</span>
+<span class="nc" id="L236">	}</span>
+
+	public FinanceApprovalStatus getFinanceApprovalStatus() {
+<span class="nc" id="L239">		return financeApprovalStatus;</span>
+	}
+
+	public void setFinanceApprovalStatus(FinanceApprovalStatus financeApprovalStatus) {
+<span class="nc" id="L243">		this.financeApprovalStatus = financeApprovalStatus;</span>
+<span class="nc" id="L244">	}</span>
+
+	public ManagerApprovalStatusExpense getManagerApprovalStatusExpense() {
+<span class="nc" id="L247">		return managerApprovalStatusExpense;</span>
+	}
+
+	public void setManagerApprovalStatusExpense(ManagerApprovalStatusExpense managerApprovalStatusExpense) {
+<span class="nc" id="L251">		this.managerApprovalStatusExpense = managerApprovalStatusExpense;</span>
+<span class="nc" id="L252">	}</span>
+
+	public byte[] getSupportingDocuments() {
+<span class="nc" id="L255">		return supportingDocuments;</span>
+	}
+
+	public void setSupportingDocuments(byte[] supportingDocuments) {
+<span class="nc" id="L259">		this.supportingDocuments = supportingDocuments;</span>
+<span class="nc" id="L260">	}</span>
+
+	public Employee getEmployee() {
+<span class="nc" id="L263">		return employee;</span>
+	}
+
+	public void setEmployee(Employee employee) {
+<span class="nc" id="L267">		this.employee = employee;</span>
+<span class="nc" id="L268">	}</span>
+
+	public Reports getReports() {
+<span class="nc" id="L271">		return reports;</span>
+	}
+
+	public void setReports(Reports reports) {
+<span class="nc" id="L275">		this.reports = reports;</span>
+<span class="nc" id="L276">	}</span>
+
+	public Category getCategory() {
+<span class="nc" id="L279">		return category;</span>
+	}
+
+	public void setCategory(Category category) {
+<span class="nc" id="L283">		this.category = category;</span>
+<span class="nc" id="L284">	}</span>
+
+	public Double getAmountApprovedINR() {
+<span class="nc" id="L287">		return amountApprovedINR;</span>
+	}
+
+	public void setAmountApprovedINR(Double amountApprovedINR) {
+<span class="nc" id="L291">		this.amountApprovedINR = amountApprovedINR;</span>
+<span class="nc" id="L292">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
