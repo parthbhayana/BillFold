@@ -16,7 +16,7 @@ ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,Currency,
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,FinanceApprovalStatus,0,34,0,0,0,2,0,1,0,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,Employee,159,19,0,0,58,8,29,1,29,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,PdfGeneratorServiceImpl,787,3,10,0,182,1,9,1,4,1
-ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,EmployeeServiceImpl,198,3,4,0,54,1,18,1,16,1
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,EmployeeServiceImpl,152,49,4,0,43,12,8,11,6,11
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,CategoryServiceImpl,1141,3,68,0,202,1,53,1,19,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,ExcelGeneratorReportsServiceImpl,768,3,34,0,169,1,20,1,3,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,ExcelGeneratorCategoryServiceImpl,412,3,22,0,102,1,16,1,5,1

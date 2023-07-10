@@ -16,23 +16,23 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 	@Override
 	public List&lt;Employee&gt; getAllEmployeeDetails() {
-<span class="nc" id="L19">		return employeeRepository.findAll();</span>
+<span class="fc" id="L19">		return employeeRepository.findAll();</span>
 	}
 
 	@Override
 	public Employee saveEmployeeDetails(Employee employee) {
-<span class="nc" id="L24">		return employeeRepository.save(employee);</span>
+<span class="fc" id="L24">		return employeeRepository.save(employee);</span>
 	}
 
 	@Override
 	public Employee getEmployeeById(Long employeeId) {
-<span class="nc" id="L29">		return employeeRepository.findById(employeeId).get();</span>
+<span class="fc" id="L29">		return employeeRepository.findById(employeeId).get();</span>
 	}
 
 	@Override
 	public void deleteEmployeeDetailsById(Long employeeId) {
-<span class="nc" id="L34">		employeeRepository.deleteById(employeeId);</span>
-<span class="nc" id="L35">	}</span>
+<span class="fc" id="L34">		employeeRepository.deleteById(employeeId);</span>
+<span class="fc" id="L35">	}</span>
 
 	@Override
 	public Employee updateEmployeeDetails(Employee newemployee, Long employeeId) {
@@ -58,7 +58,7 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 	@Override
 	public Optional&lt;Employee&gt; getEmployeeDetails(Long employeeId) {
-<span class="nc" id="L61">		return employeeRepository.findById(employeeId);</span>
+<span class="fc" id="L61">		return employeeRepository.findById(employeeId);</span>
 	}
 
 	@Override
@@ -74,17 +74,17 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 	@Override
 	public Employee getEmployeeByEmail(String emailToVerify) {
-<span class="nc" id="L77">		return null;</span>
+<span class="fc" id="L77">		return null;</span>
 	}
 
 	@Override
 	public Employee getUserByEmail(String emailToVerify) {
-<span class="nc" id="L82">		return null;</span>
+<span class="fc" id="L82">		return null;</span>
 	}
 
 	@Override
 	public List&lt;Employee&gt; getAllUser() {
-<span class="nc" id="L87">		return employeeRepository.findAll();</span>
+<span class="fc" id="L87">		return employeeRepository.findAll();</span>
 	}
 
 	@Override
@@ -94,7 +94,7 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 	@Override
 	public Employee findByEmailId(String emailId) {
-<span class="nc" id="L97">		return employeeRepository.findByEmployeeEmail(emailId);</span>
+<span class="fc" id="L97">		return employeeRepository.findByEmployeeEmail(emailId);</span>
 	}
 
 	@Override
@@ -130,7 +130,7 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 	@Override
 	public Employee insertUser(Employee newUser) {
-<span class="nc" id="L133">		return employeeRepository.save(newUser);</span>
+<span class="fc" id="L133">		return employeeRepository.save(newUser);</span>
 
 	}
 
