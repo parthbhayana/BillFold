@@ -51,6 +51,12 @@ public class SecurityConfig {
 //                                .antMatchers("/excel/reports").hasAuthority("FINANCE_ADMIN")
 //                                .antMatchers("/excel/categoryBreakup").hasAuthority("FINANCE_ADMIN")
 //                                .antMatchers("/getReportsSubmittedToUserInDateRange").hasAuthority("FINANCE_ADMIN")
+//                                .antMatchers("/getCategoryAnalyticsYearly/{categoryId}").hasAuthority("FINANCE_ADMIN")
+//                                .antMatchers("/getCategoryAnalyticsMonthly/{categoryId}").hasAuthority("FINANCE_ADMIN")
+//                                .antMatchers("/getAllCategoryAnalyticsYearly").hasAuthority("FINANCE_ADMIN")
+//                                .antMatchers("/getAllCategoryAnalyticsMonthly").hasAuthority("FINANCE_ADMIN")
+//                                .antMatchers("/updateExpenseStatus/{reportId}").hasAuthority("EMPLOYEE")
+
                 );
         return http.build();
     }

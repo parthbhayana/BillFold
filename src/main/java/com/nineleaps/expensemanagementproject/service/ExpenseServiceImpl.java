@@ -42,7 +42,7 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Autowired
     private IEmailService emailService;
 
-    @Transactional
+@Transactional
     @Override
     public Expense addExpense(Expense expense, Long employeeId, Long categoryId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
@@ -186,11 +186,9 @@ public class ExpenseServiceImpl implements IExpenseService {
 
         List<Expense> expenseList = expenseRepository.findByIsReportedAndIsHidden(false, false);
         List<Long> expenseIds = new ArrayList<>();
-
         for (Expense expense : expenseList) {
             LocalDate submissionDate = expense.getDate();
             LocalDate expirationDate = submissionDate.plusDays(60);
-
             if (currentDate.isAfter(expirationDate.minusDays(5)) && currentDate.isBefore(expirationDate)) {
                 expenseIds.add(expense.getExpenseId());
             }

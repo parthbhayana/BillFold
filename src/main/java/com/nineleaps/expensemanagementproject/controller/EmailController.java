@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.service.IEmailService;
 
-@RestController
-public class EmailController {
-
-	@Autowired
-	private IEmailService emailService;
-
-	@PostMapping("/sendEmail/{employeeId}")
-	public void sendEmail(@RequestParam Long reportId) throws FileNotFoundException, MessagingException {
-		emailService.managerNotification(reportId);
-	}
-}
+//@RestController
+//public class EmailController {
+//
+//	@Autowired
+//	private IEmailService emailService;
+//
+//	@PostMapping("/sendEmail/{employeeId}")
+//	public void sendEmail(@RequestParam Long reportId) throws FileNotFoundException, MessagingException {
+//		emailService.managerNotification(reportId);
+//	}
+//}

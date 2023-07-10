@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.*;
 import com.nineleaps.expensemanagementproject.service.IPdfGeneratorService;
 
 
-@RestController
-public class PdfController {
-	@Autowired
-	IPdfGeneratorService pdfGeneratorService;
-@GetMapping ("/openpdf/export/{reportId}")
-	public void createPDF(@PathVariable Long reportId, @RequestParam List<Long> expenseIds , HttpServletResponse response) throws IOException {
-		response.setContentType("application/pdf");
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
-		String currentDateTime = dateFormatter.format(new Date());
-		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
-		response.setHeader(headerKey, headerValue);
-		pdfGeneratorService.export(reportId,expenseIds, response);
-
-	}
-}
+//@RestController
+//public class PdfController {
+//	@Autowired
+//	IPdfGeneratorService pdfGeneratorService;
+//@GetMapping ("/openpdf/export/{reportId}")
+//	public void createPDF(@PathVariable Long reportId, @RequestParam List<Long> expenseIds , HttpServletResponse response) throws IOException {
+//		response.setContentType("application/pdf");
+//		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+//		String currentDateTime = dateFormatter.format(new Date());
+//		String headerKey = "Content-Disposition";
+//		String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+//		response.setHeader(headerKey, headerValue);
+//		pdfGeneratorService.export(reportId,expenseIds, response);
+//
+//	}
+//}
