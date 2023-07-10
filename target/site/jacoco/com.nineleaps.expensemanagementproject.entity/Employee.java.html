@@ -41,23 +41,23 @@ public class Employee {
 	@Column(name = &quot;mobile_number&quot;)
 	private Long mobileNumber;
 
-<span class="pc" id="L44">	@Column(name = &quot;is_admin&quot;, nullable = true)</span>
+<span class="fc" id="L44">	@Column(name = &quot;is_admin&quot;, nullable = true)</span>
 	@ApiModelProperty(hidden = true)
-<span class="pc" id="L46">	private Boolean isFinanceAdmin = false;</span>
+<span class="fc" id="L46">	private Boolean isFinanceAdmin = false;</span>
 
 	@Column(name = &quot;image_url&quot;)
 	@ApiModelProperty(hidden = true)
 	private String imageUrl;
 
-<span class="pc" id="L52">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+<span class="fc" id="L52">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
 	@ApiModelProperty(hidden = true)
-<span class="pc" id="L54">	private Boolean isHidden = false;</span>
+<span class="fc" id="L54">	private Boolean isHidden = false;</span>
 
-<span class="pc" id="L56">	@JsonIgnore</span>
+<span class="fc" id="L56">	@JsonIgnore</span>
 	@OneToMany(mappedBy = &quot;employee&quot;, cascade = CascadeType.ALL)
 	private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();
 
-<span class="pc" id="L60">	@Column(name = &quot;role&quot;)</span>
+<span class="fc" id="L60">	@Column(name = &quot;role&quot;)</span>
 	@ApiModelProperty(hidden = true)
 	private String role = &quot;EMPLOYEE&quot;;
 
@@ -68,134 +68,134 @@ public class Employee {
 	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
 			String employeeEmail, String managerEmail, String managerName, Long mobileNumber, Boolean isFinanceAdmin,
 			String imageUrl, Boolean isHidden, List&lt;Expense&gt; expenseList, String role) {
-<span class="nc" id="L71">		super();</span>
-<span class="nc" id="L72">		this.employeeId = employeeId;</span>
-<span class="nc" id="L73">		this.officialEmployeeId = officialEmployeeId;</span>
-<span class="nc" id="L74">		this.firstName = firstName;</span>
-<span class="nc" id="L75">		this.middleName = middleName;</span>
-<span class="nc" id="L76">		this.lastName = lastName;</span>
-<span class="nc" id="L77">		this.employeeEmail = employeeEmail;</span>
-<span class="nc" id="L78">		this.managerEmail = managerEmail;</span>
-<span class="nc" id="L79">		this.managerName = managerName;</span>
-<span class="nc" id="L80">		this.mobileNumber = mobileNumber;</span>
-<span class="nc" id="L81">		this.isFinanceAdmin = isFinanceAdmin;</span>
-<span class="nc" id="L82">		this.imageUrl = imageUrl;</span>
-<span class="nc" id="L83">		this.isHidden = isHidden;</span>
-<span class="nc" id="L84">		this.expenseList = expenseList;</span>
-<span class="nc" id="L85">		this.role = role;</span>
-<span class="nc" id="L86">	}</span>
+<span class="fc" id="L71">		super();</span>
+<span class="fc" id="L72">		this.employeeId = employeeId;</span>
+<span class="fc" id="L73">		this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L74">		this.firstName = firstName;</span>
+<span class="fc" id="L75">		this.middleName = middleName;</span>
+<span class="fc" id="L76">		this.lastName = lastName;</span>
+<span class="fc" id="L77">		this.employeeEmail = employeeEmail;</span>
+<span class="fc" id="L78">		this.managerEmail = managerEmail;</span>
+<span class="fc" id="L79">		this.managerName = managerName;</span>
+<span class="fc" id="L80">		this.mobileNumber = mobileNumber;</span>
+<span class="fc" id="L81">		this.isFinanceAdmin = isFinanceAdmin;</span>
+<span class="fc" id="L82">		this.imageUrl = imageUrl;</span>
+<span class="fc" id="L83">		this.isHidden = isHidden;</span>
+<span class="fc" id="L84">		this.expenseList = expenseList;</span>
+<span class="fc" id="L85">		this.role = role;</span>
+<span class="fc" id="L86">	}</span>
 
 	public Long getEmployeeId() {
-<span class="nc" id="L89">		return employeeId;</span>
+<span class="fc" id="L89">		return employeeId;</span>
 	}
 
 	public void setEmployeeId(Long employeeId) {
-<span class="nc" id="L93">		this.employeeId = employeeId;</span>
-<span class="nc" id="L94">	}</span>
+<span class="fc" id="L93">		this.employeeId = employeeId;</span>
+<span class="fc" id="L94">	}</span>
 
 	public String getOfficialEmployeeId() {
-<span class="nc" id="L97">		return officialEmployeeId;</span>
+<span class="fc" id="L97">		return officialEmployeeId;</span>
 	}
 
 	public void setOfficialEmployeeId(String officialEmployeeId) {
-<span class="nc" id="L101">		this.officialEmployeeId = officialEmployeeId;</span>
-<span class="nc" id="L102">	}</span>
+<span class="fc" id="L101">		this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L102">	}</span>
 
 	public String getFirstName() {
-<span class="nc" id="L105">		return firstName;</span>
+<span class="fc" id="L105">		return firstName;</span>
 	}
 
 	public void setFirstName(String firstName) {
-<span class="nc" id="L109">		this.firstName = firstName;</span>
-<span class="nc" id="L110">	}</span>
+<span class="fc" id="L109">		this.firstName = firstName;</span>
+<span class="fc" id="L110">	}</span>
 
 	public String getMiddleName() {
-<span class="nc" id="L113">		return middleName;</span>
+<span class="fc" id="L113">		return middleName;</span>
 	}
 
 	public void setMiddleName(String middleName) {
-<span class="nc" id="L117">		this.middleName = middleName;</span>
-<span class="nc" id="L118">	}</span>
+<span class="fc" id="L117">		this.middleName = middleName;</span>
+<span class="fc" id="L118">	}</span>
 
 	public String getLastName() {
-<span class="nc" id="L121">		return lastName;</span>
+<span class="fc" id="L121">		return lastName;</span>
 	}
 
 	public void setLastName(String lastName) {
-<span class="nc" id="L125">		this.lastName = lastName;</span>
-<span class="nc" id="L126">	}</span>
+<span class="fc" id="L125">		this.lastName = lastName;</span>
+<span class="fc" id="L126">	}</span>
 
 	public String getEmployeeEmail() {
-<span class="nc" id="L129">		return employeeEmail;</span>
+<span class="fc" id="L129">		return employeeEmail;</span>
 	}
 
 	public void setEmployeeEmail(String employeeEmail) {
-<span class="nc" id="L133">		this.employeeEmail = employeeEmail;</span>
-<span class="nc" id="L134">	}</span>
+<span class="fc" id="L133">		this.employeeEmail = employeeEmail;</span>
+<span class="fc" id="L134">	}</span>
 
 	public String getManagerEmail() {
-<span class="nc" id="L137">		return managerEmail;</span>
+<span class="fc" id="L137">		return managerEmail;</span>
 	}
 
 	public void setManagerEmail(String managerEmail) {
-<span class="nc" id="L141">		this.managerEmail = managerEmail;</span>
-<span class="nc" id="L142">	}</span>
+<span class="fc" id="L141">		this.managerEmail = managerEmail;</span>
+<span class="fc" id="L142">	}</span>
 
 	public String getManagerName() {
-<span class="nc" id="L145">		return managerName;</span>
+<span class="fc" id="L145">		return managerName;</span>
 	}
 
 	public void setManagerName(String managerName) {
-<span class="nc" id="L149">		this.managerName = managerName;</span>
-<span class="nc" id="L150">	}</span>
+<span class="fc" id="L149">		this.managerName = managerName;</span>
+<span class="fc" id="L150">	}</span>
 
 	public Long getMobileNumber() {
-<span class="nc" id="L153">		return mobileNumber;</span>
+<span class="fc" id="L153">		return mobileNumber;</span>
 	}
 
 	public void setMobileNumber(Long mobileNumber) {
-<span class="nc" id="L157">		this.mobileNumber = mobileNumber;</span>
-<span class="nc" id="L158">	}</span>
+<span class="fc" id="L157">		this.mobileNumber = mobileNumber;</span>
+<span class="fc" id="L158">	}</span>
 
 	public Boolean getIsFinanceAdmin() {
-<span class="nc" id="L161">		return isFinanceAdmin;</span>
+<span class="fc" id="L161">		return isFinanceAdmin;</span>
 	}
 
 	public void setIsFinanceAdmin(Boolean isFinanceAdmin) {
-<span class="nc" id="L165">		this.isFinanceAdmin = isFinanceAdmin;</span>
-<span class="nc" id="L166">	}</span>
+<span class="fc" id="L165">		this.isFinanceAdmin = isFinanceAdmin;</span>
+<span class="fc" id="L166">	}</span>
 
 	public String getImageUrl() {
-<span class="nc" id="L169">		return imageUrl;</span>
+<span class="fc" id="L169">		return imageUrl;</span>
 	}
 
 	public void setImageUrl(String imageUrl) {
-<span class="nc" id="L173">		this.imageUrl = imageUrl;</span>
-<span class="nc" id="L174">	}</span>
+<span class="fc" id="L173">		this.imageUrl = imageUrl;</span>
+<span class="fc" id="L174">	}</span>
 
 	public Boolean getIsHidden() {
-<span class="nc" id="L177">		return isHidden;</span>
+<span class="fc" id="L177">		return isHidden;</span>
 	}
 
 	public void setIsHidden(Boolean isHidden) {
-<span class="nc" id="L181">		this.isHidden = isHidden;</span>
-<span class="nc" id="L182">	}</span>
+<span class="fc" id="L181">		this.isHidden = isHidden;</span>
+<span class="fc" id="L182">	}</span>
 
 	public List&lt;Expense&gt; getExpenseList() {
-<span class="nc" id="L185">		return expenseList;</span>
+<span class="fc" id="L185">		return expenseList;</span>
 	}
 
 	public void setExpenseList(List&lt;Expense&gt; expenseList) {
-<span class="nc" id="L189">		this.expenseList = expenseList;</span>
-<span class="nc" id="L190">	}</span>
+<span class="fc" id="L189">		this.expenseList = expenseList;</span>
+<span class="fc" id="L190">	}</span>
 
 	public String getRole() {
-<span class="nc" id="L193">		return role;</span>
+<span class="fc" id="L193">		return role;</span>
 	}
 
 	public void setRole(String role) {
-<span class="nc" id="L197">		this.role = role;</span>
-<span class="nc" id="L198">	}</span>
+<span class="fc" id="L197">		this.role = role;</span>
+<span class="fc" id="L198">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,3 +1,11 @@
-/home/nineleaps/Desktop/BillFold/src/test/java/com/nineleaps/expensemanagementproject/EmployeeServiceImplTest.java
-/home/nineleaps/Desktop/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/CategoryTest.java
-/home/nineleaps/Desktop/BillFold/src/test/java/com/nineleaps/expensemanagementproject/ExpenseManagementProjectApplicationTests.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/StatusExcelTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/ExpenseTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusExpenseTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/EmployeeTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/EmployeeServiceImplTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/ExpenseManagementProjectApplicationTests.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/CategoryTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/ReportsTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/CurrencyTest.java
+/home/nineleaps/Desktop/newproject/BillFold/src/test/java/com/nineleaps/expensemanagementproject/entity/FinanceApprovalStatusTest.java
