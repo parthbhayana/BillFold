@@ -24,27 +24,27 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequestMapping()
 public class UserController {
-    @Autowired
-    private IEmployeeService userService;
-    @SuppressWarnings("unused")
-    @Autowired
-    private JwtUtil jwtUtil;
-    private String email;
-    JSONObject responseJson;
+	@Autowired
+	private IEmployeeService userService;
+	@SuppressWarnings("unused")
+	@Autowired
+	private JwtUtil jwtUtil;
+	private String email;
+	JSONObject responseJson;
 
-    @GetMapping("/listTheUser")
-    public List<Employee> getAllUserDtls() {
-        return userService.getAllUser();
-    }
+	@GetMapping("/listTheUser")
+	public List<Employee> getAllUserDtls() {
+		return userService.getAllUser();
+	}
 
-	
+
 	@SuppressWarnings("unchecked")
 	@GetMapping("/getProfileData")
 	public ResponseEntity<?> sendData(HttpServletRequest request) {
 		String authorisationHeader = request.getHeader(AUTHORIZATION);
 		String token = authorisationHeader.substring("Bearer ".length());
 		DecodedJWT decodedAccessToken = JWT.decode(token);
-        String employeeEmailFromToken = decodedAccessToken.getSubject();
+		String employeeEmailFromToken = decodedAccessToken.getSubject();
 		Employee employee1 = userService.findByEmailId(employeeEmailFromToken);
 		System.out.println(employee1.getEmployeeEmail());
 		Long employeeId = employee1.getEmployeeId();
@@ -74,14 +74,14 @@ public class UserController {
 			System.out.println("new user email" + email);
 			System.out.println(employee.getEmployeeId());
 			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),
-				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
+					employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
 			return tokenResponse;
 		} else {
 			email = employee.getEmployeeEmail();
 			System.out.println(email);
 			System.out.println(employee.getEmployeeId());
 			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),
-				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
+					employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
 			return tokenResponse;
 		}
 	}

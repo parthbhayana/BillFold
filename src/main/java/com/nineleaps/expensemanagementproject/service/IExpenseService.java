@@ -3,8 +3,7 @@ package com.nineleaps.expensemanagementproject.service;
 import java.util.List;
 
 import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
-import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatusExpense;
+
 
 public interface IExpenseService {
 

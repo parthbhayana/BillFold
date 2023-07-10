@@ -3,7 +3,6 @@ package com.nineleaps.expensemanagementproject.entity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 

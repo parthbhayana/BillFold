@@ -1,14 +1,10 @@
 package com.nineleaps.expensemanagementproject.controller;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.time.LocalDate;
 import java.util.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.service.IExpenseService;
 import org.json.simple.JSONArray;
@@ -26,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
 import com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImpl;
-
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
@@ -87,7 +82,7 @@ public class ReportsController {
 
 
     @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId, HttpServletResponse response) throws MessagingException, FileNotFoundException, IOException {
+    public void submitReport(@PathVariable Long reportId, HttpServletResponse response) throws MessagingException, IOException {
 
         reportsService.submitReport(reportId, response);
     }
@@ -174,7 +169,7 @@ public class ReportsController {
     @PostMapping("/updateExpenseStatus/{reportId}")
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
-        String formattedJson = json.replaceAll("%22", "");
+        String formattedJson = json.replace("%22", "");
         System.out.println("JSON:" + json);
         try {
             Map<Long,Float> partialApprovedMap = new HashMap<>();

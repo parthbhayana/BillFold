@@ -1,14 +1,10 @@
 package com.nineleaps.expensemanagementproject.service;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
@@ -44,7 +40,7 @@ public class CategoryServiceImpl implements ICategoryService {
 		List<Category> category = categoryRepository.findAll();
 		List<Category> nondeletedcategories = new ArrayList<>();
 		for (Category cat2 : category) {
-			if (cat2.getIsHidden() != true) {
+			if (!cat2.getIsHidden()) {
 				nondeletedcategories.add(cat2);
 			}
 		}
@@ -87,7 +83,7 @@ public class CategoryServiceImpl implements ICategoryService {
 	public HashMap<String, Float> getCategoryTotalAmountByYearAndCategory(Long categoryId) {
 
 			Category category = getCategoryById(categoryId);
-			Map<String, Float> categoryAmountMap = new HashMap<>();
+			HashMap<String, Float> categoryAmountMap = new HashMap<>();
 
 			if (category != null) {
 				List<Expense> expenseList = expenseRepository.findByCategoryAndIsReported(category, true);
@@ -106,7 +102,7 @@ public class CategoryServiceImpl implements ICategoryService {
 				}
 			}
 
-			return (HashMap<String, Float>) categoryAmountMap;
+			return categoryAmountMap;
 		}
 
 
@@ -326,7 +322,7 @@ public class CategoryServiceImpl implements ICategoryService {
 				String monthKey = year + "_" + month;
 				if (monthlyReimbursementRatioMap.containsKey(monthKey)) {
 					float totalReimbursedAmount = monthlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();
-					Float totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + "_count") + 1);
+					float totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + "_count") + 1);
 					float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 					monthlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);

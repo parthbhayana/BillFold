@@ -168,8 +168,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		ByteArrayOutputStream chartOut = new ByteArrayOutputStream();
 		try {
 			ChartUtils.writeChartAsPNG(chartOut, chart, width, height);
-			int pictureIdx = workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);
-			return pictureIdx;
+			return workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);
 		} finally {
 			chartOut.close();
 		}
