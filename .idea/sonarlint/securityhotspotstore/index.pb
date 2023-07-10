@@ -5,8 +5,6 @@ Isrc/main/java/com/nineleaps/expensemanagementproject/entity/Employee.java,0/d/
 Wsrc/main/java/com/nineleaps/expensemanagementproject/repository/EmployeeRepository.java,d/5/d596ba613e2986f2923ae7b06cd363eee8150fdf
 ç
 ]src/main/java/com/nineleaps/expensemanagementproject/service/CurrencyExchangeServiceImpl.java,5/2/52f844e927384f1d083b54b9ced4781e41f03660
-Å
-Qsrc/main/java/com/nineleaps/expensemanagementproject/service/IExpenseService.java,9/b/9b48b3ed2196254fd8bbf7970d0abbe45832add3
 x
 Hsrc/main/java/com/nineleaps/expensemanagementproject/util/ImageUtil.java,c/e/ce58f5e883b05e4d2d8d8a7e1a93137561b3a0a2
 x
