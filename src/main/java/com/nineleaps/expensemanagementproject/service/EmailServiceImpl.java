@@ -7,14 +7,14 @@ import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
-import java.io.FileNotFoundException;
-
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,15 +34,18 @@ public class EmailServiceImpl implements IEmailService {
     private IEmployeeService employeeService;
     @Autowired
     private ReportsRepository reportsRepository;
+    @Autowired
+    private IPdfGeneratorService pdfGeneratorService;
 
     private final JavaMailSender javaMailSender;
+
 
     public EmailServiceImpl(JavaMailSender mailSender) {
         this.javaMailSender = mailSender;
     }
 
     @Override
-    public void managerNotification(Long reportId) throws MessagingException, FileNotFoundException {
+    public void managerNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
 
@@ -52,7 +55,7 @@ public class EmailServiceImpl implements IEmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper eMail = new MimeMessageHelper(message, true);
 
-            eMail.setFrom("billfoldjsr@gmail.com");
+            eMail.setFrom("billfold.noreply@gmail.com");
             eMail.setTo(employee.getManagerEmail());
             eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
             eMail.setText(employee.getFirstName() + " " + employee.getLastName()
@@ -64,10 +67,9 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
                     + "\n\nThis is an automated message. Please do not reply to this email." + "\n\nThanks!");
 
-//            byte[] fileData = report.getPdfFile();
-
-//            ByteArrayDataSource dataSource = new ByteArrayDataSource(fileData, "application/pdf");
-//            eMail.addAttachment("Document.pdf", dataSource);
+            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+            ByteArrayResource resource = new ByteArrayResource(fileData);
+            eMail.addAttachment("Document.pdf", resource);
             javaMailSender.send(message);
         } else {
             throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
@@ -75,15 +77,16 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void userRejectedNotification(Long reportId) {
+    public void userRejectedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException,MessagingException{
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
 
         if (!expenseList.isEmpty()) {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
-            SimpleMailMessage eMail = new SimpleMailMessage();
-            eMail.setFrom("billfoldjsr@gmail.com");
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper eMail = new MimeMessageHelper(message, true);
+            eMail.setFrom("billfold.noreply@gmail.com");
             eMail.setTo(employee.getManagerEmail());
             eMail.setSubject("[REJECTED] Expense Report: " + report.getReportTitle());
             eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
@@ -94,23 +97,25 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nIf you have any questions or need clarification regarding the rejection, please reach out to your manager or the HR department."
                     + "\n\nThank you for your understanding and cooperation." + "\n\nBest Regards," + "\nBillFold"
                     + "\n\nThis is an automated message. Please do not reply to this email.");
-
-            this.javaMailSender.send(eMail);
+            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+            ByteArrayResource resource = new ByteArrayResource(fileData);
+            eMail.addAttachment("Document.pdf", resource);
+            this.javaMailSender.send(message);
         } else {
             throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
         }
     }
 
     @Override
-    public void userApprovedNotification(Long reportId) {
+    public void userApprovedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException,MessagingException {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
-
         if (!expenseList.isEmpty()) {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
-            SimpleMailMessage eMail = new SimpleMailMessage();
-            eMail.setFrom("billfoldjsr@gmail.com");
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper eMail = new MimeMessageHelper(message, true);
+            eMail.setFrom("billfold.noreply@gmail.com");
             eMail.setTo(employee.getEmployeeEmail());
             eMail.setSubject("[APPROVED] Expense Report: " + report.getReportTitle());
             eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
@@ -122,7 +127,10 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nBest Regards," + "\nBillFold"
                     + "\n\nThis is an automated message. Please do not reply to this email.");
 
-            this.javaMailSender.send(eMail);
+            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+            ByteArrayResource resource = new ByteArrayResource(fileData);
+            eMail.addAttachment("Document.pdf", resource);
+            this.javaMailSender.send(message);
         } else {
             throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
         }
@@ -132,12 +140,11 @@ public class EmailServiceImpl implements IEmailService {
     public void financeReimbursedNotification(Long reportId) {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
-
         if (!expenseList.isEmpty()) {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
             SimpleMailMessage eMail = new SimpleMailMessage();
-            eMail.setFrom("billfoldjsr@gmail.com");
+            eMail.setFrom("billfold.noreply@gmail.com");
             eMail.setTo(employee.getEmployeeEmail());
             eMail.setSubject("[REIMBURSED] Expense Report: " + report.getReportTitle());
             eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
@@ -165,7 +172,7 @@ public class EmailServiceImpl implements IEmailService {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
             SimpleMailMessage email = new SimpleMailMessage();
-            email.setFrom("billfoldjsr@gmail.com");
+            email.setFrom("billfold.noreply@gmail.com");
             email.setTo(employee.getEmployeeEmail());
             email.setSubject("[REJECTED] Expense Report: " + report.getReportTitle());
             email.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
@@ -180,6 +187,37 @@ public class EmailServiceImpl implements IEmailService {
             this.javaMailSender.send(email);
         } else {
             throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
+        }
+    }
+    @Override
+    public void financeNotificationToReimburse(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException {
+        Reports report = reportsService.getReportById(reportId);
+        List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
+
+        if (!expenseList.isEmpty()) {
+            Expense expense = expenseList.get(0);
+            Employee employee = expense.getEmployee();
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper eMail = new MimeMessageHelper(message, true);
+            eMail.setFrom("billfold.noreply@gmail.com");
+            eMail.setTo(employee.getFirstName()+" "+employee.getLastName());
+            eMail.setSubject("Expense Reimbursement Request: " + report.getReportTitle());
+            eMail.setText("Dear " + employee.getFirstName() + " " + employee.getLastName() + ","
+                    + "\n\nYou have received a request for expense reimbursement from employee " + employee.getFirstName() + " " + employee.getLastName() + ". The details of the expense report are as follows:"
+                    + "\n\nReport Title: " + report.getReportTitle() + "\nEmployee: " + employee.getFirstName() + " " + employee.getLastName()
+                    + "\nTotal Amount: " + report.getTotalAmountINR() + " " + report.getCurrency()
+                    + "\n\nPlease review the attached expense report and process the reimbursement accordingly. If there are any additional details required or if you have any questions, please reach out to the employee or the HR department."
+                    + "\n\nThank you for your attention to this matter."
+                    + "\n\nBest Regards," + "\nBillFold"
+                    + "\n\nThis is an automated message. Please do not reply to this email.");
+
+            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+            ByteArrayResource resource = new ByteArrayResource(fileData);
+            eMail.addAttachment("Document.pdf", resource);
+            this.javaMailSender.send(message);
+        } else {
+            throw new IllegalStateException("No expenses are added to the report " + report.getReportTitle());
+
         }
     }
 
@@ -237,8 +275,10 @@ public class EmailServiceImpl implements IEmailService {
         }
     }
 
+
     @Override
     public void reminderMailToManager(List<Long> reportIds) {
+
         for (Long reportId : reportIds) {
             Optional<Reports> report = reportsRepository.findById(reportId);
             Long employeeId = report.get().getEmployeeId();

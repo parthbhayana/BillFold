@@ -113,12 +113,12 @@ public class Reports {
 	@Column(name = "finance_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private FinanceApprovalStatus financeapprovalstatus;// = FinanceApprovalStatus.PENDING;
+	private FinanceApprovalStatus financeapprovalstatus;
 
 	@Column(name = "manager_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private ManagerApprovalStatus managerapprovalstatus;// = ManagerApprovalStatus.PENDING;
+	private ManagerApprovalStatus managerapprovalstatus;
 
 
 	@JsonIgnore

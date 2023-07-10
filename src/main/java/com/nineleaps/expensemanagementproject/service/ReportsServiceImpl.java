@@ -1,17 +1,11 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.io.FileNotFoundException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +38,7 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Autowired
     private ICurrencyExchange CurrencyExchange;
+
 
     @Override
     public List<Reports> getAllReports() {
@@ -307,13 +302,18 @@ public class ReportsServiceImpl implements IReportsService {
             if (employee.getManagerEmail() == null) {
                 throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
             }
-            // Email Notification
-            emailService.managerNotification(reportId);
+            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+            ArrayList<Long> expenseIds = new ArrayList<>();
+            for (Expense expense : expenseList) {
+                expenseIds.add(expense.getExpenseId());
+            }
+            emailService.managerNotification(reportId, expenseIds, response);
         }
+
     }
 
     @Override
-    public void approveReportByManager(Long reportId, String comments) {
+    public void approveReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException {
         Reports re = getReportById(reportId);
         if (!re.getIsSubmitted()) {
             throw new IllegalStateException("Report " + reportId + " is not Submitted!");
@@ -327,7 +327,13 @@ public class ReportsServiceImpl implements IReportsService {
             re.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
             re.setManagerActionDate(LocalDate.now());
             reportsRepository.save(re);
-            emailService.userApprovedNotification(reportId);
+            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+            List<Long> expenseIds = new ArrayList<>();
+            for (Expense expense : expenseList) {
+                expenseIds.add(expense.getExpenseId());
+            }
+            emailService.userApprovedNotification(reportId, expenseIds, response);
+            emailService.financeNotificationToReimburse(reportId, expenseIds, response);
         }
         //Update Expenses Status
         List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
@@ -335,10 +341,11 @@ public class ReportsServiceImpl implements IReportsService {
             exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
             expenseRepository.save(exp);
         }
+
     }
 
     @Override
-    public void rejectReportByManager(Long reportId, String comments) {
+    public void rejectReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException {
         ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.REJECTED;
         Reports re = getReportById(reportId);
         if (!re.getIsSubmitted()) {
@@ -352,7 +359,12 @@ public class ReportsServiceImpl implements IReportsService {
             re.setManagerComments(comments);
             re.setManagerActionDate(LocalDate.now());
             reportsRepository.save(re);
-            emailService.userRejectedNotification(reportId);
+            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+            List<Long> expenseIds = new ArrayList<>();
+            for (Expense expense : expenseList) {
+                expenseIds.add(expense.getExpenseId());
+            }
+            emailService.userRejectedNotification(reportId, expenseIds, response);
         }
         //Update Expenses Status
         List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
@@ -360,6 +372,7 @@ public class ReportsServiceImpl implements IReportsService {
             exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
             expenseRepository.save(exp);
         }
+
     }
 
     @Override
@@ -450,8 +463,9 @@ public class ReportsServiceImpl implements IReportsService {
 //            totalApprovedAmount += expense2.getAmountApproved();
 //        }
 //        return totalApprovedAmount;
-        return 0;
+       return 0;
     }
+
 
     @Override
     public float totalApprovedAmountINR(Long reportId) {
@@ -517,78 +531,6 @@ public class ReportsServiceImpl implements IReportsService {
         }
         return (total + " INR");
     }
-
-//    @Override
-//    public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, String reviewTime) {
-//        Reports report = getReportById(reportId);
-//        if (report.getIsHidden()) {
-//            throw new IllegalStateException("Report with ID " + reportId + " does not exist!");
-//        }
-//        if (report == null) {
-//            throw new NullPointerException("Report with ID " + reportId + " does not contain any expenses!");
-//        }
-//        if (!report.getIsSubmitted()) {
-//            throw new IllegalStateException("Report with ID " + reportId + " is not submitted!");
-//        }
-//        for (Long expenseId : approveExpenseIds) {
-//            Expense expense = expenseServices.getExpenseById(expenseId);
-//            if (expense.getIsHidden()) {
-//                throw new IllegalStateException(
-//                        "Expense with ID " + expenseId + " does not exist!");
-//            }
-//            if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
-//                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
-//                expense.setAmountApproved(Float.valueOf(expense.getAmount()));
-//                //Setting Approved Amount INR
-//                String curr = expense.getCurrency();
-//                String date = expense.getDate().toString();
-//                double rate = CurrencyExchange.getExchangeRate(curr, date);
-//                System.out.println("Exchange Rate = " + rate);
-//                double approvedAmountInInr = expense.getAmountApproved() * rate;
-//                expense.setAmountApprovedINR(approvedAmountInInr);
-//                expenseRepository.save(expense);
-//            }
-//        }
-//        for (Long expenseId : rejectExpenseIds) {
-//            Expense expense = expenseServices.getExpenseById(expenseId);
-//            if (expense.getIsHidden()) {
-//                throw new IllegalStateException(
-//                        "Expense with ID " + expenseId + " does not exist!");
-//            }
-//            if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
-//                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
-//                expenseRepository.save(expense);
-//
-//            }
-//        }
-//        report.setManagerReviewTime(reviewTime);
-//        //Changing Report Status
-//        //If all the expenses are approved then report status will be "APPROVED!"
-//        if (rejectExpenseIds.isEmpty()) {
-//            report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
-//            report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
-//        }
-//        //If any expense is rejected report will go back to employee for changes
-//        if (!rejectExpenseIds.isEmpty()) {
-//            report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED); //ACTION REQUIRED WAS HERE BEFORE
-//            report.setIsSubmitted(false);
-//        }
-//        if (approveExpenseIds.isEmpty()) {
-//            report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
-//        }
-//        reportsRepository.save(report);
-//        //Email Logic
-//        //If total no of expense < approved + rejected then partial approved mail will sent otherwise genral mail wll
-//        // be sent
-//        List<Expense> expenseList = expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
-//        if (expenseList.size() > approveExpenseIds.size() + rejectExpenseIds.size()) {
-//            //Send Partial approval Email
-//            emailService.userPartialApprovedExpensesNotification(reportId);
-//        } else {
-//            //send General Approved email
-//            emailService.userApprovedNotification(reportId);
-//        }
-//    }
 
     @Override
     public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime) {
@@ -656,13 +598,13 @@ public class ReportsServiceImpl implements IReportsService {
         if (!rejectExpenseIds.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
             report.setIsSubmitted(false);
-            emailService.userRejectedNotification(reportId);
+//            emailService.userRejectedNotification(reportId);
         }
         //If all the expenses are approved then report status will be "APPROVED"
         if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
             report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
             report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
-            emailService.userApprovedNotification(reportId);
+//            emailService.userApprovedNotification(reportId);
         }
         //If any of the expenses are partially-approved then report status will be "PARTIALLY_APPROVED"
         if (rejectExpenseIds.isEmpty() && !partiallyApprovedMap.isEmpty()) {
@@ -672,6 +614,7 @@ public class ReportsServiceImpl implements IReportsService {
         }
         reportsRepository.save(report);
     }
+
 
 
     @Scheduled(cron = "0 20 13 * * *")

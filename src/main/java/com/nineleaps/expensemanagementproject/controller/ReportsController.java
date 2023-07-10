@@ -102,14 +102,14 @@ public class ReportsController {
 
     @PostMapping("/approveReportByManager/{reportId}")
     public void approveReportByManager(@PathVariable Long reportId,
-                                       @RequestParam(value = "comments", defaultValue = "null") String comments) {
-        reportsService.approveReportByManager(reportId, comments);
+                                       @RequestParam(value = "comments", defaultValue = "null") String comments,HttpServletResponse response) throws MessagingException, IOException {
+        reportsService.approveReportByManager(reportId, comments,response);
     }
 
     @PostMapping("/rejectReportByManager/{reportId}")
     public void rejectReportByManager(@PathVariable Long reportId,
-                                      @RequestParam(value = "comments", defaultValue = "null") String comments) {
-        reportsService.rejectReportByManager(reportId, comments);
+                                      @RequestParam(value = "comments", defaultValue = "null") String comments,HttpServletResponse response) throws MessagingException,IOException {
+        reportsService.rejectReportByManager(reportId, comments,response);
     }
 
     @PostMapping("/approveReportByFinance")

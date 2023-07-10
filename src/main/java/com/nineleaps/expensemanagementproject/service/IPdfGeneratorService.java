@@ -18,5 +18,5 @@ public interface IPdfGeneratorService {
 	PdfPCell getCenterAlignedCells(String content, Font font);
 
 
-	void export(Long reportId, List<Long> expenses, HttpServletResponse response) throws IOException;
+	byte[] export(Long reportId, List<Long> expenses, HttpServletResponse response) throws IOException;
 }
