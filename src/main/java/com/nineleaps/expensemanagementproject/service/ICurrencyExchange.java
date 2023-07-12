@@ -4,4 +4,5 @@ public interface ICurrencyExchange {
 
 	public double getExchangeRate(String baseCurrency,String date);
 
+    Object getCurrencies();
 }

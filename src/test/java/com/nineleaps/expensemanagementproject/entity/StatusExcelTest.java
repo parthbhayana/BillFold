@@ -9,10 +9,10 @@ class StatusExcelTest {
     @Test
     void values() {
         StatusExcel[] statuses = StatusExcel.values();
-        assertEquals(3, statuses.length);
+        assertEquals(4, statuses.length);
         assertEquals(StatusExcel.ALL, statuses[0]);
         assertEquals(StatusExcel.REIMBURSED, statuses[1]);
-        assertEquals(StatusExcel.PENDING, statuses[2]);
+        assertEquals(StatusExcel.COMPLETED, statuses[2]);
     }
 
     @Test

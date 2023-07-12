@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "expense")
@@ -289,5 +290,13 @@ public class Expense {
 
 	public void setAmountApprovedINR(Double amountApprovedINR) {
 		this.amountApprovedINR = amountApprovedINR;
+	}
+
+    public HttpStatus getStatusCode() {
+		return null;
+	}
+
+	public short getBody() {
+		return 0;
 	}
 }

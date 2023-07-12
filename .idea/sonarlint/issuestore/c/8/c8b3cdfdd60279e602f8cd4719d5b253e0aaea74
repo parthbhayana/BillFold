@@ -1,0 +1,10 @@
+
+k	java:S1174"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(É°µáüÿÿÿÿ
+k	java:S1175"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(û¸Êşÿÿÿÿ
+k	java:S1177"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¹»™¾ÿÿÿÿÿ
+o
+java:S1450 "TRemove the "email" field and declare it as a local variable in the relevant methods.(ª«Õìùÿÿÿÿ
+A
+java:S1452+"&Remove usage of generic wildcard type.(¹Å×ìúÿÿÿÿ
+<
+java:S1452C"&Remove usage of generic wildcard type.(§Õ…Ğ

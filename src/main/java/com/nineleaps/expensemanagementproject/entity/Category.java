@@ -99,4 +99,23 @@ public class Category {
 		this.expenseList = expenseList;
 	}
 
+
+	public void setName(String food) {
+	}
+
+	public Category orElse(Object o) {
+		return null;
+	}
+
+
+	public long getName() {
+		return 0;
+	}
+
+    public void setCategoryName(String travel) {
+    }
+
+	public String getCategoryName() {
+		return null;
+	}
 }

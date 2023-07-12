@@ -375,6 +375,11 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
+    public void updateExpenseStatus(Long reportId, String reviewTime) {
+
+    }
+
+    @Override
     public void reimburseReportByFinance(ArrayList<Long> reportIds, String comments) {
         FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REIMBURSED;
         for (Long reportId : reportIds) {

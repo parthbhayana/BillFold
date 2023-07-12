@@ -85,6 +85,14 @@ public class Employee {
 		this.role = role;
 	}
 
+	public Employee(Long employeeId, String firstName, String lastName, String imageUrl, String employeeEmail) {
+
+	}
+
+	public Employee(long l, String john, String doe, String mail) {
+
+	}
+
 	public Long getEmployeeId() {
 		return employeeId;
 	}
@@ -197,4 +205,7 @@ public class Employee {
 		this.role = role;
 	}
 
+	public void setId(long l) {
+
+	}
 }
