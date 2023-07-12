@@ -2,9 +2,6 @@ package com.nineleaps.expensemanagementproject.config;
 
 import javax.servlet.http.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
@@ -52,6 +49,10 @@ public class JwtUtil {
 
     public Claims getClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    }
+
+    public Object decodeToken(String token) {
+        return null;
     }
 
     private static class TokenResponse {

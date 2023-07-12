@@ -17,6 +17,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "reports")
@@ -358,4 +359,11 @@ public class Reports {
 	}
 
 
+    public HttpStatus getStatusCode() {
+		return null;
+	}
+
+	public short getBody() {
+		return 0;
+	}
 }
