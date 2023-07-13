@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +16,7 @@ import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
 @RestController
-<span class="fc" id="L20">public class ExpenseController {</span>
+<span class="fc" id="L19">public class ExpenseController {</span>
     @Autowired
     private IExpenseService expenseService;
 
@@ -26,48 +25,48 @@ import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
     @PostMapping(&quot;/insertExpenses/{employeeId}&quot;)
     public Expense saveExpense(@RequestBody Expense expense, @PathVariable Long employeeId, @RequestParam Long categoryId) {
-<span class="nc" id="L29">        return expenseService.addExpense(expense, employeeId, categoryId);</span>
+<span class="nc" id="L28">        return expenseService.addExpense(expense, employeeId, categoryId);</span>
     }
 
     @GetMapping(&quot;/showAllExpenses&quot;)
     public List&lt;Expense&gt; getAllExpenses() {
-<span class="nc" id="L34">        return expenseService.getAllExpenses();</span>
+<span class="nc" id="L33">        return expenseService.getAllExpenses();</span>
     }
 
     @GetMapping(&quot;/findExpense/{expenseId}&quot;)
     public Expense getExpenseById(@PathVariable Long expenseId) {
-<span class="nc" id="L39">        return expenseService.getExpenseById(expenseId);</span>
+<span class="nc" id="L38">        return expenseService.getExpenseById(expenseId);</span>
     }
 
     @PutMapping(&quot;/updateExpenses/{expenseId}&quot;)
     public Expense updateExpenses(@RequestBody Expense newExpense, @PathVariable Long expenseId) {
-<span class="nc" id="L44">        return expenseService.updateExpenses(newExpense, expenseId);</span>
+<span class="nc" id="L43">        return expenseService.updateExpenses(newExpense, expenseId);</span>
     }
 
     @GetMapping(&quot;/getExpenseByEmployeeId/{employeeId}&quot;)
     public List&lt;Expense&gt; getExpenseByEmpId(@PathVariable Long employeeId) {
-<span class="nc" id="L49">        return expenseService.getExpenseByEmployeeId(employeeId);</span>
+<span class="nc" id="L48">        return expenseService.getExpenseByEmployeeId(employeeId);</span>
     }
 
     @GetMapping(&quot;/getExpenseByReportId/{reportId}&quot;)
     public List&lt;Expense&gt; getExpenseByReportId(@PathVariable Long reportId) {
-<span class="nc" id="L54">        return expenseService.getExpenseByReportId(reportId);</span>
+<span class="nc" id="L53">        return expenseService.getExpenseByReportId(reportId);</span>
     }
 
     @PostMapping(&quot;/removeTaggedExpense/{expenseId}&quot;)
     public Expense removeTaggedExpense(@PathVariable Long expenseId) {
-<span class="nc" id="L59">        return expenseService.removeTaggedExpense(expenseId);</span>
+<span class="nc" id="L58">        return expenseService.removeTaggedExpense(expenseId);</span>
     }
 
     @GetMapping(&quot;/getUnreportedExpensesByEmployeeId/{employeeId}&quot;)
     public List&lt;Expense&gt; getExpensesById(@PathVariable Long employeeId) {
-<span class="nc" id="L64">        return expenseService.getExpensesByEmployeeId(employeeId);</span>
+<span class="nc" id="L63">        return expenseService.getExpensesByEmployeeId(employeeId);</span>
     }
 
     @PostMapping(&quot;/hideExpense/{expenseId}&quot;)
     public void hideExpense(@PathVariable Long expenseId) {
-<span class="nc" id="L69">        expenseService.hideExpense(expenseId);</span>
-<span class="nc" id="L70">    }</span>
+<span class="nc" id="L68">        expenseService.hideExpense(expenseId);</span>
+<span class="nc" id="L69">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

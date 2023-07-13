@@ -50,7 +50,7 @@ public class Category {
 	}
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
-			List<Expense> expenseList) {
+					List<Expense> expenseList) {
 		super();
 		this.categoryId = categoryId;
 		this.categoryDescription = categoryDescription;
@@ -100,22 +100,6 @@ public class Category {
 	}
 
 
-	public void setName(String food) {
-	}
-
-	public Category orElse(Object o) {
-		return null;
-	}
-
-
-	public long getName() {
-		return 0;
-	}
-
-    public void setCategoryName(String travel) {
-    }
-
-	public String getCategoryName() {
-		return null;
-	}
 }
+
+

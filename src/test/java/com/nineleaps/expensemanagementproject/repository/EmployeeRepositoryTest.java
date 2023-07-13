@@ -24,7 +24,7 @@ public class EmployeeRepositoryTest {
     @Before
     public void setUp() {
         employee = new Employee();
-        employee.setId(1L);
+        employee.setEmployeeId(1L);
         employee.setEmployeeEmail("john@example.com");
         employee.setRole("Manager");
         // Set any other necessary properties of the employee

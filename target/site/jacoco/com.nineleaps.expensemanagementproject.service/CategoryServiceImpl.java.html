@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.service</a> &gt; <span class="el_source">CategoryServiceImpl.java</span></div><h1>CategoryServiceImpl.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.service;
 
-import java.time.Instant;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
 @Service
-<span class="fc" id="L18">public class CategoryServiceImpl implements ICategoryService {</span>
+<span class="fc" id="L15">public class CategoryServiceImpl implements ICategoryService {</span>
 
 	@Autowired
 	CategoryRepository categoryRepository;
@@ -23,20 +20,23 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 	@Autowired
 	ExpenseRepository expenseRepository;
 
+	private static final String CONSTANT1 = &quot;_ratio&quot;;
+	private static final String CONSTANT2 = &quot;_count&quot;;
+
 	@Override
 	public void deleteCategoryById(Long categoryId) {
 <span class="nc" id="L28">		categoryRepository.deleteById(categoryId);</span>
 <span class="nc" id="L29">	}</span>
 
 	@Override
-	public Category updateCategory(Category category)
-	{
-<span class="nc" id="L34">		return categoryRepository.save(category);</span>
+	public Category updateCategory(Category category) {
+<span class="nc" id="L33">		return categoryRepository.save(category);</span>
 	}
 
 	@Override
 	public Category getCategoryById(Long categoryId) {
-<span class="nc" id="L39">		return categoryRepository.findById(categoryId).get();</span>
+<span class="nc" id="L38">		Optional&lt;Category&gt; optionalCategory = categoryRepository.findById(categoryId);</span>
+<span class="nc" id="L39">		return optionalCategory.orElse(null);</span>
 	}
 
 	@Override
@@ -44,7 +44,7 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 <span class="nc" id="L44">		List&lt;Category&gt; category = categoryRepository.findAll();</span>
 <span class="nc" id="L45">		List&lt;Category&gt; nondeletedcategories = new ArrayList&lt;&gt;();</span>
 <span class="nc bnc" id="L46" title="All 2 branches missed.">		for (Category cat2 : category) {</span>
-<span class="nc bnc" id="L47" title="All 2 branches missed.">			if (cat2.getIsHidden() != true) {</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">			if (!Boolean.TRUE.equals(cat2.getIsHidden())) {</span>
 <span class="nc" id="L48">				nondeletedcategories.add(cat2);</span>
 			}
 <span class="nc" id="L50">		}</span>
@@ -149,21 +149,21 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 <span class="nc" id="L149">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategory(category);</span>
 
 <span class="nc bnc" id="L151" title="All 2 branches missed.">			for (Expense expense : expenseList) {</span>
-<span class="nc bnc" id="L152" title="All 2 branches missed.">				if (expense.getIsReported()) {</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">				if (Boolean.TRUE.equals(expense.getIsReported())) {</span>
 <span class="nc" id="L153">					String year = String.valueOf(expense.getDate().getYear());</span>
 
 <span class="nc bnc" id="L155" title="All 2 branches missed.">					if (yearlyReimbursementRatioMap.containsKey(year)) {</span>
 <span class="nc" id="L156">						float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountINR();</span>
-<span class="nc" id="L157">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + &quot;_count&quot;) + 1);</span>
+<span class="nc" id="L157">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);</span>
 <span class="nc" id="L158">						float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
 <span class="nc" id="L160">						yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);</span>
-<span class="nc" id="L161">						yearlyReimbursementRatioMap.put(year + &quot;_count&quot;, (float) totalNumberOfExpenses);</span>
-<span class="nc" id="L162">						yearlyReimbursementRatioMap.put(year + &quot;_ratio&quot;, reimbursementRatio);</span>
+<span class="nc" id="L161">						yearlyReimbursementRatioMap.put(year + CONSTANT2, (float) totalNumberOfExpenses);</span>
+<span class="nc" id="L162">						yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
 <span class="nc" id="L163">					} else {</span>
 <span class="nc" id="L164">						yearlyReimbursementRatioMap.put(year, expense.getAmountINR());</span>
-<span class="nc" id="L165">						yearlyReimbursementRatioMap.put(year + &quot;_count&quot;, 1F);</span>
-<span class="nc" id="L166">						yearlyReimbursementRatioMap.put(year + &quot;_ratio&quot;, expense.getAmountINR());</span>
+<span class="nc" id="L165">						yearlyReimbursementRatioMap.put(year + CONSTANT2, 1F);</span>
+<span class="nc" id="L166">						yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountINR());</span>
 					}
 				}
 <span class="nc" id="L169">			}</span>
@@ -180,22 +180,22 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 <span class="nc" id="L180">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategory(category);</span>
 
 <span class="nc bnc" id="L182" title="All 2 branches missed.">			for (Expense expense : expenseList) {</span>
-<span class="nc bnc" id="L183" title="All 4 branches missed.">				if (expense.getIsReported() &amp;&amp; expense.getDate().getYear() == year) {</span>
+<span class="nc bnc" id="L183" title="All 4 branches missed.">				if (Boolean.TRUE.equals(expense.getIsReported()) &amp;&amp; expense.getDate().getYear() == year) {</span>
 <span class="nc" id="L184">					String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);</span>
 <span class="nc" id="L185">					String monthKey = year + &quot;_&quot; + month;</span>
 
 <span class="nc bnc" id="L187" title="All 2 branches missed.">					if (yearlyReimbursementRatioMap.containsKey(monthKey)) {</span>
 <span class="nc" id="L188">						float totalReimbursedAmount = yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();</span>
-<span class="nc" id="L189">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + &quot;_count&quot;) + 1);</span>
+<span class="nc" id="L189">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);</span>
 <span class="nc" id="L190">						float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
 <span class="nc" id="L192">						yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);</span>
-<span class="nc" id="L193">						yearlyReimbursementRatioMap.put(monthKey + &quot;_count&quot;, (float) totalNumberOfExpenses);</span>
-<span class="nc" id="L194">						yearlyReimbursementRatioMap.put(monthKey + &quot;_ratio&quot;, reimbursementRatio);</span>
+<span class="nc" id="L193">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (float) totalNumberOfExpenses);</span>
+<span class="nc" id="L194">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);</span>
 <span class="nc" id="L195">					} else {</span>
 <span class="nc" id="L196">						yearlyReimbursementRatioMap.put(monthKey, expense.getAmountINR());</span>
-<span class="nc" id="L197">						yearlyReimbursementRatioMap.put(monthKey + &quot;_count&quot;, 1F);</span>
-<span class="nc" id="L198">						yearlyReimbursementRatioMap.put(monthKey + &quot;_ratio&quot;, expense.getAmountINR());</span>
+<span class="nc" id="L197">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1F);</span>
+<span class="nc" id="L198">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountINR());</span>
 					}
 				}
 <span class="nc" id="L201">			}</span>
@@ -289,25 +289,25 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
 <span class="nc bnc" id="L290" title="All 2 branches missed.">			if (yearlyReimbursementRatioMap.containsKey(year)) {</span>
 <span class="nc" id="L291">				float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountINR();</span>
-<span class="nc" id="L292">				int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + &quot;_count&quot;) + 1);</span>
+<span class="nc" id="L292">				int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);</span>
 <span class="nc" id="L293">				float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
 <span class="nc" id="L295">				yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);</span>
-<span class="nc" id="L296">				yearlyReimbursementRatioMap.put(year + &quot;_count&quot;, (float) totalNumberOfExpenses);</span>
-<span class="nc" id="L297">				yearlyReimbursementRatioMap.put(year + &quot;_ratio&quot;, reimbursementRatio);</span>
+<span class="nc" id="L296">				yearlyReimbursementRatioMap.put(year + CONSTANT2, (float) totalNumberOfExpenses);</span>
+<span class="nc" id="L297">				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
 <span class="nc" id="L298">			} else {</span>
 <span class="nc" id="L299">				yearlyReimbursementRatioMap.put(year, expense.getAmountINR());</span>
-<span class="nc" id="L300">				yearlyReimbursementRatioMap.put(year + &quot;_count&quot;, 1F);</span>
-<span class="nc" id="L301">				yearlyReimbursementRatioMap.put(year + &quot;_ratio&quot;, expense.getAmountINR());</span>
+<span class="nc" id="L300">				yearlyReimbursementRatioMap.put(year + CONSTANT2, 1F);</span>
+<span class="nc" id="L301">				yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountINR());</span>
 			}
 <span class="nc" id="L303">		}</span>
 <span class="nc bnc" id="L304" title="All 2 branches missed.">		for (String yearKey : yearlyReimbursementRatioMap.keySet()) {</span>
 <span class="nc bnc" id="L305" title="All 2 branches missed.">			if (!yearKey.contains(&quot;_&quot;)) {</span>
 <span class="nc" id="L306">				String year = yearKey;</span>
 <span class="nc" id="L307">				float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year);</span>
-<span class="nc" id="L308">				Float totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + &quot;_count&quot;));</span>
+<span class="nc" id="L308">				Float totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + CONSTANT2));</span>
 <span class="nc" id="L309">				float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
-<span class="nc" id="L310">				yearlyReimbursementRatioMap.put(year + &quot;_ratio&quot;, reimbursementRatio);</span>
+<span class="nc" id="L310">				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
 			}
 <span class="nc" id="L312">		}</span>
 
@@ -326,16 +326,16 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 <span class="nc" id="L326">				String monthKey = year + &quot;_&quot; + month;</span>
 <span class="nc bnc" id="L327" title="All 2 branches missed.">				if (monthlyReimbursementRatioMap.containsKey(monthKey)) {</span>
 <span class="nc" id="L328">					float totalReimbursedAmount = monthlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();</span>
-<span class="nc" id="L329">					Float totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + &quot;_count&quot;) + 1);</span>
+<span class="nc" id="L329">					Float totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);</span>
 <span class="nc" id="L330">					float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
 <span class="nc" id="L332">					monthlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);</span>
-<span class="nc" id="L333">					monthlyReimbursementRatioMap.put(monthKey + &quot;_count&quot;, (float) totalNumberOfExpenses);</span>
-<span class="nc" id="L334">					monthlyReimbursementRatioMap.put(monthKey + &quot;_ratio&quot;, reimbursementRatio);</span>
+<span class="nc" id="L333">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, (float) totalNumberOfExpenses);</span>
+<span class="nc" id="L334">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);</span>
 <span class="nc" id="L335">				} else {</span>
 <span class="nc" id="L336">					monthlyReimbursementRatioMap.put(monthKey, expense.getAmountINR());</span>
-<span class="nc" id="L337">					monthlyReimbursementRatioMap.put(monthKey + &quot;_count&quot;, 1F);</span>
-<span class="nc" id="L338">					monthlyReimbursementRatioMap.put(monthKey + &quot;_ratio&quot;, expense.getAmountINR());</span>
+<span class="nc" id="L337">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1F);</span>
+<span class="nc" id="L338">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountINR());</span>
 				}
 			}
 <span class="nc" id="L341">		}</span>

@@ -62,7 +62,7 @@ public class Employee {
 	private String role = "EMPLOYEE";
 
 	public Employee() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
@@ -83,14 +83,6 @@ public class Employee {
 		this.isHidden = isHidden;
 		this.expenseList = expenseList;
 		this.role = role;
-	}
-
-	public Employee(Long employeeId, String firstName, String lastName, String imageUrl, String employeeEmail) {
-
-	}
-
-	public Employee(long l, String john, String doe, String mail) {
-
 	}
 
 	public Long getEmployeeId() {
@@ -205,7 +197,6 @@ public class Employee {
 		this.role = role;
 	}
 
-	public void setId(long l) {
 
-	}
+
 }
