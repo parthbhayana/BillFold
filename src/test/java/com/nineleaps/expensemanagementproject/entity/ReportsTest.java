@@ -299,28 +299,28 @@ class ReportsTest {
     @Test
     void getFinanceapprovalstatus() {
         Reports reports = new Reports();
-        reports.setFinanceapprovalstatus(FinanceApprovalStatus.APPROVED);
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.APPROVED);
         assertEquals(FinanceApprovalStatus.APPROVED, reports.getFinanceapprovalstatus());
     }
 
     @Test
     void setFinanceapprovalstatus() {
         Reports reports = new Reports();
-        reports.setFinanceapprovalstatus(FinanceApprovalStatus.APPROVED);
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.APPROVED);
         assertEquals(FinanceApprovalStatus.APPROVED, reports.getFinanceapprovalstatus());
     }
 
     @Test
     void getManagerapprovalstatus() {
         Reports reports = new Reports();
-        reports.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
         assertEquals(ManagerApprovalStatus.APPROVED, reports.getManagerapprovalstatus());
     }
 
     @Test
     void setManagerapprovalstatus() {
         Reports reports = new Reports();
-        reports.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
         assertEquals(ManagerApprovalStatus.APPROVED, reports.getManagerapprovalstatus());
     }
 }

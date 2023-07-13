@@ -36,7 +36,7 @@ public class EmployeeControllerTests {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(employeeController).build();
     }
 

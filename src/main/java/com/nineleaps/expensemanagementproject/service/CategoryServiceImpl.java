@@ -1,14 +1,11 @@
 package com.nineleaps.expensemanagementproject.service;
 
-import java.time.Instant;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
@@ -23,20 +20,23 @@ public class CategoryServiceImpl implements ICategoryService {
 	@Autowired
 	ExpenseRepository expenseRepository;
 
+	private static final String CONSTANT1 = "_ratio";
+	private static final String CONSTANT2 = "_count";
+
 	@Override
 	public void deleteCategoryById(Long categoryId) {
 		categoryRepository.deleteById(categoryId);
 	}
 
 	@Override
-	public Category updateCategory(Category category)
-	{
+	public Category updateCategory(Category category) {
 		return categoryRepository.save(category);
 	}
 
 	@Override
 	public Category getCategoryById(Long categoryId) {
-		return categoryRepository.findById(categoryId).get();
+		Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+		return optionalCategory.orElse(null);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements ICategoryService {
 		List<Category> category = categoryRepository.findAll();
 		List<Category> nondeletedcategories = new ArrayList<>();
 		for (Category cat2 : category) {
-			if (cat2.getIsHidden() != true) {
+			if (!Boolean.TRUE.equals(cat2.getIsHidden())) {
 				nondeletedcategories.add(cat2);
 			}
 		}
@@ -149,21 +149,21 @@ public class CategoryServiceImpl implements ICategoryService {
 			List<Expense> expenseList = expenseRepository.findByCategory(category);
 
 			for (Expense expense : expenseList) {
-				if (expense.getIsReported()) {
+				if (Boolean.TRUE.equals(expense.getIsReported())) {
 					String year = String.valueOf(expense.getDate().getYear());
 
 					if (yearlyReimbursementRatioMap.containsKey(year)) {
 						float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountINR();
-						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + "_count") + 1);
+						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);
 						float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 						yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);
-						yearlyReimbursementRatioMap.put(year + "_count", (float) totalNumberOfExpenses);
-						yearlyReimbursementRatioMap.put(year + "_ratio", reimbursementRatio);
+						yearlyReimbursementRatioMap.put(year + CONSTANT2, (float) totalNumberOfExpenses);
+						yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);
 					} else {
 						yearlyReimbursementRatioMap.put(year, expense.getAmountINR());
-						yearlyReimbursementRatioMap.put(year + "_count", 1F);
-						yearlyReimbursementRatioMap.put(year + "_ratio", expense.getAmountINR());
+						yearlyReimbursementRatioMap.put(year + CONSTANT2, 1F);
+						yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountINR());
 					}
 				}
 			}
@@ -180,22 +180,22 @@ public class CategoryServiceImpl implements ICategoryService {
 			List<Expense> expenseList = expenseRepository.findByCategory(category);
 
 			for (Expense expense : expenseList) {
-				if (expense.getIsReported() && expense.getDate().getYear() == year) {
+				if (Boolean.TRUE.equals(expense.getIsReported()) && expense.getDate().getYear() == year) {
 					String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
 					String monthKey = year + "_" + month;
 
 					if (yearlyReimbursementRatioMap.containsKey(monthKey)) {
 						float totalReimbursedAmount = yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();
-						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + "_count") + 1);
+						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
 						float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 						yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);
-						yearlyReimbursementRatioMap.put(monthKey + "_count", (float) totalNumberOfExpenses);
-						yearlyReimbursementRatioMap.put(monthKey + "_ratio", reimbursementRatio);
+						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (float) totalNumberOfExpenses);
+						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);
 					} else {
 						yearlyReimbursementRatioMap.put(monthKey, expense.getAmountINR());
-						yearlyReimbursementRatioMap.put(monthKey + "_count", 1F);
-						yearlyReimbursementRatioMap.put(monthKey + "_ratio", expense.getAmountINR());
+						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1F);
+						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountINR());
 					}
 				}
 			}
@@ -289,25 +289,25 @@ public class CategoryServiceImpl implements ICategoryService {
 
 			if (yearlyReimbursementRatioMap.containsKey(year)) {
 				float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountINR();
-				int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + "_count") + 1);
+				int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);
 				float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 				yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);
-				yearlyReimbursementRatioMap.put(year + "_count", (float) totalNumberOfExpenses);
-				yearlyReimbursementRatioMap.put(year + "_ratio", reimbursementRatio);
+				yearlyReimbursementRatioMap.put(year + CONSTANT2, (float) totalNumberOfExpenses);
+				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);
 			} else {
 				yearlyReimbursementRatioMap.put(year, expense.getAmountINR());
-				yearlyReimbursementRatioMap.put(year + "_count", 1F);
-				yearlyReimbursementRatioMap.put(year + "_ratio", expense.getAmountINR());
+				yearlyReimbursementRatioMap.put(year + CONSTANT2, 1F);
+				yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountINR());
 			}
 		}
 		for (String yearKey : yearlyReimbursementRatioMap.keySet()) {
 			if (!yearKey.contains("_")) {
 				String year = yearKey;
 				float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year);
-				Float totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + "_count"));
+				Float totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + CONSTANT2));
 				float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
-				yearlyReimbursementRatioMap.put(year + "_ratio", reimbursementRatio);
+				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);
 			}
 		}
 
@@ -326,16 +326,16 @@ public class CategoryServiceImpl implements ICategoryService {
 				String monthKey = year + "_" + month;
 				if (monthlyReimbursementRatioMap.containsKey(monthKey)) {
 					float totalReimbursedAmount = monthlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();
-					Float totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + "_count") + 1);
+					Float totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
 					float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 					monthlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);
-					monthlyReimbursementRatioMap.put(monthKey + "_count", (float) totalNumberOfExpenses);
-					monthlyReimbursementRatioMap.put(monthKey + "_ratio", reimbursementRatio);
+					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, (float) totalNumberOfExpenses);
+					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);
 				} else {
 					monthlyReimbursementRatioMap.put(monthKey, expense.getAmountINR());
-					monthlyReimbursementRatioMap.put(monthKey + "_count", 1F);
-					monthlyReimbursementRatioMap.put(monthKey + "_ratio", expense.getAmountINR());
+					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1F);
+					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountINR());
 				}
 			}
 		}

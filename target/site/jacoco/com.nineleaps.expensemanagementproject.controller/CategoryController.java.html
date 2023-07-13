@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.controller</a> &gt; <span class="el_source">CategoryController.java</span></div><h1>CategoryController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.controller;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,65 +16,65 @@ import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.service.ICategoryService;
 
 @RestController
-<span class="fc" id="L20">public class CategoryController {</span>
+<span class="fc" id="L19">public class CategoryController {</span>
 
     @Autowired
     private ICategoryService categoryService;
 
     @PostMapping(&quot;/insertCategory&quot;)
     public Category addCategory(@RequestBody Category category) {
-<span class="nc" id="L27">        return categoryService.addCategory(category);</span>
+<span class="nc" id="L26">        return categoryService.addCategory(category);</span>
     }
 
     @GetMapping(&quot;/showAllCategories&quot;)
     public List&lt;Category&gt; getAllCategory() {
-<span class="nc" id="L32">        return categoryService.getAllCategories();</span>
+<span class="nc" id="L31">        return categoryService.getAllCategories();</span>
     }
 
     @GetMapping(&quot;/findCategory/{categoryId}&quot;)
     public Category getCategoryById(@PathVariable(&quot;categoryId&quot;) Long categoryId) {
-<span class="nc" id="L37">        return categoryService.getCategoryById(categoryId);</span>
+<span class="nc" id="L36">        return categoryService.getCategoryById(categoryId);</span>
     }
 
     @PutMapping(&quot;/updateCategory/{categoryId}&quot;)
     public Category updateCategory(@PathVariable Long categoryId, @RequestBody Category newCategory) {
-<span class="nc" id="L42">        Category category = categoryService.getCategoryById(categoryId);</span>
-<span class="nc" id="L43">        category.setCategoryDescription(newCategory.getCategoryDescription());</span>
-<span class="nc" id="L44">        return categoryService.updateCategory(category);</span>
+<span class="nc" id="L41">        Category category = categoryService.getCategoryById(categoryId);</span>
+<span class="nc" id="L42">        category.setCategoryDescription(newCategory.getCategoryDescription());</span>
+<span class="nc" id="L43">        return categoryService.updateCategory(category);</span>
     }
 
     @PostMapping(&quot;/hideCategory/{categoryId}&quot;)
     public void hideCategory(@PathVariable Long categoryId) {
-<span class="nc" id="L49">        categoryService.hideCategory(categoryId);</span>
-<span class="nc" id="L50">    }</span>
+<span class="nc" id="L48">        categoryService.hideCategory(categoryId);</span>
+<span class="nc" id="L49">    }</span>
 
     @GetMapping(&quot;/categoryTotalAmount&quot;)
-    public HashMap&lt;String, Float&gt; getCategoryTotalAmount(
+    public Map&lt;String, Float&gt; getCategoryTotalAmount(
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) {
-<span class="nc" id="L56">        return categoryService.getCategoryTotalAmount(startDate, endDate);</span>
+<span class="nc" id="L55">        return categoryService.getCategoryTotalAmount(startDate, endDate);</span>
     }
 
 
     @GetMapping(&quot;/getCategoryAnalyticsYearly/{categoryId}&quot;)
-    public HashMap&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId) {
-<span class="nc" id="L62">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
+    public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId) {
+<span class="nc" id="L61">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
     }
 
     @GetMapping(&quot;/getCategoryAnalyticsMonthly/{categoryId}&quot;)
-    public HashMap&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId, @RequestParam Long year) {
-<span class="nc" id="L67">        return categoryService.getCategoryAnalyticsMonthly(categoryId, year);</span>
+    public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId, @RequestParam Long year) {
+<span class="nc" id="L66">        return categoryService.getCategoryAnalyticsMonthly(categoryId, year);</span>
     }
 
 
     @GetMapping(&quot;/getAllCategoryAnalyticsYearly&quot;)
-    public HashMap&lt;String, Object&gt; getYearlyCategoryAnalyticsForAllCategories() {
-<span class="nc" id="L73">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
+    public Map&lt;String, Object&gt; getYearlyCategoryAnalyticsForAllCategories() {
+<span class="nc" id="L72">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
     }
 
     @GetMapping(&quot;/getAllCategoryAnalyticsMonthly&quot;)
-    public HashMap&lt;String, Object&gt; getMonthlyCategoryAnalyticsForAllCategories(@RequestParam Long year) {
-<span class="nc" id="L78">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
+    public Map&lt;String, Object&gt; getMonthlyCategoryAnalyticsForAllCategories(@RequestParam Long year) {
+<span class="nc" id="L77">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
     }
 
 }

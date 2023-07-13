@@ -148,14 +148,16 @@ public class ReportsServiceImpl implements IReportsService {
                 }
             }
             // Removing Expenses
-            boolean reportedStatus = false;
-            for (Long expenseid : removeExpenseIds) {
-                Expense expense = expenseServices.getExpenseById(expenseid);
-                if (report != null && expense.getIsReported()) {
-                    expense.setIsReported(reportedStatus);
-                    expense.setReports(null);
-                    expense.setReportTitle(null);
-                    expenseRepository.save(expense);
+            if (removeExpenseIds != null && !removeExpenseIds.isEmpty()) {
+                boolean reportedStatus = false;
+                for (Long expenseid : removeExpenseIds) {
+                    Expense expense = expenseServices.getExpenseById(expenseid);
+                    if (report != null && expense.getIsReported()) {
+                        expense.setIsReported(reportedStatus);
+                        expense.setReports(null);
+                        expense.setReportTitle(null);
+                        expenseRepository.save(expense);
+                    }
                 }
             }
         }
@@ -186,8 +188,8 @@ public class ReportsServiceImpl implements IReportsService {
         Reports re = getReportById(reportId);
         re.setTotalAmountINR(totalAmountINR(reportId));
         re.setTotalAmountCurrency(totalAmountCurrency(reportId));
-        re.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
-        re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
+//        re.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
+//        re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
         return reportsRepository.save(re);
     }
 
@@ -200,8 +202,8 @@ public class ReportsServiceImpl implements IReportsService {
                 return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
                         ManagerApprovalStatus.PENDING, true, false);
             case "rejected":
-                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
-                        ManagerApprovalStatus.REJECTED, true, false);
+                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsHidden(employeeId,
+                        ManagerApprovalStatus.REJECTED, false);
             case "approved":
                 List<Reports> approvedList = reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,
                         ManagerApprovalStatus.APPROVED, true, false);
@@ -287,7 +289,7 @@ public class ReportsServiceImpl implements IReportsService {
         }
         if ((re != null && re.getIsSubmitted() != submissionStatus) || (re != null && re.getIsSubmitted() == true && re.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED)) {
             re.setIsSubmitted(submissionStatus);
-            re.setManagerapprovalstatus(ManagerApprovalStatus.PENDING);
+            re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
             re.setDateSubmitted(LocalDate.now());
             re.setTotalAmountINR(totalAmountINR(reportId));
             re.setTotalAmountCurrency(totalAmountCurrency(reportId));
@@ -321,9 +323,9 @@ public class ReportsServiceImpl implements IReportsService {
             throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
         }
         if (re != null && !re.getIsHidden() && re.getIsSubmitted()) {
-            re.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
+            re.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
             re.setManagerComments(comments);
-            re.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
+            re.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
             re.setManagerActionDate(LocalDate.now());
             reportsRepository.save(re);
             List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
@@ -331,8 +333,8 @@ public class ReportsServiceImpl implements IReportsService {
             for (Expense expense : expenseList) {
                 expenseIds.add(expense.getExpenseId());
             }
-            emailService.userApprovedNotification(reportId, expenseIds, response);
-            emailService.financeNotificationToReimburse(reportId, expenseIds, response);
+//            emailService.userApprovedNotification(reportId, expenseIds, response);
+//            emailService.financeNotificationToReimburse(reportId, expenseIds, response);
         }
         //Update Expenses Status
         List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
@@ -340,6 +342,12 @@ public class ReportsServiceImpl implements IReportsService {
             exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
             expenseRepository.save(exp);
         }
+        System.out.println("Hi");
+        re.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
+        System.out.println("bye");
+        re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
+        reportsRepository.save(re);
+
 
     }
 
@@ -354,7 +362,7 @@ public class ReportsServiceImpl implements IReportsService {
             throw new ObjectNotFoundException(reportId, "Report " + reportId + " does not exist!");
         }
         if (re != null && !re.getIsHidden() && re.getIsSubmitted()) {
-            re.setManagerapprovalstatus(approvalStatus);
+            re.setManagerApprovalStatus(approvalStatus);
             re.setManagerComments(comments);
             re.setManagerActionDate(LocalDate.now());
             reportsRepository.save(re);
@@ -371,6 +379,7 @@ public class ReportsServiceImpl implements IReportsService {
             exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
             expenseRepository.save(exp);
         }
+
 
     }
 
@@ -394,7 +403,7 @@ public class ReportsServiceImpl implements IReportsService {
             if (re.getManagerapprovalstatus() != ManagerApprovalStatus.APPROVED) {
                 throw new IllegalStateException("Report " + reportId + " is not approved by the manager!");
             }
-            re.setFinanceapprovalstatus(approvalStatus);
+            re.setFinanceApprovalStatus(approvalStatus);
             re.setFinanceComments(comments);
             re.setFinanceActionDate(LocalDate.now());
             reportsRepository.save(re);
@@ -420,7 +429,7 @@ public class ReportsServiceImpl implements IReportsService {
         }
         if (re != null && !re.getIsHidden() && re.getIsSubmitted()
                 && re.getManagerapprovalstatus() == ManagerApprovalStatus.APPROVED) {
-            re.setFinanceapprovalstatus(approvalStatus);
+            re.setFinanceApprovalStatus(approvalStatus);
             re.setFinanceComments(comments);
             re.setFinanceActionDate(LocalDate.now());
             reportsRepository.save(re);
@@ -464,10 +473,14 @@ public class ReportsServiceImpl implements IReportsService {
                 .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
         float totalApprovedAmount = 0;
         for (Expense expense2 : expenseList) {
-            totalApprovedAmount += expense2.getAmountApproved();
+            Float amountApproved = expense2.getAmountApproved();
+            if (amountApproved != null) {
+                totalApprovedAmount += amountApproved;
+            }
+
         }
         return totalApprovedAmount;
-//       return 0;
+
     }
 
 
@@ -478,10 +491,14 @@ public class ReportsServiceImpl implements IReportsService {
                 .findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
         float totalApprovedAmount = 0;
         for (Expense expense2 : expenseList) {
-            totalApprovedAmount += expense2.getAmountApprovedINR();
+            Double amountApprovedINR = expense2.getAmountApprovedINR();
+            if (amountApprovedINR != null) {
+                totalApprovedAmount += amountApprovedINR.floatValue();
+            }
+
+
         }
         return totalApprovedAmount;
-//        return 0;
     }
 
     @Override
@@ -577,7 +594,6 @@ public class ReportsServiceImpl implements IReportsService {
                 expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
                 expense.setAmountApproved(0F);
                 expenseRepository.save(expense);
-
             }
         }
         for (Map.Entry<Long, Float> entry : partiallyApprovedMap.entrySet()) {
@@ -587,7 +603,7 @@ public class ReportsServiceImpl implements IReportsService {
             expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PARTIALLY_APPROVED);
             expense.setAmountApproved(amt);
             expenseRepository.save(expense);
-            //Setting Approved Amount INR
+
             String curr = expense.getCurrency();
             String date = expense.getDate().toString();
             double rate = CurrencyExchange.getExchangeRate(curr, date);
@@ -599,23 +615,38 @@ public class ReportsServiceImpl implements IReportsService {
         report.setManagerReviewTime(reviewTime);
         //Changing Report Status
         //If any expense is rejected report will go back to employee for changes
-        if (!rejectExpenseIds.isEmpty()) {
-            report.setManagerapprovalstatus(ManagerApprovalStatus.REJECTED);
-            report.setIsSubmitted(false);
-//            emailService.userRejectedNotification(reportId);
-        }
+//        if (!rejectExpenseIds.isEmpty()) {
+//            report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
+//            report.setIsSubmitted(false);
+//
+//        }
         //If all the expenses are approved then report status will be "APPROVED"
         if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
-            report.setManagerapprovalstatus(ManagerApprovalStatus.APPROVED);
-            report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
-//            emailService.userApprovedNotification(reportId);
+            report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+            report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
+
+
         }
+        else if (!rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
+            report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
+            report.setIsSubmitted(false);
+        }
+
+
         //If any of the expenses are partially-approved then report status will be "PARTIALLY_APPROVED"
-        if (rejectExpenseIds.isEmpty() && !partiallyApprovedMap.isEmpty()) {
-            report.setManagerapprovalstatus(ManagerApprovalStatus.PARTIALLY_APPROVED);
-            report.setFinanceapprovalstatus(FinanceApprovalStatus.PENDING);
-            emailService.userPartialApprovedExpensesNotification(reportId);
+        else if (rejectExpenseIds.isEmpty() && !partiallyApprovedMap.isEmpty()) {
+            report.setManagerApprovalStatus(ManagerApprovalStatus.PARTIALLY_APPROVED);
+            report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
+
+//            report.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
+//            report.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
+
+
         }
+        report.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
+        report.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
+
+
         reportsRepository.save(report);
     }
 

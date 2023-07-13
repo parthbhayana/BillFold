@@ -137,7 +137,7 @@ public class Reports {
 			LocalDate financeActionDate, String currency, float totalAmountINR, float totalApprovedAmountINR,
 			float totalAmountCurrency, float totalApprovedAmountCurrency, Boolean isHidden, String managerEmail,
 			String managerReviewTime, FinanceApprovalStatus financeapprovalstatus,
-			ManagerApprovalStatus managerapprovalstatus, byte[] pdfFile) {
+			ManagerApprovalStatus managerapprovalstatus) {
 <span class="nc" id="L141">		super();</span>
 <span class="nc" id="L142">		this.reportId = reportId;</span>
 <span class="nc" id="L143">		this.employeeId = employeeId;</span>
@@ -346,7 +346,7 @@ public class Reports {
 <span class="fc" id="L346">		return financeapprovalstatus;</span>
 	}
 
-	public void setFinanceapprovalstatus(FinanceApprovalStatus financeapprovalstatus) {
+	public void setFinanceApprovalStatus(FinanceApprovalStatus financeapprovalstatus) {
 <span class="fc" id="L350">		this.financeapprovalstatus = financeapprovalstatus;</span>
 <span class="fc" id="L351">	}</span>
 
@@ -354,7 +354,7 @@ public class Reports {
 <span class="fc" id="L354">		return managerapprovalstatus;</span>
 	}
 
-	public void setManagerapprovalstatus(ManagerApprovalStatus managerapprovalstatus) {
+	public void setManagerApprovalStatus(ManagerApprovalStatus managerapprovalstatus) {
 <span class="fc" id="L358">		this.managerapprovalstatus = managerapprovalstatus;</span>
 <span class="fc" id="L359">	}</span>
 

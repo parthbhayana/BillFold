@@ -41,28 +41,28 @@ public class Employee {
 	@Column(name = &quot;mobile_number&quot;)
 	private Long mobileNumber;
 
-<span class="pc" id="L44">	@Column(name = &quot;is_admin&quot;, nullable = true)</span>
+<span class="fc" id="L44">	@Column(name = &quot;is_admin&quot;, nullable = true)</span>
 	@ApiModelProperty(hidden = true)
-<span class="pc" id="L46">	private Boolean isFinanceAdmin = false;</span>
+<span class="fc" id="L46">	private Boolean isFinanceAdmin = false;</span>
 
 	@Column(name = &quot;image_url&quot;)
 	@ApiModelProperty(hidden = true)
 	private String imageUrl;
 
-<span class="pc" id="L52">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+<span class="fc" id="L52">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
 	@ApiModelProperty(hidden = true)
-<span class="pc" id="L54">	private Boolean isHidden = false;</span>
+<span class="fc" id="L54">	private Boolean isHidden = false;</span>
 
-<span class="pc" id="L56">	@JsonIgnore</span>
+<span class="fc" id="L56">	@JsonIgnore</span>
 	@OneToMany(mappedBy = &quot;employee&quot;, cascade = CascadeType.ALL)
 	private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();
 
-<span class="pc" id="L60">	@Column(name = &quot;role&quot;)</span>
+<span class="fc" id="L60">	@Column(name = &quot;role&quot;)</span>
 	@ApiModelProperty(hidden = true)
 	private String role = &quot;EMPLOYEE&quot;;
 
 <span class="fc" id="L64">	public Employee() {</span>
-		// TODO Auto-generated constructor stub
+
 <span class="fc" id="L66">	}</span>
 
 	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
@@ -85,128 +85,119 @@ public class Employee {
 <span class="fc" id="L85">		this.role = role;</span>
 <span class="fc" id="L86">	}</span>
 
-<span class="nc" id="L88">	public Employee(Long employeeId, String firstName, String lastName, String imageUrl, String employeeEmail) {</span>
-
-<span class="nc" id="L90">	}</span>
-
-<span class="nc" id="L92">	public Employee(long l, String john, String doe, String mail) {</span>
-
-<span class="nc" id="L94">	}</span>
-
 	public Long getEmployeeId() {
-<span class="fc" id="L97">		return employeeId;</span>
+<span class="fc" id="L89">		return employeeId;</span>
 	}
 
 	public void setEmployeeId(Long employeeId) {
-<span class="fc" id="L101">		this.employeeId = employeeId;</span>
-<span class="fc" id="L102">	}</span>
+<span class="fc" id="L93">		this.employeeId = employeeId;</span>
+<span class="fc" id="L94">	}</span>
 
 	public String getOfficialEmployeeId() {
-<span class="fc" id="L105">		return officialEmployeeId;</span>
+<span class="fc" id="L97">		return officialEmployeeId;</span>
 	}
 
 	public void setOfficialEmployeeId(String officialEmployeeId) {
-<span class="fc" id="L109">		this.officialEmployeeId = officialEmployeeId;</span>
-<span class="fc" id="L110">	}</span>
+<span class="fc" id="L101">		this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L102">	}</span>
 
 	public String getFirstName() {
-<span class="fc" id="L113">		return firstName;</span>
+<span class="fc" id="L105">		return firstName;</span>
 	}
 
 	public void setFirstName(String firstName) {
-<span class="fc" id="L117">		this.firstName = firstName;</span>
-<span class="fc" id="L118">	}</span>
+<span class="fc" id="L109">		this.firstName = firstName;</span>
+<span class="fc" id="L110">	}</span>
 
 	public String getMiddleName() {
-<span class="fc" id="L121">		return middleName;</span>
+<span class="fc" id="L113">		return middleName;</span>
 	}
 
 	public void setMiddleName(String middleName) {
-<span class="fc" id="L125">		this.middleName = middleName;</span>
-<span class="fc" id="L126">	}</span>
+<span class="fc" id="L117">		this.middleName = middleName;</span>
+<span class="fc" id="L118">	}</span>
 
 	public String getLastName() {
-<span class="fc" id="L129">		return lastName;</span>
+<span class="fc" id="L121">		return lastName;</span>
 	}
 
 	public void setLastName(String lastName) {
-<span class="fc" id="L133">		this.lastName = lastName;</span>
-<span class="fc" id="L134">	}</span>
+<span class="fc" id="L125">		this.lastName = lastName;</span>
+<span class="fc" id="L126">	}</span>
 
 	public String getEmployeeEmail() {
-<span class="fc" id="L137">		return employeeEmail;</span>
+<span class="fc" id="L129">		return employeeEmail;</span>
 	}
 
 	public void setEmployeeEmail(String employeeEmail) {
-<span class="fc" id="L141">		this.employeeEmail = employeeEmail;</span>
-<span class="fc" id="L142">	}</span>
+<span class="fc" id="L133">		this.employeeEmail = employeeEmail;</span>
+<span class="fc" id="L134">	}</span>
 
 	public String getManagerEmail() {
-<span class="fc" id="L145">		return managerEmail;</span>
+<span class="fc" id="L137">		return managerEmail;</span>
 	}
 
 	public void setManagerEmail(String managerEmail) {
-<span class="fc" id="L149">		this.managerEmail = managerEmail;</span>
-<span class="fc" id="L150">	}</span>
+<span class="fc" id="L141">		this.managerEmail = managerEmail;</span>
+<span class="fc" id="L142">	}</span>
 
 	public String getManagerName() {
-<span class="fc" id="L153">		return managerName;</span>
+<span class="fc" id="L145">		return managerName;</span>
 	}
 
 	public void setManagerName(String managerName) {
-<span class="fc" id="L157">		this.managerName = managerName;</span>
-<span class="fc" id="L158">	}</span>
+<span class="fc" id="L149">		this.managerName = managerName;</span>
+<span class="fc" id="L150">	}</span>
 
 	public Long getMobileNumber() {
-<span class="fc" id="L161">		return mobileNumber;</span>
+<span class="fc" id="L153">		return mobileNumber;</span>
 	}
 
 	public void setMobileNumber(Long mobileNumber) {
-<span class="fc" id="L165">		this.mobileNumber = mobileNumber;</span>
-<span class="fc" id="L166">	}</span>
+<span class="fc" id="L157">		this.mobileNumber = mobileNumber;</span>
+<span class="fc" id="L158">	}</span>
 
 	public Boolean getIsFinanceAdmin() {
-<span class="fc" id="L169">		return isFinanceAdmin;</span>
+<span class="fc" id="L161">		return isFinanceAdmin;</span>
 	}
 
 	public void setIsFinanceAdmin(Boolean isFinanceAdmin) {
-<span class="fc" id="L173">		this.isFinanceAdmin = isFinanceAdmin;</span>
-<span class="fc" id="L174">	}</span>
+<span class="fc" id="L165">		this.isFinanceAdmin = isFinanceAdmin;</span>
+<span class="fc" id="L166">	}</span>
 
 	public String getImageUrl() {
-<span class="fc" id="L177">		return imageUrl;</span>
+<span class="fc" id="L169">		return imageUrl;</span>
 	}
 
 	public void setImageUrl(String imageUrl) {
-<span class="fc" id="L181">		this.imageUrl = imageUrl;</span>
-<span class="fc" id="L182">	}</span>
+<span class="fc" id="L173">		this.imageUrl = imageUrl;</span>
+<span class="fc" id="L174">	}</span>
 
 	public Boolean getIsHidden() {
-<span class="fc" id="L185">		return isHidden;</span>
+<span class="fc" id="L177">		return isHidden;</span>
 	}
 
 	public void setIsHidden(Boolean isHidden) {
-<span class="fc" id="L189">		this.isHidden = isHidden;</span>
-<span class="fc" id="L190">	}</span>
+<span class="fc" id="L181">		this.isHidden = isHidden;</span>
+<span class="fc" id="L182">	}</span>
 
 	public List&lt;Expense&gt; getExpenseList() {
-<span class="fc" id="L193">		return expenseList;</span>
+<span class="fc" id="L185">		return expenseList;</span>
 	}
 
 	public void setExpenseList(List&lt;Expense&gt; expenseList) {
-<span class="fc" id="L197">		this.expenseList = expenseList;</span>
-<span class="fc" id="L198">	}</span>
+<span class="fc" id="L189">		this.expenseList = expenseList;</span>
+<span class="fc" id="L190">	}</span>
 
 	public String getRole() {
-<span class="fc" id="L201">		return role;</span>
+<span class="fc" id="L193">		return role;</span>
 	}
 
 	public void setRole(String role) {
-<span class="fc" id="L205">		this.role = role;</span>
-<span class="fc" id="L206">	}</span>
+<span class="fc" id="L197">		this.role = role;</span>
+<span class="fc" id="L198">	}</span>
 
-	public void setId(long l) {
 
-<span class="nc" id="L210">	}</span>
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

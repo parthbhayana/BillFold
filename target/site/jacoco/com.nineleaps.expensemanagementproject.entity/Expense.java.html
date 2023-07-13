@@ -73,12 +73,12 @@ public class Expense {
 	@Column(name = &quot;finance_approval_status&quot;, nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private FinanceApprovalStatus financeApprovalStatus;// = FinanceApprovalStatus.PENDING;
+	private FinanceApprovalStatus financeApprovalStatus;
 
 	@Column(name = &quot;manager_approval_status&quot;, nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
-	private ManagerApprovalStatusExpense managerApprovalStatusExpense;// = ManagerApprovalStatus.PENDING;
+	private ManagerApprovalStatusExpense managerApprovalStatusExpense;
 
 	@Lob
 	@Column(name = &quot;supporting_documents&quot;, nullable = true)

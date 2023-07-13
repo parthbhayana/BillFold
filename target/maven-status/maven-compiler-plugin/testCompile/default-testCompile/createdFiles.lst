@@ -12,10 +12,10 @@ com/nineleaps/expensemanagementproject/entity/StatusExcelTest.class
 com/nineleaps/expensemanagementproject/config/JwtFilterTest.class
 com/nineleaps/expensemanagementproject/repository/EmployeeRepositoryTest.class
 com/nineleaps/expensemanagementproject/controller/UserControllerTest.class
-com/nineleaps/expensemanagementproject/entity/EmployeeTest.class
 com/nineleaps/expensemanagementproject/controller/CategoryRepositoryTests.class
-com/nineleaps/expensemanagementproject/entity/ReportsTest.class
+com/nineleaps/expensemanagementproject/entity/EmployeeTest.class
 com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusExpenseTest.class
+com/nineleaps/expensemanagementproject/entity/ReportsTest.class
 com/nineleaps/expensemanagementproject/repository/ReportsRepositoryTests.class
 com/nineleaps/expensemanagementproject/entity/CategoryTest.class
 com/nineleaps/expensemanagementproject/entity/FinanceApprovalStatusTest.class

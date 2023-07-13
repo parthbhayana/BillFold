@@ -46,18 +46,17 @@ public class UserController {
 		DecodedJWT decodedAccessToken = JWT.decode(token);
         String employeeEmailFromToken = decodedAccessToken.getSubject();
 		Employee employee1 = userService.findByEmailId(employeeEmailFromToken);
-		System.out.println(employee1.getEmployeeEmail());
 		Long employeeId = employee1.getEmployeeId();
 		String email = employee1.getEmployeeEmail();
-		String First_name = employee1.getFirstName();
-		String Last_name = employee1.getLastName();
+		String firstName = employee1.getFirstName();
+		String lastName = employee1.getLastName();
 		@SuppressWarnings("unused")
-		String Full_name = First_name + " " + Last_name;
+		String fullName = firstName + " " + lastName;
 		String imageUrl = employee1.getImageUrl();
 		JSONObject responseJson = new JSONObject();
 		responseJson.put("employeeId", employeeId);
-		responseJson.put("firstName", First_name);
-		responseJson.put("lastName", Last_name);
+		responseJson.put("firstName", firstName);
+		responseJson.put("lastName", lastName);
 		responseJson.put("imageUrl", imageUrl);
 		responseJson.put("email", email);
 		return ResponseEntity.ok(responseJson);
