@@ -38,6 +38,18 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    private static final String CONSTANT1="Sl.no.";
+    private static final String CONSTANT2="Employee Official Id";
+    private static final String CONSTANT3="Employee Email";
+    private static final String CONSTANT4="Employee Name";
+    private static final String CONSTANT5="Report Id";
+    private static final String CONSTANT6="Report Name";
+    private static final String CONSTANT7="submitted on";
+    private static final String CONSTANT8="Month";
+    private static final String CONSTANT9="Appproved on";
+    private static final String CONSTANT10="Approved by";
+    private static final String CONSTANT11="Total Amount(INR)";
+    private static final String CONSTANT12="Status";
 
     @Override
     public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
@@ -53,14 +65,14 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
         generateExcel(excelStream, startDate, endDate, status);
         byte[] excelBytes = excelStream.toByteArray();
 
-        Employee financeadmin = employeeRepository.findByRole("FINANCE_ADMIN");
-        if (financeadmin == null) {
+        Employee financeAdmin = employeeRepository.findByRole("FINANCE_ADMIN");
+        if (financeAdmin == null) {
             throw new IllegalStateException("Finance admin cannot found. So, Email can't be send");
         }
 
-        boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
+        boolean emailSent = sendEmailWithAttachment(financeAdmin.getEmployeeEmail(), "BillFold:Excel Report",
                 "Please find the attached Excel report.", excelBytes, "report.xls");
-        if (emailsent) {
+        if (emailSent) {
             return "Email sent successfully!";
         } else {
             return "Email not sent";
@@ -77,18 +89,18 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
             HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Pending_Reimbursed");
             HSSFRow row = sheet.createRow(0);
 
-            row.createCell(0).setCellValue("Sl.no.");
-            row.createCell(1).setCellValue("Employee Official Id");
-            row.createCell(2).setCellValue("Employee Email");
-            row.createCell(3).setCellValue("Employee Name");
-            row.createCell(4).setCellValue("Report Id");
-            row.createCell(5).setCellValue("Report Name");
-            row.createCell(6).setCellValue("submitted on");
-            row.createCell(7).setCellValue("Month");
-            row.createCell(8).setCellValue("Appproved  on");
-            row.createCell(9).setCellValue("Approved by");
-            row.createCell(10).setCellValue("Total Amount(INR)");
-            row.createCell(11).setCellValue("Status");
+            row.createCell(0).setCellValue(CONSTANT1);
+            row.createCell(1).setCellValue(CONSTANT2);
+            row.createCell(2).setCellValue(CONSTANT3);
+            row.createCell(3).setCellValue(CONSTANT4);
+            row.createCell(4).setCellValue(CONSTANT5);
+            row.createCell(5).setCellValue(CONSTANT6);
+            row.createCell(6).setCellValue(CONSTANT7);
+            row.createCell(7).setCellValue(CONSTANT8);
+            row.createCell(8).setCellValue(CONSTANT9);
+            row.createCell(9).setCellValue(CONSTANT10);
+            row.createCell(10).setCellValue(CONSTANT11);
+            row.createCell(11).setCellValue(CONSTANT12);
             int dataRowIndex = 1;
             int sl = 1;
 
@@ -135,18 +147,18 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
             HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Pending");
             HSSFRow row = sheet.createRow(0);
 
-            row.createCell(0).setCellValue("Sl.no.");
-            row.createCell(1).setCellValue("Employee Official Id");
-            row.createCell(2).setCellValue("Employee Email");
-            row.createCell(3).setCellValue("Employee Name");
-            row.createCell(4).setCellValue("Report Id");
-            row.createCell(5).setCellValue("Report Name");
-            row.createCell(6).setCellValue("submitted on");
-            row.createCell(7).setCellValue("Month");
-            row.createCell(8).setCellValue("Appproved  on");
-            row.createCell(9).setCellValue("Approved by");
-            row.createCell(10).setCellValue("Total Amount(INR)");
-            row.createCell(11).setCellValue("Status");
+            row.createCell(0).setCellValue(CONSTANT1);
+            row.createCell(1).setCellValue(CONSTANT2);
+            row.createCell(2).setCellValue(CONSTANT3);
+            row.createCell(3).setCellValue(CONSTANT4);
+            row.createCell(4).setCellValue(CONSTANT5);
+            row.createCell(5).setCellValue(CONSTANT6);
+            row.createCell(6).setCellValue(CONSTANT7);
+            row.createCell(7).setCellValue(CONSTANT8);
+            row.createCell(8).setCellValue(CONSTANT9);
+            row.createCell(9).setCellValue(CONSTANT10);
+            row.createCell(10).setCellValue(CONSTANT11);
+            row.createCell(11).setCellValue(CONSTANT12);
             int dataRowIndex = 1;
             int sl = 1;
 
@@ -193,18 +205,18 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
             HSSFSheet sheet = workbook.createSheet("Billfold_All_reports_Reimbursed");
             HSSFRow row = sheet.createRow(0);
 
-            row.createCell(0).setCellValue("Sl.no.");
-            row.createCell(1).setCellValue("Employee Official Id");
-            row.createCell(2).setCellValue("Employee Email");
-            row.createCell(3).setCellValue("Employee Name");
-            row.createCell(4).setCellValue("Report Id");
-            row.createCell(5).setCellValue("Report Name");
-            row.createCell(6).setCellValue("submitted on");
-            row.createCell(7).setCellValue("Month");
-            row.createCell(8).setCellValue("Appproved  on");
-            row.createCell(9).setCellValue("Approved by");
-            row.createCell(10).setCellValue("Total Amount(INR)");
-            row.createCell(11).setCellValue("Status");
+            row.createCell(0).setCellValue(CONSTANT1);
+            row.createCell(1).setCellValue(CONSTANT2);
+            row.createCell(2).setCellValue(CONSTANT3);
+            row.createCell(3).setCellValue(CONSTANT4);
+            row.createCell(4).setCellValue(CONSTANT5);
+            row.createCell(5).setCellValue(CONSTANT6);
+            row.createCell(6).setCellValue(CONSTANT7);
+            row.createCell(7).setCellValue(CONSTANT8);
+            row.createCell(8).setCellValue(CONSTANT9);
+            row.createCell(9).setCellValue(CONSTANT10);
+            row.createCell(10).setCellValue(CONSTANT11);
+            row.createCell(11).setCellValue(CONSTANT12);
 
             int dataRowIndex = 1;
             int sl = 1;

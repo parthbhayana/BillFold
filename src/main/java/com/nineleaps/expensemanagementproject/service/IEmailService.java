@@ -1,7 +1,5 @@
 package com.nineleaps.expensemanagementproject.service;
 
-import com.nineleaps.expensemanagementproject.entity.Expense;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

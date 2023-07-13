@@ -6,16 +6,11 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.json.simple.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
 
 import com.nineleaps.expensemanagementproject.config.JwtUtil;
 import com.nineleaps.expensemanagementproject.entity.Employee;
@@ -47,7 +42,7 @@ class UserControllerTest {
         when(userService.getAllUser()).thenReturn(users);
 
         // Act
-        List<Employee> result = userController.getAllUserDtls();
+        List<Employee> result = userController.getAllUserDetails();
 
         // Assert
         assertEquals(users, result);

@@ -18,7 +18,6 @@ public class CurrencyExchangeServiceImpl implements ICurrencyExchange {
 
         String baseURL = "https://api.freecurrencyapi.com/v1/historical?apikey=0bM6MPvQNZk9vZmlzY3t8MCs30rcROub0soX77mB&date_from=" + date + "&date_to=" + date + "&currencies=INR&base_currency=";
         String apiURL = baseURL + baseCurrency;
-        System.out.println(apiURL);
         double exchangeValue = 0;
         try {
             URL url = new URL(apiURL);

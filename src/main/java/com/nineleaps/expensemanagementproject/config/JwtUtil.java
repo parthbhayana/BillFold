@@ -15,7 +15,7 @@ public class JwtUtil {
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 30;
 
 
-    public ResponseEntity<?> generateTokens(String emailId, Long employeeId, String name, String imageUrl, String role,
+    public ResponseEntity<TokenResponse> generateTokens(String emailId, Long employeeId,  String role,
                                             HttpServletResponse response) {
         String accessToken = generateToken(emailId, employeeId, role, ACCESS_TOKEN_EXPIRATION_TIME);
         String refreshToken = generateToken(emailId, employeeId, role, REFRESH_TOKEN_EXPIRATION_TIME);
@@ -51,9 +51,7 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
-    public Object decodeToken(String token) {
-        return null;
-    }
+
 
     private static class TokenResponse {
         private final String accessToken;

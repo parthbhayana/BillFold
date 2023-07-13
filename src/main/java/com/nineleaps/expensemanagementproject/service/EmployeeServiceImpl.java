@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public Employee getEmployeeById(Long employeeId) {
-		return employeeRepository.findById(employeeId).get();
+		Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+		return optionalEmployee.orElse(null);
 	}
+
 
 	@Override
 	public void deleteEmployeeDetailsById(Long employeeId) {
@@ -119,7 +122,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		Boolean isAdmins = false;
 		String roles = "EMPLOYEE";
 		for (Employee emp1 : emp) {
-			if (emp1.getEmployeeId() == employeeId)
+			if (Objects.equals(emp1.getEmployeeId(), employeeId))
 				continue;
 			emp1.setIsFinanceAdmin(isAdmins);
 			emp1.setRole(roles);
