@@ -18,43 +18,42 @@ import org.springframework.stereotype.Service;
 
 <span class="nc" id="L19">        String baseURL = &quot;https://api.freecurrencyapi.com/v1/historical?apikey=0bM6MPvQNZk9vZmlzY3t8MCs30rcROub0soX77mB&amp;date_from=&quot; + date + &quot;&amp;date_to=&quot; + date + &quot;&amp;currencies=INR&amp;base_currency=&quot;;</span>
 <span class="nc" id="L20">        String apiURL = baseURL + baseCurrency;</span>
-<span class="nc" id="L21">        System.out.println(apiURL);</span>
-<span class="nc" id="L22">        double exchangeValue = 0;</span>
+<span class="nc" id="L21">        double exchangeValue = 0;</span>
         try {
-<span class="nc" id="L24">            URL url = new URL(apiURL);</span>
-<span class="nc" id="L25">            HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span>
-<span class="nc" id="L26">            connection.setRequestMethod(&quot;GET&quot;);</span>
-<span class="nc" id="L27">            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));</span>
-<span class="nc" id="L28">            StringBuilder response = new StringBuilder();</span>
+<span class="nc" id="L23">            URL url = new URL(apiURL);</span>
+<span class="nc" id="L24">            HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span>
+<span class="nc" id="L25">            connection.setRequestMethod(&quot;GET&quot;);</span>
+<span class="nc" id="L26">            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));</span>
+<span class="nc" id="L27">            StringBuilder response = new StringBuilder();</span>
             String line;
-<span class="nc bnc" id="L30" title="All 2 branches missed.">            while ((line = reader.readLine()) != null) {</span>
-<span class="nc" id="L31">                response.append(line);</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">            while ((line = reader.readLine()) != null) {</span>
+<span class="nc" id="L30">                response.append(line);</span>
             }
-<span class="nc" id="L33">            reader.close();</span>
-<span class="nc" id="L34">            connection.disconnect();</span>
-<span class="nc" id="L35">            String json = response.toString();</span>
+<span class="nc" id="L32">            reader.close();</span>
+<span class="nc" id="L33">            connection.disconnect();</span>
+<span class="nc" id="L34">            String json = response.toString();</span>
             try {
-<span class="nc" id="L37">                ObjectMapper objectMapper = new ObjectMapper();</span>
-<span class="nc" id="L38">                JsonNode rootNode = objectMapper.readTree(json);</span>
-<span class="nc" id="L39">                JsonNode dataNode = rootNode.get(&quot;data&quot;);</span>
-<span class="nc bnc" id="L40" title="All 4 branches missed.">                if (dataNode != null &amp;&amp; dataNode.has(date)) {</span>
-<span class="nc" id="L41">                    JsonNode innerDataNode = dataNode.get(date);</span>
-<span class="nc bnc" id="L42" title="All 2 branches missed.">                    if (innerDataNode.has(&quot;INR&quot;)) {</span>
-<span class="nc" id="L43">                        exchangeValue = innerDataNode.get(&quot;INR&quot;).asDouble();</span>
+<span class="nc" id="L36">                ObjectMapper objectMapper = new ObjectMapper();</span>
+<span class="nc" id="L37">                JsonNode rootNode = objectMapper.readTree(json);</span>
+<span class="nc" id="L38">                JsonNode dataNode = rootNode.get(&quot;data&quot;);</span>
+<span class="nc bnc" id="L39" title="All 4 branches missed.">                if (dataNode != null &amp;&amp; dataNode.has(date)) {</span>
+<span class="nc" id="L40">                    JsonNode innerDataNode = dataNode.get(date);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">                    if (innerDataNode.has(&quot;INR&quot;)) {</span>
+<span class="nc" id="L42">                        exchangeValue = innerDataNode.get(&quot;INR&quot;).asDouble();</span>
                     }
                 }
-<span class="nc" id="L46">            } catch (Exception e) {</span>
-<span class="nc" id="L47">                e.printStackTrace();</span>
-<span class="nc" id="L48">            }</span>
-<span class="nc" id="L49">        } catch (IOException e) {</span>
-<span class="nc" id="L50">            e.printStackTrace();</span>
-<span class="nc" id="L51">        }</span>
-<span class="nc" id="L52">        return exchangeValue;</span>
+<span class="nc" id="L45">            } catch (Exception e) {</span>
+<span class="nc" id="L46">                e.printStackTrace();</span>
+<span class="nc" id="L47">            }</span>
+<span class="nc" id="L48">        } catch (IOException e) {</span>
+<span class="nc" id="L49">            e.printStackTrace();</span>
+<span class="nc" id="L50">        }</span>
+<span class="nc" id="L51">        return exchangeValue;</span>
     }
 
     @Override
     public Object getCurrencies() {
-<span class="nc" id="L57">        return null;</span>
+<span class="nc" id="L56">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
