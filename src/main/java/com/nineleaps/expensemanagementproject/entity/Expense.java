@@ -4,14 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.*;
-
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "expense")
@@ -292,11 +288,5 @@ public class Expense {
 		this.amountApprovedINR = amountApprovedINR;
 	}
 
-    public HttpStatus getStatusCode() {
-		return null;
-	}
 
-	public short getBody() {
-		return 0;
-	}
 }

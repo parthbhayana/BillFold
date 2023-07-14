@@ -2,6 +2,7 @@ package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
 
+import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +25,8 @@ public class ExpenseController {
     private ExpenseRepository expenseRepository;
 
     @PostMapping("/insertExpenses/{employeeId}")
-    public Expense saveExpense(@RequestBody Expense expense, @PathVariable Long employeeId, @RequestParam Long categoryId) {
-        return expenseService.addExpense(expense, employeeId, categoryId);
+    public Expense saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId, @RequestParam Long categoryId) {
+        return expenseService.addExpense(expenseDTO, employeeId, categoryId);
     }
 
     @GetMapping("/showAllExpenses")
@@ -39,8 +40,8 @@ public class ExpenseController {
     }
 
     @PutMapping("/updateExpenses/{expenseId}")
-    public Expense updateExpenses(@RequestBody Expense newExpense, @PathVariable Long expenseId) {
-        return expenseService.updateExpenses(newExpense, expenseId);
+    public Expense updateExpenses(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long expenseId) {
+        return expenseService.updateExpenses(expenseDTO, expenseId);
     }
 
     @GetMapping("/getExpenseByEmployeeId/{employeeId}")

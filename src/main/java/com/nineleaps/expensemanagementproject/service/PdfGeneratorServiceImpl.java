@@ -48,6 +48,9 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
+import static com.lowagie.text.Element.ALIGN_LEFT;
+import static com.lowagie.text.Element.ALIGN_RIGHT;
+import static com.lowagie.text.Element.ALIGN_CENTER;
 
 @Service
 public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
@@ -58,9 +61,9 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
     @Autowired
-    private IExpenseService expenseService;
+    IExpenseService expenseService;
 
 
     public byte[] generatePdf(Long reportId, List<Long> expenseIds) throws IOException {
@@ -69,6 +72,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         @SuppressWarnings("unused")
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         class FooterEvent extends PdfPageEventHelper {
+            @Override
             public void onEndPage(PdfWriter writer, Document document) {
                 PdfContentByte pdfContentByte = writer.getDirectContent();
                 float x = PageSize.A4.getWidth() - document.rightMargin();
@@ -91,13 +95,13 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         Font fontheader01 = FontFactory.getFont(FontFactory.TIMES);
         fontheader01.setSize(14);
         Paragraph headerParagraph01 = new Paragraph("Report_id: " + reportId, fontheader01);
-        headerParagraph01.setAlignment(Paragraph.ALIGN_LEFT);
+        headerParagraph01.setAlignment(ALIGN_LEFT);
 
 
         Font fontHeader = FontFactory.getFont(FontFactory.TIMES);
         fontHeader.setSize(22);
         Paragraph headerParagraph = new Paragraph("BillFold - Expense Report", fontHeader);
-        headerParagraph.setAlignment(Paragraph.ALIGN_CENTER);
+        headerParagraph.setAlignment(ALIGN_CENTER);
         PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100);
         Font font = FontFactory.getFont(FontFactory.TIMES, 14);
@@ -126,7 +130,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
             table.addCell(getCenterAlignedCells(expenseList.getDescription(), font));
             table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
             table.addCell(getCenterAlignedCell(String.valueOf(expenseList.getManagerApprovalStatusExpense()), font));
-//            total += expenseList.getAmountApproved();
+            total += expenseList.getAmountApproved();
         }
 
         Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES_BOLD);
@@ -134,7 +138,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         Chunk currencyChunk = new Chunk(report.getCurrency(), fontParagraph1);
         Chunk totalChunk = new Chunk(String.valueOf(total), fontParagraph1);
         Paragraph pdfParagraph01 = new Paragraph();
-        pdfParagraph01.setAlignment(Paragraph.ALIGN_RIGHT);
+        pdfParagraph01.setAlignment(ALIGN_RIGHT);
         pdfParagraph01.add("Total Amount: ");
         pdfParagraph01.add(currencyChunk);
         pdfParagraph01.add(" ");
@@ -145,29 +149,29 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         @SuppressWarnings("null")
         Paragraph pdfParagraph = new Paragraph(
                 "Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
-        pdfParagraph.setAlignment(Paragraph.ALIGN_LEFT);
+        pdfParagraph.setAlignment(ALIGN_LEFT);
         Font fontParagraph12 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph12.setSize(14);
         Paragraph pdfParagraph02 = new Paragraph("Employee Email : " + employee.getEmployeeEmail(), fontParagraph);
-        pdfParagraph02.setAlignment(Paragraph.ALIGN_LEFT);
+        pdfParagraph02.setAlignment(ALIGN_LEFT);
         Paragraph pdfParagraph002 = new Paragraph("Employee Official Id : " + employee.getOfficialEmployeeId());
-        pdfParagraph002.setAlignment(Paragraph.ALIGN_LEFT);
+        pdfParagraph002.setAlignment(ALIGN_LEFT);
         Paragraph emptyParagraph = new Paragraph(" ");
         Paragraph emptyParagraph01 = new Paragraph(" ");
         Paragraph emptyParagraph02 = new Paragraph(" ");
         Font fontParagraph13 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph13.setSize(20);
         Paragraph pdfParagraph03 = new Paragraph(report.getReportTitle(), fontParagraph13);
-        pdfParagraph03.setAlignment(Paragraph.ALIGN_LEFT);
+        pdfParagraph03.setAlignment(ALIGN_LEFT);
         Paragraph pdfParagraph011 = new Paragraph();
-        pdfParagraph011.setAlignment(Paragraph.ALIGN_RIGHT);
+        pdfParagraph011.setAlignment(ALIGN_RIGHT);
         pdfParagraph011.add("Total Amount: ");
         pdfParagraph011.add(currencyChunk);
         pdfParagraph011.add(" ");
         pdfParagraph011.add(totalChunk);
         Font fontNote = FontFactory.getFont(FontFactory.TIMES_ITALIC, 10);
         Paragraph noteParagraph = new Paragraph("Notes:\n", fontNote);
-        noteParagraph.setAlignment(Paragraph.ALIGN_LEFT);
+        noteParagraph.setAlignment(ALIGN_LEFT);
         noteParagraph.setIndentationLeft(20);
         noteParagraph.add("The information on this receipt was manually entered. Please verify for authenticity.\n");
         Paragraph lineSeparator = new Paragraph(
@@ -202,7 +206,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
         fontParagraph14.setSize(14);
         Paragraph pdfParagraph04 = new Paragraph(report.getReportDescription(), fontParagraph14);
-        pdfParagraph04.setAlignment(Paragraph.ALIGN_LEFT);
+        pdfParagraph04.setAlignment(ALIGN_LEFT);
 
 
         String qrCodeData = "Employee Email=" + employee.getEmployeeEmail() + " " + "Employee Name="
@@ -218,7 +222,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         } catch (WriterException e) {
             e.printStackTrace();
 
-            return null;
+            return new byte[0];
         }
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
 

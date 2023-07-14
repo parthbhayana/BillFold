@@ -3,6 +3,7 @@
 import java.util.List;
 import java.util.Optional;
 
+import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,64 +19,64 @@ import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 
 @RestController
 @RequestMapping(&quot;/employee&quot;)
-<span class="fc" id="L21">public class EmployeeController {</span>
+<span class="fc" id="L22">public class EmployeeController {</span>
 
 	@Autowired
 	private IEmployeeService employeeService;
 
 	@GetMapping(&quot;/listEmployee&quot;)
 	public List&lt;Employee&gt; getAllEmployeeDetails() {
-<span class="nc" id="L28">		return employeeService.getAllEmployeeDetails();</span>
+<span class="nc" id="L29">		return employeeService.getAllEmployeeDetails();</span>
 	}
 
 	@PostMapping(&quot;/insertEmployee&quot;)
-	public Employee save(@RequestBody Employee employee) {
-<span class="nc" id="L33">		return employeeService.saveEmployeeDetails(employee);</span>
+	public Employee save(@RequestBody EmployeeDTO employeeDTO) {
+<span class="nc" id="L34">		return employeeService.saveEmployeeDetails(employeeDTO);</span>
 	}
 
 	@PutMapping(&quot;/updateEmployee/{employeeId}&quot;)
-	public Employee updateEmployee(@RequestBody Employee employee, @PathVariable Long employeeId) {
-<span class="nc" id="L38">		return employeeService.updateEmployeeDetails(employee, employeeId);</span>
+	public Employee updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId) {
+<span class="nc" id="L39">		return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
 	}
 
 	@PostMapping(&quot;/additionalEmployeeDetails&quot;)
 	public Optional&lt;Employee&gt; additionalEmployeeDetails(@RequestParam Long employeeId,
 			@RequestParam String officialEmployeeId, @RequestParam String managerEmail, @RequestParam Long mobileNumber,
 			@RequestParam String managerName) {
-<span class="nc" id="L45">		return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,</span>
+<span class="nc" id="L46">		return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,</span>
 				managerName);
 	}
 
 	@GetMapping(&quot;/findEmployee/{employeeId}&quot;)
 	public Employee getEmployeeById(@PathVariable Long employeeId) {
-<span class="nc" id="L51">		return employeeService.getEmployeeById(employeeId);</span>
+<span class="nc" id="L52">		return employeeService.getEmployeeById(employeeId);</span>
 
 	}
 
 	@DeleteMapping(&quot;/deleteEmployee/{employeeId}&quot;)
 	public void deleteEmployeeById(@PathVariable Long employeeId) {
-<span class="nc" id="L57">		employeeService.deleteEmployeeDetailsById(employeeId);</span>
-<span class="nc" id="L58">	}</span>
+<span class="nc" id="L58">		employeeService.deleteEmployeeDetailsById(employeeId);</span>
+<span class="nc" id="L59">	}</span>
 
 	@PostMapping(&quot;/hideEmployee/{employeeId}&quot;)
 	public void hideEmployee(@PathVariable Long employeeId) {
-<span class="nc" id="L62">		employeeService.hideEmployee(employeeId);</span>
-<span class="nc" id="L63">	}</span>
+<span class="nc" id="L63">		employeeService.hideEmployee(employeeId);</span>
+<span class="nc" id="L64">	}</span>
 
 	@PostMapping(&quot;/setFinanceAdmin&quot;)
 	public void setFinanceAdmin(@RequestParam Long employeeId) {
-<span class="nc" id="L67">		employeeService.setFinanceAdmin(employeeId);</span>
-<span class="nc" id="L68">	}</span>
+<span class="nc" id="L68">		employeeService.setFinanceAdmin(employeeId);</span>
+<span class="nc" id="L69">	}</span>
 
 	@GetMapping(&quot;/getEmployeeDetails&quot;)
 	public Optional&lt;Employee&gt; getEmployeeDetails(@RequestParam Long employeeId) {
-<span class="nc" id="L72">		return employeeService.getEmployeeDetails(employeeId);</span>
+<span class="nc" id="L73">		return employeeService.getEmployeeDetails(employeeId);</span>
 	}
 
 	@PostMapping(&quot;/editEmployeeDetails&quot;)
 	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber,
 			String officialEmployeeId, String managerName) {
-<span class="nc" id="L78">		employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName);</span>
-<span class="nc" id="L79">	}</span>
+<span class="nc" id="L79">		employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName);</span>
+<span class="nc" id="L80">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

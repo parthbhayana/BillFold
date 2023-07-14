@@ -3,19 +3,20 @@ package com.nineleaps.expensemanagementproject.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 
 public interface IEmployeeService {
 
 	public List<Employee> getAllEmployeeDetails();
 
-	public Employee saveEmployeeDetails(Employee employee);
+	public Employee saveEmployeeDetails(EmployeeDTO employee);
 
 	public Employee getEmployeeById(Long employeeId);
 
 	public void deleteEmployeeDetailsById(Long employeeId);
 
-	public Employee updateEmployeeDetails(Employee newemployee, Long employeeId);
+	public Employee updateEmployeeDetails(EmployeeDTO newemployee, Long employeeId);
 
 	public Employee getEmployeeByEmail(String emailToVerify);
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -38,25 +39,31 @@ public class ExpenseServiceImpl implements IExpenseService {
     private ReportsRepository reportsRepository;
 
     @Autowired
-    private ICurrencyExchange CurrencyExchange;
+    private ICurrencyExchange currencyExchange;
     @Autowired
     private IEmailService emailService;
 
 @Transactional
     @Override
-    public Expense addExpense(Expense expense, Long employeeId, Long categoryId) {
+    public Expense addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
+        Expense expense = new Expense();
         expense.setEmployee(employee);
         LocalDateTime now = LocalDateTime.now();
         expense.setDateCreated(now);
-        String curr = expense.getCurrency();
-        String date = expense.getDate().toString();
-        double rate = CurrencyExchange.getExchangeRate(curr, date);
-        System.out.println("Exchange Rate = " + rate);
-        double amountInInr = expense.getAmount() * rate;
+        String curr = expenseDTO.getCurrency();
+        String date = expenseDTO.getDate().toString();
+        double rate = currencyExchange.getExchangeRate(curr, date);
+        double amountInInr = expenseDTO.getAmount() * rate;
         expense.setAmountINR((float) amountInInr);
         Category category = categoryRepository.getCategoryByCategoryId(categoryId);
         String categoryDescription = category.getCategoryDescription();
+        expense.setDescription(expenseDTO.getDescription());
+        expense.setAmount(expenseDTO.getAmount());
+        expense.setCurrency(expenseDTO.getCurrency());
+        expense.setMerchantName(expenseDTO.getMerchantName());
+        expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
+        expense.setDate(expenseDTO.getDate());
         expense.setCategory(category);
         expense.setCategoryDescription(categoryDescription);
         return expenseRepository.save(expense);
@@ -110,21 +117,21 @@ public class ExpenseServiceImpl implements IExpenseService {
     }
 
     @Override
-    public Expense updateExpenses(Expense newExpense, Long expenseId) {
+    public Expense updateExpenses(ExpenseDTO expenseDTO, Long expenseId) {
         Expense expense = getExpenseById(expenseId);
         if ((!expense.getIsHidden() && !expense.getIsReported()) || ((expense.getIsReported())
                 && (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED))) {
-            expense.setMerchantName(newExpense.getMerchantName());
-            expense.setDate(newExpense.getDate());
-            expense.setAmount(newExpense.getAmount());
-            expense.setDescription(newExpense.getDescription());
-            expense.setSupportingDocuments(newExpense.getSupportingDocuments());
+            expense.setMerchantName(expenseDTO.getMerchantName());
+            expense.setDate(expenseDTO.getDate());
+            expense.setAmount(expenseDTO.getAmount());
+            expense.setDescription(expenseDTO.getDescription());
+            expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
             LocalDateTime now = LocalDateTime.now();
             expense.setDateCreated(now);
-            expense.setCurrency(newExpense.getCurrency());
+            expense.setCurrency(expenseDTO.getCurrency());
             String curr = expense.getCurrency();
             String date = expense.getDate().toString();
-            double rate = CurrencyExchange.getExchangeRate(curr, date);
+            double rate = currencyExchange.getExchangeRate(curr, date);
             double amountInInr = expense.getAmount() * rate;
             expense.setAmountINR((float) amountInInr);
             expenseRepository.save(expense);
@@ -160,11 +167,15 @@ public class ExpenseServiceImpl implements IExpenseService {
         throw new IllegalStateException("Expense " + expenseId + " does not exist!");
     }
 
+
     @Override
     public List<Expense> getExpenseByReportId(Long reportId) {
         Reports report = reportsRepository.findById(reportId).get();
         return expenseRepository.findByReportsAndIsHidden(report, false);
     }
+
+
+
 
     @Override
     public void hideExpense(Long expId) {

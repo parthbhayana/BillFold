@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,13 +30,13 @@ public class EmployeeController {
 	}
 
 	@PostMapping("/insertEmployee")
-	public Employee save(@RequestBody Employee employee) {
-		return employeeService.saveEmployeeDetails(employee);
+	public Employee save(@RequestBody EmployeeDTO employeeDTO) {
+		return employeeService.saveEmployeeDetails(employeeDTO);
 	}
 
 	@PutMapping("/updateEmployee/{employeeId}")
-	public Employee updateEmployee(@RequestBody Employee employee, @PathVariable Long employeeId) {
-		return employeeService.updateEmployeeDetails(employee, employeeId);
+	public Employee updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId) {
+		return employeeService.updateEmployeeDetails(employeeDTO, employeeId);
 	}
 
 	@PostMapping("/additionalEmployeeDetails")

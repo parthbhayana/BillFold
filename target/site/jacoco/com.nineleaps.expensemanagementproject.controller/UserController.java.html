@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,65 +22,56 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequestMapping()
-<span class="fc" id="L26">public class UserController {</span>
+<span class="fc" id="L25">public class UserController {</span>
     @Autowired
     private IEmployeeService userService;
     @SuppressWarnings(&quot;unused&quot;)
     @Autowired
     private JwtUtil jwtUtil;
-    private String email;
     JSONObject responseJson;
-
     @GetMapping(&quot;/listTheUser&quot;)
-    public List&lt;Employee&gt; getAllUserDtls() {
-<span class="fc" id="L37">        return userService.getAllUser();</span>
+    public List&lt;Employee&gt; getAllUserDetails() {
+<span class="nc" id="L34">        return userService.getAllUser();</span>
     }
 
 	
 	@SuppressWarnings(&quot;unchecked&quot;)
 	@GetMapping(&quot;/getProfileData&quot;)
 	public ResponseEntity&lt;?&gt; sendData(HttpServletRequest request) {
-<span class="nc" id="L44">		String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
-<span class="nc" id="L45">		String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
-<span class="nc" id="L46">		DecodedJWT decodedAccessToken = JWT.decode(token);</span>
-<span class="nc" id="L47">        String employeeEmailFromToken = decodedAccessToken.getSubject();</span>
-<span class="nc" id="L48">		Employee employee1 = userService.findByEmailId(employeeEmailFromToken);</span>
-<span class="nc" id="L49">		Long employeeId = employee1.getEmployeeId();</span>
-<span class="nc" id="L50">		String email = employee1.getEmployeeEmail();</span>
-<span class="nc" id="L51">		String firstName = employee1.getFirstName();</span>
-<span class="nc" id="L52">		String lastName = employee1.getLastName();</span>
+<span class="nc" id="L41">		String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
+<span class="nc" id="L42">		String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
+<span class="nc" id="L43">		DecodedJWT decodedAccessToken = JWT.decode(token);</span>
+<span class="nc" id="L44">        String employeeEmailFromToken = decodedAccessToken.getSubject();</span>
+<span class="nc" id="L45">		Employee employee1 = userService.findByEmailId(employeeEmailFromToken);</span>
+<span class="nc" id="L46">		Long employeeId = employee1.getEmployeeId();</span>
+<span class="nc" id="L47">		String email = employee1.getEmployeeEmail();</span>
+<span class="nc" id="L48">		String firstName = employee1.getFirstName();</span>
+<span class="nc" id="L49">		String lastName = employee1.getLastName();</span>
 		@SuppressWarnings(&quot;unused&quot;)
-<span class="nc" id="L54">		String fullName = firstName + &quot; &quot; + lastName;</span>
-<span class="nc" id="L55">		String imageUrl = employee1.getImageUrl();</span>
-<span class="nc" id="L56">		JSONObject responseJson = new JSONObject();</span>
-<span class="nc" id="L57">		responseJson.put(&quot;employeeId&quot;, employeeId);</span>
-<span class="nc" id="L58">		responseJson.put(&quot;firstName&quot;, firstName);</span>
-<span class="nc" id="L59">		responseJson.put(&quot;lastName&quot;, lastName);</span>
-<span class="nc" id="L60">		responseJson.put(&quot;imageUrl&quot;, imageUrl);</span>
-<span class="nc" id="L61">		responseJson.put(&quot;email&quot;, email);</span>
-<span class="nc" id="L62">		return ResponseEntity.ok(responseJson);</span>
+<span class="nc" id="L51">		String fullName = firstName + &quot; &quot; + lastName;</span>
+<span class="nc" id="L52">		String imageUrl = employee1.getImageUrl();</span>
+<span class="nc" id="L53">		JSONObject responseJson = new JSONObject();</span>
+<span class="nc" id="L54">		responseJson.put(&quot;employeeId&quot;, employeeId);</span>
+<span class="nc" id="L55">		responseJson.put(&quot;firstName&quot;, firstName);</span>
+<span class="nc" id="L56">		responseJson.put(&quot;lastName&quot;, lastName);</span>
+<span class="nc" id="L57">		responseJson.put(&quot;imageUrl&quot;, imageUrl);</span>
+<span class="nc" id="L58">		responseJson.put(&quot;email&quot;, email);</span>
+<span class="nc" id="L59">		return ResponseEntity.ok(responseJson);</span>
 	}
 
 	@PostMapping(&quot;/theProfile&quot;)
 	public ResponseEntity&lt;?&gt; insertUser(@RequestBody Employee newUser, HttpServletResponse response) {
-<span class="nc" id="L67">		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">		if (employee == null) {</span>
-<span class="nc" id="L69">			userService.insertUser(newUser);</span>
-<span class="nc" id="L70">			employee = userService.findByEmailId(newUser.getEmployeeEmail());</span>
-<span class="nc" id="L71">			System.out.println(employee.getEmployeeEmail());</span>
-<span class="nc" id="L72">			email = employee.getEmployeeEmail();</span>
-<span class="nc" id="L73">			System.out.println(&quot;new user email&quot; + email);</span>
-<span class="nc" id="L74">			System.out.println(employee.getEmployeeId());</span>
-<span class="nc" id="L75">			ResponseEntity&lt;?&gt; tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),</span>
-<span class="nc" id="L76">				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);</span>
-<span class="nc" id="L77">			return tokenResponse;</span>
+<span class="nc" id="L64">		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (employee == null) {</span>
+<span class="nc" id="L66">			userService.insertUser(newUser);</span>
+<span class="nc" id="L67">			employee = userService.findByEmailId(newUser.getEmployeeEmail());</span>
+<span class="nc" id="L68">			String email = employee.getEmployeeEmail();</span>
+<span class="nc" id="L69">			ResponseEntity&lt;?&gt; tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),  employee.getRole(), response);</span>
+<span class="nc" id="L70">			return tokenResponse;</span>
 		} else {
-<span class="nc" id="L79">			email = employee.getEmployeeEmail();</span>
-<span class="nc" id="L80">			System.out.println(email);</span>
-<span class="nc" id="L81">			System.out.println(employee.getEmployeeId());</span>
-<span class="nc" id="L82">			ResponseEntity&lt;?&gt; tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),</span>
-<span class="nc" id="L83">				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);</span>
-<span class="nc" id="L84">			return tokenResponse;</span>
+<span class="nc" id="L72">			String email = employee.getEmployeeEmail();</span>
+<span class="nc" id="L73">			ResponseEntity&lt;?&gt; tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
+<span class="nc" id="L74">			return tokenResponse;</span>
 		}
 	}
 }

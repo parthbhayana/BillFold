@@ -1,13 +1,12 @@
 package com.nineleaps.expensemanagementproject.controller;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
-import com.nineleaps.expensemanagementproject.service.IExpenseService;
+
+import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
-import com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImpl;
-
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
@@ -32,14 +29,7 @@ public class ReportsController {
     @Autowired
     private IReportsService reportsService;
 
-    @Autowired
-    private PdfGeneratorServiceImpl pdfGeneratorService;
 
-    @Autowired
-    private IExpenseService expenseService;
-
-    @Autowired
-    private ExpenseRepository expenseRepository;
 
     @GetMapping("/getAllReports")
     public List<Reports> getAllReports() {
@@ -72,9 +62,9 @@ public class ReportsController {
     }
 
     @PostMapping("/addReport/{employeeId}")
-    public Reports addReport(@RequestBody Reports newReport, @PathVariable Long employeeId,
+    public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
                              @RequestParam List<Long> expenseIds) {
-        return reportsService.addReport(newReport, employeeId, expenseIds);
+        return reportsService.addReport(reportsDTO, employeeId, expenseIds);
     }
 
     @PatchMapping("/addExpenseToReport/{reportId}")

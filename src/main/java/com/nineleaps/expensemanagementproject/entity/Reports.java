@@ -359,11 +359,4 @@ public class Reports {
 	}
 
 
-    public HttpStatus getStatusCode() {
-		return null;
-	}
-
-	public short getBody() {
-		return 0;
-	}
 }

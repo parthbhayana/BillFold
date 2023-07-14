@@ -3,6 +3,8 @@ package com.nineleaps.expensemanagementproject.controller;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +24,8 @@ public class CategoryController {
     private ICategoryService categoryService;
 
     @PostMapping("/insertCategory")
-    public Category addCategory(@RequestBody Category category) {
-        return categoryService.addCategory(category);
+    public Category addCategory(@RequestBody CategoryDTO categoryDTO) {
+        return categoryService.addCategory(categoryDTO);
     }
 
     @GetMapping("/showAllCategories")
@@ -37,10 +39,9 @@ public class CategoryController {
     }
 
     @PutMapping("/updateCategory/{categoryId}")
-    public Category updateCategory(@PathVariable Long categoryId, @RequestBody Category newCategory) {
-        Category category = categoryService.getCategoryById(categoryId);
-        category.setCategoryDescription(newCategory.getCategoryDescription());
-        return categoryService.updateCategory(category);
+    public Category updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
+
+        return categoryService.updateCategory(categoryId,categoryDTO);
     }
 
     @PostMapping("/hideCategory/{categoryId}")

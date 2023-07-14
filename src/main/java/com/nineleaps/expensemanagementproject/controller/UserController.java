@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +28,9 @@ public class UserController {
     @SuppressWarnings("unused")
     @Autowired
     private JwtUtil jwtUtil;
-    private String email;
     JSONObject responseJson;
-
     @GetMapping("/listTheUser")
-    public List<Employee> getAllUserDtls() {
+    public List<Employee> getAllUserDetails() {
         return userService.getAllUser();
     }
 
@@ -68,19 +65,12 @@ public class UserController {
 		if (employee == null) {
 			userService.insertUser(newUser);
 			employee = userService.findByEmailId(newUser.getEmployeeEmail());
-			System.out.println(employee.getEmployeeEmail());
-			email = employee.getEmployeeEmail();
-			System.out.println("new user email" + email);
-			System.out.println(employee.getEmployeeId());
-			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),
-				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
+			String email = employee.getEmployeeEmail();
+			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),  employee.getRole(), response);
 			return tokenResponse;
 		} else {
-			email = employee.getEmployeeEmail();
-			System.out.println(email);
-			System.out.println(employee.getEmployeeId());
-			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),
-				    employee.getFirstName(), employee.getImageUrl(), employee.getRole(), response);
+			String email = employee.getEmployeeEmail();
+			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
 			return tokenResponse;
 		}
 	}

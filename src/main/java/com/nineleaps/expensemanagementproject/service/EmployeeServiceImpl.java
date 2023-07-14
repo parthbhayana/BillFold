@@ -1,8 +1,10 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.entity.Employee;
@@ -20,14 +22,25 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
-	public Employee saveEmployeeDetails(Employee employee) {
+	public Employee saveEmployeeDetails(EmployeeDTO employeeDTO) {
+		Employee employee=new Employee();
+		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());
+		employee.setFirstName(employeeDTO.getFirstName());
+		employee.setLastName(employeeDTO.getLastName());
+		employee.setManagerEmail(employeeDTO.getManagerEmail());
+		employee.setManagerName(employeeDTO.getManagerName());
+		employee.setMiddleName(employeeDTO.getMiddleName());
+		employee.setMobileNumber(employeeDTO.getMobileNumber());
+		employee.setOfficialEmployeeId(employeeDTO.getOfficialEmployeeId());
 		return employeeRepository.save(employee);
 	}
 
 	@Override
 	public Employee getEmployeeById(Long employeeId) {
-		return employeeRepository.findById(employeeId).get();
+		Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+		return optionalEmployee.orElse(null);
 	}
+
 
 	@Override
 	public void deleteEmployeeDetailsById(Long employeeId) {
@@ -35,12 +48,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
-	public Employee updateEmployeeDetails(Employee newemployee, Long employeeId) {
+	public Employee updateEmployeeDetails(EmployeeDTO employeeDTO, Long employeeId) {
 		Employee employee = getEmployeeById(employeeId);
-		employee.setEmployeeEmail(newemployee.getEmployeeEmail());
-		employee.setFirstName(newemployee.getFirstName());
-		employee.setLastName(newemployee.getLastName());
-		employee.setMiddleName(newemployee.getMiddleName());
+		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());
+		employee.setFirstName(employeeDTO.getFirstName());
+		employee.setLastName(employeeDTO.getLastName());
+		employee.setMiddleName(employeeDTO.getMiddleName());
 		return employeeRepository.save(employee);
 	}
 
@@ -119,7 +132,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		Boolean isAdmins = false;
 		String roles = "EMPLOYEE";
 		for (Employee emp1 : emp) {
-			if (emp1.getEmployeeId() == employeeId)
+			if (Objects.equals(emp1.getEmployeeId(), employeeId))
 				continue;
 			emp1.setIsFinanceAdmin(isAdmins);
 			emp1.setRole(roles);

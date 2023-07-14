@@ -1,6 +1,6 @@
 package com.nineleaps.expensemanagementproject.config;
 
-import com.nineleaps.expensemanagementproject.config.JwtUtil;
+
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.mockito.Mockito.*;
 
-public class JwtUtilTest {
+class JwtUtilTest {
     private JwtUtil jwtUtil;
     private HttpServletResponse response;
 
@@ -36,14 +36,14 @@ public class JwtUtilTest {
         JwtUtil jwtUtilMock = mock(JwtUtil.class);
 
         // Mock the behavior of the generateTokens() method to set the headers
-        when(jwtUtilMock.generateTokens(emailId, employeeId, name, imageUrl, role, response)).thenAnswer(invocation -> {
+        when(jwtUtilMock.generateTokens(emailId, employeeId, name,  response)).thenAnswer(invocation -> {
             response.setHeader("Access_Token", "access-token-value");
             response.setHeader("Refresh_Token", "refresh-token-value");
             return ResponseEntity.ok().build();
         });
 
         // Act
-        ResponseEntity<?> responseEntity = jwtUtilMock.generateTokens(emailId, employeeId, name, imageUrl, role, response);
+        ResponseEntity<?> responseEntity = jwtUtilMock.generateTokens(emailId, employeeId, name, response);
 
         // Assert
         Assertions.assertNotNull(responseEntity);

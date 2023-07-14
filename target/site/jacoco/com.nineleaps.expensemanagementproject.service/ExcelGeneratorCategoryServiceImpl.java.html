@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExcelGeneratorCategoryServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.service</a> &gt; <span class="el_source">ExcelGeneratorCategoryServiceImpl.java</span></div><h1>ExcelGeneratorCategoryServiceImpl.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.service;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -34,7 +33,7 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 
 @Service
-<span class="fc" id="L37">public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategoryService {</span>
+<span class="fc" id="L36">public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategoryService {</span>
 
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -56,30 +55,30 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 			throws Exception {
 
 		@SuppressWarnings(&quot;unused&quot;)
-<span class="nc" id="L59">		List&lt;Category&gt; categories = categoryRepository.findAll();</span>
-<span class="nc" id="L60">		HashMap&lt;String, Float&gt; categoryAmountMap = CategoryTotalAmount(startDate, endDate);</span>
+<span class="fc" id="L58">		List&lt;Category&gt; categories = categoryRepository.findAll();</span>
+<span class="fc" id="L59">		HashMap&lt;String, Float&gt; categoryAmountMap = CategoryTotalAmount(startDate, endDate);</span>
 
-<span class="nc bnc" id="L62" title="All 2 branches missed.">		if (categoryAmountMap.isEmpty()) {</span>
-<span class="nc" id="L63">			return &quot;No data available for the selected period.So, Email can't be sent!&quot;;</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">		if (categoryAmountMap.isEmpty()) {</span>
+<span class="fc" id="L62">			return &quot;No data available for the selected period.So, Email can't be sent!&quot;;</span>
 		}
 
-<span class="nc" id="L66">		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();</span>
-<span class="nc" id="L67">		generateExcel(excelStream, startDate, endDate);</span>
-<span class="nc" id="L68">		byte[] excelBytes = excelStream.toByteArray();</span>
+<span class="nc" id="L65">		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L66">		generateExcel(excelStream, startDate, endDate);</span>
+<span class="nc" id="L67">		byte[] excelBytes = excelStream.toByteArray();</span>
 		
-<span class="nc" id="L70">		Employee financeadmin=employeeRepository.findByRole(&quot;FINANCE_ADMIN&quot;);</span>
+<span class="nc" id="L69">		Employee financeadmin=employeeRepository.findByRole(&quot;FINANCE_ADMIN&quot;);</span>
 		
-<span class="nc bnc" id="L72" title="All 2 branches missed.">		if(financeadmin==null)</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">		if(financeadmin==null)</span>
 		{
-<span class="nc" id="L74">			throw new IllegalStateException (&quot;finance admin not found&quot;);</span>
+<span class="nc" id="L73">			throw new IllegalStateException (&quot;finance admin not found&quot;);</span>
 		}
 
-<span class="nc" id="L77">		boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), &quot;BillFold:Excel Report&quot;,</span>
+<span class="nc" id="L76">		boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), &quot;BillFold:Excel Report&quot;,</span>
 				&quot;Please find the attached Excel report.&quot;, excelBytes, &quot;report.xls&quot;);
-<span class="nc bnc" id="L79" title="All 2 branches missed.">		if (emailsent) {</span>
-<span class="nc" id="L80">			return &quot;Email sent successfully!&quot;;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">		if (emailsent) {</span>
+<span class="nc" id="L79">			return &quot;Email sent successfully!&quot;;</span>
 		} else {
-<span class="nc" id="L82">			return &quot;Email not sent&quot;;</span>
+<span class="nc" id="L81">			return &quot;Email not sent&quot;;</span>
 		}
 	}
 
@@ -88,110 +87,104 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate)
 			throws Exception {
 
-<span class="nc" id="L91">		List&lt;Category&gt; categories = categoryRepository.findAll();</span>
-<span class="nc" id="L92">		HashMap&lt;String, Float&gt; categoryAmountMap = CategoryTotalAmount(startDate, endDate);</span>
+<span class="nc" id="L90">		List&lt;Category&gt; categories = categoryRepository.findAll();</span>
+<span class="nc" id="L91">		HashMap&lt;String, Float&gt; categoryAmountMap = CategoryTotalAmount(startDate, endDate);</span>
 
-<span class="nc" id="L94">		HSSFWorkbook workbook = new HSSFWorkbook();</span>
-<span class="nc" id="L95">		HSSFSheet sheet = workbook.createSheet(&quot;Category Wise Expense Analytics&quot;);</span>
-<span class="nc" id="L96">		HSSFRow row = sheet.createRow(0);</span>
+<span class="nc" id="L93">		HSSFWorkbook workbook = new HSSFWorkbook();</span>
+<span class="nc" id="L94">		HSSFSheet sheet = workbook.createSheet(&quot;Category Wise Expense Analytics&quot;);</span>
+<span class="nc" id="L95">		HSSFRow row = sheet.createRow(0);</span>
 
-<span class="nc" id="L98">		row.createCell(0).setCellValue(&quot;Sl.no.&quot;);</span>
-<span class="nc" id="L99">		row.createCell(1).setCellValue(&quot;Category Name&quot;);</span>
-<span class="nc" id="L100">		row.createCell(2).setCellValue(&quot;Total Amount&quot;);</span>
-<span class="nc" id="L101">		row.createCell(3).setCellValue(&quot;Percentage&quot;);</span>
-<span class="nc" id="L102">		int dataRowIndex = 1;</span>
-<span class="nc" id="L103">		int sl = 1;</span>
-<span class="nc" id="L104">		float totalAmountSum = 0.0f;</span>
+<span class="nc" id="L97">		row.createCell(0).setCellValue(&quot;Sl.no.&quot;);</span>
+<span class="nc" id="L98">		row.createCell(1).setCellValue(&quot;Category Name&quot;);</span>
+<span class="nc" id="L99">		row.createCell(2).setCellValue(&quot;Total Amount&quot;);</span>
+<span class="nc" id="L100">		row.createCell(3).setCellValue(&quot;Percentage&quot;);</span>
+<span class="nc" id="L101">		int dataRowIndex = 1;</span>
+<span class="nc" id="L102">		int sl = 1;</span>
+<span class="nc" id="L103">		float totalAmountSum = 0.0f;</span>
 
-<span class="nc bnc" id="L106" title="All 2 branches missed.">		for (Category category : categories) {</span>
-<span class="nc" id="L107">			HSSFRow dataRow = sheet.createRow(dataRowIndex);</span>
-<span class="nc" id="L108">			dataRow.createCell(0).setCellValue(sl);</span>
-<span class="nc" id="L109">			dataRow.createCell(1).setCellValue(category.getCategoryDescription());</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">		for (Category category : categories) {</span>
+<span class="nc" id="L106">			HSSFRow dataRow = sheet.createRow(dataRowIndex);</span>
+<span class="nc" id="L107">			dataRow.createCell(0).setCellValue(sl);</span>
+<span class="nc" id="L108">			dataRow.createCell(1).setCellValue(category.getCategoryDescription());</span>
 
-<span class="nc" id="L111">			String categoryName = category.getCategoryDescription();</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
-<span class="nc" id="L113">				Float totalAmount = categoryAmountMap.get(categoryName);</span>
-<span class="nc" id="L114">				dataRow.createCell(2).setCellValue(totalAmount);</span>
-<span class="nc" id="L115">				totalAmountSum += totalAmount;</span>
-<span class="nc" id="L116">			} else {</span>
-<span class="nc" id="L117">				dataRow.createCell(2).setCellValue(0.0f);</span>
+<span class="nc" id="L110">			String categoryName = category.getCategoryDescription();</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
+<span class="nc" id="L112">				Float totalAmount = categoryAmountMap.get(categoryName);</span>
+<span class="nc" id="L113">				dataRow.createCell(2).setCellValue(totalAmount);</span>
+<span class="nc" id="L114">				totalAmountSum += totalAmount;</span>
+<span class="nc" id="L115">			} else {</span>
+<span class="nc" id="L116">				dataRow.createCell(2).setCellValue(0.0f);</span>
 			}
-<span class="nc" id="L119">			sl++;</span>
-<span class="nc" id="L120">			dataRowIndex++;</span>
-<span class="nc" id="L121">		}</span>
+<span class="nc" id="L118">			sl++;</span>
+<span class="nc" id="L119">			dataRowIndex++;</span>
+<span class="nc" id="L120">		}</span>
 
-<span class="nc" id="L123">		dataRowIndex = 1;</span>
-<span class="nc bnc" id="L124" title="All 2 branches missed.">		for (Category category : categories) {</span>
-<span class="nc" id="L125">			HSSFRow dataRow = sheet.getRow(dataRowIndex);</span>
-<span class="nc" id="L126">			String categoryName = category.getCategoryDescription();</span>
-<span class="nc bnc" id="L127" title="All 2 branches missed.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
-<span class="nc" id="L128">				Float totalAmount = categoryAmountMap.get(categoryName);</span>
-<span class="nc" id="L129">				float percentage = (totalAmount / totalAmountSum) * 100;</span>
-<span class="nc" id="L130">				dataRow.createCell(3).setCellValue(percentage);</span>
-<span class="nc" id="L131">			} else {</span>
-<span class="nc" id="L132">				dataRow.createCell(3).setCellValue(0.0f);</span>
+<span class="nc" id="L122">		dataRowIndex = 1;</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">		for (Category category : categories) {</span>
+<span class="nc" id="L124">			HSSFRow dataRow = sheet.getRow(dataRowIndex);</span>
+<span class="nc" id="L125">			String categoryName = category.getCategoryDescription();</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
+<span class="nc" id="L127">				Float totalAmount = categoryAmountMap.get(categoryName);</span>
+<span class="nc" id="L128">				float percentage = (totalAmount / totalAmountSum) * 100;</span>
+<span class="nc" id="L129">				dataRow.createCell(3).setCellValue(percentage);</span>
+<span class="nc" id="L130">			} else {</span>
+<span class="nc" id="L131">				dataRow.createCell(3).setCellValue(0.0f);</span>
 			}
-<span class="nc" id="L134">			dataRowIndex++;</span>
-<span class="nc" id="L135">		}</span>
+<span class="nc" id="L133">			dataRowIndex++;</span>
+<span class="nc" id="L134">		}</span>
 
 		@SuppressWarnings(&quot;rawtypes&quot;)
-<span class="nc" id="L138">		DefaultPieDataset dataset = new DefaultPieDataset();</span>
-<span class="nc bnc" id="L139" title="All 2 branches missed.">		for (Category category : categories) {</span>
-<span class="nc" id="L140">			String categoryName = category.getCategoryDescription();</span>
-<span class="nc bnc" id="L141" title="All 2 branches missed.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
-<span class="nc" id="L142">				Float totalAmount = categoryAmountMap.get(categoryName);</span>
-<span class="nc" id="L143">				dataset.setValue(categoryName, totalAmount);</span>
-<span class="nc" id="L144">			} else {</span>
-<span class="nc" id="L145">				dataset.setValue(categoryName, 0.0f);</span>
+<span class="nc" id="L137">		DefaultPieDataset dataset = new DefaultPieDataset();</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">		for (Category category : categories) {</span>
+<span class="nc" id="L139">			String categoryName = category.getCategoryDescription();</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
+<span class="nc" id="L141">				Float totalAmount = categoryAmountMap.get(categoryName);</span>
+<span class="nc" id="L142">				dataset.setValue(categoryName, totalAmount);</span>
+<span class="nc" id="L143">			} else {</span>
+<span class="nc" id="L144">				dataset.setValue(categoryName, 0.0f);</span>
 			}
-<span class="nc" id="L147">		}</span>
+<span class="nc" id="L146">		}</span>
 
-<span class="nc" id="L149">		JFreeChart chart = ChartFactory.createPieChart(&quot;Category Wise Expense Analytics&quot;, dataset, true, true, false);</span>
+<span class="nc" id="L148">		JFreeChart chart = ChartFactory.createPieChart(&quot;Category Wise Expense Analytics&quot;, dataset, true, true, false);</span>
 		@SuppressWarnings(&quot;rawtypes&quot;)
-<span class="nc" id="L151">		PiePlot plot = (PiePlot) chart.getPlot();</span>
-<span class="nc" id="L152">		plot.setLabelGenerator(null);</span>
+<span class="nc" id="L150">		PiePlot plot = (PiePlot) chart.getPlot();</span>
+<span class="nc" id="L151">		plot.setLabelGenerator(null);</span>
 
-<span class="nc" id="L154">		HSSFPatriarch drawing = sheet.createDrawingPatriarch();</span>
-<span class="nc" id="L155">		HSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 20, 15);</span>
+<span class="nc" id="L153">		HSSFPatriarch drawing = sheet.createDrawingPatriarch();</span>
+<span class="nc" id="L154">		HSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 20, 15);</span>
 		@SuppressWarnings(&quot;unused&quot;)
-<span class="nc" id="L157">		HSSFPicture picture = drawing.createPicture(anchor,</span>
-<span class="nc" id="L158">				loadChartImage(chart, CHART_IMAGE_WIDTH, CHART_IMAGE_HEIGHT, workbook));</span>
+<span class="nc" id="L156">		HSSFPicture picture = drawing.createPicture(anchor,</span>
+<span class="nc" id="L157">				loadChartImage(chart, CHART_IMAGE_WIDTH, CHART_IMAGE_HEIGHT, workbook));</span>
 
-<span class="nc" id="L160">		workbook.write(excelStream);</span>
-<span class="nc" id="L161">		workbook.close();</span>
-<span class="nc" id="L162">	}</span>
+<span class="nc" id="L159">		workbook.write(excelStream);</span>
+<span class="nc" id="L160">		workbook.close();</span>
+<span class="nc" id="L161">	}</span>
 
 	@Override
 	public int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException {
-		@SuppressWarnings(&quot;unused&quot;)
-<span class="nc" id="L167">		BufferedImage chartImage = chart.createBufferedImage(width, height);</span>
-<span class="nc" id="L168">		ByteArrayOutputStream chartOut = new ByteArrayOutputStream();</span>
-		try {
-<span class="nc" id="L170">			ChartUtils.writeChartAsPNG(chartOut, chart, width, height);</span>
-<span class="nc" id="L171">			int pictureIdx = workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);</span>
-<span class="nc" id="L172">			return pictureIdx;</span>
-		} finally {
-<span class="nc" id="L174">			chartOut.close();</span>
+<span class="nc" id="L165">		try (ByteArrayOutputStream chartOut = new ByteArrayOutputStream()) {</span>
+<span class="nc" id="L166">			ChartUtils.writeChartAsPNG(chartOut, chart, width, height);</span>
+<span class="nc" id="L167">			return workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);</span>
 		}
 	}
 
 	@Override
 	public HashMap&lt;String, Float&gt; CategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
-<span class="nc" id="L180">		List&lt;Expense&gt; expenseList = expenseRepository.findByDateBetween(startDate, endDate);</span>
-<span class="nc" id="L181">		HashMap&lt;String, Float&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L173">		List&lt;Expense&gt; expenseList = expenseRepository.findByDateBetween(startDate, endDate);</span>
+<span class="fc" id="L174">		HashMap&lt;String, Float&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
 
-<span class="nc bnc" id="L183" title="All 2 branches missed.">		for (Expense expense : expenseList) {</span>
-<span class="nc" id="L184">			Category category = expense.getCategory();</span>
-<span class="nc" id="L185">			String categoryName = category.getCategoryDescription();</span>
-<span class="nc" id="L186">			Float amt = expense.getAmountINR();</span>
-<span class="nc bnc" id="L187" title="All 2 branches missed.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
-<span class="nc" id="L188">				Float previousAmt = categoryAmountMap.get(categoryName);</span>
-<span class="nc" id="L189">				categoryAmountMap.put(categoryName, previousAmt + amt);</span>
-<span class="nc" id="L190">			} else {</span>
-<span class="nc" id="L191">				categoryAmountMap.put(categoryName, amt);</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">		for (Expense expense : expenseList) {</span>
+<span class="nc" id="L177">			Category category = expense.getCategory();</span>
+<span class="nc" id="L178">			String categoryName = category.getCategoryDescription();</span>
+<span class="nc" id="L179">			Float amt = expense.getAmountINR();</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
+<span class="nc" id="L181">				Float previousAmt = categoryAmountMap.get(categoryName);</span>
+<span class="nc" id="L182">				categoryAmountMap.put(categoryName, previousAmt + amt);</span>
+<span class="nc" id="L183">			} else {</span>
+<span class="nc" id="L184">				categoryAmountMap.put(categoryName, amt);</span>
 			}
-<span class="nc" id="L193">		}</span>
-<span class="nc" id="L194">		return categoryAmountMap;</span>
+<span class="nc" id="L186">		}</span>
+<span class="fc" id="L187">		return categoryAmountMap;</span>
 
 	}
 
@@ -200,23 +193,23 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 			String attachmentFilename) {
 
 		try {
-<span class="nc" id="L203">			MimeMessage message = mailSender.createMimeMessage();</span>
-<span class="nc" id="L204">			MimeMessageHelper helper = new MimeMessageHelper(message, true);</span>
-<span class="nc" id="L205">			helper.setTo(toEmail);</span>
-<span class="nc" id="L206">			helper.setSubject(subject);</span>
-<span class="nc" id="L207">			helper.setText(body);</span>
+<span class="fc" id="L196">			MimeMessage message = mailSender.createMimeMessage();</span>
+<span class="fc" id="L197">			MimeMessageHelper helper = new MimeMessageHelper(message, true);</span>
+<span class="fc" id="L198">			helper.setTo(toEmail);</span>
+<span class="fc" id="L199">			helper.setSubject(subject);</span>
+<span class="fc" id="L200">			helper.setText(body);</span>
 
-<span class="nc" id="L209">			DataSource attachment = new ByteArrayDataSource(attachmentContent, &quot;application/vnd.ms-excel&quot;);</span>
-<span class="nc" id="L210">			helper.addAttachment(attachmentFilename, attachment);</span>
+<span class="fc" id="L202">			DataSource attachment = new ByteArrayDataSource(attachmentContent, &quot;application/vnd.ms-excel&quot;);</span>
+<span class="fc" id="L203">			helper.addAttachment(attachmentFilename, attachment);</span>
 
-<span class="nc" id="L212">			mailSender.send(message);</span>
+<span class="fc" id="L205">			mailSender.send(message);</span>
 
-<span class="nc" id="L214">			return true;</span>
+<span class="fc" id="L207">			return true;</span>
 
-<span class="nc" id="L216">		} catch (Exception e) {</span>
-<span class="nc" id="L217">			e.printStackTrace();</span>
+<span class="nc" id="L209">		} catch (Exception e) {</span>
+<span class="nc" id="L210">			e.printStackTrace();</span>
 
-<span class="nc" id="L219">			return false;</span>
+<span class="nc" id="L212">			return false;</span>
 
 		}
 	}
