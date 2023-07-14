@@ -59,6 +59,8 @@ public class Category {
 		this.expenseList = expenseList;
 	}
 
+
+
 	public Long getCategoryId() {
 		return categoryId;
 	}
@@ -98,6 +100,7 @@ public class Category {
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;
 	}
+
 
 
 }

@@ -50,13 +50,13 @@ private static final String CONSTANT6=&quot;Enter a valid request !&quot;;
 
     @Override
     public List&lt;Reports&gt; getAllReports() {
-<span class="nc" id="L53">        return reportsRepository.findAll();</span>
+<span class="fc" id="L53">        return reportsRepository.findAll();</span>
     }
 
     @Override
     public Reports getReportById(Long reportId) {
-<span class="nc" id="L58">        Optional&lt;Reports&gt; optionalReport = reportsRepository.findById(reportId);</span>
-<span class="nc" id="L59">        return optionalReport.orElseThrow(() -&gt; new RuntimeException(&quot;Report not found&quot;));</span>
+<span class="fc" id="L58">        Optional&lt;Reports&gt; optionalReport = reportsRepository.findById(reportId);</span>
+<span class="fc" id="L59">        return optionalReport.orElseThrow(() -&gt; new RuntimeException(&quot;Report not found&quot;));</span>
     }
 
     @Override
@@ -108,13 +108,13 @@ private static final String CONSTANT6=&quot;Enter a valid request !&quot;;
     @Override
     public List&lt;Reports&gt; editReport(Long reportId, String reportTitle, String reportDescription,
                                     List&lt;Long&gt; addExpenseIds, List&lt;Long&gt; removeExpenseIds) {
-<span class="nc" id="L111">        Long empId = null;</span>
-<span class="nc" id="L112">        Reports report = getReportById(reportId);</span>
-<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (report.getIsSubmitted()) {</span>
-<span class="nc" id="L114">            throw new IllegalStateException(&quot;Can not edit Report with ReportId:&quot; + reportId + &quot; as it is already submitted!&quot;);</span>
+<span class="fc" id="L111">        Long empId = null;</span>
+<span class="fc" id="L112">        Reports report = getReportById(reportId);</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (report.getIsSubmitted()) {</span>
+<span class="fc" id="L114">            throw new IllegalStateException(&quot;Can not edit Report with ReportId:&quot; + reportId + &quot; as it is already submitted!&quot;);</span>
         }
-<span class="nc bnc" id="L116" title="All 2 branches missed.">        else if (report.getIsHidden()) {</span>
-<span class="nc" id="L117">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        else if (report.getIsHidden()) {</span>
+<span class="fc" id="L117">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
         }
 <span class="nc bnc" id="L119" title="All 6 branches missed.">        else if (!report.getIsHidden() || report.getIsSubmitted() &amp;&amp; report.getManagerapprovalstatus() == ManagerApprovalStatus.ACTION_REQUIRED) {</span>
 <span class="nc" id="L120">            report.setReportTitle(reportTitle);</span>
@@ -167,24 +167,24 @@ private static final String CONSTANT6=&quot;Enter a valid request !&quot;;
 
     @Override
     public Reports addExpenseToReport(Long reportId, List&lt;Long&gt; expenseids) {
-<span class="nc" id="L170">        Reports report = getReportById(reportId);</span>
-<span class="nc bnc" id="L171" title="All 2 branches missed.">        if ( report.getIsHidden()) {</span>
-<span class="nc" id="L172">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
+<span class="fc" id="L170">        Reports report = getReportById(reportId);</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if ( report.getIsHidden()) {</span>
+<span class="fc" id="L172">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
         }
-<span class="nc bnc" id="L174" title="All 2 branches missed.">        for (Long expenseid : expenseids) {</span>
-<span class="nc" id="L175">            Expense expense = expenseServices.getExpenseById(expenseid);</span>
-<span class="nc bnc" id="L176" title="All 2 branches missed.">            if (expense.getIsReported()) {</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        for (Long expenseid : expenseids) {</span>
+<span class="fc" id="L175">            Expense expense = expenseServices.getExpenseById(expenseid);</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">            if (expense.getIsReported()) {</span>
 <span class="nc" id="L177">                throw new IllegalStateException(</span>
                         CONSTANT3 + expenseid + &quot; is already reported in another report!&quot;);
             }
-<span class="nc bnc" id="L180" title="All 2 branches missed.">            if (!expense.getIsReported()) {</span>
-<span class="nc" id="L181">                expenseServices.updateExpense(reportId, expenseid);</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">            if (!expense.getIsReported()) {</span>
+<span class="fc" id="L181">                expenseServices.updateExpense(reportId, expenseid);</span>
             }
-<span class="nc" id="L183">        }</span>
-<span class="nc" id="L184">        Reports re = getReportById(reportId);</span>
-<span class="nc" id="L185">        re.setTotalAmountINR(totalAmountINR(reportId));</span>
-<span class="nc" id="L186">        re.setTotalAmountCurrency(totalAmountCurrency(reportId));</span>
-<span class="nc" id="L187">        return reportsRepository.save(re);</span>
+<span class="fc" id="L183">        }</span>
+<span class="fc" id="L184">        Reports re = getReportById(reportId);</span>
+<span class="fc" id="L185">        re.setTotalAmountINR(totalAmountINR(reportId));</span>
+<span class="fc" id="L186">        re.setTotalAmountCurrency(totalAmountCurrency(reportId));</span>
+<span class="fc" id="L187">        return reportsRepository.save(re);</span>
     }
 
     @Override
@@ -273,13 +273,13 @@ private static final String CONSTANT6=&quot;Enter a valid request !&quot;;
     @Override
     public void submitReport(Long reportId, HttpServletResponse response)
             throws MessagingException, IOException {
-<span class="nc" id="L276">        boolean submissionStatus = true;</span>
-<span class="nc" id="L277">        Reports re = getReportById(reportId);</span>
-<span class="nc bnc" id="L278" title="All 4 branches missed.">        if (re == null || re.getIsHidden()) {</span>
-<span class="nc" id="L279">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
+<span class="fc" id="L276">        boolean submissionStatus = true;</span>
+<span class="fc" id="L277">        Reports re = getReportById(reportId);</span>
+<span class="pc bpc" id="L278" title="1 of 4 branches missed.">        if (re == null || re.getIsHidden()) {</span>
+<span class="fc" id="L279">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
         }
-<span class="nc bnc" id="L281" title="All 4 branches missed.">        if (re.getIsSubmitted() == submissionStatus &amp;&amp; re.getManagerapprovalstatus() != ManagerApprovalStatus.REJECTED) {</span>
-<span class="nc" id="L282">            throw new IllegalStateException(CONSTANT2 + reportId + &quot; is already submitted!&quot;);</span>
+<span class="pc bpc" id="L281" title="2 of 4 branches missed.">        if (re.getIsSubmitted() == submissionStatus &amp;&amp; re.getManagerapprovalstatus() != ManagerApprovalStatus.REJECTED) {</span>
+<span class="fc" id="L282">            throw new IllegalStateException(CONSTANT2 + reportId + &quot; is already submitted!&quot;);</span>
         }
 <span class="nc bnc" id="L284" title="All 6 branches missed.">        if (re.getIsSubmitted() != submissionStatus || re.getIsSubmitted() &amp;&amp; re.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED) {</span>
 <span class="nc" id="L285">            re.setIsSubmitted(submissionStatus);</span>
@@ -430,26 +430,26 @@ private static final String CONSTANT6=&quot;Enter a valid request !&quot;;
 
     @Override
     public float totalAmountINR(Long reportId) {
-<span class="nc" id="L433">        Reports report = reportsRepository.findById(reportId).get();</span>
-<span class="nc" id="L434">        List&lt;Expense&gt; expenses = expenseRepository.findByReports(report);</span>
+<span class="fc" id="L433">        Reports report = reportsRepository.findById(reportId).get();</span>
+<span class="fc" id="L434">        List&lt;Expense&gt; expenses = expenseRepository.findByReports(report);</span>
 
-<span class="nc" id="L436">        float amtINR = 0;</span>
-<span class="nc bnc" id="L437" title="All 2 branches missed.">        for (Expense expense2 : expenses) {</span>
+<span class="fc" id="L436">        float amtINR = 0;</span>
+<span class="pc bpc" id="L437" title="1 of 2 branches missed.">        for (Expense expense2 : expenses) {</span>
 <span class="nc" id="L438">            amtINR += expense2.getAmountINR();</span>
 <span class="nc" id="L439">        }</span>
-<span class="nc" id="L440">        return amtINR;</span>
+<span class="fc" id="L440">        return amtINR;</span>
     }
 
     @Override
     public float totalAmountCurrency(Long reportId) {
-<span class="nc" id="L445">        Reports report = reportsRepository.findById(reportId).get();</span>
-<span class="nc" id="L446">        List&lt;Expense&gt; expenses = expenseRepository.findByReports(report);</span>
+<span class="fc" id="L445">        Reports report = reportsRepository.findById(reportId).get();</span>
+<span class="fc" id="L446">        List&lt;Expense&gt; expenses = expenseRepository.findByReports(report);</span>
 
-<span class="nc" id="L448">        float amtCurrency = 0;</span>
-<span class="nc bnc" id="L449" title="All 2 branches missed.">        for (Expense expense2 : expenses) {</span>
+<span class="fc" id="L448">        float amtCurrency = 0;</span>
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">        for (Expense expense2 : expenses) {</span>
 <span class="nc" id="L450">            amtCurrency += expense2.getAmount();</span>
 <span class="nc" id="L451">        }</span>
-<span class="nc" id="L452">        return amtCurrency;</span>
+<span class="fc" id="L452">        return amtCurrency;</span>
     }
 
     @Override
@@ -489,8 +489,8 @@ private static final String CONSTANT6=&quot;Enter a valid request !&quot;;
 
     @Override
     public void hideReport(Long reportId) {
-<span class="nc" id="L492">        Boolean hidden = true;</span>
-<span class="nc" id="L493">        Boolean isReported = false;</span>
+<span class="fc" id="L492">        Boolean hidden = true;</span>
+<span class="fc" id="L493">        Boolean isReported = false;</span>
 <span class="nc" id="L494">        Reports report = getReportById(reportId);</span>
 <span class="nc" id="L495">        List&lt;Expense&gt; expenseList = expenseServices.getExpenseByReportId(reportId);</span>
 <span class="nc bnc" id="L496" title="All 2 branches missed.">        for (Expense exp : expenseList) {</span>
@@ -645,6 +645,8 @@ private static final String CONSTANT6=&quot;Enter a valid request !&quot;;
 <span class="nc" id="L645">        }</span>
 <span class="nc" id="L646">        emailService.reminderMailToManager(reportIds);</span>
 <span class="nc" id="L647">    }</span>
+
+
 }
 
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

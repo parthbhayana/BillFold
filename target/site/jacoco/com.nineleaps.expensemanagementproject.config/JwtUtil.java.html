@@ -42,8 +42,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
         try {
 <span class="nc" id="L43">            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);</span>
 <span class="nc" id="L44">            return true;</span>
-<span class="nc" id="L45">        } catch (Exception e) {</span>
-<span class="nc" id="L46">            return false;</span>
+<span class="fc" id="L45">        } catch (Exception e) {</span>
+<span class="fc" id="L46">            return false;</span>
         }
     }
 
