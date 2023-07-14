@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.nineleaps.expensemanagementproject.entity.CategoryTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s - in com.nineleaps.expensemanagementproject.entity.CategoryTest
+=======
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 s - in com.nineleaps.expensemanagementproject.entity.CategoryTest
+>>>>>>> master

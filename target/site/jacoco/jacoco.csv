@@ -4,9 +4,15 @@ ExpenseManagementProject,com.nineleaps.expensemanagementproject.controller,Repor
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.controller,CurrencyController,14,3,0,0,2,1,2,1,2,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.controller,ExpenseController,47,3,0,0,10,1,9,1,9,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.controller,CategoryController,59,3,0,0,13,1,10,1,10,1
+<<<<<<< HEAD
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.controller,ExcelController,0,89,0,8,0,24,0,7,0,3
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.controller,UserController,127,7,2,0,28,2,3,2,2,2
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,Reports,99,177,0,0,31,76,5,47,5,47
+=======
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.controller,ExcelController,0,83,0,8,0,24,0,7,0,3
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.controller,UserController,120,7,2,0,28,2,3,2,2,2
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,Reports,91,181,0,0,27,78,2,48,2,48
+>>>>>>> master
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,ManagerApprovalStatus,0,54,0,0,0,2,0,1,0,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,Category,0,74,0,0,0,27,0,12,0,12
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,ManagerApprovalStatusExpense,0,44,0,0,0,2,0,1,0,1
@@ -15,6 +21,7 @@ ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,StatusExc
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,Currency,0,334,0,0,0,3,0,1,0,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,FinanceApprovalStatus,0,44,0,0,0,2,0,1,0,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.entity,Employee,0,178,0,0,0,66,0,30,0,30
+<<<<<<< HEAD
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,PdfGeneratorServiceImpl,794,3,10,0,183,1,9,1,4,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,EmployeeServiceImpl,153,52,4,0,43,13,8,11,6,11
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,CategoryServiceImpl,1146,3,68,0,203,1,53,1,19,1
@@ -25,10 +32,26 @@ ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,EmailSer
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,PdfGeneratorServiceImpl.new PdfPageEventHelper() {...},82,0,0,0,14,0,2,0,2,0
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,ExpenseServiceImpl,454,3,34,0,94,1,30,1,13,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,CurrencyExchangeServiceImpl,111,3,8,0,28,1,6,1,2,1
+=======
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,PdfGeneratorServiceImpl,680,69,10,0,166,18,7,3,2,3
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,EmployeeServiceImpl,153,52,4,0,43,13,8,11,6,11
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,CategoryServiceImpl,351,652,26,42,74,130,26,28,6,14
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,ExcelGeneratorReportsServiceImpl,32,718,10,24,9,161,10,11,0,4
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,ExcelGeneratorCategoryServiceImpl,336,70,20,2,82,18,13,4,2,4
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,ReportsServiceImpl,1604,195,179,16,354,41,114,14,16,10
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,EmailServiceImpl,653,6,20,0,157,3,19,1,9,1
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,PdfGeneratorServiceImpl.new PdfPageEventHelper() {...},82,0,0,0,14,0,2,0,2,0
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,ExpenseServiceImpl,243,175,28,6,55,40,20,11,4,10
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.service,CurrencyExchangeServiceImpl,95,3,8,0,28,1,6,1,2,1
+>>>>>>> master
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.util,ImageUtil,16,0,0,0,5,0,2,0,2,0
 ExpenseManagementProject,com.nineleaps.expensemanagementproject,ExpenseManagementProjectApplication,5,3,0,0,2,1,1,1,1,1
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.config,JwtFilter,0,69,4,6,0,17,4,3,0,2
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.config,SwaggerConfig,0,105,0,0,0,21,0,6,0,6
+<<<<<<< HEAD
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.config,JwtUtil,75,3,0,0,19,1,4,1,4,1
+=======
+ExpenseManagementProject,com.nineleaps.expensemanagementproject.config,JwtUtil,72,6,0,0,17,3,3,2,3,2
+>>>>>>> master
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.config,JwtUtil.TokenResponse,15,0,0,0,6,0,3,0,3,0
 ExpenseManagementProject,com.nineleaps.expensemanagementproject.config,SecurityConfig,0,552,0,0,0,42,0,4,0,4

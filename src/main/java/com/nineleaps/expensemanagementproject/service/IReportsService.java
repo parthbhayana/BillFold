@@ -60,4 +60,8 @@ public interface IReportsService {
     void rejectReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException;
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 }

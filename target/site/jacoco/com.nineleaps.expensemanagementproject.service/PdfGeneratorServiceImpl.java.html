@@ -61,9 +61,9 @@ import static com.lowagie.text.Element.ALIGN_CENTER;
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
     @Autowired
-    private IExpenseService expenseService;
+    IExpenseService expenseService;
 
 
     public byte[] generatePdf(Long reportId, List&lt;Long&gt; expenseIds) throws IOException {
@@ -287,6 +287,7 @@ import static com.lowagie.text.Element.ALIGN_CENTER;
 
     @Override
     public PdfPCell getCenterAlignedCell(String content, Font font) {
+<<<<<<< HEAD
 <span class="nc" id="L290">        PdfPCell cell = new PdfPCell(new Phrase(content, font));</span>
 <span class="nc" id="L291">        cell.setHorizontalAlignment(Element.ALIGN_CENTER);</span>
 <span class="nc" id="L292">        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);</span>
@@ -296,10 +297,22 @@ import static com.lowagie.text.Element.ALIGN_CENTER;
 <span class="nc" id="L296">        cell.setBorderWidthLeft(0);</span>
 <span class="nc" id="L297">        cell.setBorderWidthRight(0);</span>
 <span class="nc" id="L298">        return cell;</span>
+=======
+<span class="fc" id="L290">        PdfPCell cell = new PdfPCell(new Phrase(content, font));</span>
+<span class="fc" id="L291">        cell.setHorizontalAlignment(Element.ALIGN_CENTER);</span>
+<span class="fc" id="L292">        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);</span>
+<span class="fc" id="L293">        cell.setPadding(Element.ALIGN_MIDDLE);</span>
+<span class="fc" id="L294">        cell.setBackgroundColor(new Color(240, 240, 240));</span>
+<span class="fc" id="L295">        cell.setBorderWidth(0.01f);</span>
+<span class="fc" id="L296">        cell.setBorderWidthLeft(0);</span>
+<span class="fc" id="L297">        cell.setBorderWidthRight(0);</span>
+<span class="fc" id="L298">        return cell;</span>
+>>>>>>> master
     }
 
     @Override
     public PdfPCell getCenterAlignedCells(String content, Font font) {
+<<<<<<< HEAD
 <span class="nc" id="L303">        PdfPCell cell = new PdfPCell(new Phrase(content, font));</span>
 <span class="nc" id="L304">        cell.setHorizontalAlignment(Element.ALIGN_CENTER);</span>
 <span class="nc" id="L305">        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);</span>
@@ -308,6 +321,16 @@ import static com.lowagie.text.Element.ALIGN_CENTER;
 <span class="nc" id="L308">        cell.setBorderWidthLeft(0);</span>
 <span class="nc" id="L309">        cell.setBorderWidthRight(0);</span>
 <span class="nc" id="L310">        return cell;</span>
+=======
+<span class="fc" id="L303">        PdfPCell cell = new PdfPCell(new Phrase(content, font));</span>
+<span class="fc" id="L304">        cell.setHorizontalAlignment(Element.ALIGN_CENTER);</span>
+<span class="fc" id="L305">        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);</span>
+<span class="fc" id="L306">        cell.setPadding(Element.ALIGN_MIDDLE);</span>
+<span class="fc" id="L307">        cell.setBorderWidth(0.01f);</span>
+<span class="fc" id="L308">        cell.setBorderWidthLeft(0);</span>
+<span class="fc" id="L309">        cell.setBorderWidthRight(0);</span>
+<span class="fc" id="L310">        return cell;</span>
+>>>>>>> master
     }
 
     @Override

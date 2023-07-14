@@ -61,9 +61,9 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
     @Autowired
-    private IExpenseService expenseService;
+    IExpenseService expenseService;
 
 
     public byte[] generatePdf(Long reportId, List<Long> expenseIds) throws IOException {
