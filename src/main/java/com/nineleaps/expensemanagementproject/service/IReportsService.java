@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
 
@@ -15,7 +17,7 @@ public interface IReportsService {
 
      Reports getReportById(Long reportId);
 
-     Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids);
+     Reports addReport(ReportsDTO newReport, Long employeeId, List<Long> expenseids);
 
      List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
                                     List<Long> addExpenseIds, List<Long> removeExpenseIds);
@@ -60,8 +62,5 @@ public interface IReportsService {
     void rejectReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException;
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 }

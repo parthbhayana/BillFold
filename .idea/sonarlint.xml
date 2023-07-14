@@ -5,6 +5,7 @@
       <list>
         <option value="FILE:src/main/java/com/nineleaps/expensemanagementproject/service/IPdfGeneratorService.java" />
         <option value="FILE:src/main/java/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.java" />
+        <option value="FILE:src/main/java/com/nineleaps/expensemanagementproject/controller/CurrencyController.java" />
       </list>
     </option>
   </component>

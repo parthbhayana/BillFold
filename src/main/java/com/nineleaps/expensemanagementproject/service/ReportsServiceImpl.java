@@ -6,6 +6,8 @@ import java.util.*;
 import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +40,11 @@ public class ReportsServiceImpl implements IReportsService {
     private static final String CONSTANT2="Report with ID ";
     private static final String CONSTANT3="Expense with ID ";
     private static final String CONSTANT4="rejected";
-private static final String CONSTANT5="approved";
-private static final String CONSTANT6="Enter a valid request !";
+    private static final String CONSTANT5="approved";
+    private static final String CONSTANT6="Enter a valid request !";
     private static final String CONSTANT7="pending";
     private static final String CONSTANT8="Report ";
     private static final String CONSTANT9=" is not Submitted!";
-
-
-
-
 
     @Override
     public List<Reports> getAllReports() {
@@ -60,12 +58,15 @@ private static final String CONSTANT6="Enter a valid request !";
     }
 
     @Override
-    public Reports addReport(Reports newReport, Long employeeId, List<Long> expenseids) {
+    public Reports addReport(ReportsDTO reportsDTO, Long employeeId, List<Long> expenseids) {
         Employee employee = employeeServices.getEmployeeById(employeeId);
         String employeeEmail = employee.getEmployeeEmail();
         String managerEmail = employee.getManagerEmail();
         String employeeName = (employee.getFirstName() + " " + employee.getLastName());
         String officialEmployeeId = employee.getOfficialEmployeeId();
+        Reports newReport=new Reports();
+        newReport.setReportTitle(reportsDTO.getReportTitle());
+        newReport.setReportDescription(reportsDTO.getReportDescription());
         newReport.setEmployeeMail(employeeEmail);
         newReport.setManagerEmail(managerEmail);
         newReport.setEmployeeName(employeeName);

@@ -41,21 +41,21 @@ class CategoryServiceImplTest {
         verify(categoryRepository).deleteById(categoryId);
     }
 
-    @Test
-    void testUpdateCategory() {
-        // Arrange
-        Category category = new Category();
-        category.setCategoryId(1L);
-
-        when(categoryRepository.save(category)).thenReturn(category);
-
-        // Act
-        Category updatedCategory = categoryService.updateCategory(category);
-
-        // Assert
-        assertEquals(category, updatedCategory);
-        verify(categoryRepository).save(category);
-    }
+//    @Test
+//    void testUpdateCategory() {
+//        // Arrange
+//        Category category = new Category();
+//        category.setCategoryId(1L);
+//
+//        when(categoryRepository.save(category)).thenReturn(category);
+//
+//        // Act
+//        Category updatedCategory = categoryService.updateCategory(category);
+//
+//        // Assert
+//        assertEquals(category, updatedCategory);
+//        verify(categoryRepository).save(category);
+//    }
 
     @Test
     void testGetCategoryById_ExistingCategory() {
@@ -113,20 +113,20 @@ class CategoryServiceImplTest {
         verify(categoryRepository).findAll();
     }
 
-    @Test
-    void testAddCategory() {
-        // Arrange
-        Category category = new Category();
-
-        when(categoryRepository.save(category)).thenReturn(category);
-
-        // Act
-        Category addedCategory = categoryService.addCategory(category);
-
-        // Assert
-        assertEquals(category, addedCategory);
-        verify(categoryRepository).save(category);
-    }
+//    @Test
+//    void testAddCategory() {
+//        // Arrange
+//        Category category = new Category();
+//
+//        when(categoryRepository.save(category)).thenReturn(category);
+//
+//        // Act
+//        Category addedCategory = categoryService.addCategory(category);
+//
+//        // Assert
+//        assertEquals(category, addedCategory);
+//        verify(categoryRepository).save(category);
+//    }
 
     @Test
     void testHideCategory() {

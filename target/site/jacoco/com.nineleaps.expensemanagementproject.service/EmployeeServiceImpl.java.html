@@ -4,136 +4,146 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 @Service
-<span class="fc" id="L13">public class EmployeeServiceImpl implements IEmployeeService {</span>
+<span class="fc" id="L14">public class EmployeeServiceImpl implements IEmployeeService {</span>
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
 	@Override
 	public List&lt;Employee&gt; getAllEmployeeDetails() {
-<span class="fc" id="L20">		return employeeRepository.findAll();</span>
+<span class="nc" id="L21">		return employeeRepository.findAll();</span>
 	}
 
 	@Override
-	public Employee saveEmployeeDetails(Employee employee) {
-<span class="fc" id="L25">		return employeeRepository.save(employee);</span>
+	public Employee saveEmployeeDetails(EmployeeDTO employeeDTO) {
+<span class="nc" id="L26">		Employee employee=new Employee();</span>
+<span class="nc" id="L27">		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());</span>
+<span class="nc" id="L28">		employee.setFirstName(employeeDTO.getFirstName());</span>
+<span class="nc" id="L29">		employee.setLastName(employeeDTO.getLastName());</span>
+<span class="nc" id="L30">		employee.setManagerEmail(employeeDTO.getManagerEmail());</span>
+<span class="nc" id="L31">		employee.setManagerName(employeeDTO.getManagerName());</span>
+<span class="nc" id="L32">		employee.setMiddleName(employeeDTO.getMiddleName());</span>
+<span class="nc" id="L33">		employee.setMobileNumber(employeeDTO.getMobileNumber());</span>
+<span class="nc" id="L34">		employee.setOfficialEmployeeId(employeeDTO.getOfficialEmployeeId());</span>
+<span class="nc" id="L35">		return employeeRepository.save(employee);</span>
 	}
 
 	@Override
 	public Employee getEmployeeById(Long employeeId) {
-<span class="fc" id="L30">		Optional&lt;Employee&gt; optionalEmployee = employeeRepository.findById(employeeId);</span>
-<span class="fc" id="L31">		return optionalEmployee.orElse(null);</span>
+<span class="nc" id="L40">		Optional&lt;Employee&gt; optionalEmployee = employeeRepository.findById(employeeId);</span>
+<span class="nc" id="L41">		return optionalEmployee.orElse(null);</span>
 	}
 
 
 	@Override
 	public void deleteEmployeeDetailsById(Long employeeId) {
-<span class="fc" id="L37">		employeeRepository.deleteById(employeeId);</span>
-<span class="fc" id="L38">	}</span>
+<span class="nc" id="L47">		employeeRepository.deleteById(employeeId);</span>
+<span class="nc" id="L48">	}</span>
 
 	@Override
-	public Employee updateEmployeeDetails(Employee newemployee, Long employeeId) {
-<span class="nc" id="L42">		Employee employee = getEmployeeById(employeeId);</span>
-<span class="nc" id="L43">		employee.setEmployeeEmail(newemployee.getEmployeeEmail());</span>
-<span class="nc" id="L44">		employee.setFirstName(newemployee.getFirstName());</span>
-<span class="nc" id="L45">		employee.setLastName(newemployee.getLastName());</span>
-<span class="nc" id="L46">		employee.setMiddleName(newemployee.getMiddleName());</span>
-<span class="nc" id="L47">		return employeeRepository.save(employee);</span>
+	public Employee updateEmployeeDetails(EmployeeDTO employeeDTO, Long employeeId) {
+<span class="nc" id="L52">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="nc" id="L53">		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());</span>
+<span class="nc" id="L54">		employee.setFirstName(employeeDTO.getFirstName());</span>
+<span class="nc" id="L55">		employee.setLastName(employeeDTO.getLastName());</span>
+<span class="nc" id="L56">		employee.setMiddleName(employeeDTO.getMiddleName());</span>
+<span class="nc" id="L57">		return employeeRepository.save(employee);</span>
 	}
 
 	@Override
 	public Optional&lt;Employee&gt; additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
 			Long mobileNumber, String managerName) {
-<span class="nc" id="L53">		Employee employee = getEmployeeById(employeeId);</span>
-<span class="nc" id="L54">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
-<span class="nc" id="L55">		employee.setManagerEmail(managerEmail);</span>
-<span class="nc" id="L56">		employee.setMobileNumber(mobileNumber);</span>
-<span class="nc" id="L57">		employee.setManagerName(managerName);</span>
-<span class="nc" id="L58">		employeeRepository.save(employee);</span>
-<span class="nc" id="L59">		return getEmployeeDetails(employeeId);</span>
+<span class="nc" id="L63">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="nc" id="L64">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
+<span class="nc" id="L65">		employee.setManagerEmail(managerEmail);</span>
+<span class="nc" id="L66">		employee.setMobileNumber(mobileNumber);</span>
+<span class="nc" id="L67">		employee.setManagerName(managerName);</span>
+<span class="nc" id="L68">		employeeRepository.save(employee);</span>
+<span class="nc" id="L69">		return getEmployeeDetails(employeeId);</span>
 	}
 
 	@Override
 	public Optional&lt;Employee&gt; getEmployeeDetails(Long employeeId) {
-<span class="fc" id="L64">		return employeeRepository.findById(employeeId);</span>
+<span class="nc" id="L74">		return employeeRepository.findById(employeeId);</span>
 	}
 
 	@Override
 	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber,
 			String officialEmployeeId, String managerName) {
-<span class="nc" id="L70">		Employee employee = getEmployeeById(employeeId);</span>
-<span class="nc" id="L71">		employee.setManagerEmail(managerEmail);</span>
-<span class="nc" id="L72">		employee.setMobileNumber(mobileNumber);</span>
-<span class="nc" id="L73">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
-<span class="nc" id="L74">		employee.setManagerName(managerName);</span>
-<span class="nc" id="L75">		employeeRepository.save(employee);</span>
-<span class="nc" id="L76">	}</span>
+<span class="nc" id="L80">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="nc" id="L81">		employee.setManagerEmail(managerEmail);</span>
+<span class="nc" id="L82">		employee.setMobileNumber(mobileNumber);</span>
+<span class="nc" id="L83">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
+<span class="nc" id="L84">		employee.setManagerName(managerName);</span>
+<span class="nc" id="L85">		employeeRepository.save(employee);</span>
+<span class="nc" id="L86">	}</span>
 
 	@Override
 	public Employee getEmployeeByEmail(String emailToVerify) {
-<span class="fc" id="L80">		return null;</span>
+<span class="nc" id="L90">		return null;</span>
 	}
 
 	@Override
 	public Employee getUserByEmail(String emailToVerify) {
-<span class="fc" id="L85">		return null;</span>
+<span class="nc" id="L95">		return null;</span>
 	}
 
 	@Override
 	public List&lt;Employee&gt; getAllUser() {
-<span class="fc" id="L90">		return employeeRepository.findAll();</span>
+<span class="nc" id="L100">		return employeeRepository.findAll();</span>
 	}
 
 	@Override
 	public Employee insertuser(Employee newUser) {
-<span class="nc" id="L95">		return employeeRepository.save(newUser);</span>
+<span class="nc" id="L105">		return employeeRepository.save(newUser);</span>
 	}
 
 	@Override
 	public Employee findByEmailId(String emailId) {
-<span class="fc" id="L100">		return employeeRepository.findByEmployeeEmail(emailId);</span>
+<span class="nc" id="L110">		return employeeRepository.findByEmployeeEmail(emailId);</span>
 	}
 
 	@Override
 	public void hideEmployee(Long employeeId) {
-<span class="nc" id="L105">		Boolean hidden = true;</span>
-<span class="nc" id="L106">		Employee employee = getEmployeeById(employeeId);</span>
-<span class="nc" id="L107">		employee.setIsHidden(hidden);</span>
-<span class="nc" id="L108">		employeeRepository.save(employee);</span>
-<span class="nc" id="L109">	}</span>
+<span class="nc" id="L115">		Boolean hidden = true;</span>
+<span class="nc" id="L116">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="nc" id="L117">		employee.setIsHidden(hidden);</span>
+<span class="nc" id="L118">		employeeRepository.save(employee);</span>
+<span class="nc" id="L119">	}</span>
 
 	@Override
 	public void setFinanceAdmin(Long employeeId) {
-<span class="nc" id="L113">		Boolean isAdmin = true;</span>
-<span class="nc" id="L114">		String role = &quot;FINANCE_ADMIN&quot;;</span>
-<span class="nc" id="L115">		Employee employee = getEmployeeById(employeeId);</span>
-<span class="nc" id="L116">		employee.setIsFinanceAdmin(isAdmin);</span>
-<span class="nc" id="L117">		employee.setRole(role);</span>
+<span class="nc" id="L123">		Boolean isAdmin = true;</span>
+<span class="nc" id="L124">		String role = &quot;FINANCE_ADMIN&quot;;</span>
+<span class="nc" id="L125">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="nc" id="L126">		employee.setIsFinanceAdmin(isAdmin);</span>
+<span class="nc" id="L127">		employee.setRole(role);</span>
 
-<span class="nc" id="L119">		employeeRepository.save(employee);</span>
+<span class="nc" id="L129">		employeeRepository.save(employee);</span>
 
-<span class="nc" id="L121">		List&lt;Employee&gt; emp = employeeRepository.findAll();</span>
-<span class="nc" id="L122">		Boolean isAdmins = false;</span>
-<span class="nc" id="L123">		String roles = &quot;EMPLOYEE&quot;;</span>
-<span class="nc bnc" id="L124" title="All 2 branches missed.">		for (Employee emp1 : emp) {</span>
-<span class="nc bnc" id="L125" title="All 2 branches missed.">			if (Objects.equals(emp1.getEmployeeId(), employeeId))</span>
-<span class="nc" id="L126">				continue;</span>
-<span class="nc" id="L127">			emp1.setIsFinanceAdmin(isAdmins);</span>
-<span class="nc" id="L128">			emp1.setRole(roles);</span>
-<span class="nc" id="L129">			employeeRepository.save(emp1);</span>
-<span class="nc" id="L130">		}</span>
+<span class="nc" id="L131">		List&lt;Employee&gt; emp = employeeRepository.findAll();</span>
+<span class="nc" id="L132">		Boolean isAdmins = false;</span>
+<span class="nc" id="L133">		String roles = &quot;EMPLOYEE&quot;;</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">		for (Employee emp1 : emp) {</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">			if (Objects.equals(emp1.getEmployeeId(), employeeId))</span>
+<span class="nc" id="L136">				continue;</span>
+<span class="nc" id="L137">			emp1.setIsFinanceAdmin(isAdmins);</span>
+<span class="nc" id="L138">			emp1.setRole(roles);</span>
+<span class="nc" id="L139">			employeeRepository.save(emp1);</span>
+<span class="nc" id="L140">		}</span>
 
-<span class="nc" id="L132">	}</span>
+<span class="nc" id="L142">	}</span>
 
 	@Override
 	public Employee insertUser(Employee newUser) {
-<span class="fc" id="L136">		return employeeRepository.save(newUser);</span>
+<span class="nc" id="L146">		return employeeRepository.save(newUser);</span>
 
 	}
 

@@ -4,6 +4,8 @@ package com.nineleaps.expensemanagementproject.service;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.*;
+
+import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.entity.Category;
@@ -29,7 +31,9 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	@Override
-	public Category updateCategory(Category category) {
+	public Category updateCategory(Long categoryID,CategoryDTO categoryDTO) {
+		Category category = getCategoryById(categoryID);
+		category.setCategoryDescription(categoryDTO.getCategoryDescription());
 		return categoryRepository.save(category);
 	}
 
@@ -52,7 +56,9 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	@Override
-	public Category addCategory(Category category) {
+	public Category addCategory(CategoryDTO categoryDTO) {
+		Category category = new Category();
+		category.setCategoryDescription(categoryDTO.getCategoryDescription());
 		return categoryRepository.save(category);
 	}
 
