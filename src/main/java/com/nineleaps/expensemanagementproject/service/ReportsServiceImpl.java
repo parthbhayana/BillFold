@@ -229,8 +229,8 @@ public class ReportsServiceImpl implements IReportsService {
                 mergedList.addAll(partiallyApprovedList);
                 return mergedList;
             case CONSTANT4:
-                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                        ManagerApprovalStatus.REJECTED, true, false);
+                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsHidden(managerEmail,
+                        ManagerApprovalStatus.REJECTED, false);
             case CONSTANT7:
                 return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
                         ManagerApprovalStatus.PENDING, true, false);
@@ -601,8 +601,6 @@ public class ReportsServiceImpl implements IReportsService {
             expenseRepository.save(expense);
         }
         report.setManagerReviewTime(reviewTime);
-        //Changing Report Status
-        //If any expense is rejected report will go back to employee for changes
 
         //If all the expenses are approved then report status will be "APPROVED"
         if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {

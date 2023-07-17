@@ -7,6 +7,8 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
+import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
+import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,6 +30,8 @@ public class ReportsController {
 
     @Autowired
     private IReportsService reportsService;
+    @Autowired
+    private ReportsRepository reportsRepository;
 
 
 
@@ -178,9 +182,17 @@ public class ReportsController {
                 if(Objects.equals(status, "partiallyApproved")){
                     partialApprovedMap.put(expenseId,amountApproved);
                 }
-                reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime);
+
 
             }
+            reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime);
+            Reports report = getReportByReportId(reportId);
+            if (!rejectedIds.isEmpty()) {
+                report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
+                report.setIsSubmitted(false);
+            }
+            reportsRepository.save(report);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

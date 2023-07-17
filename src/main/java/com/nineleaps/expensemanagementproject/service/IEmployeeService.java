@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
+import com.nineleaps.expensemanagementproject.DTO.UserDTO;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 
 public interface IEmployeeService {
@@ -26,7 +27,7 @@ public interface IEmployeeService {
 
 	public List<Employee> getAllUser();
 
-	public Employee insertUser(Employee newUser);
+	public Employee insertUser(UserDTO newUser);
 
 	public Employee insertuser(Employee newUser);
 

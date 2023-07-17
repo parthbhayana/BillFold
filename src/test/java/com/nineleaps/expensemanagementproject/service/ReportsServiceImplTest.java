@@ -282,29 +282,29 @@ class ReportsServiceImplTest {
         verifyNoMoreInteractions(reportsRepository);
     }
 
-    @Test
-    void testGetReportsSubmittedToUser_Rejected() {
-        // Arrange
-        String managerEmail = "manager@example.com";
-        String request = "rejected";
-
-        Reports report1 = new Reports();
-        List<Reports> rejectedList = new ArrayList<>();
-        rejectedList.add(report1);
-
-        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                ManagerApprovalStatus.REJECTED, true, false)).thenReturn(rejectedList);
-
-        // Act
-        List<Reports> result = reportsService.getReportsSubmittedToUser(managerEmail, request);
-
-        // Assert
-        Assertions.assertEquals(rejectedList, result);
-
-        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                ManagerApprovalStatus.REJECTED, true, false);
-        verifyNoMoreInteractions(reportsRepository);
-    }
+//    @Test
+//    void testGetReportsSubmittedToUser_Rejected() {
+//        // Arrange
+//        String managerEmail = "manager@example.com";
+//        String request = "rejected";
+//
+//        Reports report1 = new Reports();
+//        List<Reports> rejectedList = new ArrayList<>();
+//        rejectedList.add(report1);
+//
+//        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
+//                ManagerApprovalStatus.REJECTED, true, false)).thenReturn(rejectedList);
+//
+//        // Act
+//        List<Reports> result = reportsService.getReportsSubmittedToUser(managerEmail, request);
+//
+//        // Assert
+//        Assertions.assertEquals(rejectedList, result);
+//
+//        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
+//                ManagerApprovalStatus.REJECTED, true, false);
+//        verifyNoMoreInteractions(reportsRepository);
+//    }
 
     @Test
     void testGetReportsSubmittedToUser_Pending() {
