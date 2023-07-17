@@ -18,43 +18,43 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 	@Override
 	public List&lt;Employee&gt; getAllEmployeeDetails() {
-<span class="nc" id="L21">		return employeeRepository.findAll();</span>
+<span class="fc" id="L21">		return employeeRepository.findAll();</span>
 	}
 
 	@Override
 	public Employee saveEmployeeDetails(EmployeeDTO employeeDTO) {
-<span class="nc" id="L26">		Employee employee=new Employee();</span>
-<span class="nc" id="L27">		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());</span>
-<span class="nc" id="L28">		employee.setFirstName(employeeDTO.getFirstName());</span>
-<span class="nc" id="L29">		employee.setLastName(employeeDTO.getLastName());</span>
-<span class="nc" id="L30">		employee.setManagerEmail(employeeDTO.getManagerEmail());</span>
-<span class="nc" id="L31">		employee.setManagerName(employeeDTO.getManagerName());</span>
-<span class="nc" id="L32">		employee.setMiddleName(employeeDTO.getMiddleName());</span>
-<span class="nc" id="L33">		employee.setMobileNumber(employeeDTO.getMobileNumber());</span>
-<span class="nc" id="L34">		employee.setOfficialEmployeeId(employeeDTO.getOfficialEmployeeId());</span>
-<span class="nc" id="L35">		return employeeRepository.save(employee);</span>
+<span class="fc" id="L26">		Employee employee=new Employee();</span>
+<span class="fc" id="L27">		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());</span>
+<span class="fc" id="L28">		employee.setFirstName(employeeDTO.getFirstName());</span>
+<span class="fc" id="L29">		employee.setLastName(employeeDTO.getLastName());</span>
+<span class="fc" id="L30">		employee.setManagerEmail(employeeDTO.getManagerEmail());</span>
+<span class="fc" id="L31">		employee.setManagerName(employeeDTO.getManagerName());</span>
+<span class="fc" id="L32">		employee.setMiddleName(employeeDTO.getMiddleName());</span>
+<span class="fc" id="L33">		employee.setMobileNumber(employeeDTO.getMobileNumber());</span>
+<span class="fc" id="L34">		employee.setOfficialEmployeeId(employeeDTO.getOfficialEmployeeId());</span>
+<span class="fc" id="L35">		return employeeRepository.save(employee);</span>
 	}
 
 	@Override
 	public Employee getEmployeeById(Long employeeId) {
-<span class="nc" id="L40">		Optional&lt;Employee&gt; optionalEmployee = employeeRepository.findById(employeeId);</span>
-<span class="nc" id="L41">		return optionalEmployee.orElse(null);</span>
+<span class="fc" id="L40">		Optional&lt;Employee&gt; optionalEmployee = employeeRepository.findById(employeeId);</span>
+<span class="fc" id="L41">		return optionalEmployee.orElse(null);</span>
 	}
 
 
 	@Override
 	public void deleteEmployeeDetailsById(Long employeeId) {
-<span class="nc" id="L47">		employeeRepository.deleteById(employeeId);</span>
-<span class="nc" id="L48">	}</span>
+<span class="fc" id="L47">		employeeRepository.deleteById(employeeId);</span>
+<span class="fc" id="L48">	}</span>
 
 	@Override
 	public Employee updateEmployeeDetails(EmployeeDTO employeeDTO, Long employeeId) {
-<span class="nc" id="L52">		Employee employee = getEmployeeById(employeeId);</span>
-<span class="nc" id="L53">		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());</span>
-<span class="nc" id="L54">		employee.setFirstName(employeeDTO.getFirstName());</span>
-<span class="nc" id="L55">		employee.setLastName(employeeDTO.getLastName());</span>
-<span class="nc" id="L56">		employee.setMiddleName(employeeDTO.getMiddleName());</span>
-<span class="nc" id="L57">		return employeeRepository.save(employee);</span>
+<span class="fc" id="L52">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="fc" id="L53">		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());</span>
+<span class="fc" id="L54">		employee.setFirstName(employeeDTO.getFirstName());</span>
+<span class="fc" id="L55">		employee.setLastName(employeeDTO.getLastName());</span>
+<span class="fc" id="L56">		employee.setMiddleName(employeeDTO.getMiddleName());</span>
+<span class="fc" id="L57">		return employeeRepository.save(employee);</span>
 	}
 
 	@Override
@@ -71,19 +71,19 @@ import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 
 	@Override
 	public Optional&lt;Employee&gt; getEmployeeDetails(Long employeeId) {
-<span class="nc" id="L74">		return employeeRepository.findById(employeeId);</span>
+<span class="fc" id="L74">		return employeeRepository.findById(employeeId);</span>
 	}
 
 	@Override
 	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber,
 			String officialEmployeeId, String managerName) {
-<span class="nc" id="L80">		Employee employee = getEmployeeById(employeeId);</span>
-<span class="nc" id="L81">		employee.setManagerEmail(managerEmail);</span>
-<span class="nc" id="L82">		employee.setMobileNumber(mobileNumber);</span>
-<span class="nc" id="L83">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
-<span class="nc" id="L84">		employee.setManagerName(managerName);</span>
-<span class="nc" id="L85">		employeeRepository.save(employee);</span>
-<span class="nc" id="L86">	}</span>
+<span class="fc" id="L80">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="fc" id="L81">		employee.setManagerEmail(managerEmail);</span>
+<span class="fc" id="L82">		employee.setMobileNumber(mobileNumber);</span>
+<span class="fc" id="L83">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
+<span class="fc" id="L84">		employee.setManagerName(managerName);</span>
+<span class="fc" id="L85">		employeeRepository.save(employee);</span>
+<span class="fc" id="L86">	}</span>
 
 	@Override
 	public Employee getEmployeeByEmail(String emailToVerify) {

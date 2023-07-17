@@ -46,13 +46,13 @@ public class Expense {
 	@ApiModelProperty(hidden = true)
 	private String categoryDescription;
 
-<span class="pc" id="L49">	@Column(name = &quot;is_reported&quot;, nullable = true)</span>
+<span class="fc" id="L49">	@Column(name = &quot;is_reported&quot;, nullable = true)</span>
 	@ApiModelProperty(hidden = true)
-<span class="pc" id="L51">	private Boolean isReported = false;</span>
+<span class="fc" id="L51">	private Boolean isReported = false;</span>
 
-<span class="pc" id="L53">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+<span class="fc" id="L53">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
 	@ApiModelProperty(hidden = true)
-<span class="pc" id="L55">	private Boolean isHidden = false;</span>
+<span class="fc" id="L55">	private Boolean isHidden = false;</span>
 
 	@Column(name = &quot;report_title&quot;)
 	@ApiModelProperty(hidden = true)
@@ -105,28 +105,28 @@ public class Expense {
 			Long amount, float amountINR, String description, String categoryDescription, Boolean isReported,
 			Boolean isHidden, String reportTitle, Float amountApproved, Double amountApprovedINR,
 			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
-<span class="nc" id="L108">			byte[] supportingDocuments, Employee employee, Reports reports, Category category) {</span>
-<span class="nc" id="L109">		this.expenseId = expenseId;</span>
-<span class="nc" id="L110">		this.merchantName = merchantName;</span>
-<span class="nc" id="L111">		this.date = date;</span>
-<span class="nc" id="L112">		this.dateCreated = dateCreated;</span>
-<span class="nc" id="L113">		this.currency = currency;</span>
-<span class="nc" id="L114">		this.amount = amount;</span>
-<span class="nc" id="L115">		this.amountINR = amountINR;</span>
-<span class="nc" id="L116">		this.description = description;</span>
-<span class="nc" id="L117">		this.categoryDescription = categoryDescription;</span>
-<span class="nc" id="L118">		this.isReported = isReported;</span>
-<span class="nc" id="L119">		this.isHidden = isHidden;</span>
-<span class="nc" id="L120">		this.reportTitle = reportTitle;</span>
-<span class="nc" id="L121">		this.amountApproved = amountApproved;</span>
-<span class="nc" id="L122">		this.amountApprovedINR = amountApprovedINR;</span>
-<span class="nc" id="L123">		this.financeApprovalStatus = financeApprovalStatus;</span>
-<span class="nc" id="L124">		this.managerApprovalStatusExpense = managerApprovalStatusExpense;</span>
-<span class="nc" id="L125">		this.supportingDocuments = supportingDocuments;</span>
-<span class="nc" id="L126">		this.employee = employee;</span>
-<span class="nc" id="L127">		this.reports = reports;</span>
-<span class="nc" id="L128">		this.category = category;</span>
-<span class="nc" id="L129">	}</span>
+<span class="fc" id="L108">			byte[] supportingDocuments, Employee employee, Reports reports, Category category) {</span>
+<span class="fc" id="L109">		this.expenseId = expenseId;</span>
+<span class="fc" id="L110">		this.merchantName = merchantName;</span>
+<span class="fc" id="L111">		this.date = date;</span>
+<span class="fc" id="L112">		this.dateCreated = dateCreated;</span>
+<span class="fc" id="L113">		this.currency = currency;</span>
+<span class="fc" id="L114">		this.amount = amount;</span>
+<span class="fc" id="L115">		this.amountINR = amountINR;</span>
+<span class="fc" id="L116">		this.description = description;</span>
+<span class="fc" id="L117">		this.categoryDescription = categoryDescription;</span>
+<span class="fc" id="L118">		this.isReported = isReported;</span>
+<span class="fc" id="L119">		this.isHidden = isHidden;</span>
+<span class="fc" id="L120">		this.reportTitle = reportTitle;</span>
+<span class="fc" id="L121">		this.amountApproved = amountApproved;</span>
+<span class="fc" id="L122">		this.amountApprovedINR = amountApprovedINR;</span>
+<span class="fc" id="L123">		this.financeApprovalStatus = financeApprovalStatus;</span>
+<span class="fc" id="L124">		this.managerApprovalStatusExpense = managerApprovalStatusExpense;</span>
+<span class="fc" id="L125">		this.supportingDocuments = supportingDocuments;</span>
+<span class="fc" id="L126">		this.employee = employee;</span>
+<span class="fc" id="L127">		this.reports = reports;</span>
+<span class="fc" id="L128">		this.category = category;</span>
+<span class="fc" id="L129">	}</span>
 
 	public Long getExpenseId() {
 <span class="fc" id="L132">		return expenseId;</span>
@@ -287,6 +287,7 @@ public class Expense {
 	public void setAmountApprovedINR(Double amountApprovedINR) {
 <span class="fc" id="L288">		this.amountApprovedINR = amountApprovedINR;</span>
 <span class="fc" id="L289">	}</span>
+
 
 
 }

@@ -7,12 +7,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.token.Token;
+import org.springframework.security.core.token.TokenService;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class JwtUtilTest {
+
+    private static final String SECRET_KEY = "secret";
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 10000;
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 20000;
     private JwtUtil jwtUtil;
     private HttpServletResponse response;
 
@@ -21,6 +29,7 @@ class JwtUtilTest {
         jwtUtil = new JwtUtil();
         response = mock(HttpServletResponse.class);
     }
+
 
     @Test
     void generateTokens_ValidArguments_ShouldReturnResponseEntityWithTokens() {
@@ -46,10 +55,10 @@ class JwtUtilTest {
         ResponseEntity<?> responseEntity = jwtUtilMock.generateTokens(emailId, employeeId, name, response);
 
         // Assert
-        Assertions.assertNotNull(responseEntity);
-        Assertions.assertEquals(200, responseEntity.getStatusCodeValue());
-        Assertions.assertEquals("access-token-value", response.getHeader("Access_Token"));
-        Assertions.assertEquals("refresh-token-value", response.getHeader("Refresh_Token"));
+        assertNotNull(responseEntity);
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals("access-token-value", response.getHeader("Access_Token"));
+        assertEquals("refresh-token-value", response.getHeader("Refresh_Token"));
     }
 
 
@@ -100,8 +109,8 @@ class JwtUtilTest {
         Claims claims = jwtUtil.getClaimsFromToken(token);
 
         // Assert
-        Assertions.assertNotNull(claims);
-        Assertions.assertEquals(expectedClaims, claims);
+        assertNotNull(claims);
+        assertEquals(expectedClaims, claims);
     }
 
 

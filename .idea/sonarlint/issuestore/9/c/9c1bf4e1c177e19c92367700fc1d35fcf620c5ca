@@ -1,9 +1,0 @@
-
-f
-java:S2095’"JUse try-with-resources or close this "HSSFWorkbook" in a "finally" clause.(ÐÅ±Ìøÿÿÿÿ
-f
-java:S2095Ì"JUse try-with-resources or close this "HSSFWorkbook" in a "finally" clause.(ÐÅ±Ìøÿÿÿÿ
-h
-java:S3776S"RRefactor this method to reduce its Cognitive Complexity from 40 to the 15 allowed.(¡ÊÎµ
-Ý
-java:S6541S"ÆA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 156 to 64, Complexity from 15 to 14, Nesting Level from 5 to 2, Number of Variables from 49 to 6.(¡ÊÎµ

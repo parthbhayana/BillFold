@@ -55,9 +55,9 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	private String financeComments;
 
-<span class="pc" id="L58">	@Column(name = &quot;is_submitted&quot;, nullable = true)</span>
+<span class="fc" id="L58">	@Column(name = &quot;is_submitted&quot;, nullable = true)</span>
 	@ApiModelProperty(hidden = true)
-<span class="pc" id="L60">	private Boolean isSubmitted = false;</span>
+<span class="fc" id="L60">	private Boolean isSubmitted = false;</span>
 
 	@Column(name = &quot;employee_mail&quot;, nullable = true)
 	@ApiModelProperty(hidden = true)
@@ -99,9 +99,9 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	private float totalApprovedAmountCurrency;
 
-<span class="pc" id="L102">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+<span class="fc" id="L102">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
 	@ApiModelProperty(hidden = true)
-<span class="pc" id="L104">	private Boolean isHidden = false;</span>
+<span class="fc" id="L104">	private Boolean isHidden = false;</span>
 
 	@Column(name = &quot;manager_email&quot;)
 	@ApiModelProperty(hidden = true)
@@ -122,7 +122,7 @@ public class Reports {
 	private ManagerApprovalStatus managerapprovalstatus;
 
 
-<span class="pc" id="L125">	@JsonIgnore</span>
+<span class="fc" id="L125">	@JsonIgnore</span>
 	@OneToMany(mappedBy = &quot;reports&quot;, cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private final List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();
@@ -138,33 +138,33 @@ public class Reports {
 			float totalAmountCurrency, float totalApprovedAmountCurrency, Boolean isHidden, String managerEmail,
 			String managerReviewTime, FinanceApprovalStatus financeapprovalstatus,
 			ManagerApprovalStatus managerapprovalstatus) {
-<span class="nc" id="L141">		super();</span>
-<span class="nc" id="L142">		this.reportId = reportId;</span>
-<span class="nc" id="L143">		this.employeeId = employeeId;</span>
-<span class="nc" id="L144">		this.employeeName = employeeName;</span>
-<span class="nc" id="L145">		this.officialEmployeeId = officialEmployeeId;</span>
-<span class="nc" id="L146">		this.reportTitle = reportTitle;</span>
-<span class="nc" id="L147">		this.reportDescription = reportDescription;</span>
-<span class="nc" id="L148">		this.managerComments = managerComments;</span>
-<span class="nc" id="L149">		this.financeComments = financeComments;</span>
-<span class="nc" id="L150">		this.isSubmitted = isSubmitted;</span>
-<span class="nc" id="L151">		this.employeeMail = employeeMail;</span>
-<span class="nc" id="L152">		this.dateSubmitted = dateSubmitted;</span>
-<span class="nc" id="L153">		this.dateCreated = dateCreated;</span>
-<span class="nc" id="L154">		this.managerActionDate = managerActionDate;</span>
-<span class="nc" id="L155">		this.financeActionDate = financeActionDate;</span>
-<span class="nc" id="L156">		this.currency = currency;</span>
-<span class="nc" id="L157">		this.totalAmountINR = totalAmountINR;</span>
-<span class="nc" id="L158">		this.totalApprovedAmountINR = totalApprovedAmountINR;</span>
-<span class="nc" id="L159">		this.totalAmountCurrency = totalAmountCurrency;</span>
-<span class="nc" id="L160">		this.totalApprovedAmountCurrency = totalApprovedAmountCurrency;</span>
-<span class="nc" id="L161">		this.isHidden = isHidden;</span>
-<span class="nc" id="L162">		this.managerEmail = managerEmail;</span>
-<span class="nc" id="L163">		this.managerReviewTime = managerReviewTime;</span>
-<span class="nc" id="L164">		this.financeapprovalstatus = financeapprovalstatus;</span>
-<span class="nc" id="L165">		this.managerapprovalstatus = managerapprovalstatus;</span>
+<span class="fc" id="L141">		super();</span>
+<span class="fc" id="L142">		this.reportId = reportId;</span>
+<span class="fc" id="L143">		this.employeeId = employeeId;</span>
+<span class="fc" id="L144">		this.employeeName = employeeName;</span>
+<span class="fc" id="L145">		this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L146">		this.reportTitle = reportTitle;</span>
+<span class="fc" id="L147">		this.reportDescription = reportDescription;</span>
+<span class="fc" id="L148">		this.managerComments = managerComments;</span>
+<span class="fc" id="L149">		this.financeComments = financeComments;</span>
+<span class="fc" id="L150">		this.isSubmitted = isSubmitted;</span>
+<span class="fc" id="L151">		this.employeeMail = employeeMail;</span>
+<span class="fc" id="L152">		this.dateSubmitted = dateSubmitted;</span>
+<span class="fc" id="L153">		this.dateCreated = dateCreated;</span>
+<span class="fc" id="L154">		this.managerActionDate = managerActionDate;</span>
+<span class="fc" id="L155">		this.financeActionDate = financeActionDate;</span>
+<span class="fc" id="L156">		this.currency = currency;</span>
+<span class="fc" id="L157">		this.totalAmountINR = totalAmountINR;</span>
+<span class="fc" id="L158">		this.totalApprovedAmountINR = totalApprovedAmountINR;</span>
+<span class="fc" id="L159">		this.totalAmountCurrency = totalAmountCurrency;</span>
+<span class="fc" id="L160">		this.totalApprovedAmountCurrency = totalApprovedAmountCurrency;</span>
+<span class="fc" id="L161">		this.isHidden = isHidden;</span>
+<span class="fc" id="L162">		this.managerEmail = managerEmail;</span>
+<span class="fc" id="L163">		this.managerReviewTime = managerReviewTime;</span>
+<span class="fc" id="L164">		this.financeapprovalstatus = financeapprovalstatus;</span>
+<span class="fc" id="L165">		this.managerapprovalstatus = managerapprovalstatus;</span>
 
-<span class="nc" id="L167">	}</span>
+<span class="fc" id="L167">	}</span>
 
 	public Long getReportId() {
 <span class="fc" id="L170">		return reportId;</span>
@@ -303,7 +303,7 @@ public class Reports {
 <span class="fc" id="L303">	}</span>
 
 	public float getTotalAmountCurrency() {
-<span class="nc" id="L306">		return totalAmountCurrency;</span>
+<span class="fc" id="L306">		return totalAmountCurrency;</span>
 	}
 
 	public void setTotalAmountCurrency(float totalAmountCurrency) {
@@ -357,6 +357,7 @@ public class Reports {
 	public void setManagerApprovalStatus(ManagerApprovalStatus managerapprovalstatus) {
 <span class="fc" id="L358">		this.managerapprovalstatus = managerapprovalstatus;</span>
 <span class="fc" id="L359">	}</span>
+
 
 
 }

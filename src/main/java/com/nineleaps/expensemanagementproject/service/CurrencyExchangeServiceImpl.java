@@ -51,8 +51,6 @@ public class CurrencyExchangeServiceImpl implements ICurrencyExchange {
         return exchangeValue;
     }
 
-    @Override
-    public Object getCurrencies() {
-        return null;
-    }
+
+
 }

@@ -323,4 +323,66 @@ class ReportsTest {
         reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
         assertEquals(ManagerApprovalStatus.APPROVED, reports.getManagerapprovalstatus());
     }
+
+    @Test
+    void constructor_WithValidInputs_SetsFieldsCorrectly() {
+        // Prepare test data
+        Long reportId = 1L;
+        Long employeeId = 1L;
+        String employeeName = "John Doe";
+        String officialEmployeeId = "EMP001";
+        String reportTitle = "Test Report";
+        String reportDescription = "This is a test report";
+        String managerComments = "Manager comments";
+        String financeComments = "Finance comments";
+        Boolean isSubmitted = true;
+        String employeeMail = "john@example.com";
+        LocalDate dateSubmitted = LocalDate.now();
+        LocalDate dateCreated = LocalDate.now();
+        LocalDate managerActionDate = LocalDate.now();
+        LocalDate financeActionDate = LocalDate.now();
+        String currency = "USD";
+        float totalAmountINR = 1000.0f;
+        float totalApprovedAmountINR = 900.0f;
+        float totalAmountCurrency = 100.0f;
+        float totalApprovedAmountCurrency = 90.0f;
+        Boolean isHidden = false;
+        String managerEmail = "manager@example.com";
+        String managerReviewTime = "2 days";
+        FinanceApprovalStatus financeApprovalStatus = FinanceApprovalStatus.APPROVED;
+        ManagerApprovalStatus managerApprovalStatus = ManagerApprovalStatus.APPROVED;
+
+        // Create an instance of Reports
+        Reports reports = new Reports(reportId, employeeId, employeeName, officialEmployeeId, reportTitle,
+                reportDescription, managerComments, financeComments, isSubmitted, employeeMail, dateSubmitted,
+                dateCreated, managerActionDate, financeActionDate, currency, totalAmountINR, totalApprovedAmountINR,
+                totalAmountCurrency, totalApprovedAmountCurrency, isHidden, managerEmail, managerReviewTime,
+                financeApprovalStatus, managerApprovalStatus);
+
+        // Verify the fields are set correctly
+        assertEquals(reportId, reports.getReportId());
+        assertEquals(employeeId, reports.getEmployeeId());
+        assertEquals(employeeName, reports.getEmployeeName());
+        assertEquals(officialEmployeeId, reports.getOfficialEmployeeId());
+        assertEquals(reportTitle, reports.getReportTitle());
+        assertEquals(reportDescription, reports.getReportDescription());
+        assertEquals(managerComments, reports.getManagerComments());
+        assertEquals(financeComments, reports.getFinanceComments());
+        assertEquals(isSubmitted, reports.getIsSubmitted());
+        assertEquals(employeeMail, reports.getEmployeeMail());
+        assertEquals(dateSubmitted, reports.getDateSubmitted());
+        assertEquals(dateCreated, reports.getDateCreated());
+        assertEquals(managerActionDate, reports.getManagerActionDate());
+        assertEquals(financeActionDate, reports.getFinanceActionDate());
+        assertEquals(currency, reports.getCurrency());
+        assertEquals(totalAmountINR, reports.getTotalAmountINR());
+        assertEquals(totalApprovedAmountINR, reports.getTotalApprovedAmountINR());
+        assertEquals(totalAmountCurrency, reports.getTotalAmountCurrency());
+        assertEquals(totalApprovedAmountCurrency, reports.getTotalApprovedAmountCurrency());
+        assertEquals(isHidden, reports.getIsHidden());
+        assertEquals(managerEmail, reports.getManagerEmail());
+        assertEquals(managerReviewTime, reports.getManagerReviewTime());
+        assertEquals(financeApprovalStatus, reports.getFinanceapprovalstatus());
+        assertEquals(managerApprovalStatus, reports.getManagerapprovalstatus());
+    }
 }
