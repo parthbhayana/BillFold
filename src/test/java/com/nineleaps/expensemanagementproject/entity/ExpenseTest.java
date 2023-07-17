@@ -327,4 +327,56 @@ class ExpenseTest {
         expense.setAmountApprovedINR(amountApprovedINR);
         assertEquals(amountApprovedINR, expense.getAmountApprovedINR());
     }
+
+    @Test
+    void Expense_Constructor_WithValidArguments_CreatesExpenseObject() {
+        // Prepare test data
+        Long expenseId = 1L;
+        String merchantName = "Test Merchant";
+        LocalDate date = LocalDate.of(2023, 1, 1);
+        LocalDateTime dateCreated = LocalDateTime.now();
+        String currency = "USD";
+        Long amount = 100L;
+        float amountINR = 100.0f;
+        String description = "Test Expense";
+        String categoryDescription = "Test Category";
+        Boolean isReported = true;
+        Boolean isHidden = false;
+        String reportTitle = "Test Report";
+        Float amountApproved = 50.0f;
+        Double amountApprovedINR = 50.0;
+        FinanceApprovalStatus financeApprovalStatus = FinanceApprovalStatus.APPROVED;
+        ManagerApprovalStatusExpense managerApprovalStatusExpense = ManagerApprovalStatusExpense.APPROVED;
+        byte[] supportingDocuments = new byte[0];
+        Employee employee = new Employee();
+        Reports reports = new Reports();
+        Category category = new Category();
+
+        // Call the Expense constructor
+        Expense expense = new Expense(expenseId, merchantName, date, dateCreated, currency, amount, amountINR,
+                description, categoryDescription, isReported, isHidden, reportTitle, amountApproved, amountApprovedINR,
+                financeApprovalStatus, managerApprovalStatusExpense, supportingDocuments, employee, reports, category);
+
+        // Assert the fields of the created Expense object
+        assertEquals(expenseId, expense.getExpenseId());
+        assertEquals(merchantName, expense.getMerchantName());
+        assertEquals(date, expense.getDate());
+        assertEquals(dateCreated, expense.getDateCreated());
+        assertEquals(currency, expense.getCurrency());
+        assertEquals(amount, expense.getAmount());
+        assertEquals(amountINR, expense.getAmountINR());
+        assertEquals(description, expense.getDescription());
+        assertEquals(categoryDescription, expense.getCategoryDescription());
+        assertEquals(isReported, expense.getIsReported());
+        assertEquals(isHidden, expense.getIsHidden());
+        assertEquals(reportTitle, expense.getReportTitle());
+        assertEquals(amountApproved, expense.getAmountApproved());
+        assertEquals(amountApprovedINR, expense.getAmountApprovedINR());
+        assertEquals(financeApprovalStatus, expense.getFinanceApprovalStatus());
+        assertEquals(managerApprovalStatusExpense, expense.getManagerApprovalStatusExpense());
+        assertEquals(supportingDocuments, expense.getSupportingDocuments());
+        assertEquals(employee, expense.getEmployee());
+        assertEquals(reports, expense.getReports());
+        assertEquals(category, expense.getCategory());
+    }
 }

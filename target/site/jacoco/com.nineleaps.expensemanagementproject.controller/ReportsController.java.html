@@ -33,32 +33,32 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
     @GetMapping(&quot;/getAllReports&quot;)
     public List&lt;Reports&gt; getAllReports() {
-<span class="nc" id="L36">        return reportsService.getAllReports();</span>
+<span class="fc" id="L36">        return reportsService.getAllReports();</span>
     }
 
     @GetMapping(&quot;/getByReportId/{reportId}&quot;)
     public Reports getReportByReportId(@PathVariable Long reportId) {
-<span class="nc" id="L41">        return reportsService.getReportById(reportId);</span>
+<span class="fc" id="L41">        return reportsService.getReportById(reportId);</span>
     }
 
     @GetMapping(&quot;/getReportByEmployeeId/{employeeId}&quot;)
     public List&lt;Reports&gt; getReportByEmpId(@PathVariable Long employeeId, @RequestParam String request) {
-<span class="nc" id="L46">        return reportsService.getReportByEmpId(employeeId, request);</span>
+<span class="fc" id="L46">        return reportsService.getReportByEmpId(employeeId, request);</span>
     }
 
     @GetMapping(&quot;/getReportsSubmittedToUser/{managerEmail}&quot;)
     public List&lt;Reports&gt; getReportsSubmittedToUser(@PathVariable String managerEmail, @RequestParam String request) {
-<span class="nc" id="L51">        return reportsService.getReportsSubmittedToUser(managerEmail, request);</span>
+<span class="fc" id="L51">        return reportsService.getReportsSubmittedToUser(managerEmail, request);</span>
     }
 
     @GetMapping(&quot;/getAllSubmittedReports&quot;)
     public List&lt;Reports&gt; getAllSubmittedReports() {
-<span class="nc" id="L56">        return reportsService.getAllSubmittedReports();</span>
+<span class="fc" id="L56">        return reportsService.getAllSubmittedReports();</span>
     }
 
     @GetMapping(&quot;/getAllReportsApprovedByManager&quot;)
     public List&lt;Reports&gt; getAllReportsApprovedByManager(@RequestParam String request) {
-<span class="nc" id="L61">        return reportsService.getAllReportsApprovedByManager(request);</span>
+<span class="fc" id="L61">        return reportsService.getAllReportsApprovedByManager(request);</span>
     }
 
     @PostMapping(&quot;/addReport/{employeeId}&quot;)

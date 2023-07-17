@@ -25,7 +25,9 @@ public class CategoryServiceImpl implements ICategoryService {
 	private static final String CONSTANT1 = "_ratio";
 	private static final String CONSTANT2 = "_count";
 
-	@Override
+  
+
+    @Override
 	public void deleteCategoryById(Long categoryId) {
 		categoryRepository.deleteById(categoryId);
 	}

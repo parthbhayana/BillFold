@@ -3,7 +3,6 @@
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
 import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,64 +17,64 @@ import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.service.ICategoryService;
 
 @RestController
-<span class="fc" id="L21">public class CategoryController {</span>
+<span class="fc" id="L20">public class CategoryController {</span>
 
     @Autowired
     private ICategoryService categoryService;
 
     @PostMapping(&quot;/insertCategory&quot;)
     public Category addCategory(@RequestBody CategoryDTO categoryDTO) {
-<span class="nc" id="L28">        return categoryService.addCategory(categoryDTO);</span>
+<span class="fc" id="L27">        return categoryService.addCategory(categoryDTO);</span>
     }
 
     @GetMapping(&quot;/showAllCategories&quot;)
     public List&lt;Category&gt; getAllCategory() {
-<span class="nc" id="L33">        return categoryService.getAllCategories();</span>
+<span class="fc" id="L32">        return categoryService.getAllCategories();</span>
     }
 
     @GetMapping(&quot;/findCategory/{categoryId}&quot;)
     public Category getCategoryById(@PathVariable(&quot;categoryId&quot;) Long categoryId) {
-<span class="nc" id="L38">        return categoryService.getCategoryById(categoryId);</span>
+<span class="fc" id="L37">        return categoryService.getCategoryById(categoryId);</span>
     }
 
     @PutMapping(&quot;/updateCategory/{categoryId}&quot;)
     public Category updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
 
-<span class="nc" id="L44">        return categoryService.updateCategory(categoryId,categoryDTO);</span>
+<span class="fc" id="L43">        return categoryService.updateCategory(categoryId,categoryDTO);</span>
     }
 
     @PostMapping(&quot;/hideCategory/{categoryId}&quot;)
     public void hideCategory(@PathVariable Long categoryId) {
-<span class="nc" id="L49">        categoryService.hideCategory(categoryId);</span>
-<span class="nc" id="L50">    }</span>
+<span class="fc" id="L48">        categoryService.hideCategory(categoryId);</span>
+<span class="fc" id="L49">    }</span>
 
     @GetMapping(&quot;/categoryTotalAmount&quot;)
     public Map&lt;String, Float&gt; getCategoryTotalAmount(
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) {
-<span class="nc" id="L56">        return categoryService.getCategoryTotalAmount(startDate, endDate);</span>
+<span class="nc" id="L55">        return categoryService.getCategoryTotalAmount(startDate, endDate);</span>
     }
 
 
     @GetMapping(&quot;/getCategoryAnalyticsYearly/{categoryId}&quot;)
     public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId) {
-<span class="nc" id="L62">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
+<span class="nc" id="L61">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
     }
 
     @GetMapping(&quot;/getCategoryAnalyticsMonthly/{categoryId}&quot;)
     public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId, @RequestParam Long year) {
-<span class="nc" id="L67">        return categoryService.getCategoryAnalyticsMonthly(categoryId, year);</span>
+<span class="nc" id="L66">        return categoryService.getCategoryAnalyticsMonthly(categoryId, year);</span>
     }
 
 
     @GetMapping(&quot;/getAllCategoryAnalyticsYearly&quot;)
     public Map&lt;String, Object&gt; getYearlyCategoryAnalyticsForAllCategories() {
-<span class="nc" id="L73">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
+<span class="nc" id="L72">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
     }
 
     @GetMapping(&quot;/getAllCategoryAnalyticsMonthly&quot;)
     public Map&lt;String, Object&gt; getMonthlyCategoryAnalyticsForAllCategories(@RequestParam Long year) {
-<span class="nc" id="L78">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
+<span class="nc" id="L77">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
     }
 
 }

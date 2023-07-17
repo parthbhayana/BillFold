@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.service;
 
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,9 @@ import org.mockito.MockitoAnnotations;
 import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
-
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,6 +27,8 @@ class ExpenseServiceImplTest {
 
     @Mock
     private EmployeeRepository employeeRepository;
+    @Mock
+    private CategoryServiceImpl currencyRates;
 
 
 
@@ -32,7 +37,6 @@ class ExpenseServiceImplTest {
 
     @Mock
     private ReportsRepository reportsRepository;
-
 
 
     @Mock
@@ -46,27 +50,7 @@ class ExpenseServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @Test
-//    void testAddExpense() {
-//        // Mock data
-//        Expense expense = new Expense();
-//        Long employeeId = 1L;
-//        Long categoryId = 1L;
-//
-//        // Mock dependencies
-//        Employee employee = new Employee();
-//        Category category = new Category();
-//        Mockito.when(employeeService.getEmployeeById(employeeId)).thenReturn(employee);
-//        Mockito.when(categoryRepository.getCategoryByCategoryId(categoryId)).thenReturn(category);
-//        Mockito.when(expenseRepository.save(Mockito.any(Expense.class))).thenReturn(expense);
-//
-//        // Perform the test
-//        Expense result = expenseService.addExpense(expense, employeeId, categoryId);
-//
-//        // Verify the results
-//        Assertions.assertNotNull(result);
-//        // Add more assertions as needed
-//    }
+
 
     @Test
     void testGetAllExpenses() {
@@ -77,9 +61,9 @@ class ExpenseServiceImplTest {
         unreportedExpenses.add(expense);
 
         // Mock dependencies
-        Mockito.when(expenseRepository.findByIsReportedAndDateBefore(false, sixtyDaysAgo)).thenReturn(unreportedExpenses);
-        Mockito.when(expenseRepository.findAll()).thenReturn(unreportedExpenses);
-        Mockito.when(expenseRepository.save(Mockito.any(Expense.class))).thenReturn(expense);
+        when(expenseRepository.findByIsReportedAndDateBefore(false, sixtyDaysAgo)).thenReturn(unreportedExpenses);
+        when(expenseRepository.findAll()).thenReturn(unreportedExpenses);
+        when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
 
         // Perform the test
         List<Expense> result = expenseService.getAllExpenses();
@@ -97,14 +81,14 @@ class ExpenseServiceImplTest {
         expense.setExpenseId(expenseId);
 
         // Mock dependencies
-        Mockito.when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
+        when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
 
         // Perform the test
         Expense result = expenseService.getExpenseById(expenseId);
 
         // Verify the results
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(expenseId, result.getExpenseId());
+        assertEquals(expenseId, result.getExpenseId());
 
     }
 
@@ -118,9 +102,9 @@ class ExpenseServiceImplTest {
         report.setReportId(reportId);
 
         // Mock dependencies
-        Mockito.when(expenseRepository.save(Mockito.any(Expense.class))).thenReturn(expense);
-        Mockito.when(expenseRepository.findById(employeeId)).thenReturn(Optional.of(expense));
-        Mockito.when(reportServices.getReportById(reportId)).thenReturn(report);
+        when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
+        when(expenseRepository.findById(employeeId)).thenReturn(Optional.of(expense));
+        when(reportServices.getReportById(reportId)).thenReturn(report);
 
         // Perform the test
         Expense result = expenseService.updateExpense(reportId, employeeId);
@@ -152,8 +136,8 @@ class ExpenseServiceImplTest {
         expenses.add(new Expense());
 
         // Mock dependencies
-        Mockito.when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
-        Mockito.when(expenseRepository.findByEmployeeAndIsHidden(employee, false)).thenReturn(expenses);
+        when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
+        when(expenseRepository.findByEmployeeAndIsHidden(employee, false)).thenReturn(expenses);
 
         // Perform the test
         List<Expense> result = expenseService.getExpenseByEmployeeId(employeeId);
@@ -163,50 +147,7 @@ class ExpenseServiceImplTest {
         // Add more assertions as needed
     }
 
-//    @Test
-//    void testUpdateSupportingDocument() {
-//        // Mock data
-//        String supportingDoc = "document";
-//        Long expenseId = 1L;
-//        Expense expense = new Expense();
-//        expense.setExpenseId(expenseId);
-//
-//        // Mock dependencies
-//        Mockito.when(expenseRepository.save(Mockito.any(Expense.class))).thenReturn(expense);
-//
-//        // Perform the test
-//        Expense result = expenseService.updateSupportingDocument(supportingDoc, expenseId);
-//
-//        // Verify the results
-//        Assertions.assertNotNull(result);
-//        Assertions.assertEquals(expenseId, result.getExpenseId());
-//        Assertions.assertEquals(supportingDoc, result.getSupportingDocuments());
-//        // Add more assertions as needed
-//    }
-
-
-//    @Test
-//    void testUpdateExpenses() {
-//        // Mock data
-//        Expense newExpense = new Expense();
-//        newExpense.setExpenseId(1L);
-//        Long expenseId = 1L;
-//        Expense expense = new Expense();
-//        expense.setExpenseId(expenseId);
-//
-//        // Mock dependencies
-//        Mockito.when(expenseRepository.save(Mockito.any(Expense.class))).thenReturn(expense);
-//        Mockito.when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
-//
-//        // Perform the test
-//        Expense result = expenseService.updateExpenses(newExpense, expenseId);
-//
-//        // Verify the results
-//        Assertions.assertNotNull(result);
-//        // Add more assertions as needed
-//    }
-
-    @Test
+     @Test
     void testGetExpensesByEmployeeId() {
         // Mock data
         Long employeeId = 1L;
@@ -216,8 +157,8 @@ class ExpenseServiceImplTest {
         expenses.add(new Expense());
 
         // Mock dependencies
-        Mockito.when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
-        Mockito.when(expenseRepository.findByEmployeeAndIsReported(employee, false)).thenReturn(expenses);
+        when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
+        when(expenseRepository.findByEmployeeAndIsReported(employee, false)).thenReturn(expenses);
 
         // Perform the test
         List<Expense> result = expenseService.getExpensesByEmployeeId(employeeId);
@@ -235,8 +176,8 @@ class ExpenseServiceImplTest {
         expense.setExpenseId(expenseId);
 
         // Mock dependencies
-        Mockito.when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
-        Mockito.when(expenseRepository.save(Mockito.any(Expense.class))).thenReturn(expense);
+        when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
+        when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
 
         // Perform the test
         Expense result = expenseService.removeTaggedExpense(expenseId);
@@ -256,8 +197,8 @@ class ExpenseServiceImplTest {
         expenses.add(new Expense());
 
         // Mock dependencies
-        Mockito.when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
-        Mockito.when(expenseRepository.findByReportsAndIsHidden(report, false)).thenReturn(expenses);
+        when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
+        when(expenseRepository.findByReportsAndIsHidden(report, false)).thenReturn(expenses);
 
         // Perform the test
         List<Expense> result = expenseService.getExpenseByReportId(reportId);
@@ -275,8 +216,8 @@ class ExpenseServiceImplTest {
         expense.setExpenseId(expenseId);
 
         // Mock dependencies
-        Mockito.when(expenseRepository.save(Mockito.any(Expense.class))).thenReturn(expense);
-        Mockito.when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
+        when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
+        when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
 
         // Perform the test
         expenseService.hideExpense(expenseId);
@@ -295,7 +236,7 @@ class ExpenseServiceImplTest {
         expenseList.add(expense);
 
         // Mock dependencies
-        Mockito.when(expenseRepository.findByIsReportedAndIsHidden(false, false)).thenReturn(expenseList);
+        when(expenseRepository.findByIsReportedAndIsHidden(false, false)).thenReturn(expenseList);
         Mockito.doNothing().when(emailService).reminderMailToEmployee(Mockito.anyList());
 
         // Perform the test

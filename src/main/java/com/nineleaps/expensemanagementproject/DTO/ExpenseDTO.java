@@ -10,7 +10,7 @@ public class ExpenseDTO {
     private byte[] supportingDocuments;
     private LocalDate date;
 
-    private ExpenseDTO() {
+    public ExpenseDTO() {
     }
 
     public ExpenseDTO(Long amount, String currency, String description, String merchantName, byte[] supportingDocuments,LocalDate date) {
@@ -35,6 +35,22 @@ public class ExpenseDTO {
         return currency;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
+
+    public void setSupportingDocuments(byte[] supportingDocuments) {
+        this.supportingDocuments = supportingDocuments;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -51,5 +67,7 @@ public class ExpenseDTO {
         return date;
     }
 
-
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 }

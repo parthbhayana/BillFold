@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
@@ -41,21 +42,7 @@ class CategoryServiceImplTest {
         verify(categoryRepository).deleteById(categoryId);
     }
 
-//    @Test
-//    void testUpdateCategory() {
-//        // Arrange
-//        Category category = new Category();
-//        category.setCategoryId(1L);
-//
-//        when(categoryRepository.save(category)).thenReturn(category);
-//
-//        // Act
-//        Category updatedCategory = categoryService.updateCategory(category);
-//
-//        // Assert
-//        assertEquals(category, updatedCategory);
-//        verify(categoryRepository).save(category);
-//    }
+
 
     @Test
     void testGetCategoryById_ExistingCategory() {
@@ -113,20 +100,7 @@ class CategoryServiceImplTest {
         verify(categoryRepository).findAll();
     }
 
-//    @Test
-//    void testAddCategory() {
-//        // Arrange
-//        Category category = new Category();
-//
-//        when(categoryRepository.save(category)).thenReturn(category);
-//
-//        // Act
-//        Category addedCategory = categoryService.addCategory(category);
-//
-//        // Assert
-//        assertEquals(category, addedCategory);
-//        verify(categoryRepository).save(category);
-//    }
+
 
     @Test
     void testHideCategory() {
@@ -148,33 +122,7 @@ class CategoryServiceImplTest {
         verify(categoryRepository).save(category);
     }
 
-//    @Test
-//    void testGetCategoryTotalAmount() {
-//        // Arrange
-//        LocalDate startDate = LocalDate.of(2022, 1, 1);
-//        LocalDate endDate = LocalDate.of(2022, 1, 31);
-//
-//        Expense expense1 = new Expense();
-//        expense1.setAmountINR(100F);
-//        expense1.setCategory(new Category("Category 1"));
-//
-//        Expense expense2 = new Expense();
-//        expense2.setAmountINR(200F);
-//        expense2.setCategory(new Category("Category 2"));
-//
-//        List<Expense> expenseList = Arrays.asList(expense1, expense2);
-//
-//        when(expenseRepository.findByDateBetweenAndIsReported(startDate, endDate, true)).thenReturn(expenseList);
-//
-//        // Act
-//        HashMap<String, Float> categoryAmountMap = categoryService.getCategoryTotalAmount(startDate, endDate);
-//
-//        // Assert
-//        assertEquals(2, categoryAmountMap.size());
-//        assertEquals(100F, categoryAmountMap.get("Category 1"));
-//        assertEquals(200F, categoryAmountMap.get("Category 2"));
-//        verify(expenseRepository).findByDateBetweenAndIsReported(startDate, endDate, true);
-//    }
+
 
     @Test
     void testGetCategoryTotalAmountByYearAndCategory() {
@@ -315,96 +263,6 @@ class CategoryServiceImplTest {
         verify(expenseRepository).findByCategory(category);
     }
 
-//    @Test
-//    void testGetCategoryAnalyticsYearly() {
-//        // Arrange
-//        Long categoryId = 1L;
-//        Category category = new Category();
-//        category.setCategoryId(categoryId);
-//
-//        HashMap<String, Float> categoryTotalAmountByYear = new HashMap<>();
-//        categoryTotalAmountByYear.put("2022", 100F);
-//
-//        HashMap<String, Float> yearlyReimbursementRatio = new HashMap<>();
-//        yearlyReimbursementRatio.put("2022", 0.5F);
-//
-//        Optional<Category> optionalCategory = Optional.of(category);
-//
-//        when(categoryService.getCategoryById(categoryId)).thenReturn(optionalCategory);
-//        when(categoryService.getCategoryTotalAmountByYearAndCategory(categoryId)).thenReturn(categoryTotalAmountByYear);
-//        when(categoryService.getYearlyReimbursementRatio(categoryId)).thenReturn(yearlyReimbursementRatio);
-//
-//        // Act
-//        HashMap<String, Object> analyticsData = categoryService.getCategoryAnalyticsYearly(categoryId);
-//
-//        // Assert
-//        assertEquals(2, analyticsData.size());
-//        assertEquals(categoryTotalAmountByYear, analyticsData.get("categoryTotalAmountByYear"));
-//        assertEquals(yearlyReimbursementRatio, analyticsData.get("yearlyReimbursementRatio"));
-//        verify(categoryService).getCategoryById(categoryId);
-//        verify(categoryService).getCategoryTotalAmountByYearAndCategory(categoryId);
-//        verify(categoryService).getYearlyReimbursementRatio(categoryId);
-//    }
-
-
-
-//    @Test
-//    void testGetCategoryAnalyticsMonthly() {
-//        // Arrange
-//        Long categoryId = 1L;
-//        Long year = 2022L;
-//        Category category = new Category();
-//        category.setCategoryId(categoryId);
-//
-//        HashMap<String, Float> categoryTotalAmountByMonth = new HashMap<>();
-//        categoryTotalAmountByMonth.put("Jan", 100F);
-//
-//        HashMap<String, Float> monthlyReimbursementRatio = new HashMap<>();
-//        monthlyReimbursementRatio.put("Jan", 0.5F);
-//
-//        when(categoryService.getCategoryById(categoryId)).thenReturn(category);
-//        when(categoryService.getCategoryTotalAmountByMonthAndCategory(categoryId, year)).thenReturn(categoryTotalAmountByMonth);
-//        when(categoryService.getMonthlyReimbursementRatio(categoryId, year)).thenReturn(monthlyReimbursementRatio);
-//
-//        // Act
-//        HashMap<String, Object> analyticsData = categoryService.getCategoryAnalyticsMonthly(categoryId, year);
-//
-//        // Assert
-//        assertEquals(2, analyticsData.size());
-//        assertEquals(categoryTotalAmountByMonth, analyticsData.get("categoryTotalAmountByMonth"));
-//        assertEquals(monthlyReimbursementRatio, analyticsData.get("monthlyReimbursementRatio"));
-//        verify(categoryService).getCategoryById(categoryId);
-//        verify(categoryService).getCategoryTotalAmountByMonthAndCategory(categoryId, year);
-//        verify(categoryService).getMonthlyReimbursementRatio(categoryId, year);
-//    }
-
-//    @Test
-//    void testGetTotalAmountByYearForAllCategories() {
-//        // Arrange
-//        Expense expense1 = new Expense();
-//        expense1.setAmountINR(100F);
-//        expense1.setDate(LocalDate.of(2022, 1, 1));
-//        expense1.setIsReported(true);
-//        expense1.setIsHidden(false);
-//
-//        Expense expense2 = new Expense();
-//        expense2.setAmountINR(200F);
-//        expense2.setDate(LocalDate.of(2022, 2, 1));
-//        expense2.setIsReported(true);
-//        expense2.setIsHidden(false);
-//
-//        List<Expense> expenseList = Arrays.asList(expense1, expense2);
-//
-//        when(expenseRepository.findByIsReportedAndIsHidden(true, false)).thenReturn(expenseList);
-//
-//        // Act
-//        HashMap<String, Float> result = categoryService.getTotalAmountByYearForAllCategories();
-//
-//        // Assert
-//        assertEquals(2, result.size());
-//        assertEquals(300F, result.get("2022"));
-//        verify(expenseRepository).findByIsReportedAndIsHidden(true, false);
-//    }
 
     @Test
     void testGetTotalAmountByMonthForAllCategories() {
@@ -497,71 +355,152 @@ class CategoryServiceImplTest {
         assertEquals(200F, result.get("2022_Feb"));
         verify(expenseRepository).findByIsReportedAndIsHidden(true, false);
     }
+    @Test
+    void updateCategory_WithValidInputs_ReturnsUpdatedCategory() {
+        // Prepare test data
+        long categoryId = 1L;
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCategoryDescription("New Description");
 
-//    @Test
-//    void testGetYearlyCategoryAnalyticsForAllCategories() {
-//        // Arrange
-//        List<Expense> expenses = new ArrayList<>();
-//        Expense expense1 = new Expense();
-//        expense1.setAmountINR(100F);
-//        expense1.setDate(LocalDate.of(2022, 1, 1));
-//        expense1.setIsReported(true);
-//        expense1.setIsHidden(false);
-//        expenses.add(expense1);
-//
-//        Expense expense2 = new Expense();
-//        expense2.setAmountINR(200F);
-//        expense2.setDate(LocalDate.of(2022, 2, 1));
-//        expense2.setIsReported(true);
-//        expense2.setIsHidden(false);
-//        expenses.add(expense2);
-//
-//        when(expenseRepository.findByIsReportedAndIsHidden(true, false)).thenReturn(expenses);
-//
-//        HashMap<String, Float> totalAmountByYear = new HashMap<>();
-//        totalAmountByYear.put("2022", 300F);
-//
-//        HashMap<String, Float> yearlyReimbursementRatio = new HashMap<>();
-//        yearlyReimbursementRatio.put("2022", 0.5F);
-//
-//        when(categoryService.getTotalAmountByYearForAllCategories()).thenReturn(totalAmountByYear);
-//        when(categoryService.getYearlyReimbursementRatioForAllCategories()).thenReturn(yearlyReimbursementRatio);
-//
-//        // Act
-//        HashMap<String, Object> analyticsData = categoryService.getYearlyCategoryAnalyticsForAllCategories();
-//
-//        // Assert
-//        assertEquals(2, analyticsData.size());
-//        assertEquals(totalAmountByYear, analyticsData.get("categoryTotalAmountByYear"));
-//        assertEquals(yearlyReimbursementRatio, analyticsData.get("yearlyReimbursementRatio"));
-//        verify(categoryService).getTotalAmountByYearForAllCategories();
-//        verify(categoryService).getYearlyReimbursementRatioForAllCategories();
-//    }
+        Category category = new Category();
+        category.setCategoryId(categoryId);
+        category.setCategoryDescription("Old Description");
+
+        // Mock dependencies
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        when(categoryRepository.save(category)).thenReturn(category);
+
+        // Call the method
+        Category updatedCategory = categoryService.updateCategory(categoryId, categoryDTO);
+
+        // Verify the expected behavior
+        verify(categoryRepository).findById(categoryId);
+        verify(categoryRepository).save(category);
+
+        // Assert the updated values
+        assertEquals(categoryDTO.getCategoryDescription(), updatedCategory.getCategoryDescription());
+        assertEquals(categoryId, updatedCategory.getCategoryId());
+    }
+
+    @Test
+    void addCategory_WithValidInputs_ReturnsAddedCategory() {
+        // Prepare test data
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCategoryDescription("New Category");
+
+        Category category = new Category();
+        category.setCategoryId(1L);
+        category.setCategoryDescription("New Category");
+
+        // Mock the category repository
+        when(categoryRepository.save(any(Category.class))).thenReturn(category);
+
+        // Call the method
+        Category addedCategory = categoryService.addCategory(categoryDTO);
+
+        // Verify the interaction with the repository
+        verify(categoryRepository).save(any(Category.class));
+
+        // Assert the result
+        assertNotNull(addedCategory);
+        assertEquals(1L, addedCategory.getCategoryId());
+        assertEquals("New Category", addedCategory.getCategoryDescription());
+    }
+
+    @Test
+    void getCategoryTotalAmount_WithValidDateRange_ReturnsCategoryAmountMap() {
+        // Prepare test data
+        LocalDate startDate = LocalDate.of(2023, 1, 1);
+        LocalDate endDate = LocalDate.of(2023, 12, 31);
+
+        Category category1 = new Category();
+        category1.setCategoryDescription("Category 1");
+
+        Category category2 = new Category();
+        category2.setCategoryDescription("Category 2");
+
+        Expense expense1 = new Expense();
+        expense1.setCategory(category1);
+        expense1.setAmountINR(100.0f);
+
+        Expense expense2 = new Expense();
+        expense2.setCategory(category2);
+        expense2.setAmountINR(200.0f);
+
+        Expense expense3 = new Expense();
+        expense3.setCategory(category1);
+        expense3.setAmountINR(150.0f);
+
+        List<Expense> expenseList = Arrays.asList(expense1, expense2, expense3);
+
+        // Mock the expense repository
+        when(expenseRepository.findByDateBetweenAndIsReported(startDate, endDate, true)).thenReturn(expenseList);
+
+        // Call the method
+        HashMap<String, Float> categoryAmountMap = categoryService.getCategoryTotalAmount(startDate, endDate);
+
+        // Verify the interaction with the repository
+        verify(expenseRepository).findByDateBetweenAndIsReported(startDate, endDate, true);
+
+        // Assert the result
+        assertNotNull(categoryAmountMap);
+        assertEquals(2, categoryAmountMap.size());
+        assertEquals(250.0f, categoryAmountMap.get("Category 1"), 0.0f);
+        assertEquals(200.0f, categoryAmountMap.get("Category 2"), 0.0f);
+    }
+    @Test
+    void getTotalAmountByYearForAllCategories_ReturnsTotalAmountByYear() {
+        // Prepare test data
+        Expense expense1 = new Expense();
+        expense1.setDate(LocalDate.of(2021, 1, 1));
+        expense1.setAmountINR(100.0f);
+
+        Expense expense2 = new Expense();
+        expense2.setDate(LocalDate.of(2021, 2, 1));
+        expense2.setAmountINR(200.0f);
+
+        Expense expense3 = new Expense();
+        expense3.setDate(LocalDate.of(2022, 1, 1));
+        expense3.setAmountINR(150.0f);
+
+        List<Expense> expenses = Arrays.asList(expense1, expense2, expense3);
+
+        // Mock the expense repository
+        when(expenseRepository.findByIsReportedAndIsHidden(true, false)).thenReturn(expenses);
+
+        // Call the method
+        HashMap<String, Float> result = categoryService.getTotalAmountByYearForAllCategories();
+
+        // Verify the interaction with the expense repository
+        verify(expenseRepository).findByIsReportedAndIsHidden(true, false);
+
+        // Assert the result
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(300.0f, result.get("2021"), 0.0f);
+        assertEquals(150.0f, result.get("2022"), 0.0f);
+    }
+
+    @Test
+    void getTotalAmountByYearForAllCategories_WithNoExpenses_ReturnsEmptyResult() {
+        // Mock the expense repository to return an empty list
+        when(expenseRepository.findByIsReportedAndIsHidden(true, false)).thenReturn(Collections.emptyList());
+
+        // Call the method
+        HashMap<String, Float> result = categoryService.getTotalAmountByYearForAllCategories();
+
+        // Verify the interaction with the expense repository
+        verify(expenseRepository).findByIsReportedAndIsHidden(true, false);
+
+        // Assert the result
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
 
 
 
-//    @Test
-//    void testGetMonthlyCategoryAnalyticsForAllCategories() {
-//        // Arrange
-//        Long year = 2022L;
-//
-//        HashMap<String, Float> totalAmountByMonth = new HashMap<>();
-//        totalAmountByMonth.put("Jan", 100F);
-//
-//        HashMap<String, Float> monthlyReimbursementRatio = new HashMap<>();
-//        monthlyReimbursementRatio.put("Jan", 0.5F);
-//
-//        when(categoryService.getTotalAmountByMonthForAllCategories(year)).thenReturn(totalAmountByMonth);
-//        when(categoryService.getMonthlyReimbursementRatioForAllCategories(year)).thenReturn(monthlyReimbursementRatio);
-//
-//        // Act
-//        HashMap<String, Object> analyticsData = categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);
-//
-//        // Assert
-//        assertEquals(2, analyticsData.size());
-//        assertEquals(totalAmountByMonth, analyticsData.get("categoryTotalAmountByMonth"));
-//        assertEquals(monthlyReimbursementRatio, analyticsData.get("monthlyReimbursementRatio"));
-//        verify(categoryService).getTotalAmountByMonthForAllCategories(year);
-//        verify(categoryService).getMonthlyReimbursementRatioForAllCategories(year);
-//    }
+
+
+
+
 }

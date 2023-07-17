@@ -17,4 +17,7 @@ public class CategoryDTO {
     public void setCategoryDescription(String categoryDescription) {
         this.categoryDescription = categoryDescription;
     }
+
+
+
 }

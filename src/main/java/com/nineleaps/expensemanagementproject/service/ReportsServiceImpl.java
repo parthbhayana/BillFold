@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -45,6 +46,8 @@ public class ReportsServiceImpl implements IReportsService {
     private static final String CONSTANT7="pending";
     private static final String CONSTANT8="Report ";
     private static final String CONSTANT9=" is not Submitted!";
+
+
 
     @Override
     public List<Reports> getAllReports() {
@@ -646,6 +649,7 @@ public class ReportsServiceImpl implements IReportsService {
         }
         emailService.reminderMailToManager(reportIds);
     }
+
 
 
 }

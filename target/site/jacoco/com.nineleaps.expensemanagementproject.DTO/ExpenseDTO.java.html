@@ -10,47 +10,65 @@ public class ExpenseDTO {
     private byte[] supportingDocuments;
     private LocalDate date;
 
-    private ExpenseDTO() {
-    }
+<span class="fc" id="L13">    public ExpenseDTO() {</span>
+<span class="fc" id="L14">    }</span>
 
-<span class="nc" id="L16">    public ExpenseDTO(Long amount, String currency, String description, String merchantName, byte[] supportingDocuments,LocalDate date) {</span>
-<span class="nc" id="L17">        this.amount = amount;</span>
-<span class="nc" id="L18">        this.currency = currency;</span>
-<span class="nc" id="L19">        this.description = description;</span>
-<span class="nc" id="L20">        this.merchantName = merchantName;</span>
-<span class="nc" id="L21">        this.supportingDocuments = supportingDocuments;</span>
-<span class="nc" id="L22">        this.date=date;</span>
-<span class="nc" id="L23">    }</span>
+<span class="fc" id="L16">    public ExpenseDTO(Long amount, String currency, String description, String merchantName, byte[] supportingDocuments,LocalDate date) {</span>
+<span class="fc" id="L17">        this.amount = amount;</span>
+<span class="fc" id="L18">        this.currency = currency;</span>
+<span class="fc" id="L19">        this.description = description;</span>
+<span class="fc" id="L20">        this.merchantName = merchantName;</span>
+<span class="fc" id="L21">        this.supportingDocuments = supportingDocuments;</span>
+<span class="fc" id="L22">        this.date=date;</span>
+<span class="fc" id="L23">    }</span>
 
 
     public Long getAmount() {
-<span class="nc" id="L27">        return amount;</span>
+<span class="fc" id="L27">        return amount;</span>
     }
 
     public void setAmount(Long amount) {
-<span class="nc" id="L31">        this.amount = amount;</span>
-<span class="nc" id="L32">    }</span>
+<span class="fc" id="L31">        this.amount = amount;</span>
+<span class="fc" id="L32">    }</span>
 
     public String getCurrency() {
-<span class="nc" id="L35">        return currency;</span>
+<span class="fc" id="L35">        return currency;</span>
     }
 
+    public void setDescription(String description) {
+<span class="fc" id="L39">        this.description = description;</span>
+<span class="fc" id="L40">    }</span>
+
+    public void setMerchantName(String merchantName) {
+<span class="fc" id="L43">        this.merchantName = merchantName;</span>
+<span class="fc" id="L44">    }</span>
+
+    public void setSupportingDocuments(byte[] supportingDocuments) {
+<span class="fc" id="L47">        this.supportingDocuments = supportingDocuments;</span>
+<span class="fc" id="L48">    }</span>
+
+    public void setDate(LocalDate date) {
+<span class="fc" id="L51">        this.date = date;</span>
+<span class="fc" id="L52">    }</span>
+
     public String getDescription() {
-<span class="nc" id="L39">        return description;</span>
+<span class="fc" id="L55">        return description;</span>
     }
 
     public String getMerchantName() {
-<span class="nc" id="L43">        return merchantName;</span>
+<span class="fc" id="L59">        return merchantName;</span>
     }
 
     public byte[] getSupportingDocuments() {
-<span class="nc" id="L47">        return supportingDocuments;</span>
+<span class="fc" id="L63">        return supportingDocuments;</span>
     }
 
     public LocalDate getDate() {
-<span class="nc" id="L51">        return date;</span>
+<span class="fc" id="L67">        return date;</span>
     }
 
-
+    public void setCurrency(String currency) {
+<span class="fc" id="L71">        this.currency = currency;</span>
+<span class="fc" id="L72">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
