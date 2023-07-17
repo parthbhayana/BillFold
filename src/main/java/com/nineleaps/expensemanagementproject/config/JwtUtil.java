@@ -53,7 +53,7 @@ public class JwtUtil {
 
 
 
-    private static class TokenResponse {
+    public static class TokenResponse {
         private final String accessToken;
         private final String refreshToken;
 

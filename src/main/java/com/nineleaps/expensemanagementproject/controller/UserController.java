@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.nineleaps.expensemanagementproject.DTO.UserDTO;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -60,18 +62,18 @@ public class UserController {
 	}
 
 	@PostMapping("/theProfile")
-	public ResponseEntity<?> insertUser(@RequestBody Employee newUser, HttpServletResponse response) {
-		Employee employee = userService.findByEmailId(newUser.getEmployeeEmail());
+	public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
+		Employee employee = userService.findByEmailId(userDTO.getEmployeeEmail());
 		if (employee == null) {
-			userService.insertUser(newUser);
-			employee = userService.findByEmailId(newUser.getEmployeeEmail());
+			userService.insertUser(userDTO);
+			employee = userService.findByEmailId(userDTO.getEmployeeEmail());
 			String email = employee.getEmployeeEmail();
-			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(),  employee.getRole(), response);
-			return tokenResponse;
+			return jwtUtil.generateTokens(email, employee.getEmployeeId(),  employee.getRole(), response);
+
 		} else {
 			String email = employee.getEmployeeEmail();
-			ResponseEntity<?> tokenResponse = jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
-			return tokenResponse;
+			return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
+
 		}
 	}
 }

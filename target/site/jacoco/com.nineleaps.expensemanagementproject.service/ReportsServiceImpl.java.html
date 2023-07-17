@@ -218,7 +218,7 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
     @Override
     public List&lt;Reports&gt; getReportsSubmittedToUser(String managerEmail, String request) {
-<span class="fc bfc" id="L221" title="All 4 branches covered.">        switch (request) {</span>
+<span class="pc bpc" id="L221" title="1 of 4 branches missed.">        switch (request) {</span>
             case CONSTANT5:
 <span class="fc" id="L223">                List&lt;Reports&gt; approvedList = reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,</span>
 <span class="fc" id="L224">                        ManagerApprovalStatus.APPROVED, true, false);</span>
@@ -229,8 +229,8 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 <span class="fc" id="L229">                mergedList.addAll(partiallyApprovedList);</span>
 <span class="fc" id="L230">                return mergedList;</span>
             case CONSTANT4:
-<span class="fc" id="L232">                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,</span>
-<span class="fc" id="L233">                        ManagerApprovalStatus.REJECTED, true, false);</span>
+<span class="nc" id="L232">                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsHidden(managerEmail,</span>
+                        ManagerApprovalStatus.REJECTED, false);
             case CONSTANT7:
 <span class="fc" id="L235">                return reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,</span>
 <span class="fc" id="L236">                        ManagerApprovalStatus.PENDING, true, false);</span>

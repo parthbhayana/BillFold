@@ -45,5 +45,5 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 	List<Reports> getReportsByEmployeeIdAndManagerapprovalstatusAndIsHidden(Long employeeId, ManagerApprovalStatus managerApprovalStatus, boolean b);
 
 
-
+    List<Reports> findByManagerEmailAndManagerapprovalstatusAndIsHidden(String managerEmail, ManagerApprovalStatus managerApprovalStatus, boolean b);
 }

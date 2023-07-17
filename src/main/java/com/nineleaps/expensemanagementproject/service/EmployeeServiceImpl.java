@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
+import com.nineleaps.expensemanagementproject.DTO.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.entity.Employee;
@@ -142,8 +143,14 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
-	public Employee insertUser(Employee newUser) {
-		return employeeRepository.save(newUser);
+	public Employee insertUser(UserDTO userDTO) {
+		Employee employee = new Employee();
+		employee.setEmployeeEmail(userDTO.getEmployeeEmail());
+		employee.setImageUrl(userDTO.getImageUrl());
+		employee.setFirstName(userDTO.getFirstName());
+		employee.setMiddleName(userDTO.getMiddleName());
+		employee.setLastName(userDTO.getLastName());
+		return employeeRepository.save(employee);
 
 	}
 
