@@ -2,18 +2,20 @@ package com.nineleaps.expensemanagementproject.config;
 
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.core.token.Token;
-import org.springframework.security.core.token.TokenService;
+
+
 
 import javax.servlet.http.HttpServletResponse;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class JwtUtilTest {
@@ -30,6 +32,55 @@ class JwtUtilTest {
         response = mock(HttpServletResponse.class);
     }
 
+    @Test
+    void generateTokens_ShouldReturnTokenResponseWithTokensSetInHeaders() {
+        // Arrange
+        String emailId = "test@example.com";
+        Long employeeId = 1L;
+        String role = "admin";
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        JwtUtil jwtUtil = new JwtUtil();
+
+        // Act
+        ResponseEntity<JwtUtil.TokenResponse> result = jwtUtil.generateTokens(emailId, employeeId, role, response);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(200, result.getStatusCodeValue());
+
+        JwtUtil.TokenResponse tokenResponse = result.getBody();
+        assertNotNull(tokenResponse);
+        assertNotNull(tokenResponse.getAccessToken());
+        assertNotNull(tokenResponse.getRefreshToken());
+
+        verify(response).setHeader("Access_Token", tokenResponse.getAccessToken());
+        verify(response).setHeader("Refresh_Token", tokenResponse.getRefreshToken());
+    }
+
+    @Test
+    void generateToken_ShouldReturnValidToken() {
+        // Arrange
+        String emailId = "test@example.com";
+        Long employeeId = 1L;
+        String role = "admin";
+        long expirationTime = 3600000; // 1 hour
+
+        JwtUtil jwtUtil = new JwtUtil();
+
+        // Act
+        String token = jwtUtil.generateToken(emailId, employeeId, role, expirationTime);
+
+        // Assert
+        assertNotNull(token);
+
+        Claims claims = jwtUtil.getClaimsFromToken(token);
+        assertEquals(emailId, claims.getSubject());
+        assertEquals(employeeId, claims.get("EmployeeID", Long.class));
+        assertEquals(role, claims.get("Role", String.class));
+
+        assertTrue(jwtUtil.validateToken(token));
+    }
 
     @Test
     void generateTokens_ValidArguments_ShouldReturnResponseEntityWithTokens() {
@@ -78,9 +129,8 @@ class JwtUtilTest {
         boolean isValid = jwtUtil.validateToken(token);
 
         // Assert
-        Assertions.assertTrue(isValid);
+        assertTrue(isValid);
     }
-
 
 
     @Test

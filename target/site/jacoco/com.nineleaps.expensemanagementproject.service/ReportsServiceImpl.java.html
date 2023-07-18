@@ -193,12 +193,12 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
     @Override
     public List&lt;Reports&gt; getReportByEmpId(Long employeeId, String request) {
-<span class="nc bnc" id="L196" title="All 5 branches missed.">        switch (request) {</span>
+<span class="pc bpc" id="L196" title="2 of 5 branches missed.">        switch (request) {</span>
             case &quot;drafts&quot;:
-<span class="nc" id="L198">                return reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(employeeId, false, false);</span>
+<span class="fc" id="L198">                return reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(employeeId, false, false);</span>
             case &quot;submitted&quot;:
-<span class="nc" id="L200">                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,</span>
-<span class="nc" id="L201">                        ManagerApprovalStatus.PENDING, true, false);</span>
+<span class="fc" id="L200">                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(employeeId,</span>
+<span class="fc" id="L201">                        ManagerApprovalStatus.PENDING, true, false);</span>
             case CONSTANT4:
 <span class="nc" id="L203">                return reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsHidden(employeeId,</span>
                         ManagerApprovalStatus.REJECTED, false);
@@ -212,7 +212,7 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 <span class="nc" id="L212">                mergedList.addAll(partiallyApprovedList);</span>
 <span class="nc" id="L213">                return mergedList;</span>
             default:
-<span class="nc" id="L215">                throw new IllegalArgumentException(CONSTANT6 + request);</span>
+<span class="fc" id="L215">                throw new IllegalArgumentException(CONSTANT6 + request);</span>
         }
     }
 
@@ -601,54 +601,52 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 <span class="nc" id="L601">            expenseRepository.save(expense);</span>
 <span class="nc" id="L602">        }</span>
 <span class="nc" id="L603">        report.setManagerReviewTime(reviewTime);</span>
-        //Changing Report Status
-        //If any expense is rejected report will go back to employee for changes
 
         //If all the expenses are approved then report status will be &quot;APPROVED&quot;
-<span class="nc bnc" id="L608" title="All 4 branches missed.">        if (rejectExpenseIds.isEmpty() &amp;&amp; partiallyApprovedMap.isEmpty()) {</span>
-<span class="nc" id="L609">            report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);</span>
-<span class="nc" id="L610">            report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);</span>
+<span class="nc bnc" id="L606" title="All 4 branches missed.">        if (rejectExpenseIds.isEmpty() &amp;&amp; partiallyApprovedMap.isEmpty()) {</span>
+<span class="nc" id="L607">            report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);</span>
+<span class="nc" id="L608">            report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);</span>
 
 
         }
-<span class="nc bnc" id="L614" title="All 4 branches missed.">        else if (!rejectExpenseIds.isEmpty() &amp;&amp; partiallyApprovedMap.isEmpty()) {</span>
-<span class="nc" id="L615">            report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);</span>
-<span class="nc" id="L616">            report.setIsSubmitted(false);</span>
+<span class="nc bnc" id="L612" title="All 4 branches missed.">        else if (!rejectExpenseIds.isEmpty() &amp;&amp; partiallyApprovedMap.isEmpty()) {</span>
+<span class="nc" id="L613">            report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);</span>
+<span class="nc" id="L614">            report.setIsSubmitted(false);</span>
         }
 
 
         //If any of the expenses are partially-approved then report status will be &quot;PARTIALLY_APPROVED&quot;
-<span class="nc bnc" id="L621" title="All 4 branches missed.">        else if (rejectExpenseIds.isEmpty() &amp;&amp; !partiallyApprovedMap.isEmpty()) {</span>
-<span class="nc" id="L622">            report.setManagerApprovalStatus(ManagerApprovalStatus.PARTIALLY_APPROVED);</span>
-<span class="nc" id="L623">            report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);</span>
+<span class="nc bnc" id="L619" title="All 4 branches missed.">        else if (rejectExpenseIds.isEmpty() &amp;&amp; !partiallyApprovedMap.isEmpty()) {</span>
+<span class="nc" id="L620">            report.setManagerApprovalStatus(ManagerApprovalStatus.PARTIALLY_APPROVED);</span>
+<span class="nc" id="L621">            report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);</span>
 
 
         }
-<span class="nc" id="L627">        report.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));</span>
-<span class="nc" id="L628">        report.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));</span>
+<span class="nc" id="L625">        report.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));</span>
+<span class="nc" id="L626">        report.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));</span>
 
 
-<span class="nc" id="L631">        reportsRepository.save(report);</span>
-<span class="nc" id="L632">    }</span>
+<span class="nc" id="L629">        reportsRepository.save(report);</span>
+<span class="nc" id="L630">    }</span>
 
 
 
     @Scheduled(cron = &quot;0 20 13 * * *&quot;)
     public void sendReportNotApprovedByManagerReminder() {
-<span class="nc" id="L638">        LocalDate currentDate = LocalDate.now();</span>
+<span class="nc" id="L636">        LocalDate currentDate = LocalDate.now();</span>
 
-<span class="nc" id="L640">        List&lt;Reports&gt; reportsList = reportsRepository.findBymanagerapprovalstatus(ManagerApprovalStatus.PENDING);</span>
-<span class="nc" id="L641">        List&lt;Long&gt; reportIds = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L642" title="All 2 branches missed.">        for (Reports report : reportsList) {</span>
-<span class="nc" id="L643">            LocalDate submissionDate = report.getDateSubmitted();</span>
-<span class="nc" id="L644">            LocalDate expirationDate = submissionDate.plusDays(60);</span>
+<span class="nc" id="L638">        List&lt;Reports&gt; reportsList = reportsRepository.findBymanagerapprovalstatus(ManagerApprovalStatus.PENDING);</span>
+<span class="nc" id="L639">        List&lt;Long&gt; reportIds = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L640" title="All 2 branches missed.">        for (Reports report : reportsList) {</span>
+<span class="nc" id="L641">            LocalDate submissionDate = report.getDateSubmitted();</span>
+<span class="nc" id="L642">            LocalDate expirationDate = submissionDate.plusDays(60);</span>
 
-<span class="nc bnc" id="L646" title="All 4 branches missed.">            if (currentDate.isAfter(expirationDate.minusDays(5)) &amp;&amp; currentDate.isBefore(expirationDate)) {</span>
-<span class="nc" id="L647">                reportIds.add(report.getReportId());</span>
+<span class="nc bnc" id="L644" title="All 4 branches missed.">            if (currentDate.isAfter(expirationDate.minusDays(5)) &amp;&amp; currentDate.isBefore(expirationDate)) {</span>
+<span class="nc" id="L645">                reportIds.add(report.getReportId());</span>
             }
-<span class="nc" id="L649">        }</span>
-<span class="nc" id="L650">        emailService.reminderMailToManager(reportIds);</span>
-<span class="nc" id="L651">    }</span>
+<span class="nc" id="L647">        }</span>
+<span class="nc" id="L648">        emailService.reminderMailToManager(reportIds);</span>
+<span class="nc" id="L649">    }</span>
 
 
 

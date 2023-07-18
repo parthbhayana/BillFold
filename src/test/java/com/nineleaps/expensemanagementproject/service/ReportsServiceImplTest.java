@@ -1,22 +1,16 @@
 package com.nineleaps.expensemanagementproject.service;
 
-
+import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
-
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
-
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 import java.time.LocalDate;
 import java.util.*;
 
@@ -41,7 +35,6 @@ class ReportsServiceImplTest {
     @Mock
     private IEmailService emailService;
 
-
     @InjectMocks
     private ReportsServiceImpl reportsService;
 
@@ -49,6 +42,69 @@ class ReportsServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
+    // AddReport tests...
+
+//    @Test
+//    void testAddReport() {
+//        // Mock employee
+//        Long employeeId = 1L;
+//        Employee employee = new Employee();
+//        employee.setEmployeeEmail("employee@example.com");
+//        employee.setManagerEmail("manager@example.com");
+//        employee.setFirstName("John");
+//        employee.setLastName("Doe");
+//        employee.setOfficialEmployeeId("EMP123");
+//
+//        when(employeeServices.getEmployeeById(employeeId)).thenReturn(employee);
+//
+//        // Mock expenses
+//        List<Long> expenseIds = new ArrayList<>();
+//        Long expenseId1 = 1L;
+//        Long expenseId2 = 2L;
+//        expenseIds.add(expenseId1);
+//        expenseIds.add(expenseId2);
+//
+//        Expense expense1 = new Expense();
+//        expense1.setCurrency("USD");
+//        expense1.setAmountINR(100);
+//        Expense expense2 = new Expense();
+//        expense2.setCurrency("USD");
+//        expense2.setAmountINR(200);
+//
+//        when(expenseRepository.getExpenseByexpenseId(expenseId1)).thenReturn(expense1);
+//        when(expenseRepository.getExpenseByexpenseId(expenseId2)).thenReturn(expense2);
+//        when(expenseRepository.findAllById(expenseIds)).thenReturn(List.of(expense1, expense2));
+//
+//        // Call the method
+//        ReportsDTO reportsDTO = new ReportsDTO("Report Title", "Report Description");
+//        Reports savedReport = new Reports();
+//        when(reportsRepository.save(any(Reports.class))).thenReturn(savedReport);
+//
+//        Reports result = reportsService.addReport(reportsDTO, employeeId, expenseIds);
+//
+//        // Assertions
+//        verify(employeeServices, times(1)).getEmployeeById(employeeId);
+//        verify(expenseRepository, times(2)).getExpenseByexpenseId(anyLong());
+//        verify(expenseRepository, times(1)).findAllById(expenseIds);
+//        verify(reportsRepository, times(2)).save(any(Reports.class));
+//
+//        // Verify the values of the created report
+//        assertSame(savedReport, result);
+//        assertEquals("Report Title", result.getReportTitle());
+//        assertEquals("Report Description", result.getReportDescription());
+//        assertEquals("employee@example.com", result.getEmployeeMail());
+//        assertEquals("manager@example.com", result.getManagerEmail());
+//        assertEquals("John Doe", result.getEmployeeName());
+//        assertEquals("EMP123", result.getOfficialEmployeeId());
+//        assertEquals(LocalDate.now(), result.getDateCreated());
+//        assertEquals(employeeId, result.getEmployeeId());
+//        assertEquals("USD", result.getCurrency());
+//        assertEquals(300, result.getTotalAmountINR());
+//        assertEquals(300, result.getTotalAmountCurrency());
+//    }
+
+    // GetAllReports test...
 
     @Test
     void testGetAllReports() {
@@ -62,6 +118,8 @@ class ReportsServiceImplTest {
         // Assert
         assertEquals(expectedReports, actualReports);
     }
+
+    // GetReportById tests...
 
     @Test
     void testGetReportById() {
@@ -89,9 +147,7 @@ class ReportsServiceImplTest {
         assertThrows(RuntimeException.class, () -> reportsService.getReportById(reportId));
     }
 
-
-
-
+    // EditReport tests...
 
     @Test
     void testEditReport_SubmittedReport() {
@@ -104,7 +160,8 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
 
         // Act and Assert
-        assertThrows(IllegalStateException.class, () -> reportsService.editReport(reportId, "Title", "Description", null, null));
+        assertThrows(IllegalStateException.class, () ->
+                reportsService.editReport(reportId, "Title", "Description", null, null));
         verify(reportsRepository, never()).save(any(Reports.class));
         verify(expenseServices, never()).updateExpense(anyLong(), anyLong());
     }
@@ -120,7 +177,8 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
 
         // Act and Assert
-        assertThrows(NullPointerException.class, () -> reportsService.editReport(reportId, "Title", "Description", null, null));
+        assertThrows(NullPointerException.class, () ->
+                reportsService.editReport(reportId, "Title", "Description", null, null));
         verify(reportsRepository, never()).save(any(Reports.class));
         verify(expenseServices, never()).updateExpense(anyLong(), anyLong());
     }
@@ -138,11 +196,14 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
 
         // Act and Assert
-        assertThrows(IllegalStateException.class, () -> reportsService.editReport(reportId, "Title", "Description", null, null));
+        assertThrows(IllegalStateException.class, () ->
+                reportsService.editReport(reportId, "Title", "Description", null, null));
 
         verify(reportsRepository, never()).save(any(Reports.class));
         verify(expenseServices, never()).updateExpense(anyLong(), anyLong());
     }
+
+    // AddExpenseToReport tests...
 
     @Test
     void testAddExpenseToReport() {
@@ -171,9 +232,63 @@ class ReportsServiceImplTest {
 
         // Assert
         assertNotNull(updatedReport);
-        assertEquals(report, updatedReport);
+        assertSame(report, updatedReport);
         verify(expenseServices, times(2)).updateExpense(anyLong(), anyLong());
         verify(reportsRepository).save(any(Reports.class));
+    }
+
+    @Test
+    void testGetReportByEmpId_Drafts() {
+        // Arrange
+        Long employeeId = 1L;
+        String request = "drafts";
+        List<Reports> expectedReports = new ArrayList<>();
+        when(reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(
+                employeeId, false, false)).thenReturn(expectedReports);
+
+        // Act
+        List<Reports> actualReports = reportsService.getReportByEmpId(employeeId, request);
+
+        // Assert
+        Assertions.assertEquals(expectedReports, actualReports);
+        verify(reportsRepository).getReportsByEmployeeIdAndIsSubmittedAndIsHidden(
+                employeeId, false, false);
+        verifyNoMoreInteractions(reportsRepository);
+    }
+
+    @Test
+    void testGetReportByEmpId_Submitted() {
+        // Arrange
+        Long employeeId = 1L;
+        String request = "submitted";
+        List<Reports> expectedReports = new ArrayList<>();
+        when(reportsRepository.getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
+                employeeId, ManagerApprovalStatus.PENDING, true, false)).thenReturn(expectedReports);
+
+        // Act
+        List<Reports> actualReports = reportsService.getReportByEmpId(employeeId, request);
+
+        // Assert
+        Assertions.assertEquals(expectedReports, actualReports);
+        verify(reportsRepository).getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
+                employeeId, ManagerApprovalStatus.PENDING, true, false);
+        verifyNoMoreInteractions(reportsRepository);
+    }
+
+
+
+
+    @Test
+    void testGetReportByEmpId_InvalidRequest() {
+        // Arrange
+        Long employeeId = 1L;
+        String request = "invalidRequest";
+
+        // Act and Assert
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> reportsService.getReportByEmpId(employeeId, request));
+
+        verifyNoInteractions(reportsRepository);
     }
 
     @Test
@@ -189,12 +304,13 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
 
         // Act and Assert
-        assertThrows(NullPointerException.class, () -> reportsService.addExpenseToReport(reportId, expenseIds));
+        assertThrows(NullPointerException.class, () ->
+                reportsService.addExpenseToReport(reportId, expenseIds));
         verify(expenseServices, never()).updateExpense(anyLong(), anyLong());
         verify(reportsRepository, never()).save(any(Reports.class));
     }
 
-
+    // SubmitReport tests...
 
     @Test
     void testSubmitReport_AlreadySubmitted() throws MessagingException, IOException {
@@ -211,7 +327,8 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
 
         // Act and Assert
-        assertThrows(IllegalStateException.class, () -> reportsService.submitReport(reportId, response));
+        assertThrows(IllegalStateException.class, () ->
+                reportsService.submitReport(reportId, response));
         verify(reportsRepository, never()).save(any(Reports.class));
         verify(emailService, never()).managerNotification(anyLong(), anyList(), any(HttpServletResponse.class));
     }
@@ -230,12 +347,13 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
 
         // Act and Assert
-        assertThrows(NullPointerException.class, () -> reportsService.submitReport(reportId, response));
+        assertThrows(NullPointerException.class, () ->
+                reportsService.submitReport(reportId, response));
         verify(reportsRepository, never()).save(any(Reports.class));
         verify(emailService, never()).managerNotification(anyLong(), anyList(), any(HttpServletResponse.class));
     }
 
-
+    // DeleteReport tests...
 
     @Test
     void testDeleteReport_NonexistentReport() {
@@ -244,9 +362,12 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(RuntimeException.class, () -> reportsService.hideReport(reportId));
+        assertThrows(RuntimeException.class, () ->
+                reportsService.hideReport(reportId));
         verify(reportsRepository, never()).delete(any(Reports.class));
     }
+
+    // GetReportsSubmittedToUser tests...
 
     @Test
     void testGetReportsSubmittedToUser_ApprovedAndPartiallyApproved() {
@@ -264,10 +385,10 @@ class ReportsServiceImplTest {
         mergedList.addAll(approvedList);
         mergedList.addAll(partiallyApprovedList);
 
-        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                ManagerApprovalStatus.APPROVED, true, false)).thenReturn(approvedList);
-        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                ManagerApprovalStatus.PARTIALLY_APPROVED, true, false)).thenReturn(partiallyApprovedList);
+        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
+                managerEmail, ManagerApprovalStatus.APPROVED, true, false)).thenReturn(approvedList);
+        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
+                managerEmail, ManagerApprovalStatus.PARTIALLY_APPROVED, true, false)).thenReturn(partiallyApprovedList);
 
         // Act
         List<Reports> result = reportsService.getReportsSubmittedToUser(managerEmail, request);
@@ -275,36 +396,12 @@ class ReportsServiceImplTest {
         // Assert
         Assertions.assertEquals(mergedList, result);
 
-        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                ManagerApprovalStatus.APPROVED, true, false);
-        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                ManagerApprovalStatus.PARTIALLY_APPROVED, true, false);
+        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
+                managerEmail, ManagerApprovalStatus.APPROVED, true, false);
+        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
+                managerEmail, ManagerApprovalStatus.PARTIALLY_APPROVED, true, false);
         verifyNoMoreInteractions(reportsRepository);
     }
-
-//    @Test
-//    void testGetReportsSubmittedToUser_Rejected() {
-//        // Arrange
-//        String managerEmail = "manager@example.com";
-//        String request = "rejected";
-//
-//        Reports report1 = new Reports();
-//        List<Reports> rejectedList = new ArrayList<>();
-//        rejectedList.add(report1);
-//
-//        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-//                ManagerApprovalStatus.REJECTED, true, false)).thenReturn(rejectedList);
-//
-//        // Act
-//        List<Reports> result = reportsService.getReportsSubmittedToUser(managerEmail, request);
-//
-//        // Assert
-//        Assertions.assertEquals(rejectedList, result);
-//
-//        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-//                ManagerApprovalStatus.REJECTED, true, false);
-//        verifyNoMoreInteractions(reportsRepository);
-//    }
 
     @Test
     void testGetReportsSubmittedToUser_Pending() {
@@ -316,8 +413,8 @@ class ReportsServiceImplTest {
         List<Reports> pendingList = new ArrayList<>();
         pendingList.add(report1);
 
-        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                ManagerApprovalStatus.PENDING, true, false)).thenReturn(pendingList);
+        when(reportsRepository.findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
+                managerEmail, ManagerApprovalStatus.PENDING, true, false)).thenReturn(pendingList);
 
         // Act
         List<Reports> result = reportsService.getReportsSubmittedToUser(managerEmail, request);
@@ -325,8 +422,8 @@ class ReportsServiceImplTest {
         // Assert
         Assertions.assertEquals(pendingList, result);
 
-        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(managerEmail,
-                ManagerApprovalStatus.PENDING, true, false);
+        verify(reportsRepository, times(1)).findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
+                managerEmail, ManagerApprovalStatus.PENDING, true, false);
         verifyNoMoreInteractions(reportsRepository);
     }
 
@@ -342,6 +439,11 @@ class ReportsServiceImplTest {
 
         verifyNoInteractions(reportsRepository);
     }
+
+    // Other test methods...
+
+
+
 
     @Test
     void testGetAllSubmittedReports() {

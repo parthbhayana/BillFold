@@ -27,7 +27,7 @@ public class JwtUtil {
         return ResponseEntity.ok(tokenResponse);
     }
 
-    private String generateToken(String emailId, Long employeeId, String role, long expirationTime) {
+    String generateToken(String emailId, Long employeeId, String role, long expirationTime) {
         return Jwts.builder()
                 .setSubject(emailId)
                 .claim("EmployeeID", employeeId)
@@ -50,6 +50,7 @@ public class JwtUtil {
     public Claims getClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
+
 
 
 
