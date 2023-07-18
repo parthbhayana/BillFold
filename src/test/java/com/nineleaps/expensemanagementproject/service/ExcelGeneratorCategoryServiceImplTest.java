@@ -1,13 +1,14 @@
 package com.nineleaps.expensemanagementproject.service;
 
 
-
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSender;
 import javax.mail.internet.MimeMessage;
@@ -42,6 +43,7 @@ class ExcelGeneratorCategoryServiceImplTest {
 
 
 
+    private final EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
 
 
 
@@ -87,6 +89,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(mailSender).createMimeMessage();
         verify(mailSender).send(any(MimeMessage.class));
     }
+
 
 
 

@@ -36,12 +36,12 @@ import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
     @GetMapping(&quot;/findExpense/{expenseId}&quot;)
     public Expense getExpenseById(@PathVariable Long expenseId) {
-<span class="nc" id="L39">        return expenseService.getExpenseById(expenseId);</span>
+<span class="fc" id="L39">        return expenseService.getExpenseById(expenseId);</span>
     }
 
     @PutMapping(&quot;/updateExpenses/{expenseId}&quot;)
     public Expense updateExpenses(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long expenseId) {
-<span class="nc" id="L44">        return expenseService.updateExpenses(expenseDTO, expenseId);</span>
+<span class="fc" id="L44">        return expenseService.updateExpenses(expenseDTO, expenseId);</span>
     }
 
     @GetMapping(&quot;/getExpenseByEmployeeId/{employeeId}&quot;)
@@ -56,7 +56,7 @@ import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
     @PostMapping(&quot;/removeTaggedExpense/{expenseId}&quot;)
     public Expense removeTaggedExpense(@PathVariable Long expenseId) {
-<span class="nc" id="L59">        return expenseService.removeTaggedExpense(expenseId);</span>
+<span class="fc" id="L59">        return expenseService.removeTaggedExpense(expenseId);</span>
     }
 
     @GetMapping(&quot;/getUnreportedExpensesByEmployeeId/{employeeId}&quot;)

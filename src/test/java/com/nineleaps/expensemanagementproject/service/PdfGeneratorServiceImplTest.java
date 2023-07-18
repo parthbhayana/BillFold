@@ -8,11 +8,11 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSender;
 import java.awt.Color;
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.mockito.Mockito.*;
 
 
 class PdfGeneratorServiceImplTest {
@@ -20,19 +20,23 @@ class PdfGeneratorServiceImplTest {
     private PdfGeneratorServiceImpl pdfGeneratorService;
 
 
+
      @BeforeEach
     void setUp() {
-        ExpenseRepository expenseRepository = Mockito.mock(ExpenseRepository.class);
-        ReportsRepository reportsRepository = Mockito.mock(ReportsRepository.class);
-        EmployeeRepository employeeRepository = Mockito.mock(EmployeeRepository.class);
-        IExpenseService expenseService = Mockito.mock(IExpenseService.class);
+        MockitoAnnotations.openMocks(this);
+        ExpenseRepository expenseRepository = mock(ExpenseRepository.class);
+        ReportsRepository reportsRepository = mock(ReportsRepository.class);
+        EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
+        IExpenseService expenseService = mock(IExpenseService.class);
         pdfGeneratorService = new PdfGeneratorServiceImpl();
         pdfGeneratorService.expenseRepository = expenseRepository;
         pdfGeneratorService.reportsRepository = reportsRepository;
         pdfGeneratorService.employeeRepository = employeeRepository;
         pdfGeneratorService.expenseService = expenseService;
-        pdfGeneratorService.mailSender = Mockito.mock(JavaMailSender.class);
+        pdfGeneratorService.mailSender = mock(JavaMailSender.class);
     }
+
+
 
      @Test
     void testGetCenterAlignedCell() {

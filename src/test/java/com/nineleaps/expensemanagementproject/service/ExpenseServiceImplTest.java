@@ -27,9 +27,6 @@ class ExpenseServiceImplTest {
 
     @Mock
     private EmployeeRepository employeeRepository;
-    @Mock
-    private CategoryServiceImpl currencyRates;
-
 
 
     @Mock
@@ -44,6 +41,8 @@ class ExpenseServiceImplTest {
 
     @InjectMocks
     private IExpenseService expenseService = new ExpenseServiceImpl();
+
+
 
     @BeforeEach
     void setUp() {
@@ -226,6 +225,8 @@ class ExpenseServiceImplTest {
         // Add more assertions as needed
     }
 
+
+
     @Test
     void testSendExpenseReminder() {
         // Mock data
@@ -239,7 +240,6 @@ class ExpenseServiceImplTest {
         when(expenseRepository.findByIsReportedAndIsHidden(false, false)).thenReturn(expenseList);
         Mockito.doNothing().when(emailService).reminderMailToEmployee(Mockito.anyList());
 
-        // Perform the test
 
 
     }

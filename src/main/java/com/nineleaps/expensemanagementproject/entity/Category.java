@@ -45,9 +45,7 @@ public class Category {
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private List<Expense> expenseList = new ArrayList<>();
 
-	public Category() {
 
-	}
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
 					List<Expense> expenseList) {
@@ -59,10 +57,16 @@ public class Category {
 		this.expenseList = expenseList;
 	}
 
+	
+
+	public Category() {
+		
+	}
 
 
 
-    public Long getCategoryId() {
+
+	public Long getCategoryId() {
 		return categoryId;
 	}
 

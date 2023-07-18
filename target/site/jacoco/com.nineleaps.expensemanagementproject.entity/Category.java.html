@@ -45,62 +45,66 @@ public class Category {
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();
 
-<span class="fc" id="L48">	public Category() {</span>
 
-<span class="fc" id="L50">	}</span>
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
 					List&lt;Expense&gt; expenseList) {
-<span class="fc" id="L54">		super();</span>
-<span class="fc" id="L55">		this.categoryId = categoryId;</span>
-<span class="fc" id="L56">		this.categoryDescription = categoryDescription;</span>
-<span class="fc" id="L57">		this.categoryTotal = categoryTotal;</span>
-<span class="fc" id="L58">		this.isHidden = isHidden;</span>
-<span class="fc" id="L59">		this.expenseList = expenseList;</span>
-<span class="fc" id="L60">	}</span>
+<span class="fc" id="L52">		super();</span>
+<span class="fc" id="L53">		this.categoryId = categoryId;</span>
+<span class="fc" id="L54">		this.categoryDescription = categoryDescription;</span>
+<span class="fc" id="L55">		this.categoryTotal = categoryTotal;</span>
+<span class="fc" id="L56">		this.isHidden = isHidden;</span>
+<span class="fc" id="L57">		this.expenseList = expenseList;</span>
+<span class="fc" id="L58">	}</span>
+
+	
+
+<span class="fc" id="L62">	public Category() {</span>
+		
+<span class="fc" id="L64">	}</span>
 
 
 
 
-    public Long getCategoryId() {
-<span class="fc" id="L66">		return categoryId;</span>
+	public Long getCategoryId() {
+<span class="fc" id="L70">		return categoryId;</span>
 	}
 
 	public void setCategoryId(Long categoryId) {
-<span class="fc" id="L70">		this.categoryId = categoryId;</span>
-<span class="fc" id="L71">	}</span>
+<span class="fc" id="L74">		this.categoryId = categoryId;</span>
+<span class="fc" id="L75">	}</span>
 
 	public String getCategoryDescription() {
-<span class="fc" id="L74">		return categoryDescription;</span>
+<span class="fc" id="L78">		return categoryDescription;</span>
 	}
 
 	public void setCategoryDescription(String categoryDescription) {
-<span class="fc" id="L78">		this.categoryDescription = categoryDescription;</span>
-<span class="fc" id="L79">	}</span>
+<span class="fc" id="L82">		this.categoryDescription = categoryDescription;</span>
+<span class="fc" id="L83">	}</span>
 
 	public long getCategoryTotal() {
-<span class="fc" id="L82">		return categoryTotal;</span>
+<span class="fc" id="L86">		return categoryTotal;</span>
 	}
 
 	public void setCategoryTotal(long categoryTotal) {
-<span class="fc" id="L86">		this.categoryTotal = categoryTotal;</span>
-<span class="fc" id="L87">	}</span>
+<span class="fc" id="L90">		this.categoryTotal = categoryTotal;</span>
+<span class="fc" id="L91">	}</span>
 
 	public Boolean getIsHidden() {
-<span class="fc" id="L90">		return isHidden;</span>
+<span class="fc" id="L94">		return isHidden;</span>
 	}
 
 	public void setIsHidden(Boolean isHidden) {
-<span class="fc" id="L94">		this.isHidden = isHidden;</span>
-<span class="fc" id="L95">	}</span>
+<span class="fc" id="L98">		this.isHidden = isHidden;</span>
+<span class="fc" id="L99">	}</span>
 
 	public List&lt;Expense&gt; getExpenseList() {
-<span class="fc" id="L98">		return expenseList;</span>
+<span class="fc" id="L102">		return expenseList;</span>
 	}
 
 	public void setExpenseList(List&lt;Expense&gt; expenseList) {
-<span class="fc" id="L102">		this.expenseList = expenseList;</span>
-<span class="fc" id="L103">	}</span>
+<span class="fc" id="L106">		this.expenseList = expenseList;</span>
+<span class="fc" id="L107">	}</span>
 
 
 
