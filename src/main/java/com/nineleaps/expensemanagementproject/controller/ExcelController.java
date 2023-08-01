@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -74,4 +75,30 @@ public class ExcelController {
 			return ResponseEntity.badRequest().body(result);
 		}
 	}
+
+	@GetMapping("/reimburse/allReports")
+	public ResponseEntity<String> reimburseAndGenerateExcel(HttpServletResponse response) throws Exception {
+
+		String fileName = "Billfold_All_Submissions_Status.xls";
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=" + fileName;
+
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader(headerKey, headerValue);
+
+		String result = excelServiceReports.reimburseAndGenerateExcel(response);
+
+		if (result.equals("Email sent successfully!")) {
+			response.flushBuffer();
+			return ResponseEntity.ok(result);
+		} else if (result.equals("No data available for the selected period.So, Email can't be sent!")) {
+			return ResponseEntity.ok(result);
+		} else {
+			return ResponseEntity.badRequest().body(result);
+		}
+	}
+
+
+
+
 }

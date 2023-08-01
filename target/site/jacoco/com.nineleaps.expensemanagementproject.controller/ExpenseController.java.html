@@ -26,12 +26,12 @@ import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
     @PostMapping(&quot;/insertExpenses/{employeeId}&quot;)
     public Expense saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId, @RequestParam Long categoryId) {
-<span class="nc" id="L29">        return expenseService.addExpense(expenseDTO, employeeId, categoryId);</span>
+<span class="fc" id="L29">        return expenseService.addExpense(expenseDTO, employeeId, categoryId);</span>
     }
 
     @GetMapping(&quot;/showAllExpenses&quot;)
     public List&lt;Expense&gt; getAllExpenses() {
-<span class="nc" id="L34">        return expenseService.getAllExpenses();</span>
+<span class="fc" id="L34">        return expenseService.getAllExpenses();</span>
     }
 
     @GetMapping(&quot;/findExpense/{expenseId}&quot;)
@@ -46,12 +46,12 @@ import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
     @GetMapping(&quot;/getExpenseByEmployeeId/{employeeId}&quot;)
     public List&lt;Expense&gt; getExpenseByEmpId(@PathVariable Long employeeId) {
-<span class="nc" id="L49">        return expenseService.getExpenseByEmployeeId(employeeId);</span>
+<span class="fc" id="L49">        return expenseService.getExpenseByEmployeeId(employeeId);</span>
     }
 
     @GetMapping(&quot;/getExpenseByReportId/{reportId}&quot;)
     public List&lt;Expense&gt; getExpenseByReportId(@PathVariable Long reportId) {
-<span class="nc" id="L54">        return expenseService.getExpenseByReportId(reportId);</span>
+<span class="fc" id="L54">        return expenseService.getExpenseByReportId(reportId);</span>
     }
 
     @PostMapping(&quot;/removeTaggedExpense/{expenseId}&quot;)
@@ -61,13 +61,15 @@ import com.nineleaps.expensemanagementproject.service.IExpenseService;
 
     @GetMapping(&quot;/getUnreportedExpensesByEmployeeId/{employeeId}&quot;)
     public List&lt;Expense&gt; getExpensesById(@PathVariable Long employeeId) {
-<span class="nc" id="L64">        return expenseService.getExpensesByEmployeeId(employeeId);</span>
+<span class="fc" id="L64">        return expenseService.getExpensesByEmployeeId(employeeId);</span>
     }
 
     @PostMapping(&quot;/hideExpense/{expenseId}&quot;)
     public void hideExpense(@PathVariable Long expenseId) {
-<span class="nc" id="L69">        expenseService.hideExpense(expenseId);</span>
-<span class="nc" id="L70">    }</span>
+<span class="fc" id="L69">        expenseService.hideExpense(expenseId);</span>
+<span class="fc" id="L70">    }</span>
+
+
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

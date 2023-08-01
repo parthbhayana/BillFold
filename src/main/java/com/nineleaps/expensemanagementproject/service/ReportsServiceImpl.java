@@ -109,6 +109,9 @@ public class ReportsServiceImpl implements IReportsService {
         return reportsRepository.save(newReport);
     }
 
+
+
+
     @Override
     public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
                                     List<Long> addExpenseIds, List<Long> removeExpenseIds) {
@@ -256,7 +259,7 @@ public class ReportsServiceImpl implements IReportsService {
         switch (request) {
             case CONSTANT5:
                 return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
-                        ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);
+                        ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.APPROVED, true, false);
             case CONSTANT4:
                 return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false);
@@ -269,6 +272,9 @@ public class ReportsServiceImpl implements IReportsService {
                 mergedList.addAll(approvedList);
                 mergedList.addAll(partiallyApprovedList);
                 return mergedList;
+            case "reimbursed":
+                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                        ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);
             default:
                 throw new IllegalArgumentException(CONSTANT6);
         }
@@ -380,7 +386,7 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public void reimburseReportByFinance(ArrayList<Long> reportIds, String comments) {
-        FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REIMBURSED;
+        FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.APPROVED;
         for (Long reportId : reportIds) {
             Reports re = getReportById(reportId);
             if (re == null || re.getIsHidden()) {
@@ -390,7 +396,7 @@ public class ReportsServiceImpl implements IReportsService {
                 throw new IllegalStateException(CONSTANT8 + reportId + " is not submitted!");
             }
 
-            if (re.getManagerapprovalstatus() != ManagerApprovalStatus.APPROVED) {
+            if (re.getManagerapprovalstatus() != ManagerApprovalStatus.APPROVED && re.getManagerapprovalstatus()!=ManagerApprovalStatus.PARTIALLY_APPROVED) {
                 throw new IllegalStateException(CONSTANT8 + reportId + " is not approved by the manager!");
             }
             re.setFinanceApprovalStatus(approvalStatus);
@@ -528,6 +534,7 @@ public class ReportsServiceImpl implements IReportsService {
                 return reportsRepository
                         .findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(
                                 managerEmail, startDate, endDate, ManagerApprovalStatus.PENDING, true, false);
+
             default:
                 throw new IllegalArgumentException(CONSTANT6);
         }
@@ -555,6 +562,9 @@ public class ReportsServiceImpl implements IReportsService {
         else if (!report.getIsSubmitted()) {
             throw new IllegalStateException(CONSTANT2 + reportId + " is not submitted!");
         }
+        LocalDate managerActionDate = LocalDate.now();
+
+
         for (Long expenseId : approveExpenseIds) {
             Expense expense = expenseServices.getExpenseById(expenseId);
             if (expense.getIsHidden()) {
@@ -601,6 +611,7 @@ public class ReportsServiceImpl implements IReportsService {
             expenseRepository.save(expense);
         }
         report.setManagerReviewTime(reviewTime);
+        report.setManagerActionDate(managerActionDate);
 
         //If all the expenses are approved then report status will be "APPROVED"
         if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
@@ -631,7 +642,7 @@ public class ReportsServiceImpl implements IReportsService {
 
 
 
-    @Scheduled(cron = "0 20 13 * * *")
+    @Scheduled(cron = "0 0 12 * * *")
     public void sendReportNotApprovedByManagerReminder() {
         LocalDate currentDate = LocalDate.now();
 

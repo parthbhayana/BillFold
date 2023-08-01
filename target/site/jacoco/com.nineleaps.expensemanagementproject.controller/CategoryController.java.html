@@ -52,13 +52,13 @@ import com.nineleaps.expensemanagementproject.service.ICategoryService;
     public Map&lt;String, Float&gt; getCategoryTotalAmount(
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) {
-<span class="nc" id="L55">        return categoryService.getCategoryTotalAmount(startDate, endDate);</span>
+<span class="fc" id="L55">        return categoryService.getCategoryTotalAmount(startDate, endDate);</span>
     }
 
 
     @GetMapping(&quot;/getCategoryAnalyticsYearly/{categoryId}&quot;)
     public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId) {
-<span class="nc" id="L61">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
+<span class="fc" id="L61">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
     }
 
     @GetMapping(&quot;/getCategoryAnalyticsMonthly/{categoryId}&quot;)
@@ -69,12 +69,12 @@ import com.nineleaps.expensemanagementproject.service.ICategoryService;
 
     @GetMapping(&quot;/getAllCategoryAnalyticsYearly&quot;)
     public Map&lt;String, Object&gt; getYearlyCategoryAnalyticsForAllCategories() {
-<span class="nc" id="L72">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
+<span class="fc" id="L72">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
     }
 
     @GetMapping(&quot;/getAllCategoryAnalyticsMonthly&quot;)
     public Map&lt;String, Object&gt; getMonthlyCategoryAnalyticsForAllCategories(@RequestParam Long year) {
-<span class="nc" id="L77">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
+<span class="fc" id="L77">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
     }
 
 }

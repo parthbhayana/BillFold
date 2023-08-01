@@ -10,8 +10,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSender;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -25,11 +27,14 @@ class ExcelGeneratorReportsServiceImplTest {
     @Mock
     private JavaMailSender mailSender;
 
+
     @Mock
     private IExpenseService expenseService;
 
     @Mock
     private EmployeeRepository employeeRepository;
+    @Mock
+    private HttpServletResponse response;
 
     @InjectMocks
     private ExcelGeneratorReportsServiceImpl excelGeneratorReportsService;
@@ -152,5 +157,45 @@ class ExcelGeneratorReportsServiceImplTest {
         assertNotNull(excelBytes);
         // Add more assertions as needed to validate the generated Excel content
     }
+    @Test
+    void testGenerateExcelAndSendEmail() throws Exception {
+        ExcelGeneratorReportsServiceImpl excelGenerator = new ExcelGeneratorReportsServiceImpl();
+        excelGenerator.reportRepository = reportRepository;
+        excelGenerator.employeeRepository = employeeRepository;
+        excelGenerator.expenseService = expenseService;
+        excelGenerator.mailSender = mailSender;
+
+        LocalDate startDate = LocalDate.of(2023, 1, 1);
+        LocalDate endDate = LocalDate.of(2023, 1, 31);
+        StatusExcel status = StatusExcel.ALL;
+
+        // Mock report list
+        List<Reports> reportList = new ArrayList<>();
+        Reports report = new Reports();
+        report.setReportId(1L);
+        report.setReportTitle("Expense Report");
+        report.setEmployeeMail("test@example.com");
+        report.setDateSubmitted(LocalDate.now());
+        report.setTotalAmountINR(1000.0F);
+        report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
+        reportList.add(report);
+        when(reportRepository.findByDateSubmittedBetween(startDate, endDate)).thenReturn(reportList);
+
+        // Mock finance admin
+        Employee financeAdmin = new Employee();
+        financeAdmin.setEmployeeEmail("admin@example.com");
+        when(employeeRepository.findByRole("FINANCE_ADMIN")).thenReturn(financeAdmin);
+
+        // Mock sendEmailWithAttachment
+        when(mailSender.createMimeMessage()).thenReturn(mock(MimeMessage.class));
+
+        String result = excelGenerator.generateExcelAndSendEmail(response, startDate, endDate, status);
+
+        assertEquals("Email sent successfully!", result);
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+
+
 
 }

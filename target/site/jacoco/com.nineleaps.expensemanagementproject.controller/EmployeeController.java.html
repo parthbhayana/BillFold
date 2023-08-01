@@ -26,17 +26,17 @@ import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 
 	@GetMapping(&quot;/listEmployee&quot;)
 	public List&lt;Employee&gt; getAllEmployeeDetails() {
-<span class="nc" id="L29">		return employeeService.getAllEmployeeDetails();</span>
+<span class="fc" id="L29">		return employeeService.getAllEmployeeDetails();</span>
 	}
 
 	@PostMapping(&quot;/insertEmployee&quot;)
 	public Employee save(@RequestBody EmployeeDTO employeeDTO) {
-<span class="nc" id="L34">		return employeeService.saveEmployeeDetails(employeeDTO);</span>
+<span class="fc" id="L34">		return employeeService.saveEmployeeDetails(employeeDTO);</span>
 	}
 
 	@PutMapping(&quot;/updateEmployee/{employeeId}&quot;)
 	public Employee updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId) {
-<span class="nc" id="L39">		return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
+<span class="fc" id="L39">		return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
 	}
 
 	@PostMapping(&quot;/additionalEmployeeDetails&quot;)
@@ -49,35 +49,35 @@ import com.nineleaps.expensemanagementproject.service.IEmployeeService;
 
 	@GetMapping(&quot;/findEmployee/{employeeId}&quot;)
 	public Employee getEmployeeById(@PathVariable Long employeeId) {
-<span class="nc" id="L52">		return employeeService.getEmployeeById(employeeId);</span>
+<span class="fc" id="L52">		return employeeService.getEmployeeById(employeeId);</span>
 
 	}
 
 	@DeleteMapping(&quot;/deleteEmployee/{employeeId}&quot;)
 	public void deleteEmployeeById(@PathVariable Long employeeId) {
-<span class="nc" id="L58">		employeeService.deleteEmployeeDetailsById(employeeId);</span>
-<span class="nc" id="L59">	}</span>
+<span class="fc" id="L58">		employeeService.deleteEmployeeDetailsById(employeeId);</span>
+<span class="fc" id="L59">	}</span>
 
 	@PostMapping(&quot;/hideEmployee/{employeeId}&quot;)
 	public void hideEmployee(@PathVariable Long employeeId) {
-<span class="nc" id="L63">		employeeService.hideEmployee(employeeId);</span>
-<span class="nc" id="L64">	}</span>
+<span class="fc" id="L63">		employeeService.hideEmployee(employeeId);</span>
+<span class="fc" id="L64">	}</span>
 
 	@PostMapping(&quot;/setFinanceAdmin&quot;)
 	public void setFinanceAdmin(@RequestParam Long employeeId) {
-<span class="nc" id="L68">		employeeService.setFinanceAdmin(employeeId);</span>
-<span class="nc" id="L69">	}</span>
+<span class="fc" id="L68">		employeeService.setFinanceAdmin(employeeId);</span>
+<span class="fc" id="L69">	}</span>
 
 	@GetMapping(&quot;/getEmployeeDetails&quot;)
 	public Optional&lt;Employee&gt; getEmployeeDetails(@RequestParam Long employeeId) {
-<span class="nc" id="L73">		return employeeService.getEmployeeDetails(employeeId);</span>
+<span class="fc" id="L73">		return employeeService.getEmployeeDetails(employeeId);</span>
 	}
 
 	@PostMapping(&quot;/editEmployeeDetails&quot;)
 	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber,
 			String officialEmployeeId, String managerName) {
-<span class="nc" id="L79">		employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName);</span>
-<span class="nc" id="L80">	}</span>
+<span class="fc" id="L79">		employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName);</span>
+<span class="fc" id="L80">	}</span>
 
 
 }

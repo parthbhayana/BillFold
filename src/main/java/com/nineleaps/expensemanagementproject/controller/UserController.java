@@ -31,7 +31,12 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
     JSONObject responseJson;
-    @GetMapping("/listTheUser")
+
+	public UserController(IEmployeeService userService) {
+
+	}
+
+	@GetMapping("/listTheUser")
     public List<Employee> getAllUserDetails() {
         return userService.getAllUser();
     }

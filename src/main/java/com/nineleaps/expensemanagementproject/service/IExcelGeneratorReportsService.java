@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,4 +19,5 @@ public interface IExcelGeneratorReportsService {
 	boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
 			String attachmentFilename);
 
+    String reimburseAndGenerateExcel(HttpServletResponse response) throws IOException;
 }

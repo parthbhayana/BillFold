@@ -20,7 +20,7 @@ import com.nineleaps.expensemanagementproject.service.CurrencyExchangeServiceImp
 
 	@GetMapping(&quot;/currencyList&quot;)
 	public List&lt;String&gt; getCurrency() {
-<span class="nc" id="L23">		return Arrays.stream(Currency.values()).map(Enum::name).collect(Collectors.toList());</span>
+<span class="fc" id="L23">		return Arrays.stream(Currency.values()).map(Enum::name).collect(Collectors.toList());</span>
 	}
 
 	@PostMapping(&quot;/getExchangeRate/{baseCurrency}&quot;)

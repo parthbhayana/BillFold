@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import com.nineleaps.expensemanagementproject.service.IExcelGeneratorCategorySer
 import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsService;
 
 @RestController
-<span class="fc" id="L19">public class ExcelController {</span>
+<span class="fc" id="L20">public class ExcelController {</span>
 	@Autowired
 	private IExcelGeneratorCategoryService excelService;
 	
@@ -28,22 +29,22 @@ import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsServ
 			@RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
 			@RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) throws Exception {
 
-<span class="nc" id="L31">		response.setContentType(&quot;application/octet-stream&quot;);</span>
+<span class="nc" id="L32">		response.setContentType(&quot;application/octet-stream&quot;);</span>
 
-<span class="nc" id="L33">		String headerKey = &quot;Content-Disposition&quot;;</span>
-<span class="nc" id="L34">		String headerValue = &quot;attachment;filename=Category wise Expense Analytics.xls&quot;;</span>
+<span class="nc" id="L34">		String headerKey = &quot;Content-Disposition&quot;;</span>
+<span class="nc" id="L35">		String headerValue = &quot;attachment;filename=Category wise Expense Analytics.xls&quot;;</span>
 
-<span class="nc" id="L36">		response.setHeader(headerKey, headerValue);</span>
+<span class="nc" id="L37">		response.setHeader(headerKey, headerValue);</span>
 
-<span class="nc" id="L38">		String result = excelService.generateExcelAndSendEmail(response, startDate, endDate);</span>
+<span class="nc" id="L39">		String result = excelService.generateExcelAndSendEmail(response, startDate, endDate);</span>
 
-<span class="nc bnc" id="L40" title="All 2 branches missed.">		if (result.equals(&quot;Email sent successfully!&quot;)) {</span>
-<span class="nc" id="L41">			response.flushBuffer();</span>
-<span class="nc" id="L42">			return ResponseEntity.ok(result);</span>
-<span class="nc bnc" id="L43" title="All 2 branches missed.">		} else if (result.equals(&quot;No data available for the selected period.So, Email can't be sent!&quot;)) {</span>
-<span class="nc" id="L44">			return ResponseEntity.ok(result);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">		if (result.equals(&quot;Email sent successfully!&quot;)) {</span>
+<span class="nc" id="L42">			response.flushBuffer();</span>
+<span class="nc" id="L43">			return ResponseEntity.ok(result);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">		} else if (result.equals(&quot;No data available for the selected period.So, Email can't be sent!&quot;)) {</span>
+<span class="nc" id="L45">			return ResponseEntity.ok(result);</span>
 		} else {
-<span class="nc" id="L46">			return ResponseEntity.badRequest().body(result);</span>
+<span class="nc" id="L47">			return ResponseEntity.badRequest().body(result);</span>
 		}
 	}
 	
@@ -56,23 +57,26 @@ import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsServ
 			@RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate,
 			@RequestParam StatusExcel status) throws Exception {
 
-<span class="nc" id="L59">		String fileName = &quot;Billfold_All_Submissions_Status.xls&quot;;</span>
-<span class="nc" id="L60">		String headerKey = &quot;Content-Disposition&quot;;</span>
-<span class="nc" id="L61">		String headerValue = &quot;attachment; filename=&quot; + fileName;</span>
+<span class="nc" id="L60">		String fileName = &quot;Billfold_All_Submissions_Status.xls&quot;;</span>
+<span class="nc" id="L61">		String headerKey = &quot;Content-Disposition&quot;;</span>
+<span class="nc" id="L62">		String headerValue = &quot;attachment; filename=&quot; + fileName;</span>
 
-<span class="nc" id="L63">		response.setContentType(&quot;application/vnd.ms-excel&quot;);</span>
-<span class="nc" id="L64">		response.setHeader(headerKey, headerValue);</span>
+<span class="nc" id="L64">		response.setContentType(&quot;application/vnd.ms-excel&quot;);</span>
+<span class="nc" id="L65">		response.setHeader(headerKey, headerValue);</span>
 
-<span class="nc" id="L66">		String result = excelServiceReports.generateExcelAndSendEmail(response, startDate, endDate, status);</span>
+<span class="nc" id="L67">		String result = excelServiceReports.generateExcelAndSendEmail(response, startDate, endDate, status);</span>
 
-<span class="nc bnc" id="L68" title="All 2 branches missed.">		if (result.equals(&quot;Email sent successfully!&quot;)) {</span>
-<span class="nc" id="L69">			response.flushBuffer();</span>
-<span class="nc" id="L70">			return ResponseEntity.ok(result);</span>
-<span class="nc bnc" id="L71" title="All 2 branches missed.">		} else if (result.equals(&quot;No data available for the selected period.So, Email can't be sent!&quot;)) {</span>
-<span class="nc" id="L72">			return ResponseEntity.ok(result);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		if (result.equals(&quot;Email sent successfully!&quot;)) {</span>
+<span class="nc" id="L70">			response.flushBuffer();</span>
+<span class="nc" id="L71">			return ResponseEntity.ok(result);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">		} else if (result.equals(&quot;No data available for the selected period.So, Email can't be sent!&quot;)) {</span>
+<span class="nc" id="L73">			return ResponseEntity.ok(result);</span>
 		} else {
-<span class="nc" id="L74">			return ResponseEntity.badRequest().body(result);</span>
+<span class="nc" id="L75">			return ResponseEntity.badRequest().body(result);</span>
 		}
 	}
+
+
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

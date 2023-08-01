@@ -5,73 +5,198 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="94bfa920-06b9-4576-94da-b4b35c6fb711" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/DTO/UserDTOTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/ExpenseControllerTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ICategoryServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/CurrencyControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/EmployeeControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/ExcelControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/UserControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/EmailServiceImplTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/6/06a34501571d9ccf4ebfed38409149135a181150" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/1/1/11436433b830ce20f5badf60df8d21e30ce695df" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/5/25b77ecd8974d9164684682a1e4a18618f0ccc03" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/6/266c87f47215e5c6c793b4661dd38e2a9b61a499" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/d/2d209e5b46886d49d279c07f08f2817cc1878212" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/6/36338f08da3b6738c97e22ef6a8af94fb0239e43" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/4/442292b8a7efeabbe4cc176709b833b1792140ec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/6/460b83f25b35bfa7fe6427316766a9508501ac50" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/c/4c3892678e0fafa3877be2c61286193ee9e9dfe1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/d/4d8b2187c8dc3ea0978851cfd74946ecfdcd751f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/2/52f844e927384f1d083b54b9ced4781e41f03660" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/5/6577ef85284936228d4d6b1c8f5df4dafe7b174a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/5/6583342e4f047a66d01abfe6c77a22b6df857b4a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/a/7a4a008a98c52aecabefcd64570f21f4f6312523" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/d/7d9fd70632b4529a1b35ae654fe860a6632aff99" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/8/88ad2a1d7616c36fb5aa7af9bd68f69105786f2f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/d/8d208813de907cc10f1c2922485a5a45ee1f1fa7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/9/b9946b3d152d70b715cc9bd585c488dcebd44f5e" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/e/bed476114064502c700ccc84ba467e76b7b7c2cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/8/c8b3cdfdd60279e602f8cd4719d5b253e0aaea74" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/e/ce58f5e883b05e4d2d8d8a7e1a93137561b3a0a2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/8/d8f1e09c455619670c3717f2e39dccae881c684f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/a/da2fbf9a27bff22c6390c235ced91877b39487b0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/5/e5b98ed2e83325416aec0f78e260120091c14592" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/9/e9ceb34653c06ed6cf0345d3aba3a0c3b3582cc4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/c/ec2a64bf41a8c32c82ad9395b89cdfab3f8377a2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/d/ed2867f0278fc1e6d88e24f5daf754ecca511b81" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/0/f0bd9f308b589936969052e4511803d4d3570030" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/9/f954767c2b8f6c576cd453aa394d0d2bcdc0cccf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/6/06a34501571d9ccf4ebfed38409149135a181150" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/1/1/11436433b830ce20f5badf60df8d21e30ce695df" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/2/5/25b77ecd8974d9164684682a1e4a18618f0ccc03" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/2/6/266c87f47215e5c6c793b4661dd38e2a9b61a499" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/2/d/2d209e5b46886d49d279c07f08f2817cc1878212" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/3/6/36338f08da3b6738c97e22ef6a8af94fb0239e43" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/4/4/442292b8a7efeabbe4cc176709b833b1792140ec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/4/6/460b83f25b35bfa7fe6427316766a9508501ac50" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/4/c/4c3892678e0fafa3877be2c61286193ee9e9dfe1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/4/d/4d8b2187c8dc3ea0978851cfd74946ecfdcd751f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/5/2/52f844e927384f1d083b54b9ced4781e41f03660" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/6/5/6577ef85284936228d4d6b1c8f5df4dafe7b174a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/6/5/6583342e4f047a66d01abfe6c77a22b6df857b4a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/a/7a4a008a98c52aecabefcd64570f21f4f6312523" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/d/7d9fd70632b4529a1b35ae654fe860a6632aff99" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/8/88ad2a1d7616c36fb5aa7af9bd68f69105786f2f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/d/8d208813de907cc10f1c2922485a5a45ee1f1fa7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/b/9/b9946b3d152d70b715cc9bd585c488dcebd44f5e" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/b/e/bed476114064502c700ccc84ba467e76b7b7c2cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/c/8/c8b3cdfdd60279e602f8cd4719d5b253e0aaea74" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/c/e/ce58f5e883b05e4d2d8d8a7e1a93137561b3a0a2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/d/8/d8f1e09c455619670c3717f2e39dccae881c684f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/d/a/da2fbf9a27bff22c6390c235ced91877b39487b0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/e/5/e5b98ed2e83325416aec0f78e260120091c14592" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/e/9/e9ceb34653c06ed6cf0345d3aba3a0c3b3582cc4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/e/c/ec2a64bf41a8c32c82ad9395b89cdfab3f8377a2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/e/d/ed2867f0278fc1e6d88e24f5daf754ecca511b81" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/f/0/f0bd9f308b589936969052e4511803d4d3570030" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/f/9/f954767c2b8f6c576cd453aa394d0d2bcdc0cccf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/DTO/ExpenseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/DTO/ExpenseDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/config/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/config/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/entity/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/entity/Category.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/ExcelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/ExcelController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/ExpenseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/ExpenseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/entity/Reports.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/entity/Reports.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/repository/ReportsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/repository/ReportsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/EmailServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/EmailServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ExcelGeneratorReportsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ExcelGeneratorReportsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ICurrencyExchange.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ICurrencyExchange.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/IExcelGeneratorReportsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/IExcelGeneratorReportsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/util/ImageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/util/ImageUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/config/JwtUtilTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/config/JwtUtilTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/repository/ExpenseRepositoryTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/repository/ExpenseRepositoryTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ExcelGeneratorCategoryServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ExcelGeneratorCategoryServiceImplTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ExpenseServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ExpenseServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/CategoryControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/CategoryControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/ExpenseControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/ExpenseControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/ReportsControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/ReportsControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/CategoryServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/CategoryServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/EmployeeServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/EmployeeServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ExcelGeneratorReportsServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ExcelGeneratorReportsServiceImplTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImplTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ReportsServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/service/ReportsServiceImplTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/ExpenseManagementProject-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/ExpenseManagementProject-0.0.1-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/ExpenseManagementProject-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/ExpenseManagementProject-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/ExpenseManagementProjectApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/ExpenseManagementProjectApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/JwtFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/JwtFilter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/JwtUtil$TokenResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/JwtUtil$TokenResponse.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/JwtUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/SwaggerConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/config/SwaggerConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/CategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/CategoryController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/CurrencyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/CurrencyController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/EmployeeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/EmployeeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/ExcelController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/ExcelController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/ExpenseController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/ExpenseController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/ReportsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/ReportsController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/UserController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Category.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Category.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Currency.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Currency.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Employee.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Employee.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Expense.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Expense.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/FinanceApprovalStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/FinanceApprovalStatus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusExpense.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusExpense.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Reports.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Reports.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/StatusExcel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/StatusExcel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/CategoryRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/CategoryRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/EmployeeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/EmployeeRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/ExpenseRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/ExpenseRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/ReportsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/ReportsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/CategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/CategoryServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/CurrencyExchangeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/CurrencyExchangeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/EmailServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/EmailServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/EmployeeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/EmployeeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExcelGeneratorCategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExcelGeneratorCategoryServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExcelGeneratorReportsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExcelGeneratorReportsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ICategoryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ICategoryService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ICurrencyExchange.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ICurrencyExchange.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IEmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IEmailService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IEmployeeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IEmployeeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IExcelGeneratorCategoryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IExcelGeneratorCategoryService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IExcelGeneratorReportsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IExcelGeneratorReportsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IExpenseService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IExpenseService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IPdfGeneratorService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IPdfGeneratorService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IReportsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IReportsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl$1FooterEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl$1FooterEvent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/util/ImageUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/util/ImageUtil.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/jacoco.exec" beforeDir="false" afterPath="$PROJECT_DIR$/target/jacoco.exec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/UserDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/UserDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/UserDTO.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/UserDTO.java.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/index.source.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/index.source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/ExpenseDTO.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.DTO/ExpenseDTO.java.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/JwtUtil$TokenResponse.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/JwtUtil$TokenResponse.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/JwtUtil.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/JwtUtil.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/JwtUtil.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/JwtUtil.java.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/index.source.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.config/index.source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/CategoryController.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/CategoryController.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/CategoryController.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/CategoryController.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/CurrencyController.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/CurrencyController.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/CurrencyController.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/CurrencyController.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/EmployeeController.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/EmployeeController.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/EmployeeController.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/EmployeeController.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ExcelController.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ExcelController.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ExcelController.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ExcelController.java.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ExpenseController.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ExpenseController.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ExpenseController.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ExpenseController.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ReportsController.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ReportsController.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ReportsController.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/ReportsController.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/UserController.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/UserController.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/UserController.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/UserController.java.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/index.source.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.controller/index.source.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.entity/Category.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.entity/Category.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.entity/Category.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.entity/Category.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/CurrencyExchangeServiceImpl.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/CurrencyExchangeServiceImpl.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/CurrencyExchangeServiceImpl.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/CurrencyExchangeServiceImpl.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/EmailServiceImpl.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/EmailServiceImpl.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/EmailServiceImpl.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/EmailServiceImpl.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/EmployeeServiceImpl.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/EmployeeServiceImpl.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/EmployeeServiceImpl.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/EmployeeServiceImpl.java.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/ExcelGeneratorReportsServiceImpl.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/ExcelGeneratorReportsServiceImpl.java.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/ReportsServiceImpl.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/ReportsServiceImpl.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/ReportsServiceImpl.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/ReportsServiceImpl.java.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/index.source.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.service/index.source.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.util/ImageUtil.java.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/com.nineleaps.expensemanagementproject.util/ImageUtil.java.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/jacoco-sessions.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/jacoco-sessions.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/jacoco.csv" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/jacoco.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/site/jacoco/jacoco.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/site/jacoco/jacoco.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/sonar/report-task.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/sonar/report-task.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.CategoryDTOTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.CategoryDTOTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.EmployeeDTOTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.EmployeeDTOTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.ExpenseDTOTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.ExpenseDTOTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.ReportsDTOTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.ReportsDTOTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.UserDTOTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.DTO.UserDTOTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.ExpenseManagementProjectApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.ExpenseManagementProjectApplicationTests.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.config.JwtFilterTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.config.JwtFilterTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.config.JwtUtilTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.config.JwtUtilTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.config.SwaggerConfigTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.config.SwaggerConfigTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.controller.CategoryControllerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.controller.CategoryControllerTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.controller.ExpenseControllerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.controller.ExpenseControllerTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.controller.ReportsControllerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.controller.ReportsControllerTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.entity.CategoryTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.entity.CategoryTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.entity.CurrencyTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.entity.CurrencyTest.xml" afterDir="false" />
@@ -89,24 +214,21 @@
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.service.ExpenseServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.service.ExpenseServiceImplTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImplTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.service.ReportsServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.nineleaps.expensemanagementproject.service.ReportsServiceImplTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.DTO.CategoryDTOTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.DTO.CategoryDTOTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.DTO.EmployeeDTOTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.DTO.EmployeeDTOTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.DTO.ExpenseDTOTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.DTO.ExpenseDTOTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.DTO.ReportsDTOTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.DTO.ReportsDTOTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.ExpenseManagementProjectApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.ExpenseManagementProjectApplicationTests.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.config.JwtFilterTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.config.JwtFilterTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.config.JwtUtilTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.config.JwtUtilTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.config.SwaggerConfigTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.config.SwaggerConfigTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.controller.CategoryControllerTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.controller.CategoryControllerTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.controller.ExpenseControllerTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.controller.ExpenseControllerTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.controller.ReportsControllerTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.controller.ReportsControllerTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.CategoryTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.CategoryTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.CurrencyTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.CurrencyTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.EmployeeTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.EmployeeTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.ExpenseTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.ExpenseTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatusExpenseTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatusExpenseTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatusTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatusTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatusTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatusTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.ReportsTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.ReportsTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.StatusExcelTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.entity.StatusExcelTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.CategoryServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.CategoryServiceImplTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.EmployeeServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.EmployeeServiceImplTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImplTest.txt" afterDir="false" />
@@ -114,7 +236,21 @@
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.ExpenseServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.ExpenseServiceImplTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImplTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.ReportsServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.nineleaps.expensemanagementproject.service.ReportsServiceImplTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/ExpenseManagementProjectApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/ExpenseManagementProjectApplicationTests.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/config/JwtFilterTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/config/JwtFilterTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/config/SwaggerConfigTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/config/SwaggerConfigTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/CategoryTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/CategoryTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/CurrencyTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/CurrencyTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/EmployeeTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/EmployeeTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ExpenseTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ExpenseTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/FinanceApprovalStatusTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/FinanceApprovalStatusTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusExpenseTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusExpenseTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ManagerApprovalStatusTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ReportsTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ReportsTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/StatusExcelTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/StatusExcelTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/repository/EmployeeRepositoryTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/repository/EmployeeRepositoryTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/repository/ExpenseRepositoryTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/repository/ExpenseRepositoryTests.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/repository/ReportsRepositoryTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/repository/ReportsRepositoryTests.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,9 +260,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
         <option value="JUnit5 Test Class" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -156,13 +292,15 @@
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="mavenHome" value="Use Maven wrapper" />
-        <option name="useMavenConfig" value="true" />
       </MavenGeneralSettings>
     </option>
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2OxY9rqPdEFBK7XHYrFSFSWfKTU" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -175,22 +313,58 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Parth/Desktop/_/Nineleaps Projecct/Project/BillFold&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;
+    &quot;git-widget-placeholder&quot;: &quot;updated-test-case&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nineleaps/Documents/Project BillFold/BillFold/src/main/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.tabs&quot;
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.nineleaps.expensemanagementproject.util" />
       <recent name="com.nineleaps.expensemanagementproject.service" />
-      <recent name="com.nineleaps.expensemanagementproject.DTO" />
       <recent name="com.nineleaps.expensemanagementproject.controller" />
+      <recent name="com.nineleaps.expensemanagementproject.DTO" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ExpenseServiceImplTest">
+  <component name="RunManager" selected="Application.ExpenseManagementProjectApplication">
+    <configuration name="ExpenseManagementProjectApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.nineleaps.expensemanagementproject.ExpenseManagementProjectApplication" />
+      <module name="ExpenseManagementProject" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nineleaps.expensemanagementproject.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CategoryServiceImplTest.testGetCategoryAnalyticsYearly" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ExpenseManagementProject" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.nineleaps.expensemanagementproject.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.nineleaps.expensemanagementproject.service" />
+      <option name="MAIN_CLASS_NAME" value="com.nineleaps.expensemanagementproject.service.CategoryServiceImplTest" />
+      <option name="METHOD_NAME" value="testGetCategoryAnalyticsYearly" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CurrencyExchangeServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ExpenseManagementProject" />
       <extension name="coverage">
@@ -206,7 +380,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ExcelGeneratorCategoryServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="CurrencyExchangeServiceImplTest.testGetCategoryAnalyticsMonthly" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ExpenseManagementProject" />
       <extension name="coverage">
         <pattern>
@@ -215,66 +389,35 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.nineleaps.expensemanagementproject.service" />
-      <option name="MAIN_CLASS_NAME" value="com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImplTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ExcelGeneratorCategoryServiceImplTest.testGenerateExcelAndSendEmail_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ExpenseManagementProject" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.nineleaps.expensemanagementproject.service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.nineleaps.expensemanagementproject.service" />
-      <option name="MAIN_CLASS_NAME" value="com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImplTest" />
-      <option name="METHOD_NAME" value="testGenerateExcelAndSendEmail_Success" />
+      <option name="MAIN_CLASS_NAME" value="com.nineleaps.expensemanagementproject.service.CurrencyExchangeServiceImplTest" />
+      <option name="METHOD_NAME" value="testGetCategoryAnalyticsMonthly" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ExpenseServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ExpenseManagementProjectApplicationTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ExpenseManagementProject" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.nineleaps.expensemanagementproject.service.*" />
+          <option name="PATTERN" value="com.nineleaps.expensemanagementproject.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.nineleaps.expensemanagementproject.service" />
-      <option name="MAIN_CLASS_NAME" value="com.nineleaps.expensemanagementproject.service.ExpenseServiceImplTest" />
+      <option name="PACKAGE_NAME" value="com.nineleaps.expensemanagementproject" />
+      <option name="MAIN_CLASS_NAME" value="com.nineleaps.expensemanagementproject.ExpenseManagementProjectApplicationTests" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ExpenseServiceImplTest.testAddExpense_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ExpenseManagementProject" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.nineleaps.expensemanagementproject.service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.nineleaps.expensemanagementproject.service" />
-      <option name="MAIN_CLASS_NAME" value="com.nineleaps.expensemanagementproject.service.ExpenseServiceImplTest" />
-      <option name="METHOD_NAME" value="testAddExpense_Success" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.ExpenseServiceImplTest" />
-        <item itemvalue="JUnit.ExpenseServiceImplTest.testAddExpense_Success" />
+        <item itemvalue="Application.ExpenseManagementProjectApplication" />
+        <item itemvalue="JUnit.ExpenseManagementProjectApplicationTests" />
+        <item itemvalue="JUnit.CategoryServiceImplTest.testGetCategoryAnalyticsYearly" />
         <item itemvalue="JUnit.CurrencyExchangeServiceImplTest" />
-        <item itemvalue="JUnit.ExcelGeneratorCategoryServiceImplTest" />
-        <item itemvalue="JUnit.ExcelGeneratorCategoryServiceImplTest.testGenerateExcelAndSendEmail_Success" />
+        <item itemvalue="JUnit.CurrencyExchangeServiceImplTest.testGetCategoryAnalyticsMonthly" />
       </list>
     </recent_temporary>
   </component>
