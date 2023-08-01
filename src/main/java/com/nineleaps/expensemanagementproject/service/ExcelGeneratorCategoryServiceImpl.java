@@ -1,12 +1,10 @@
 package com.nineleaps.expensemanagementproject.service;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 import javax.servlet.http.HttpServletResponse;
 import javax.activation.DataSource;
 import javax.mail.internet.MimeMessage;
@@ -164,15 +162,9 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 
 	@Override
 	public int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException {
-		@SuppressWarnings("unused")
-		BufferedImage chartImage = chart.createBufferedImage(width, height);
-		ByteArrayOutputStream chartOut = new ByteArrayOutputStream();
-		try {
+		try (ByteArrayOutputStream chartOut = new ByteArrayOutputStream()) {
 			ChartUtils.writeChartAsPNG(chartOut, chart, width, height);
-			int pictureIdx = workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);
-			return pictureIdx;
-		} finally {
-			chartOut.close();
+			return workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);
 		}
 	}
 

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Reports.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.entity</a> &gt; <span class="el_source">Reports.java</span></div><h1>Reports.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.entity;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.http.HttpStatus;
+
+@Entity
+@Table(name = &quot;reports&quot;)
+public class Reports {
+
+	@Id
+	@Column(name = &quot;report_id&quot;, nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@ApiModelProperty(hidden = true)
+	private Long reportId;
+
+	@Column(name = &quot;employee_id&quot;)
+	@ApiModelProperty(hidden = true)
+	private Long employeeId;
+
+	@Column(name = &quot;employee_name&quot;)
+	@ApiModelProperty(hidden = true)
+	private String employeeName;
+
+	@Column(name = &quot;official_employee_id&quot;)
+	@ApiModelProperty(hidden = true)
+	private String officialEmployeeId;
+
+	@Column(name = &quot;report_title&quot;, nullable = false)
+	private String reportTitle;
+
+	@Column(name = &quot;report_description&quot;)
+	private String reportDescription;
+
+	@Column(name = &quot;manager_comments&quot;)
+	@ApiModelProperty(hidden = true)
+	private String managerComments;
+
+	@Column(name = &quot;finance_comments&quot;)
+	@ApiModelProperty(hidden = true)
+	private String financeComments;
+
+<span class="fc" id="L58">	@Column(name = &quot;is_submitted&quot;, nullable = true)</span>
+	@ApiModelProperty(hidden = true)
+<span class="fc" id="L60">	private Boolean isSubmitted = false;</span>
+
+	@Column(name = &quot;employee_mail&quot;, nullable = true)
+	@ApiModelProperty(hidden = true)
+	private String employeeMail;
+
+	@Column(name = &quot;date_submitted&quot;)
+	@ApiModelProperty(hidden = true)
+	private LocalDate dateSubmitted;
+
+	@Column(name = &quot;date_created&quot;)
+	@ApiModelProperty(hidden = true)
+	private LocalDate dateCreated;
+
+	@Column(name = &quot;date_manager_action&quot;)
+	@ApiModelProperty(hidden = true)
+	private LocalDate managerActionDate;
+
+	@Column(name = &quot;date_finance_action&quot;)
+	@ApiModelProperty(hidden = true)
+	private LocalDate financeActionDate;
+
+	@Column(name = &quot;currency&quot;)
+	@ApiModelProperty(hidden = true)
+	private String currency;
+
+	@Column(name = &quot;total_amount_INR&quot;)
+	@ApiModelProperty(hidden = true)
+	private float totalAmountINR;
+
+	@Column(name = &quot;total_approved_amount_INR&quot;)
+	@ApiModelProperty(hidden = true)
+	private float totalApprovedAmountINR;
+
+	@Column(name = &quot;total_amount_currency&quot;)
+	@ApiModelProperty(hidden = true)
+	private float totalAmountCurrency;
+
+	@Column(name = &quot;total_approved_amount_currency&quot;)
+	@ApiModelProperty(hidden = true)
+	private float totalApprovedAmountCurrency;
+
+<span class="fc" id="L102">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+	@ApiModelProperty(hidden = true)
+<span class="fc" id="L104">	private Boolean isHidden = false;</span>
+
+	@Column(name = &quot;manager_email&quot;)
+	@ApiModelProperty(hidden = true)
+	private String managerEmail;
+
+	@Column(name = &quot;manager_review_time&quot;)
+	@ApiModelProperty(hidden = true)
+	private String managerReviewTime;
+
+	@Column(name = &quot;finance_approval_status&quot;, nullable = true)
+	@ApiModelProperty(hidden = true)
+	@Enumerated(EnumType.STRING)
+	private FinanceApprovalStatus financeapprovalstatus;
+
+	@Column(name = &quot;manager_approval_status&quot;, nullable = true)
+	@ApiModelProperty(hidden = true)
+	@Enumerated(EnumType.STRING)
+	private ManagerApprovalStatus managerapprovalstatus;
+
+
+<span class="fc" id="L125">	@JsonIgnore</span>
+	@OneToMany(mappedBy = &quot;reports&quot;, cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	private final List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();
+
+<span class="fc" id="L130">	public Reports() {</span>
+
+<span class="fc" id="L132">	}</span>
+
+	public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
+			String reportDescription, String managerComments, String financeComments, Boolean isSubmitted,
+			String employeeMail, LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate,
+			LocalDate financeActionDate, String currency, float totalAmountINR, float totalApprovedAmountINR,
+			float totalAmountCurrency, float totalApprovedAmountCurrency, Boolean isHidden, String managerEmail,
+			String managerReviewTime, FinanceApprovalStatus financeapprovalstatus,
+			ManagerApprovalStatus managerapprovalstatus) {
+<span class="fc" id="L141">		super();</span>
+<span class="fc" id="L142">		this.reportId = reportId;</span>
+<span class="fc" id="L143">		this.employeeId = employeeId;</span>
+<span class="fc" id="L144">		this.employeeName = employeeName;</span>
+<span class="fc" id="L145">		this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L146">		this.reportTitle = reportTitle;</span>
+<span class="fc" id="L147">		this.reportDescription = reportDescription;</span>
+<span class="fc" id="L148">		this.managerComments = managerComments;</span>
+<span class="fc" id="L149">		this.financeComments = financeComments;</span>
+<span class="fc" id="L150">		this.isSubmitted = isSubmitted;</span>
+<span class="fc" id="L151">		this.employeeMail = employeeMail;</span>
+<span class="fc" id="L152">		this.dateSubmitted = dateSubmitted;</span>
+<span class="fc" id="L153">		this.dateCreated = dateCreated;</span>
+<span class="fc" id="L154">		this.managerActionDate = managerActionDate;</span>
+<span class="fc" id="L155">		this.financeActionDate = financeActionDate;</span>
+<span class="fc" id="L156">		this.currency = currency;</span>
+<span class="fc" id="L157">		this.totalAmountINR = totalAmountINR;</span>
+<span class="fc" id="L158">		this.totalApprovedAmountINR = totalApprovedAmountINR;</span>
+<span class="fc" id="L159">		this.totalAmountCurrency = totalAmountCurrency;</span>
+<span class="fc" id="L160">		this.totalApprovedAmountCurrency = totalApprovedAmountCurrency;</span>
+<span class="fc" id="L161">		this.isHidden = isHidden;</span>
+<span class="fc" id="L162">		this.managerEmail = managerEmail;</span>
+<span class="fc" id="L163">		this.managerReviewTime = managerReviewTime;</span>
+<span class="fc" id="L164">		this.financeapprovalstatus = financeapprovalstatus;</span>
+<span class="fc" id="L165">		this.managerapprovalstatus = managerapprovalstatus;</span>
+
+<span class="fc" id="L167">	}</span>
+
+	public Long getReportId() {
+<span class="fc" id="L170">		return reportId;</span>
+	}
+
+	public void setReportId(Long reportId) {
+<span class="fc" id="L174">		this.reportId = reportId;</span>
+<span class="fc" id="L175">	}</span>
+
+	public Long getEmployeeId() {
+<span class="fc" id="L178">		return employeeId;</span>
+	}
+
+	public void setEmployeeId(Long employeeId) {
+<span class="fc" id="L182">		this.employeeId = employeeId;</span>
+<span class="fc" id="L183">	}</span>
+
+	public String getEmployeeName() {
+<span class="fc" id="L186">		return employeeName;</span>
+	}
+
+	public void setEmployeeName(String employeeName) {
+<span class="fc" id="L190">		this.employeeName = employeeName;</span>
+<span class="fc" id="L191">	}</span>
+
+	public String getOfficialEmployeeId() {
+<span class="fc" id="L194">		return officialEmployeeId;</span>
+	}
+
+	public void setOfficialEmployeeId(String officialEmployeeId) {
+<span class="fc" id="L198">		this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L199">	}</span>
+
+	public String getReportTitle() {
+<span class="fc" id="L202">		return reportTitle;</span>
+	}
+
+	public void setReportTitle(String reportTitle) {
+<span class="fc" id="L206">		this.reportTitle = reportTitle;</span>
+<span class="fc" id="L207">	}</span>
+
+	public String getReportDescription() {
+<span class="fc" id="L210">		return reportDescription;</span>
+	}
+
+	public void setReportDescription(String reportDescription) {
+<span class="fc" id="L214">		this.reportDescription = reportDescription;</span>
+<span class="fc" id="L215">	}</span>
+
+	public String getManagerComments() {
+<span class="fc" id="L218">		return managerComments;</span>
+	}
+
+	public void setManagerComments(String managerComments) {
+<span class="fc" id="L222">		this.managerComments = managerComments;</span>
+<span class="fc" id="L223">	}</span>
+
+	public String getFinanceComments() {
+<span class="fc" id="L226">		return financeComments;</span>
+	}
+
+	public void setFinanceComments(String financeComments) {
+<span class="fc" id="L230">		this.financeComments = financeComments;</span>
+<span class="fc" id="L231">	}</span>
+
+	public Boolean getIsSubmitted() {
+<span class="fc" id="L234">		return isSubmitted;</span>
+	}
+
+	public void setIsSubmitted(Boolean isSubmitted) {
+<span class="fc" id="L238">		this.isSubmitted = isSubmitted;</span>
+<span class="fc" id="L239">	}</span>
+
+	public String getEmployeeMail() {
+<span class="fc" id="L242">		return employeeMail;</span>
+	}
+
+	public void setEmployeeMail(String employeeMail) {
+<span class="fc" id="L246">		this.employeeMail = employeeMail;</span>
+<span class="fc" id="L247">	}</span>
+
+	public LocalDate getDateSubmitted() {
+<span class="fc" id="L250">		return dateSubmitted;</span>
+	}
+
+	public void setDateSubmitted(LocalDate dateSubmitted) {
+<span class="fc" id="L254">		this.dateSubmitted = dateSubmitted;</span>
+<span class="fc" id="L255">	}</span>
+
+	public LocalDate getDateCreated() {
+<span class="fc" id="L258">		return dateCreated;</span>
+	}
+
+	public void setDateCreated(LocalDate dateCreated) {
+<span class="fc" id="L262">		this.dateCreated = dateCreated;</span>
+<span class="fc" id="L263">	}</span>
+
+	public LocalDate getManagerActionDate() {
+<span class="fc" id="L266">		return managerActionDate;</span>
+	}
+
+	public void setManagerActionDate(LocalDate managerActionDate) {
+<span class="fc" id="L270">		this.managerActionDate = managerActionDate;</span>
+<span class="fc" id="L271">	}</span>
+
+	public LocalDate getFinanceActionDate() {
+<span class="fc" id="L274">		return financeActionDate;</span>
+	}
+
+	public void setFinanceActionDate(LocalDate financeActionDate) {
+<span class="fc" id="L278">		this.financeActionDate = financeActionDate;</span>
+<span class="fc" id="L279">	}</span>
+
+	public String getCurrency() {
+<span class="fc" id="L282">		return currency;</span>
+	}
+
+	public void setCurrency(String currency) {
+<span class="fc" id="L286">		this.currency = currency;</span>
+<span class="fc" id="L287">	}</span>
+
+	public float getTotalAmountINR() {
+<span class="fc" id="L290">		return totalAmountINR;</span>
+	}
+
+	public void setTotalAmountINR(float totalAmountINR) {
+<span class="fc" id="L294">		this.totalAmountINR = totalAmountINR;</span>
+<span class="fc" id="L295">	}</span>
+
+	public float getTotalApprovedAmountINR() {
+<span class="fc" id="L298">		return totalApprovedAmountINR;</span>
+	}
+
+	public void setTotalApprovedAmountINR(float totalApprovedAmountINR) {
+<span class="fc" id="L302">		this.totalApprovedAmountINR = totalApprovedAmountINR;</span>
+<span class="fc" id="L303">	}</span>
+
+	public float getTotalAmountCurrency() {
+<span class="fc" id="L306">		return totalAmountCurrency;</span>
+	}
+
+	public void setTotalAmountCurrency(float totalAmountCurrency) {
+<span class="fc" id="L310">		this.totalAmountCurrency = totalAmountCurrency;</span>
+<span class="fc" id="L311">	}</span>
+
+	public float getTotalApprovedAmountCurrency() {
+<span class="fc" id="L314">		return totalApprovedAmountCurrency;</span>
+	}
+
+	public void setTotalApprovedAmountCurrency(float totalApprovedAmountCurrency) {
+<span class="fc" id="L318">		this.totalApprovedAmountCurrency = totalApprovedAmountCurrency;</span>
+<span class="fc" id="L319">	}</span>
+
+	public Boolean getIsHidden() {
+<span class="fc" id="L322">		return isHidden;</span>
+	}
+
+	public void setIsHidden(Boolean isHidden) {
+<span class="fc" id="L326">		this.isHidden = isHidden;</span>
+<span class="fc" id="L327">	}</span>
+
+	public String getManagerEmail() {
+<span class="fc" id="L330">		return managerEmail;</span>
+	}
+
+	public void setManagerEmail(String managerEmail) {
+<span class="fc" id="L334">		this.managerEmail = managerEmail;</span>
+<span class="fc" id="L335">	}</span>
+
+	public String getManagerReviewTime() {
+<span class="fc" id="L338">		return managerReviewTime;</span>
+	}
+
+	public void setManagerReviewTime(String managerReviewTime) {
+<span class="fc" id="L342">		this.managerReviewTime = managerReviewTime;</span>
+<span class="fc" id="L343">	}</span>
+
+	public FinanceApprovalStatus getFinanceapprovalstatus() {
+<span class="fc" id="L346">		return financeapprovalstatus;</span>
+	}
+
+	public void setFinanceApprovalStatus(FinanceApprovalStatus financeapprovalstatus) {
+<span class="fc" id="L350">		this.financeapprovalstatus = financeapprovalstatus;</span>
+<span class="fc" id="L351">	}</span>
+
+	public ManagerApprovalStatus getManagerapprovalstatus() {
+<span class="fc" id="L354">		return managerapprovalstatus;</span>
+	}
+
+	public void setManagerApprovalStatus(ManagerApprovalStatus managerapprovalstatus) {
+<span class="fc" id="L358">		this.managerapprovalstatus = managerapprovalstatus;</span>
+<span class="fc" id="L359">	}</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

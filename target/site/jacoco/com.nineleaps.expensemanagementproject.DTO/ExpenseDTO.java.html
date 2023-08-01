@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpenseDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.DTO</a> &gt; <span class="el_source">ExpenseDTO.java</span></div><h1>ExpenseDTO.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.DTO;
+
+import java.time.LocalDate;
+
+public class ExpenseDTO {
+    private Long amount;
+    private String currency;
+    private String description;
+    private String merchantName;
+    private byte[] supportingDocuments;
+    private LocalDate date;
+
+<span class="fc" id="L13">    public ExpenseDTO() {</span>
+<span class="fc" id="L14">    }</span>
+
+<span class="fc" id="L16">    public ExpenseDTO(Long amount, String currency, String description, String merchantName, byte[] supportingDocuments,LocalDate date) {</span>
+<span class="fc" id="L17">        this.amount = amount;</span>
+<span class="fc" id="L18">        this.currency = currency;</span>
+<span class="fc" id="L19">        this.description = description;</span>
+<span class="fc" id="L20">        this.merchantName = merchantName;</span>
+<span class="fc" id="L21">        this.supportingDocuments = supportingDocuments;</span>
+<span class="fc" id="L22">        this.date=date;</span>
+<span class="fc" id="L23">    }</span>
+
+
+    public Long getAmount() {
+<span class="fc" id="L27">        return amount;</span>
+    }
+
+    public void setAmount(Long amount) {
+<span class="fc" id="L31">        this.amount = amount;</span>
+<span class="fc" id="L32">    }</span>
+
+    public String getCurrency() {
+<span class="fc" id="L35">        return currency;</span>
+    }
+
+    public void setDescription(String description) {
+<span class="fc" id="L39">        this.description = description;</span>
+<span class="fc" id="L40">    }</span>
+
+    public void setMerchantName(String merchantName) {
+<span class="fc" id="L43">        this.merchantName = merchantName;</span>
+<span class="fc" id="L44">    }</span>
+
+    public void setSupportingDocuments(byte[] supportingDocuments) {
+<span class="fc" id="L47">        this.supportingDocuments = supportingDocuments;</span>
+<span class="fc" id="L48">    }</span>
+
+    public void setDate(LocalDate date) {
+<span class="fc" id="L51">        this.date = date;</span>
+<span class="fc" id="L52">    }</span>
+
+    public String getDescription() {
+<span class="fc" id="L55">        return description;</span>
+    }
+
+    public String getMerchantName() {
+<span class="fc" id="L59">        return merchantName;</span>
+    }
+
+    public byte[] getSupportingDocuments() {
+<span class="fc" id="L63">        return supportingDocuments;</span>
+    }
+
+    public LocalDate getDate() {
+<span class="fc" id="L67">        return date;</span>
+    }
+
+    public void setCurrency(String currency) {
+<span class="fc" id="L71">        this.currency = currency;</span>
+<span class="fc" id="L72">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

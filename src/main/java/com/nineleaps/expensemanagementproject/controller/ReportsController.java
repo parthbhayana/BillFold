@@ -1,19 +1,18 @@
 package com.nineleaps.expensemanagementproject.controller;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import java.util.*;
 import javax.mail.MessagingException;
-import javax.management.AttributeNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
+import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
+import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
-import com.nineleaps.expensemanagementproject.service.PdfGeneratorServiceImpl;
-
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
@@ -34,9 +30,10 @@ public class ReportsController {
 
     @Autowired
     private IReportsService reportsService;
-
     @Autowired
-    PdfGeneratorServiceImpl pdfGeneratorService;
+    private ReportsRepository reportsRepository;
+
+
 
     @GetMapping("/getAllReports")
     public List<Reports> getAllReports() {
@@ -69,47 +66,46 @@ public class ReportsController {
     }
 
     @PostMapping("/addReport/{employeeId}")
-    public Reports addReport(@RequestBody Reports newReport, @PathVariable Long employeeId,
-                             @RequestParam ArrayList<Long> expenseIds) {
-        return reportsService.addReport(newReport, employeeId, expenseIds);
+    public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
+                             @RequestParam List<Long> expenseIds) {
+        return reportsService.addReport(reportsDTO, employeeId, expenseIds);
     }
 
     @PatchMapping("/addExpenseToReport/{reportId}")
-    public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam ArrayList<Long> expenseIds) {
+    public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam List<Long> expenseIds) {
         return reportsService.addExpenseToReport(reportId, expenseIds);
     }
 
 
     @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId,HttpServletResponse response) throws MessagingException,FileNotFoundException,IOException{
+    public void submitReport(@PathVariable Long reportId, HttpServletResponse response) throws MessagingException,  IOException {
 
-        reportsService.submitReport(reportId,response);
+        reportsService.submitReport(reportId, response);
     }
-
 
 
     @PatchMapping("/editReport/{reportId}")
     public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
-                                    @RequestParam String reportDescription, @RequestParam ArrayList<Long> addExpenseIds,
-                                    @RequestParam ArrayList<Long> removeExpenseIds) {
+                                    @RequestParam String reportDescription, @RequestParam List<Long> addExpenseIds,
+                                    @RequestParam List<Long> removeExpenseIds) {
         return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
 
     @PostMapping("/approveReportByManager/{reportId}")
     public void approveReportByManager(@PathVariable Long reportId,
-                                       @RequestParam(value = "comments", defaultValue = "null") String comments) {
-        reportsService.approveReportByManager(reportId, comments);
+                                       @RequestParam(value = "comments", defaultValue = "null") String comments,HttpServletResponse response) throws MessagingException, IOException {
+        reportsService.approveReportByManager(reportId, comments,response);
     }
 
     @PostMapping("/rejectReportByManager/{reportId}")
     public void rejectReportByManager(@PathVariable Long reportId,
-                                      @RequestParam(value = "comments", defaultValue = "null") String comments) {
-        reportsService.rejectReportByManager(reportId, comments);
+                                      @RequestParam(value = "comments", defaultValue = "null") String comments,HttpServletResponse response) throws MessagingException,IOException {
+        reportsService.rejectReportByManager(reportId, comments,response);
     }
 
     @PostMapping("/approveReportByFinance")
-    public void reimburseReportByFinance( @RequestParam ArrayList<Long> reportIds,
-                                       @RequestParam(value = "comments", defaultValue = "null") String comments) {
+    public void reimburseReportByFinance(@RequestParam ArrayList<Long> reportIds,
+                                         @RequestParam(value = "comments", defaultValue = "null") String comments) {
         reportsService.reimburseReportByFinance(reportIds, comments);
     }
 
@@ -126,12 +122,12 @@ public class ReportsController {
 
     @GetMapping("/getTotalAmountInrByReportId")
     public float totalAmountINR(@RequestParam Long reportId) {
-        return reportsService.totalamountINR(reportId);
+        return reportsService.totalAmountINR(reportId);
     }
 
     @GetMapping("/getTotalAmountCurrencyByReportId")
     public float totalAmountCurrency(@RequestParam Long reportId) {
-        return reportsService.totalamountCurrency(reportId);
+        return reportsService.totalAmountCurrency(reportId);
     }
 
     @GetMapping("/getReportsInDateRange")
@@ -145,7 +141,7 @@ public class ReportsController {
     public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam String request) {
-        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate,request);
+        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
@@ -153,5 +149,52 @@ public class ReportsController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
+    }
+
+    @GetMapping("/getTotalApprovedAmount")
+    public float totalApprovedAmount(Long reportId) {
+        return reportsService.totalApprovedAmountCurrency(reportId);
+    }
+
+
+
+    @PostMapping("/updateExpenseStatus/{reportId}")
+    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json) throws  ParseException {
+        JSONParser parser = new JSONParser();
+        try {
+            Map<Long,Float> partialApprovedMap = new HashMap<>();
+            List<Long> approvedIds = new ArrayList<>();
+            List<Long> rejectedIds = new ArrayList<>();
+            JSONArray jsonArray = (JSONArray) parser.parse(json);
+            for (Object object : jsonArray) {
+                JSONObject jsonObject = (JSONObject) object;
+
+                long expenseId = (Long) jsonObject.get("expenseId");
+                float amountApproved = (Long) jsonObject.get("amountApproved");
+                String status = (String) jsonObject.get("status");
+
+                if(Objects.equals(status, "approved")){
+                    approvedIds.add(expenseId);
+                }
+                if(Objects.equals(status, "rejected")){
+                    rejectedIds.add(expenseId);
+                }
+                if(Objects.equals(status, "partiallyApproved")){
+                    partialApprovedMap.put(expenseId,amountApproved);
+                }
+
+
+            }
+            reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime);
+            Reports report = getReportByReportId(reportId);
+            if (!rejectedIds.isEmpty()) {
+                report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
+                report.setIsSubmitted(false);
+            }
+            reportsRepository.save(report);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

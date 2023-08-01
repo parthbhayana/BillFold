@@ -16,4 +16,5 @@ public class ImageUtil {
 		BufferedImage image = ImageIO.read(in);
 		return image;
 	}
+
 }

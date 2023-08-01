@@ -4,22 +4,36 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
+import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import com.nineleaps.expensemanagementproject.entity.Category;
 
 public interface ICategoryService {
-
 	void deleteCategoryById(Long categoryId);
 
-	public Category getCategoryById(Long categoryId);
+	Category getCategoryById(Long categoryId);
+	List<Category> getAllCategories();
+	Category addCategory(CategoryDTO category);
 
-	public List<Category> getAllCategories();
+	void hideCategory(Long categoryId);
+	HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate);
+	HashMap<String, Float> getCategoryTotalAmountByYearAndCategory(Long categoryId);
+	HashMap<String, Float> getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year);
+    HashMap<String, Float> getYearlyReimbursementRatio(Long categoryId);
+	HashMap<String, Float> getMonthlyReimbursementRatio(Long categoryId, Long year);
+	HashMap<String, Object> getCategoryAnalyticsYearly(Long categoryId);
+	HashMap<String, Object> getCategoryAnalyticsMonthly(Long categoryId, Long year);
 
-	public Category addCategory(Category category);
+	HashMap<String, Float> getTotalAmountByYearForAllCategories();
 
-	public Category updateCategory(Category category);
+	HashMap<String, Float> getTotalAmountByMonthForAllCategories(Long year);
 
-	public void hideCategory(Long categoryId);
+	HashMap<String, Float> getYearlyReimbursementRatioForAllCategories();
 
-	public HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate);
+	HashMap<String, Float> getMonthlyReimbursementRatioForAllCategories(Long year);
 
+	HashMap<String, Object> getYearlyCategoryAnalyticsForAllCategories();
+
+	HashMap<String,Object> getMonthlyCategoryAnalyticsForAllCategories(Long year);
+
+	Category updateCategory(Long categoryId, CategoryDTO categoryDTO);
 }

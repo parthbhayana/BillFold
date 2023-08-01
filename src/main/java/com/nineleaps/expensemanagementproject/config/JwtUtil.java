@@ -2,9 +2,6 @@ package com.nineleaps.expensemanagementproject.config;
 
 import javax.servlet.http.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
@@ -14,11 +11,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtil {
     private static final String SECRET_KEY = "67c3f3e463358fb9cb3fb8538e04c05b6c1707563df66d2fb8a990ee04b22019";
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 10;
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 10;
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 30;
 
 
-    public ResponseEntity<?> generateTokens(String emailId, Long employeeId, String name, String imageUrl, String role,
+    public ResponseEntity<TokenResponse> generateTokens(String emailId, Long employeeId,  String role,
                                             HttpServletResponse response) {
         String accessToken = generateToken(emailId, employeeId, role, ACCESS_TOKEN_EXPIRATION_TIME);
         String refreshToken = generateToken(emailId, employeeId, role, REFRESH_TOKEN_EXPIRATION_TIME);
@@ -30,7 +27,7 @@ public class JwtUtil {
         return ResponseEntity.ok(tokenResponse);
     }
 
-    private String generateToken(String emailId, Long employeeId, String role, long expirationTime) {
+    String generateToken(String emailId, Long employeeId, String role, long expirationTime) {
         return Jwts.builder()
                 .setSubject(emailId)
                 .claim("EmployeeID", employeeId)
@@ -54,7 +51,10 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
-    private static class TokenResponse {
+
+
+
+    public static class TokenResponse {
         private final String accessToken;
         private final String refreshToken;
 
@@ -62,6 +62,9 @@ public class JwtUtil {
             this.accessToken = accessToken;
             this.refreshToken = refreshToken;
         }
+
+
+
 
         @SuppressWarnings("unused")
         public String getAccessToken() {
@@ -72,6 +75,13 @@ public class JwtUtil {
         public String getRefreshToken() {
             return refreshToken;
         }
+
+        public String setAccessToken(String testToken){
+            return accessToken;
+        }
+
+
+
     }
 
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExcelController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.controller</a> &gt; <span class="el_source">ExcelController.java</span></div><h1>ExcelController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.controller;
+
+import java.time.LocalDate;
+
+import javax.servlet.http.HttpServletResponse;
+
+import com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.nineleaps.expensemanagementproject.entity.StatusExcel;
+import com.nineleaps.expensemanagementproject.service.IExcelGeneratorCategoryService;
+import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsService;
+
+@RestController
+<span class="fc" id="L20">public class ExcelController {</span>
+	@Autowired
+	private IExcelGeneratorCategoryService excelService;
+	
+	@Autowired
+	private IExcelGeneratorReportsService excelServiceReports;
+
+	@GetMapping(&quot;/excel/categoryBreakup&quot;)
+	public ResponseEntity&lt;String&gt; generateExcelReport(HttpServletResponse response,
+			@RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
+			@RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) throws Exception {
+
+<span class="nc" id="L32">		response.setContentType(&quot;application/octet-stream&quot;);</span>
+
+<span class="nc" id="L34">		String headerKey = &quot;Content-Disposition&quot;;</span>
+<span class="nc" id="L35">		String headerValue = &quot;attachment;filename=Category wise Expense Analytics.xls&quot;;</span>
+
+<span class="nc" id="L37">		response.setHeader(headerKey, headerValue);</span>
+
+<span class="nc" id="L39">		String result = excelService.generateExcelAndSendEmail(response, startDate, endDate);</span>
+
+<span class="nc bnc" id="L41" title="All 2 branches missed.">		if (result.equals(&quot;Email sent successfully!&quot;)) {</span>
+<span class="nc" id="L42">			response.flushBuffer();</span>
+<span class="nc" id="L43">			return ResponseEntity.ok(result);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">		} else if (result.equals(&quot;No data available for the selected period.So, Email can't be sent!&quot;)) {</span>
+<span class="nc" id="L45">			return ResponseEntity.ok(result);</span>
+		} else {
+<span class="nc" id="L47">			return ResponseEntity.badRequest().body(result);</span>
+		}
+	}
+	
+	
+	@GetMapping(&quot;/excel/allReports&quot;)
+
+	public ResponseEntity&lt;String&gt; generateExcelReport(HttpServletResponse response,
+			@RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
+
+			@RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate,
+			@RequestParam StatusExcel status) throws Exception {
+
+<span class="nc" id="L60">		String fileName = &quot;Billfold_All_Submissions_Status.xls&quot;;</span>
+<span class="nc" id="L61">		String headerKey = &quot;Content-Disposition&quot;;</span>
+<span class="nc" id="L62">		String headerValue = &quot;attachment; filename=&quot; + fileName;</span>
+
+<span class="nc" id="L64">		response.setContentType(&quot;application/vnd.ms-excel&quot;);</span>
+<span class="nc" id="L65">		response.setHeader(headerKey, headerValue);</span>
+
+<span class="nc" id="L67">		String result = excelServiceReports.generateExcelAndSendEmail(response, startDate, endDate, status);</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		if (result.equals(&quot;Email sent successfully!&quot;)) {</span>
+<span class="nc" id="L70">			response.flushBuffer();</span>
+<span class="nc" id="L71">			return ResponseEntity.ok(result);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">		} else if (result.equals(&quot;No data available for the selected period.So, Email can't be sent!&quot;)) {</span>
+<span class="nc" id="L73">			return ResponseEntity.ok(result);</span>
+		} else {
+<span class="nc" id="L75">			return ResponseEntity.badRequest().body(result);</span>
+		}
+	}
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

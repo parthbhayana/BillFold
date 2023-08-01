@@ -23,18 +23,17 @@ public class JwtFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            System.out.println("Access token " + token);
             if (jwtUtil.validateToken(token)) {
                 Claims claims = jwtUtil.getClaimsFromToken(token);
-                System.out.println(claims);
                 String emailId = claims.getSubject();
-                System.out.println(emailId);
                 String role = (String) claims.get("Role");
                 if (role != null && !role.isEmpty()) {
                     List<GrantedAuthority> authorities = new ArrayList<>();

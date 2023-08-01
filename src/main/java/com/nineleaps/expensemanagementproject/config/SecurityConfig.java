@@ -13,6 +13,8 @@ public class SecurityConfig {
 
     @Autowired
     private JwtUtil jwtUtil;
+    private static final String CONSTANT1="EMPLOYEE";
+    private static final String CONSTANT2="FINANCE_ADMIN";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -20,37 +22,43 @@ public class SecurityConfig {
                 .csrf().disable()
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorizeRequests ->
-                        authorizeRequests
+                                authorizeRequests
                                 .antMatchers(AUTH_WHITELIST).permitAll()
-                                .antMatchers("/theProfile").permitAll()
-                                .antMatchers("/getProfileData").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/getExpenseByEmployeeId/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/updateCategory/{categoryId}").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/showAllCategories").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/hideCategory/{categoryId}").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/categoryTotalAmount").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/insertCategory").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/currencyList").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/insertExpenses/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/getExpenseByReportId/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/getReportByEmployeeId/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/addReport/{employeeId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/getReportsSubmittedToUser/{managerEmail}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/getAllReportsApprovedByManager").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/submitReport/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/approveReportByFinance/{reportId}").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/approveReportByManager/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/rejectReportByFinance/{reportId}").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/rejectReportByManager/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/updateExpenses/{expenseId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/editReport/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/hideExpense/{expenseId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/hideReport/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/getReportsInDateRange").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/openpdf/export/{reportId}").hasAnyAuthority("EMPLOYEE", "FINANCE_ADMIN")
-                                .antMatchers("/excel/reports").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/excel/categoryBreakup").hasAuthority("FINANCE_ADMIN")
-                                .antMatchers("/getReportsSubmittedToUserInDateRange").hasAuthority("FINANCE_ADMIN")
+//                                        .antMatchers("/theProfile").permitAll()
+//                                        .antMatchers("/getProfileData").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/getExpenseByEmployeeId/{employeeId}").hasAnyAuthority(CONSTANT1,CONSTANT2)
+//                                        .antMatchers("/updateCategory/{categoryId}").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/showAllCategories").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/hideCategory/{categoryId}").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/categoryTotalAmount").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/insertCategory").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/currencyList").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/insertExpenses/{employeeId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/getExpenseByReportId/{reportId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/getReportByEmployeeId/{employeeId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/addReport/{employeeId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/getReportsSubmittedToUser/{managerEmail}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/getAllReportsApprovedByManager").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/submitReport/{reportId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/approveReportByFinance/{reportId}").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/approveReportByManager/{reportId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/rejectReportByFinance/{reportId}").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/rejectReportByManager/{reportId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/updateExpenses/{expenseId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/editReport/{reportId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/hideExpense/{expenseId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/hideReport/{reportId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/getReportsInDateRange").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/openpdf/export/{reportId}").hasAnyAuthority(CONSTANT1, CONSTANT2)
+//                                        .antMatchers("/excel/reports").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/excel/categoryBreakup").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/getReportsSubmittedToUserInDateRange").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/getCategoryAnalyticsYearly/{categoryId}").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/getCategoryAnalyticsMonthly/{categoryId}").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/getAllCategoryAnalyticsYearly").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/getAllCategoryAnalyticsMonthly").hasAuthority(CONSTANT2)
+//                                        .antMatchers("/updateExpenseStatus/{reportId}").hasAuthority(CONSTANT1)
+
                 );
         return http.build();
     }

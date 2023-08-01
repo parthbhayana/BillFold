@@ -1,8 +1,9 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,41 +18,65 @@ import com.nineleaps.expensemanagementproject.service.ICategoryService;
 
 @RestController
 public class CategoryController {
-	@Autowired
-	private ICategoryService categoryService;
 
-	@PostMapping("/insertCategory")
-	public Category addCategory(@RequestBody Category category) {
-		return categoryService.addCategory(category);
-	}
+    @Autowired
+    private ICategoryService categoryService;
 
-	@GetMapping("/showAllCategories")
-	public List<Category> getAllCategory() {
-		return categoryService.getAllCategories();
-	}
+    @PostMapping("/insertCategory")
+    public Category addCategory(@RequestBody CategoryDTO categoryDTO) {
+        return categoryService.addCategory(categoryDTO);
+    }
 
-	@GetMapping("/findCategory/{categoryId}")
-	public Category getCategoryById(@PathVariable("categoryId") Long categoryId) {
-		return categoryService.getCategoryById(categoryId);
-	}
+    @GetMapping("/showAllCategories")
+    public List<Category> getAllCategory() {
+        return categoryService.getAllCategories();
+    }
 
-	@PutMapping("/updateCategory/{categoryId}")
-	public Category updateCategory(@PathVariable Long categoryId, @RequestBody Category newCategory) {
-		Category category = categoryService.getCategoryById(categoryId);
-		category.setCategoryDescription(newCategory.getCategoryDescription());
-		return categoryService.updateCategory(category);
-	}
+    @GetMapping("/findCategory/{categoryId}")
+    public Category getCategoryById(@PathVariable("categoryId") Long categoryId) {
+        return categoryService.getCategoryById(categoryId);
+    }
 
-	@PostMapping("/hideCategory/{categoryId}")
-	public void hideCategory(@PathVariable Long categoryId) {
-		categoryService.hideCategory(categoryId);
-	}
+    @PutMapping("/updateCategory/{categoryId}")
+    public Category updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
 
-	@GetMapping("/categoryTotalAmount")
-	public HashMap<String, Float> getCategoryTotalAmount(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate)
-	{
-		return categoryService.getCategoryTotalAmount(startDate, endDate);
-	}
+        return categoryService.updateCategory(categoryId,categoryDTO);
+    }
+
+    @PostMapping("/hideCategory/{categoryId}")
+    public void hideCategory(@PathVariable Long categoryId) {
+        categoryService.hideCategory(categoryId);
+    }
+
+    @GetMapping("/categoryTotalAmount")
+    public Map<String, Float> getCategoryTotalAmount(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        return categoryService.getCategoryTotalAmount(startDate, endDate);
+    }
+
+
+    @GetMapping("/getCategoryAnalyticsYearly/{categoryId}")
+    public Map<String, Object> getCategoryAnalytics(@PathVariable Long categoryId) {
+        return categoryService.getCategoryAnalyticsYearly(categoryId);
+    }
+
+    @GetMapping("/getCategoryAnalyticsMonthly/{categoryId}")
+    public Map<String, Object> getCategoryAnalytics(@PathVariable Long categoryId, @RequestParam Long year) {
+        return categoryService.getCategoryAnalyticsMonthly(categoryId, year);
+    }
+
+
+    @GetMapping("/getAllCategoryAnalyticsYearly")
+    public Map<String, Object> getYearlyCategoryAnalyticsForAllCategories() {
+        return categoryService.getYearlyCategoryAnalyticsForAllCategories();
+    }
+
+    @GetMapping("/getAllCategoryAnalyticsMonthly")
+    public Map<String, Object> getMonthlyCategoryAnalyticsForAllCategories(@RequestParam Long year) {
+        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);
+    }
+
 }
+
+
