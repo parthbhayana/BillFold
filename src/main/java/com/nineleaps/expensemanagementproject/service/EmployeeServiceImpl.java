@@ -87,8 +87,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
-	public Employee getEmployeeByEmail(String emailToVerify) {
-		return null;
+	public Employee getEmployeeByEmail(String employeeEmail) {
+		return employeeRepository.findByEmployeeEmail(employeeEmail);
 	}
 
 	@Override
@@ -150,6 +150,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		employee.setFirstName(userDTO.getFirstName());
 		employee.setMiddleName(userDTO.getMiddleName());
 		employee.setLastName(userDTO.getLastName());
+		employee.setToken(userDTO.getFcmToken());
 		return employeeRepository.save(employee);
 
 	}

@@ -39,9 +39,10 @@ class UserDTOTest {
         String firstName = "John";
         String middleName = "Middle";
         String lastName = "Doe";
+        String fcm_token = "dIgqC2CYTDWBMfNMuRZAk_:APA91bHG1W_sMNDMuI_QwYsBc3FhwOQtOIimJxb0zqMOWd1FzJYdez2q-HkEp2wkQcw7ojDqt9wAHLXdpMs6EfvGvwtRqGByDByyQbt-j9v5H1GXNb9LBo7kEJKdsZzg3ndeuPsuH_KK";
 
         // Act
-        UserDTO userDTO = new UserDTO(employeeEmail, imageUrl, firstName, middleName, lastName);
+        UserDTO userDTO = new UserDTO(employeeEmail, imageUrl, firstName, middleName, lastName, fcm_token);
 
         // Assert
         Assertions.assertEquals(employeeEmail, userDTO.getEmployeeEmail());
@@ -49,6 +50,7 @@ class UserDTOTest {
         Assertions.assertEquals(firstName, userDTO.getFirstName());
         Assertions.assertEquals(middleName, userDTO.getMiddleName());
         Assertions.assertEquals(lastName, userDTO.getLastName());
+        Assertions.assertEquals(fcm_token , userDTO.getFcmToken());
     }
 
     @Test

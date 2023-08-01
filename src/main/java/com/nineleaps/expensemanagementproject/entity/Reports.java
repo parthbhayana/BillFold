@@ -17,7 +17,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "reports")
@@ -44,7 +43,7 @@ public class Reports {
 	@Column(name = "report_title", nullable = false)
 	private String reportTitle;
 
-	@Column(name = "report_description",nullable=true)
+	@Column(name = "report_description", nullable = true)
 	private String reportDescription;
 
 	@Column(name = "manager_comments")
@@ -120,7 +119,6 @@ public class Reports {
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
 	private ManagerApprovalStatus managerapprovalstatus;
-
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
@@ -357,7 +355,5 @@ public class Reports {
 	public void setManagerApprovalStatus(ManagerApprovalStatus managerapprovalstatus) {
 		this.managerapprovalstatus = managerapprovalstatus;
 	}
-
-
 
 }

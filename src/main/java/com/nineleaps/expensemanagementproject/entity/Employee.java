@@ -61,14 +61,36 @@ public class Employee {
 	@ApiModelProperty(hidden = true)
 	private String role = "EMPLOYEE";
 
+	@Column(name = "fcm_token")
+	@ApiModelProperty(hidden = true)
+	private String token;
+
 	public Employee() {
 
 	}
 
-	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
-			String employeeEmail, String managerEmail, String managerName, Long mobileNumber, Boolean isFinanceAdmin,
-			String imageUrl, Boolean isHidden, List<Expense> expenseList, String role) {
-		super();
+//	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
+//					String employeeEmail, String managerEmail, String managerName, Long mobileNumber, Boolean isFinanceAdmin,
+//					String imageUrl, Boolean isHidden, List<Expense> expenseList, String role) {
+//		super();
+//		this.employeeId = employeeId;
+//		this.officialEmployeeId = officialEmployeeId;
+//		this.firstName = firstName;
+//		this.middleName = middleName;
+//		this.lastName = lastName;
+//		this.employeeEmail = employeeEmail;
+//		this.managerEmail = managerEmail;
+//		this.managerName = managerName;
+//		this.mobileNumber = mobileNumber;
+//		this.isFinanceAdmin = isFinanceAdmin;
+//		this.imageUrl = imageUrl;
+//		this.isHidden = isHidden;
+//		this.expenseList = expenseList;
+//		this.role = role;
+//	}
+
+
+	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName, String employeeEmail, String managerEmail, String managerName, Long mobileNumber, Boolean isFinanceAdmin, String imageUrl, Boolean isHidden, List<Expense> expenseList, String role, String token) {
 		this.employeeId = employeeId;
 		this.officialEmployeeId = officialEmployeeId;
 		this.firstName = firstName;
@@ -83,6 +105,7 @@ public class Employee {
 		this.isHidden = isHidden;
 		this.expenseList = expenseList;
 		this.role = role;
+		this.token = token;
 	}
 
 	public Long getEmployeeId() {
@@ -197,6 +220,11 @@ public class Employee {
 		this.role = role;
 	}
 
+	public String getToken() {
+		return token;
+	}
 
-
+	public void setToken(String token) {
+		this.token = token;
+	}
 }

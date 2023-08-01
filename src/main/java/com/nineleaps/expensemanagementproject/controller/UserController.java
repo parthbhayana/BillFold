@@ -26,19 +26,19 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequestMapping()
 public class UserController {
     @Autowired
-    private IEmployeeService userService;
+    private IEmployeeService employeeService;
     @SuppressWarnings("unused")
     @Autowired
     private JwtUtil jwtUtil;
     JSONObject responseJson;
 
-	public UserController(IEmployeeService userService) {
+	public UserController(IEmployeeService employeeService) {
 
 	}
 
 	@GetMapping("/listTheUser")
     public List<Employee> getAllUserDetails() {
-        return userService.getAllUser();
+        return employeeService.getAllUser();
     }
 
 	
@@ -49,7 +49,7 @@ public class UserController {
 		String token = authorisationHeader.substring("Bearer ".length());
 		DecodedJWT decodedAccessToken = JWT.decode(token);
         String employeeEmailFromToken = decodedAccessToken.getSubject();
-		Employee employee1 = userService.findByEmailId(employeeEmailFromToken);
+		Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);
 		Long employeeId = employee1.getEmployeeId();
 		String email = employee1.getEmployeeEmail();
 		String firstName = employee1.getFirstName();
@@ -68,10 +68,10 @@ public class UserController {
 
 	@PostMapping("/theProfile")
 	public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
-		Employee employee = userService.findByEmailId(userDTO.getEmployeeEmail());
+		Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
 		if (employee == null) {
-			userService.insertUser(userDTO);
-			employee = userService.findByEmailId(userDTO.getEmployeeEmail());
+			employeeService.insertUser(userDTO);
+			employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
 			String email = employee.getEmployeeEmail();
 			return jwtUtil.generateTokens(email, employee.getEmployeeId(),  employee.getRole(), response);
 

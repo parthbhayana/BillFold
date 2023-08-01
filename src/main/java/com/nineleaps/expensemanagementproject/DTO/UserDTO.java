@@ -6,16 +6,18 @@ public class UserDTO {
     private String firstName;
     private String middleName;
     private String lastName;
+    private String fcmToken;
 
     public UserDTO() {
     }
 
-    public UserDTO(String employeeEmail, String imageUrl, String firstName, String middleName, String lastName) {
+    public UserDTO(String employeeEmail, String imageUrl, String firstName, String middleName, String lastName, String fcmToken) {
         this.employeeEmail = employeeEmail;
         this.imageUrl = imageUrl;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
+        this.fcmToken = fcmToken;
     }
 
     public String getEmployeeEmail() {
@@ -56,5 +58,13 @@ public class UserDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

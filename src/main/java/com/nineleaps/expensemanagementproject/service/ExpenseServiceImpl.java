@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 
 import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
+import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
+import com.nineleaps.expensemanagementproject.firebase.PushNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,9 @@ public class ExpenseServiceImpl implements IExpenseService {
     private ICurrencyExchange currencyExchange;
     @Autowired
     private IEmailService emailService;
+
+    @Autowired
+    private PushNotificationService pushNotificationService;
 
 @Transactional
     @Override
@@ -204,8 +209,20 @@ public class ExpenseServiceImpl implements IExpenseService {
                 expenseIds.add(expense.getExpenseId());
             }
         }
-
         emailService.reminderMailToEmployee(expenseIds);
+        //Push Notification Functionality
+        for(Long expense : expenseIds){
+            Expense exp = getExpenseById(expense);
+            Long employeeId = exp.getExpenseId();
+            Employee employee = employeeService.getEmployeeById(employeeId);
+            PushNotificationRequest notificationRequest = new PushNotificationRequest();
+            notificationRequest.setTitle("[REMINDER]: Report your pending expenses.");
+            notificationRequest.setMessage("Unreported expenses will be deleted.");
+            notificationRequest.setToken(employee.getToken());
+            System.out.println("TOKEN-" + employee.getToken());
+
+            pushNotificationService.sendPushNotificationToToken(notificationRequest);
+        }
     }
 
 
