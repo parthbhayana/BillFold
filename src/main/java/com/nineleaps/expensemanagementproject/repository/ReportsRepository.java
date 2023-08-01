@@ -50,4 +50,6 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
 
 	List<Reports> findByfinanceapprovalstatus(FinanceApprovalStatus financeApprovalStatus);
+
+    List<Reports> findByDateSubmittedBetweenAndFinanceapprovalstatus(LocalDate startDate, LocalDate endDate, FinanceApprovalStatus financeApprovalStatus);
 }

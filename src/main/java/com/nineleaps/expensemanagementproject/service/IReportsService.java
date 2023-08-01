@@ -46,12 +46,15 @@ public interface IReportsService {
 
      float totalApprovedAmountINR(Long reportId);
 
-     List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate);
+
 
      String getAmountOfReportsInDateRange(LocalDate startDate, LocalDate endDate);
 
-     List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
-                                                              LocalDate endDate, String request);
+
+    List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate, String request);
+
+    List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
+                                                       LocalDate endDate, String request);
 
      void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
 
