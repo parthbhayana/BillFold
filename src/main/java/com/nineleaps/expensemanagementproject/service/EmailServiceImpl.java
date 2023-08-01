@@ -58,29 +58,30 @@ public class EmailServiceImpl implements IEmailService {
     public void managerNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
-
         if (!expenseList.isEmpty()) {
             Expense expense = expenseList.get(0);
             Employee employee = expense.getEmployee();
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper eMail = new MimeMessageHelper(message, true);
-
-            eMail.setFrom(CONSTANT1);
-            eMail.setTo(employee.getManagerEmail());
-            eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
-            eMail.setText(employee.getFirstName() + " " + employee.getLastName()
-                    + " has submitted you a report for approval. As a designated approver, we kindly request your prompt attention to review and take necessary action on the report."
-                    + "\n\nBelow are the details of the report submission:" + CONSTANT2
-                    + report.getReportTitle() + "\nSubmitter's Name: " + employee.getFirstName() + " "
-                    + employee.getLastName() + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: "
-                    + report.getTotalAmountINR() + " INR"
-                    + "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
-                    + CONSTANT3 + "\n\nThanks!");
-
-            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
-            ByteArrayResource resource = new ByteArrayResource(fileData);
-            eMail.addAttachment(CONSTANT4, resource);
-            javaMailSender.send(message);
+            if (employee != null && employee.getManagerEmail() != null) {
+                MimeMessage message = javaMailSender.createMimeMessage();
+                MimeMessageHelper eMail = new MimeMessageHelper(message, true);
+                eMail.setFrom(CONSTANT1);
+                eMail.setTo(employee.getManagerEmail());
+                eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
+                eMail.setText(employee.getFirstName() + " " + employee.getLastName()
+                        + " has submitted you a report for approval. As a designated approver, we kindly request your prompt attention to review and take necessary action on the report."
+                        + "\n\nBelow are the details of the report submission:" + CONSTANT2
+                        + report.getReportTitle() + "\nSubmitter's Name: " + employee.getFirstName() + " "
+                        + employee.getLastName() + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: "
+                        + report.getTotalAmountINR() + " INR"
+                        + "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
+                        + CONSTANT3 + "\n\nThanks!");
+                byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+                ByteArrayResource resource = new ByteArrayResource(fileData);
+                eMail.addAttachment(CONSTANT4, resource);
+                javaMailSender.send(message);
+            } else {
+                throw new IllegalStateException(CONSTANT5 + report.getReportTitle());
+            }
         } else {
             throw new IllegalStateException(CONSTANT5 + report.getReportTitle());
         }

@@ -2,5 +2,5 @@ projectKey=billfold
 serverUrl=http://localhost:9000
 serverVersion=9.8.0.63668
 dashboardUrl=http://localhost:9000/dashboard?id=billfold
-ceTaskId=AYloRcIUOJQXL7pxR_gc
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYloRcIUOJQXL7pxR_gc
+ceTaskId=AYltX07Y0daNd96SwrqG
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYltX07Y0daNd96SwrqG

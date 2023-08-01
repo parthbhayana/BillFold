@@ -1,6 +1,5 @@
 package com.nineleaps.expensemanagementproject.service;
 
-import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
@@ -43,68 +42,10 @@ class ReportsServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // AddReport tests...
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-//    @Test
-//    void testAddReport() {
-//        // Mock employee
-//        Long employeeId = 1L;
-//        Employee employee = new Employee();
-//        employee.setEmployeeEmail("employee@example.com");
-//        employee.setManagerEmail("manager@example.com");
-//        employee.setFirstName("John");
-//        employee.setLastName("Doe");
-//        employee.setOfficialEmployeeId("EMP123");
-//
-//        when(employeeServices.getEmployeeById(employeeId)).thenReturn(employee);
-//
-//        // Mock expenses
-//        List<Long> expenseIds = new ArrayList<>();
-//        Long expenseId1 = 1L;
-//        Long expenseId2 = 2L;
-//        expenseIds.add(expenseId1);
-//        expenseIds.add(expenseId2);
-//
-//        Expense expense1 = new Expense();
-//        expense1.setCurrency("USD");
-//        expense1.setAmountINR(100);
-//        Expense expense2 = new Expense();
-//        expense2.setCurrency("USD");
-//        expense2.setAmountINR(200);
-//
-//        when(expenseRepository.getExpenseByexpenseId(expenseId1)).thenReturn(expense1);
-//        when(expenseRepository.getExpenseByexpenseId(expenseId2)).thenReturn(expense2);
-//        when(expenseRepository.findAllById(expenseIds)).thenReturn(List.of(expense1, expense2));
-//
-//        // Call the method
-//        ReportsDTO reportsDTO = new ReportsDTO("Report Title", "Report Description");
-//        Reports savedReport = new Reports();
-//        when(reportsRepository.save(any(Reports.class))).thenReturn(savedReport);
-//
-//        Reports result = reportsService.addReport(reportsDTO, employeeId, expenseIds);
-//
-//        // Assertions
-//        verify(employeeServices, times(1)).getEmployeeById(employeeId);
-//        verify(expenseRepository, times(2)).getExpenseByexpenseId(anyLong());
-//        verify(expenseRepository, times(1)).findAllById(expenseIds);
-//        verify(reportsRepository, times(2)).save(any(Reports.class));
-//
-//        // Verify the values of the created report
-//        assertSame(savedReport, result);
-//        assertEquals("Report Title", result.getReportTitle());
-//        assertEquals("Report Description", result.getReportDescription());
-//        assertEquals("employee@example.com", result.getEmployeeMail());
-//        assertEquals("manager@example.com", result.getManagerEmail());
-//        assertEquals("John Doe", result.getEmployeeName());
-//        assertEquals("EMP123", result.getOfficialEmployeeId());
-//        assertEquals(LocalDate.now(), result.getDateCreated());
-//        assertEquals(employeeId, result.getEmployeeId());
-//        assertEquals("USD", result.getCurrency());
-//        assertEquals(300, result.getTotalAmountINR());
-//        assertEquals(300, result.getTotalAmountCurrency());
-//    }
-
-    // GetAllReports test...
 
     @Test
     void testGetAllReports() {
@@ -119,7 +60,8 @@ class ReportsServiceImplTest {
         assertEquals(expectedReports, actualReports);
     }
 
-    // GetReportById tests...
+
+
 
     @Test
     void testGetReportById() {

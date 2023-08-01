@@ -70,4 +70,6 @@ public class ExpenseDTO {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+
 }

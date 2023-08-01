@@ -11,22 +11,13 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
@@ -207,37 +198,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         fontParagraph14.setSize(14);
         Paragraph pdfParagraph04 = new Paragraph(report.getReportDescription(), fontParagraph14);
         pdfParagraph04.setAlignment(ALIGN_LEFT);
-
-
-        String qrCodeData = "Employee Email=" + employee.getEmployeeEmail() + " " + "Employee Name="
-                + employee.getFirstName() + " " + "TotalAmount=" + currencyChunk + totalChunk;
-        int qrCodeSize = 200;
-        Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<>();
-        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix;
-        try {
-            bitMatrix = qrCodeWriter.encode(qrCodeData, BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize, hintMap);
-        } catch (WriterException e) {
-            e.printStackTrace();
-
-            return new byte[0];
-        }
-        BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-
-        ByteArrayOutputStream qrBaos = new ByteArrayOutputStream();
-        ImageIO.write(qrImage, "png", qrBaos);
-        qrBaos.flush();
-        byte[] qrBytes = qrBaos.toByteArray();
-        qrBaos.close();
-
-        Image qrCodeImage = Image.getInstance(qrBytes);
-        qrCodeImage.setAlignment(Element.ALIGN_CENTER);
-        qrCodeImage.scaleToFit(150, 150);
-
         document.add(headerParagraph);
-
         document.add(emptyParagraph01);
         document.add(emptyParagraph02);
         document.add(pdfParagraph002);
@@ -258,7 +219,6 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         document.add(lineSeparator);
 //		document.add(historyTitle);
 //		document.add(historyContent);
-        document.add(qrCodeImage);
 
 
         document.newPage();

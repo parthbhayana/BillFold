@@ -43,7 +43,6 @@ class CategoryServiceImplTest {
     }
 
 
-
     @Test
     void testGetCategoryById_ExistingCategory() {
         // Arrange
@@ -101,7 +100,6 @@ class CategoryServiceImplTest {
     }
 
 
-
     @Test
     void testHideCategory() {
         // Arrange
@@ -121,7 +119,6 @@ class CategoryServiceImplTest {
         verify(categoryRepository).findById(categoryId);
         verify(categoryRepository).save(category);
     }
-
 
 
     @Test
@@ -355,6 +352,7 @@ class CategoryServiceImplTest {
         assertEquals(200F, result.get("2022_Feb"));
         verify(expenseRepository).findByIsReportedAndIsHidden(true, false);
     }
+
     @Test
     void updateCategory_WithValidInputs_ReturnsUpdatedCategory() {
         // Prepare test data
@@ -448,6 +446,7 @@ class CategoryServiceImplTest {
         assertEquals(250.0f, categoryAmountMap.get("Category 1"), 0.0f);
         assertEquals(200.0f, categoryAmountMap.get("Category 2"), 0.0f);
     }
+
     @Test
     void getTotalAmountByYearForAllCategories_ReturnsTotalAmountByYear() {
         // Prepare test data
@@ -496,11 +495,62 @@ class CategoryServiceImplTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
-
-
-
-
-
+//    @Test
+//    void testGetCategoryAnalyticsYearly() {
+//        // Mock data
+//        Long categoryId = 1L;
+//
+//        // Mock category
+//        Category category = new Category();
+//        category.setCategoryId(categoryId);
+//
+//        // Mock category repository
+//        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+//
+//        // Mock expense repository
+//        List<Expense> expenseList = new ArrayList<>();
+//        Expense expense1 = new Expense();
+//        expense1.setAmountINR(100.0f);
+//        expense1.setDate(LocalDate.of(2022, 1, 1));
+//        expense1.setIsReported(true);
+//        expense1.setCategory(category);
+//        expenseList.add(expense1);
+//
+//        Expense expense2 = new Expense();
+//        expense2.setAmountINR(200.0f);
+//        expense2.setDate(LocalDate.of(2022, 2, 1));
+//        expense2.setIsReported(true);
+//        expense2.setCategory(category);
+//        expenseList.add(expense2);
+//
+//        when(expenseRepository.findByCategoryAndIsReported(category, true)).thenReturn(expenseList);
+//
+//        // Expected result
+//        HashMap<String, Float> expectedCategoryTotalAmountByYear = new HashMap<>();
+//        expectedCategoryTotalAmountByYear.put("2022", 300.0f);
+//
+//        HashMap<String, Float> expectedYearlyReimbursementRatio = new HashMap<>();
+//        expectedYearlyReimbursementRatio.put("2022", 150.0f);
+//
+//        // Call the method
+//        HashMap<String, Object> result = categoryService.getCategoryAnalyticsYearly(categoryId);
+//
+//        // Verify the results
+//        assertEquals(expectedCategoryTotalAmountByYear, result.get("categoryTotalAmountByYear"));
+//        assertEquals(expectedYearlyReimbursementRatio, result.get("yearlyReimbursementRatio"));
+//
+//        // Verify the method invocations
+//        verify(categoryRepository, times(1)).findById(categoryId);
+//        verify(expenseRepository, times(1)).findByCategoryAndIsReported(category, true);
+//    }
 
 
 }
+
+
+
+
+
+
+
+
