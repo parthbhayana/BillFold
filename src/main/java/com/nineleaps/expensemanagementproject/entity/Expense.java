@@ -288,6 +288,4 @@ public class Expense {
 		this.amountApprovedINR = amountApprovedINR;
 	}
 
-
-
 }

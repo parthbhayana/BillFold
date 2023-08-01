@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
+import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
+import com.nineleaps.expensemanagementproject.firebase.PushNotificationService;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +39,18 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Autowired
     private ICurrencyExchange currencyExchange;
-    private static final String CONSTANT1=" does not exist!";
-    private static final String CONSTANT2="Report with ID ";
-    private static final String CONSTANT3="Expense with ID ";
-    private static final String CONSTANT4="rejected";
-    private static final String CONSTANT5="approved";
-    private static final String CONSTANT6="Enter a valid request !";
-    private static final String CONSTANT7="pending";
-    private static final String CONSTANT8="Report ";
-    private static final String CONSTANT9=" is not Submitted!";
 
+    @Autowired
+    private PushNotificationService pushNotificationService;
+    private static final String CONSTANT1 = " does not exist!";
+    private static final String CONSTANT2 = "Report with ID ";
+    private static final String CONSTANT3 = "Expense with ID ";
+    private static final String CONSTANT4 = "rejected";
+    private static final String CONSTANT5 = "approved";
+    private static final String CONSTANT6 = "Enter a valid request !";
+    private static final String CONSTANT7 = "pending";
+    private static final String CONSTANT8 = "Report ";
+    private static final String CONSTANT9 = " is not Submitted!";
 
 
     @Override
@@ -67,7 +71,7 @@ public class ReportsServiceImpl implements IReportsService {
         String managerEmail = employee.getManagerEmail();
         String employeeName = (employee.getFirstName() + " " + employee.getLastName());
         String officialEmployeeId = employee.getOfficialEmployeeId();
-        Reports newReport=new Reports();
+        Reports newReport = new Reports();
         newReport.setReportTitle(reportsDTO.getReportTitle());
         newReport.setReportDescription(reportsDTO.getReportDescription());
         newReport.setEmployeeMail(employeeEmail);
@@ -110,8 +114,6 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
 
-
-
     @Override
     public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
                                     List<Long> addExpenseIds, List<Long> removeExpenseIds) {
@@ -119,11 +121,9 @@ public class ReportsServiceImpl implements IReportsService {
         Reports report = getReportById(reportId);
         if (report.getIsSubmitted()) {
             throw new IllegalStateException("Can not edit Report with ReportId:" + reportId + " as it is already submitted!");
-        }
-        else if (report.getIsHidden()) {
+        } else if (report.getIsHidden()) {
             throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
-        }
-        else if (!report.getIsHidden() || report.getIsSubmitted() && report.getManagerapprovalstatus() == ManagerApprovalStatus.ACTION_REQUIRED) {
+        } else if (!report.getIsHidden() || report.getIsSubmitted() && report.getManagerapprovalstatus() == ManagerApprovalStatus.ACTION_REQUIRED) {
             report.setReportTitle(reportTitle);
             report.setReportDescription(reportDescription);
             reportsRepository.save(report);
@@ -175,7 +175,7 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public Reports addExpenseToReport(Long reportId, List<Long> expenseids) {
         Reports report = getReportById(reportId);
-        if ( report.getIsHidden()) {
+        if (report.getIsHidden()) {
             throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
         }
         for (Long expenseid : expenseids) {
@@ -284,7 +284,9 @@ public class ReportsServiceImpl implements IReportsService {
     public void submitReport(Long reportId, HttpServletResponse response)
             throws MessagingException, IOException {
         boolean submissionStatus = true;
+        // Fetching employee ID
         Reports re = getReportById(reportId);
+        Long employeeId = re.getEmployeeId();
         if (re == null || re.getIsHidden()) {
             throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
         }
@@ -297,8 +299,6 @@ public class ReportsServiceImpl implements IReportsService {
             re.setDateSubmitted(LocalDate.now());
             re.setTotalAmountINR(totalAmountINR(reportId));
             re.setTotalAmountCurrency(totalAmountCurrency(reportId));
-            // Fetching employee ID
-            Long employeeId = re.getEmployeeId();
             Employee employee = employeeServices.getEmployeeById(employeeId);
             re.setManagerEmail(employee.getManagerEmail());
             reportsRepository.save(re);
@@ -312,12 +312,26 @@ public class ReportsServiceImpl implements IReportsService {
             }
             emailService.managerNotification(reportId, expenseIds, response);
         }
+        //Push Notification Functionality
 
+        String managerEmail = re.getManagerEmail();
+
+        Employee employee = employeeServices.getEmployeeById(employeeId);
+        Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
+
+        PushNotificationRequest notificationRequest = new PushNotificationRequest();
+        notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
+        notificationRequest.setMessage("Submitted you an expense report.");
+        notificationRequest.setToken(manager.getToken());
+        System.out.println("TOKEN-" + manager.getToken());
+
+        pushNotificationService.sendPushNotificationToToken(notificationRequest);
     }
 
     @Override
     public void approveReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException {
         Reports re = getReportById(reportId);
+        Long employeeId = re.getEmployeeId();
         if (!re.getIsSubmitted()) {
             throw new IllegalStateException(CONSTANT8 + reportId + CONSTANT9);
         }
@@ -335,7 +349,6 @@ public class ReportsServiceImpl implements IReportsService {
             for (Expense expense : expenseList) {
                 expenseIds.add(expense.getExpenseId());
             }
-//
         }
         //Update Expenses Status
         List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
@@ -347,13 +360,24 @@ public class ReportsServiceImpl implements IReportsService {
         re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
         reportsRepository.save(re);
 
+        //Push Notification Functionality
 
+        Employee employee = employeeServices.getEmployeeById(employeeId);
+
+        PushNotificationRequest notificationRequest = new PushNotificationRequest();
+        notificationRequest.setTitle("[APPROVED]: " + re.getReportTitle());
+        notificationRequest.setMessage(employee.getManagerName() + " approved your expense report.");
+        notificationRequest.setToken(employee.getToken());
+        System.out.println("TOKEN-" + employee.getToken());
+
+        pushNotificationService.sendPushNotificationToToken(notificationRequest);
     }
 
     @Override
     public void rejectReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException {
         ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.REJECTED;
         Reports re = getReportById(reportId);
+        Long employeeId = re.getEmployeeId();
         if (!re.getIsSubmitted()) {
             throw new IllegalStateException(CONSTANT8 + reportId + CONSTANT9);
         }
@@ -379,9 +403,18 @@ public class ReportsServiceImpl implements IReportsService {
             expenseRepository.save(exp);
         }
 
+        //Push Notification Functionality
 
+        Employee employee = employeeServices.getEmployeeById(employeeId);
+
+        PushNotificationRequest notificationRequest = new PushNotificationRequest();
+        notificationRequest.setTitle("[REJECTED]: " + re.getReportTitle());
+        notificationRequest.setMessage(employee.getManagerName() + " rejected your expense report.");
+        notificationRequest.setToken(employee.getToken());
+        System.out.println("TOKEN-" + employee.getToken());
+
+        pushNotificationService.sendPushNotificationToToken(notificationRequest);
     }
-
 
 
     @Override
@@ -389,6 +422,7 @@ public class ReportsServiceImpl implements IReportsService {
         FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.APPROVED;
         for (Long reportId : reportIds) {
             Reports re = getReportById(reportId);
+            Long employeeId = re.getEmployeeId();
             if (re == null || re.getIsHidden()) {
                 throw new ObjectNotFoundException(reportId, CONSTANT8 + reportId + CONSTANT1);
             }
@@ -396,7 +430,7 @@ public class ReportsServiceImpl implements IReportsService {
                 throw new IllegalStateException(CONSTANT8 + reportId + " is not submitted!");
             }
 
-            if (re.getManagerapprovalstatus() != ManagerApprovalStatus.APPROVED && re.getManagerapprovalstatus()!=ManagerApprovalStatus.PARTIALLY_APPROVED) {
+            if (re.getManagerapprovalstatus() != ManagerApprovalStatus.APPROVED && re.getManagerapprovalstatus() != ManagerApprovalStatus.PARTIALLY_APPROVED) {
                 throw new IllegalStateException(CONSTANT8 + reportId + " is not approved by the manager!");
             }
             re.setFinanceApprovalStatus(approvalStatus);
@@ -410,6 +444,17 @@ public class ReportsServiceImpl implements IReportsService {
                 exp.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
                 expenseRepository.save(exp);
             }
+            //Push Notification Functionality
+
+            Employee employee = employeeServices.getEmployeeById(employeeId);
+
+            PushNotificationRequest notificationRequest = new PushNotificationRequest();
+            notificationRequest.setTitle("[PUSHED TO REIMBURSEMENT]: " + re.getReportTitle());
+            notificationRequest.setMessage("Your expense report is pushed to reimbursement.");
+            notificationRequest.setToken(employee.getToken());
+            System.out.println("TOKEN-" + employee.getToken());
+
+            pushNotificationService.sendPushNotificationToToken(notificationRequest);
         }
     }
 
@@ -417,6 +462,7 @@ public class ReportsServiceImpl implements IReportsService {
     public void rejectReportByFinance(Long reportId, String comments) {
         FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECTED;
         Reports re = getReportById(reportId);
+        Long employeeId = re.getEmployeeId();
         if (!re.getIsSubmitted()) {
             throw new IllegalStateException(CONSTANT8 + reportId + CONSTANT9);
         }
@@ -436,6 +482,17 @@ public class ReportsServiceImpl implements IReportsService {
                 expenseRepository.save(exp);
             }
         }
+        //Push Notification Functionality
+
+        Employee employee = employeeServices.getEmployeeById(employeeId);
+
+        PushNotificationRequest notificationRequest = new PushNotificationRequest();
+        notificationRequest.setTitle("[REJECTED]: " + re.getReportTitle());
+        notificationRequest.setMessage("Accounts admin rejected your expense report.");
+        notificationRequest.setToken(employee.getToken());
+        System.out.println("TOKEN-" + employee.getToken());
+
+        pushNotificationService.sendPushNotificationToToken(notificationRequest);
     }
 
     @Override
@@ -555,11 +612,9 @@ public class ReportsServiceImpl implements IReportsService {
         Reports report = getReportById(reportId);
         if (Boolean.TRUE.equals(report.getIsHidden())) {
             throw new IllegalStateException(CONSTANT2 + reportId + CONSTANT1);
-        }
-        else if (report == null) {
+        } else if (report == null) {
             throw new NullPointerException(CONSTANT2 + reportId + " does not contain any expenses!");
-        }
-        else if (!report.getIsSubmitted()) {
+        } else if (!report.getIsSubmitted()) {
             throw new IllegalStateException(CONSTANT2 + reportId + " is not submitted!");
         }
         LocalDate managerActionDate = LocalDate.now();
@@ -619,8 +674,7 @@ public class ReportsServiceImpl implements IReportsService {
             report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
 
 
-        }
-        else if (!rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
+        } else if (!rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
             report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
             report.setIsSubmitted(false);
         }
@@ -641,7 +695,6 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
 
-
     @Scheduled(cron = "0 0 12 * * *")
     public void sendReportNotApprovedByManagerReminder() {
         LocalDate currentDate = LocalDate.now();
@@ -657,9 +710,19 @@ public class ReportsServiceImpl implements IReportsService {
             }
         }
         emailService.reminderMailToManager(reportIds);
+        //Push Notification Functionality
+        for(Long report : reportIds){
+            Reports re = getReportById(report);
+            String managerEmail = re.getManagerEmail();
+            Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
+            PushNotificationRequest notificationRequest = new PushNotificationRequest();
+            notificationRequest.setTitle("[REMINDER]: Take Action on pending reports.");
+//            notificationRequest.setMessage("");
+            notificationRequest.setToken(manager.getToken());
+            System.out.println("TOKEN-" + manager.getToken());
+
+            pushNotificationService.sendPushNotificationToToken(notificationRequest);
+        }
     }
-
-
-
 }
 

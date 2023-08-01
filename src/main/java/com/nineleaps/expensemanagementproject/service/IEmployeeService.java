@@ -19,7 +19,7 @@ public interface IEmployeeService {
 
 	public Employee updateEmployeeDetails(EmployeeDTO newemployee, Long employeeId);
 
-	public Employee getEmployeeByEmail(String emailToVerify);
+	public Employee getEmployeeByEmail(String employeeEmail);
 
 	public void hideEmployee(Long employeeId);
 
