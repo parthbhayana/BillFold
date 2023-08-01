@@ -11,7 +11,6 @@ import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationService;
-import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -262,7 +261,7 @@ public class ReportsServiceImpl implements IReportsService {
                         ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.APPROVED, true, false);
             case CONSTANT4:
                 return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
-                        ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false);
+                        ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REJECTED, true, false);
             case CONSTANT7:
                 List<Reports> approvedList = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false);
@@ -281,30 +280,39 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public void submitReport(Long reportId, HttpServletResponse response)
-            throws MessagingException, IOException {
+    public void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
         boolean submissionStatus = true;
-        // Fetching employee ID
         Reports re = getReportById(reportId);
         Long employeeId = re.getEmployeeId();
+
         if (re == null || re.getIsHidden()) {
             throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
         }
-        if (re.getIsSubmitted() == submissionStatus && re.getManagerapprovalstatus() != ManagerApprovalStatus.REJECTED) {
+
+        // Check if the report is already submitted and not rejected
+        if (re.getIsSubmitted() && re.getManagerapprovalstatus() != ManagerApprovalStatus.REJECTED) {
             throw new IllegalStateException(CONSTANT2 + reportId + " is already submitted!");
         }
-        if (re.getIsSubmitted() != submissionStatus || re.getIsSubmitted() && re.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED) {
+
+        // Check if the report is not submitted or was previously rejected by the manager
+        if (!re.getIsSubmitted() || re.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED) {
             re.setIsSubmitted(submissionStatus);
             re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
             re.setDateSubmitted(LocalDate.now());
             re.setTotalAmountINR(totalAmountINR(reportId));
             re.setTotalAmountCurrency(totalAmountCurrency(reportId));
+
+            // Fetch the manager's email and set it in the report
             Employee employee = employeeServices.getEmployeeById(employeeId);
-            re.setManagerEmail(employee.getManagerEmail());
-            reportsRepository.save(re);
-            if (employee.getManagerEmail() == null) {
+            String managerEmail = employee.getManagerEmail();
+            if (managerEmail == null) {
                 throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
             }
+            re.setManagerEmail(managerEmail);
+
+            reportsRepository.save(re);
+
+            // Send email notification to the manager
             List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
             ArrayList<Long> expenseIds = new ArrayList<>();
             for (Expense expense : expenseList) {
@@ -312,20 +320,21 @@ public class ReportsServiceImpl implements IReportsService {
             }
             emailService.managerNotification(reportId, expenseIds, response);
         }
-        //Push Notification Functionality
 
+        // Push Notification Functionality
         String managerEmail = re.getManagerEmail();
-
-        Employee employee = employeeServices.getEmployeeById(employeeId);
         Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
 
-        PushNotificationRequest notificationRequest = new PushNotificationRequest();
-        notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
-        notificationRequest.setMessage("Submitted you an expense report.");
-        notificationRequest.setToken(manager.getToken());
-        System.out.println("TOKEN-" + manager.getToken());
+        if (manager != null && manager.getToken() != null) {
+            Employee employee = employeeServices.getEmployeeById(employeeId);
+            PushNotificationRequest notificationRequest = new PushNotificationRequest();
+            notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
+            notificationRequest.setMessage("Submitted you an expense report.");
+            notificationRequest.setToken(manager.getToken());
+            System.out.println("TOKEN-" + manager.getToken());
 
-        pushNotificationService.sendPushNotificationToToken(notificationRequest);
+            pushNotificationService.sendPushNotificationToToken(notificationRequest);
+        }
     }
 
     @Override
@@ -554,6 +563,7 @@ public class ReportsServiceImpl implements IReportsService {
         return totalApprovedAmount;
     }
 
+
     @Override
     public void hideReport(Long reportId) {
         Boolean hidden = true;
@@ -571,9 +581,24 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate) {
-        return reportsRepository.findByDateSubmittedBetween(startDate, endDate);
+    public List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate, String request) {
+
+        switch (request) {
+            case "approved":
+                return reportsRepository.findByDateSubmittedBetweenAndFinanceapprovalstatus(startDate, endDate, FinanceApprovalStatus.APPROVED);
+            case "pending":
+                return reportsRepository.findByDateSubmittedBetweenAndFinanceapprovalstatus(startDate, endDate, FinanceApprovalStatus.PENDING);
+            case "reimbursed":
+                return reportsRepository.findByDateSubmittedBetweenAndFinanceapprovalstatus(startDate, endDate, FinanceApprovalStatus.REIMBURSED);
+            case "rejected":
+                return reportsRepository.findByDateSubmittedBetweenAndFinanceapprovalstatus(startDate, endDate, FinanceApprovalStatus.REJECTED);
+            default:
+                throw new IllegalArgumentException(CONSTANT6);
+
+        }
+
     }
+
 
     @Override
     public List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
