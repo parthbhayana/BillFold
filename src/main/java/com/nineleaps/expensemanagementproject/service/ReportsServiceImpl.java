@@ -244,41 +244,62 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public List<Reports> getAllSubmittedReports() {
         List<Reports> reports = reportsRepository.findAll();
-        List<Reports> submitttedReports = new ArrayList<>();
+        List<Reports> submittedReports = new ArrayList<>();
         for (Reports reports2 : reports) {
             if (reports2.getIsSubmitted()) {
-                submitttedReports.add(reports2);
+                submittedReports.add(reports2);
             }
         }
-        return submitttedReports;
+        return submittedReports;
     }
 
     @Override
     public List<Reports> getAllReportsApprovedByManager(String request) {
         switch (request) {
             case CONSTANT5:
-                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                List<Reports> approvedList1 = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.APPROVED, true, false);
+                List<Reports> partiallyApprovedList1 = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                        ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.APPROVED, true, false);
+                List<Reports> mergedList1 = new ArrayList<>();
+                mergedList1.addAll(approvedList1);
+                mergedList1.addAll(partiallyApprovedList1);
+                return mergedList1;
             case CONSTANT4:
-                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                List<Reports> approvedList2 = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                        ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false);
+                List<Reports> partiallyApprovedList2 = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REJECTED, true, false);
+                List<Reports> mergedList2 = new ArrayList<>();
+                mergedList2.addAll(approvedList2);
+                mergedList2.addAll(partiallyApprovedList2);
+                return mergedList2;
+
+
             case CONSTANT7:
-                List<Reports> approvedList = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                List<Reports> approvedList3 = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false);
-                List<Reports> partiallyApprovedList = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                List<Reports> partiallyApprovedList3 = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.PENDING, true, false);
-                List<Reports> mergedList = new ArrayList<>();
-                mergedList.addAll(approvedList);
-                mergedList.addAll(partiallyApprovedList);
-                return mergedList;
+                List<Reports> mergedList3 = new ArrayList<>();
+                mergedList3.addAll(approvedList3);
+                mergedList3.addAll(partiallyApprovedList3);
+                return mergedList3;
             case "reimbursed":
-                return reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                List<Reports> approvedList4 = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
                         ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);
+                List<Reports> partiallyApprovedList4 = reportsRepository.findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+                        ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);
+                List<Reports> mergedList4 = new ArrayList<>();
+                mergedList4.addAll(approvedList4);
+                mergedList4.addAll(partiallyApprovedList4);
+                return mergedList4;
+
+
             default:
                 throw new IllegalArgumentException(CONSTANT6);
         }
     }
-
     @Override
     public void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
         boolean submissionStatus = true;
