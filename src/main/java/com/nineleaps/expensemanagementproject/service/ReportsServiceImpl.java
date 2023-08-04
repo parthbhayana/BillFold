@@ -317,6 +317,11 @@ public class ReportsServiceImpl implements IReportsService {
 
         // Check if the report is not submitted or was previously rejected by the manager
         if (!re.getIsSubmitted() || re.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED) {
+            List<Expense> rejectedExpenses = expenseServices.getRejectedExpensesByReportId(reportId);
+            for (Expense expense : rejectedExpenses) {
+                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
+                expenseRepository.save(expense);
+            }
             re.setIsSubmitted(submissionStatus);
             re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
             re.setDateSubmitted(LocalDate.now());

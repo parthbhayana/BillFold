@@ -48,7 +48,7 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Autowired
     private PushNotificationService pushNotificationService;
 
-@Transactional
+    @Transactional
     @Override
     public Expense addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
@@ -180,8 +180,6 @@ public class ExpenseServiceImpl implements IExpenseService {
     }
 
 
-
-
     @Override
     public void hideExpense(Long expId) {
         Boolean hidden = true;
@@ -211,7 +209,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         }
         emailService.reminderMailToEmployee(expenseIds);
         //Push Notification Functionality
-        for(Long expense : expenseIds){
+        for (Long expense : expenseIds) {
             Expense exp = getExpenseById(expense);
             Long employeeId = exp.getExpenseId();
             Employee employee = employeeService.getEmployeeById(employeeId);
@@ -223,6 +221,19 @@ public class ExpenseServiceImpl implements IExpenseService {
 
             pushNotificationService.sendPushNotificationToToken(notificationRequest);
         }
+    }
+
+    @Override
+    public List<Expense> getRejectedExpensesByReportId(Long reportId) {
+        List<Expense> rejectedExpenses = new ArrayList<>();
+        List<Expense> expenses = getExpenseByReportId(reportId);
+
+        for (Expense expense : expenses) {
+            if (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED) {
+                rejectedExpenses.add(expense);
+            }
+        }
+        return rejectedExpenses;
     }
 
 
