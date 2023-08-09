@@ -88,7 +88,7 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void userRejectedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException,MessagingException{
+    public void userRejectedNotification(Long reportId, List<Long> expenseIds) throws IOException,MessagingException{
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
 
@@ -108,9 +108,9 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nIf you have any questions or need clarification regarding the rejection, please reach out to your manager or the HR department."
                     + "\n\nThank you for your understanding and cooperation." + CONSTANT7 + CONSTANT8
                     + CONSTANT3);
-            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
-            ByteArrayResource resource = new ByteArrayResource(fileData);
-            eMail.addAttachment(CONSTANT4, resource);
+//            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+//            ByteArrayResource resource = new ByteArrayResource(fileData);
+//            eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
         } else {
             throw new IllegalStateException(CONSTANT5 + report.getReportTitle());
@@ -118,7 +118,7 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void userApprovedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException,MessagingException {
+    public void userApprovedNotification(Long reportId, List<Long> expenseIds) throws IOException,MessagingException {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
         if (!expenseList.isEmpty()) {
@@ -138,9 +138,9 @@ public class EmailServiceImpl implements IEmailService {
                     + CONSTANT7 + CONSTANT8
                     + CONSTANT3);
 
-            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
-            ByteArrayResource resource = new ByteArrayResource(fileData);
-            eMail.addAttachment(CONSTANT4, resource);
+//            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+//            ByteArrayResource resource = new ByteArrayResource(fileData);
+//            eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
         } else {
             throw new IllegalStateException(CONSTANT5 + report.getReportTitle());

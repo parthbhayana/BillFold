@@ -20,6 +20,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nineleaps.expensemanagementproject.config.JwtUtil;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
+
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
@@ -32,53 +33,53 @@ public class UserController {
     private JwtUtil jwtUtil;
     JSONObject responseJson;
 
-	public UserController(IEmployeeService employeeService) {
+    public UserController(IEmployeeService employeeService) {
 
-	}
+    }
 
-	@GetMapping("/listTheUser")
+    @GetMapping("/listTheUser")
     public List<Employee> getAllUserDetails() {
         return employeeService.getAllUser();
     }
 
-	
-	@SuppressWarnings("unchecked")
-	@GetMapping("/getProfileData")
-	public ResponseEntity<?> sendData(HttpServletRequest request) {
-		String authorisationHeader = request.getHeader(AUTHORIZATION);
-		String token = authorisationHeader.substring("Bearer ".length());
-		DecodedJWT decodedAccessToken = JWT.decode(token);
+
+    @SuppressWarnings("unchecked")
+    @GetMapping("/getProfileData")
+    public ResponseEntity<?> sendData(HttpServletRequest request) {
+        String authorisationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorisationHeader.substring("Bearer ".length());
+        DecodedJWT decodedAccessToken = JWT.decode(token);
         String employeeEmailFromToken = decodedAccessToken.getSubject();
-		Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);
-		Long employeeId = employee1.getEmployeeId();
-		String email = employee1.getEmployeeEmail();
-		String firstName = employee1.getFirstName();
-		String lastName = employee1.getLastName();
-		@SuppressWarnings("unused")
-		String fullName = firstName + " " + lastName;
-		String imageUrl = employee1.getImageUrl();
-		JSONObject responseJson = new JSONObject();
-		responseJson.put("employeeId", employeeId);
-		responseJson.put("firstName", firstName);
-		responseJson.put("lastName", lastName);
-		responseJson.put("imageUrl", imageUrl);
-		responseJson.put("email", email);
-		return ResponseEntity.ok(responseJson);
-	}
+        Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);
+        Long employeeId = employee1.getEmployeeId();
+        String email = employee1.getEmployeeEmail();
+        String firstName = employee1.getFirstName();
+        String lastName = employee1.getLastName();
+        @SuppressWarnings("unused")
+        String fullName = firstName + " " + lastName;
+        String imageUrl = employee1.getImageUrl();
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("employeeId", employeeId);
+        responseJson.put("firstName", firstName);
+        responseJson.put("lastName", lastName);
+        responseJson.put("imageUrl", imageUrl);
+        responseJson.put("email", email);
+        return ResponseEntity.ok(responseJson);
+    }
 
-	@PostMapping("/theProfile")
-	public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
-		Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
-		if (employee == null) {
-			employeeService.insertUser(userDTO);
-			employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
-			String email = employee.getEmployeeEmail();
-			return jwtUtil.generateTokens(email, employee.getEmployeeId(),  employee.getRole(), response);
+    @PostMapping("/theProfile")
+    public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
+        Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
+        if (employee == null) {
+            employeeService.insertUser(userDTO);
+            employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
+            String email = employee.getEmployeeEmail();
+            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
 
-		} else {
-			String email = employee.getEmployeeEmail();
-			return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
+        } else {
+            String email = employee.getEmployeeEmail();
+            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
 
-		}
-	}
+        }
+    }
 }

@@ -15,6 +15,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import com.lowagie.text.pdf.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -27,12 +29,6 @@ import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.ColumnText;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfPageEventHelper;
-import com.lowagie.text.pdf.PdfWriter;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
@@ -42,6 +38,7 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 import static com.lowagie.text.Element.ALIGN_LEFT;
 import static com.lowagie.text.Element.ALIGN_RIGHT;
 import static com.lowagie.text.Element.ALIGN_CENTER;
+import java.util.Base64;
 
 @Service
 public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
@@ -69,7 +66,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
                 float x = PageSize.A4.getWidth() - document.rightMargin();
                 float y = document.bottomMargin() - 20;
                 Font billFont = FontFactory.getFont(FontFactory.TIMES_BOLD, 25, Font.NORMAL, Color.BLACK);
-                Font foldFont = FontFactory.getFont(FontFactory.TIMES_BOLD, 25, Font.NORMAL, new Color(0, 0, 139));
+                Font foldFont = FontFactory.getFont(FontFactory.TIMES_BOLD, 25, Font.NORMAL, new Color(0, 110, 230));
                 Font generatedbyFont = FontFactory.getFont(FontFactory.TIMES, 10, Font.NORMAL, Color.BLACK);
                 Paragraph footerParagraph = new Paragraph();
                 footerParagraph.setAlignment(Element.ALIGN_RIGHT);
@@ -93,14 +90,13 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         fontHeader.setSize(22);
         Paragraph headerParagraph = new Paragraph("BillFold - Expense Report", fontHeader);
         headerParagraph.setAlignment(ALIGN_CENTER);
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100);
         Font font = FontFactory.getFont(FontFactory.TIMES, 14);
         table.addCell(getCenterAlignedCell("Date", font));
         table.addCell(getCenterAlignedCell("Merchant", font));
         table.addCell(getCenterAlignedCell("Description", font));
         table.addCell(getCenterAlignedCell("Amount", font));
-        table.addCell(getCenterAlignedCell("Status", font));
         Font fontParagraph = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph.setSize(14);
         Reports report = reportsRepository.findById(reportId).get();
@@ -119,10 +115,21 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
             table.addCell(getCenterAlignedCells(dateCreated.format(formatter1), font));
             table.addCell(getCenterAlignedCells(expenseList.getMerchantName(), font));
             table.addCell(getCenterAlignedCells(expenseList.getDescription(), font));
-            table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
-            table.addCell(getCenterAlignedCell(String.valueOf(expenseList.getManagerApprovalStatusExpense()), font));
-            total += expenseList.getAmountApproved();
+            if(expenseList.getAmountApprovedINR()!=null)
+            {
+                table.addCell((getCenterAlignedCells(expenseList.getAmountApprovedINR().toString(), font)));
+            }
+            else {
+                table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
+            }
+
+            total += (expenseList.getAmountApprovedINR() != null) ? expenseList.getAmountApprovedINR() : expenseList.getAmount();
         }
+
+
+
+
+
 
         Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES_BOLD);
         fontParagraph1.setSize(14);
@@ -138,8 +145,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         Font fontParagraph11 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph11.setSize(14);
         @SuppressWarnings("null")
-        Paragraph pdfParagraph = new Paragraph(
-                "Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
+        Paragraph pdfParagraph = new Paragraph("Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
         pdfParagraph.setAlignment(ALIGN_LEFT);
         Font fontParagraph12 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph12.setSize(14);
@@ -148,12 +154,10 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         Paragraph pdfParagraph002 = new Paragraph("Employee Official Id : " + employee.getOfficialEmployeeId());
         pdfParagraph002.setAlignment(ALIGN_LEFT);
         Paragraph emptyParagraph = new Paragraph(" ");
-        Paragraph emptyParagraph01 = new Paragraph(" ");
-        Paragraph emptyParagraph02 = new Paragraph(" ");
         Font fontParagraph13 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph13.setSize(20);
         Paragraph pdfParagraph03 = new Paragraph(report.getReportTitle(), fontParagraph13);
-        pdfParagraph03.setAlignment(ALIGN_LEFT);
+        pdfParagraph03.setAlignment(ALIGN_CENTER);
         Paragraph pdfParagraph011 = new Paragraph();
         pdfParagraph011.setAlignment(ALIGN_RIGHT);
         pdfParagraph011.add("Total Amount: ");
@@ -169,56 +173,66 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
                 "----------------------------------------------------------------------------------------------------------------------------------");
         lineSeparator.setAlignment(Element.ALIGN_CENTER);
         lineSeparator.setSpacingAfter(10);
-        Paragraph emptyParagraph03 = new Paragraph(" ");
-        Paragraph emptyParagraph04 = new Paragraph(" ");
-        Paragraph emptyParagraph05 = new Paragraph(" ");
-        Paragraph emptyParagraph06 = new Paragraph(" ");
-        Paragraph emptyParagraph07 = new Paragraph(" ");
-        Paragraph emptyParagraph08 = new Paragraph(" ");
-//		Paragraph historyTitle = new Paragraph("Report History and comments:",
-//				FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
-//		historyTitle.setAlignment(Element.ALIGN_LEFT);
-//		historyTitle.setSpacingAfter(10);
-//		Paragraph historyContent = new Paragraph();
-//		historyContent.setAlignment(Element.ALIGN_LEFT);
-//		historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
+        PdfPCell titleAndDescriptionCell = new PdfPCell();
+        titleAndDescriptionCell.addElement(pdfParagraph03);
 
-//		LocalDate dateTimeCreated = report.getDateCreated();
-//		LocalDate dateSubmitted = report.getDateSubmitted();
-//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
-//
-//		String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);
-//		historyContent.add(createdMessage);
-//		historyContent.add(Chunk.NEWLINE);
-//
-//		String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
-//		historyContent.add(submissionMessage);
+
+
+
+        Paragraph historyTitle = new Paragraph("Report History and comments:",
+				FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
+		historyTitle.setAlignment(Element.ALIGN_LEFT);
+		historyTitle.setSpacingAfter(10);
+		Paragraph historyContent = new Paragraph();
+		historyContent.setAlignment(Element.ALIGN_LEFT);
+		historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
+
+		LocalDate dateTimeCreated = report.getDateCreated();
+		LocalDate dateSubmitted = report.getDateSubmitted();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
+
+		String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);
+		historyContent.add(createdMessage);
+		historyContent.add(Chunk.NEWLINE);
+
+		String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
+		historyContent.add(submissionMessage);
+
+
+
 
         Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
         fontParagraph14.setSize(14);
         Paragraph pdfParagraph04 = new Paragraph(report.getReportDescription(), fontParagraph14);
-        pdfParagraph04.setAlignment(ALIGN_LEFT);
+        pdfParagraph04.setAlignment(ALIGN_CENTER);
+        titleAndDescriptionCell.addElement(pdfParagraph04);
+
+
+
+
         document.add(headerParagraph);
-        document.add(emptyParagraph01);
-        document.add(emptyParagraph02);
-        document.add(pdfParagraph002);
+        document.add(emptyParagraph);
+        document.add(emptyParagraph);
         document.add(pdfParagraph03);
         document.add(pdfParagraph04);
+        document.add(emptyParagraph);
+        document.add(pdfParagraph002);
         document.add(pdfParagraph);
         document.add(pdfParagraph02);
         document.add(emptyParagraph);
-        document.add(emptyParagraph07);
-        document.add(emptyParagraph08);
+        document.add(emptyParagraph);
+        document.add(emptyParagraph);
         document.add(table);
         document.add(pdfParagraph011);
-        document.add(emptyParagraph03);
-        document.add(emptyParagraph04);
-        document.add(emptyParagraph05);
-        document.add(emptyParagraph06);
+        document.add(emptyParagraph);
+        document.add(emptyParagraph);
+        document.add(emptyParagraph);
+        document.add(emptyParagraph);
         document.add(noteParagraph);
         document.add(lineSeparator);
-//		document.add(historyTitle);
-//		document.add(historyContent);
+
+		document.add(historyTitle);
+		document.add(historyContent);
 
 
         document.newPage();
@@ -237,6 +251,8 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
                 document.newPage();
             }
         }
+
+
 
         document.close();
         writer.close();
