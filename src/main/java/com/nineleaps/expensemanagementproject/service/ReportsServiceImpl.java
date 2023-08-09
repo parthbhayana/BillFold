@@ -6,7 +6,6 @@ import java.util.*;
 import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
@@ -300,6 +299,7 @@ public class ReportsServiceImpl implements IReportsService {
                 throw new IllegalArgumentException(CONSTANT6);
         }
     }
+
     @Override
     public void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
         boolean submissionStatus = true;
@@ -429,7 +429,7 @@ public class ReportsServiceImpl implements IReportsService {
             for (Expense expense : expenseList) {
                 expenseIds.add(expense.getExpenseId());
             }
-            emailService.userRejectedNotification(reportId, expenseIds, response);
+            emailService.userRejectedNotification(reportId, expenseIds);
         }
         //Update Expenses Status
         List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
@@ -659,7 +659,7 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime) {
+    public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime, HttpServletResponse response) throws MessagingException, IOException {
         Reports report = getReportById(reportId);
         if (Boolean.TRUE.equals(report.getIsHidden())) {
             throw new IllegalStateException(CONSTANT2 + reportId + CONSTANT1);
@@ -723,11 +723,13 @@ public class ReportsServiceImpl implements IReportsService {
         if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
             report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
             report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
+            emailService.userApprovedNotification(reportId, approveExpenseIds);
 
 
         } else if (!rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
             report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
             report.setIsSubmitted(false);
+            emailService.userRejectedNotification(reportId, rejectExpenseIds);
         }
 
 
@@ -735,6 +737,7 @@ public class ReportsServiceImpl implements IReportsService {
         else if (rejectExpenseIds.isEmpty() && !partiallyApprovedMap.isEmpty()) {
             report.setManagerApprovalStatus(ManagerApprovalStatus.PARTIALLY_APPROVED);
             report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
+            emailService.userPartialApprovedExpensesNotification(reportId);
 
 
         }
@@ -743,6 +746,7 @@ public class ReportsServiceImpl implements IReportsService {
 
 
         reportsRepository.save(report);
+
     }
 
 
@@ -762,13 +766,12 @@ public class ReportsServiceImpl implements IReportsService {
         }
         emailService.reminderMailToManager(reportIds);
         //Push Notification Functionality
-        for(Long report : reportIds){
+        for (Long report : reportIds) {
             Reports re = getReportById(report);
             String managerEmail = re.getManagerEmail();
             Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
             PushNotificationRequest notificationRequest = new PushNotificationRequest();
             notificationRequest.setTitle("[REMINDER]: Take Action on pending reports.");
-//            notificationRequest.setMessage("");
             notificationRequest.setToken(manager.getToken());
             System.out.println("TOKEN-" + manager.getToken());
 

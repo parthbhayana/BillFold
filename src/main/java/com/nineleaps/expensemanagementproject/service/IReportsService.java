@@ -58,12 +58,12 @@ public interface IReportsService {
 
      void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
 
-     void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long,Float> partiallyApprovedMap, String reviewTime);
+//     void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long,Float> partiallyApprovedMap, String reviewTime);
 
     void approveReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException;
 
     void rejectReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException;
 
 
-
+    void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime, HttpServletResponse response) throws MessagingException, IOException;
 }
