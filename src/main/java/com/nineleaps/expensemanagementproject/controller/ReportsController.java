@@ -133,8 +133,8 @@ public class ReportsController {
     @GetMapping("/getReportsInDateRange")
     public List<Reports> getReportsInDateRange(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-        return reportsService.getReportsInDateRange(startDate, endDate);
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,@RequestParam String request) {
+        return reportsService.getReportsInDateRange(startDate, endDate,request);
     }
 
     @GetMapping("/getReportsSubmittedToUserInDateRange")
@@ -159,7 +159,7 @@ public class ReportsController {
 
 
     @PostMapping("/updateExpenseStatus/{reportId}")
-    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json) throws  ParseException {
+    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,HttpServletResponse response) throws  ParseException {
         JSONParser parser = new JSONParser();
         try {
             Map<Long,Float> partialApprovedMap = new HashMap<>();
@@ -185,7 +185,7 @@ public class ReportsController {
 
 
             }
-            reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime);
+            reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime,response);
             Reports report = getReportByReportId(reportId);
             if (!rejectedIds.isEmpty()) {
                 report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
@@ -195,6 +195,10 @@ public class ReportsController {
 
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

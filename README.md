@@ -58,7 +58,7 @@ The BillFold Project has the following features:
 
 - Spring Boot (2.7.10)
 - MySQL Database (8.0.32)
-- Java 8
+- Java 11
 
 
 

@@ -357,7 +357,7 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
                         dataRow.createCell(8).setCellValue(managerActionDate.toString());
                     }
                     dataRow.createCell(9).setCellValue(employee.getManagerEmail());
-                    dataRow.createCell(10).setCellValue(report.getTotalAmountINR());
+                    dataRow.createCell(10).setCellValue(report.getTotalApprovedAmountINR());
 
 
                     dataRowIndex++;

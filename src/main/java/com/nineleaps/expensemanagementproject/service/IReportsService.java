@@ -46,21 +46,24 @@ public interface IReportsService {
 
      float totalApprovedAmountINR(Long reportId);
 
-     List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate);
+
 
      String getAmountOfReportsInDateRange(LocalDate startDate, LocalDate endDate);
 
-     List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
-                                                              LocalDate endDate, String request);
+
+    List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate, String request);
+
+    List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
+                                                       LocalDate endDate, String request);
 
      void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
 
-     void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long,Float> partiallyApprovedMap, String reviewTime);
+//     void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long,Float> partiallyApprovedMap, String reviewTime);
 
     void approveReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException;
 
     void rejectReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException;
 
 
-
+    void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime, HttpServletResponse response) throws MessagingException, IOException;
 }
