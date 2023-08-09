@@ -152,7 +152,17 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		employee.setLastName(userDTO.getLastName());
 		employee.setToken(userDTO.getFcmToken());
 		return employeeRepository.save(employee);
-
 	}
 
+	@Override
+	public Employee updateUser(UserDTO userDTO) {
+		Employee employee = findByEmailId(userDTO.getEmployeeEmail());
+		employee.setEmployeeEmail(userDTO.getEmployeeEmail());
+		employee.setImageUrl(userDTO.getImageUrl());
+		employee.setFirstName(userDTO.getFirstName());
+		employee.setMiddleName(userDTO.getMiddleName());
+		employee.setLastName(userDTO.getLastName());
+		employee.setToken(userDTO.getFcmToken());
+		return employeeRepository.save(employee);
+	}
 }
