@@ -78,6 +78,7 @@ public class UserController {
 
         } else {
             String email = employee.getEmployeeEmail();
+            employeeService.updateUser(userDTO);
             return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
 
         }

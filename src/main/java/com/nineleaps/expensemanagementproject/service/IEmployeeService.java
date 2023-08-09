@@ -29,6 +29,8 @@ public interface IEmployeeService {
 
 	public Employee insertUser(UserDTO newUser);
 
+	public Employee updateUser(UserDTO newUser);
+
 	public Employee insertuser(Employee newUser);
 
 	public Employee findByEmailId(String emailId);
