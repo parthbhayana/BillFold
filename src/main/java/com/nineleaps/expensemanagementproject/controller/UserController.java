@@ -63,6 +63,7 @@ public class UserController {
 		responseJson.put("lastName", lastName);
 		responseJson.put("imageUrl", imageUrl);
 		responseJson.put("email", email);
+
 		return ResponseEntity.ok(responseJson);
 	}
 
@@ -77,8 +78,8 @@ public class UserController {
 
 		} else {
 			String email = employee.getEmployeeEmail();
+			employeeService.updateUser(userDTO);
 			return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
-
 		}
 	}
 }

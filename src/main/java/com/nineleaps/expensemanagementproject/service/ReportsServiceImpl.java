@@ -310,7 +310,7 @@ public class ReportsServiceImpl implements IReportsService {
             for (Expense expense : expenseList) {
                 expenseIds.add(expense.getExpenseId());
             }
-            emailService.managerNotification(reportId, expenseIds, response);
+//            emailService.managerNotification(reportId, expenseIds, response);
         }
         //Push Notification Functionality
 
@@ -322,8 +322,9 @@ public class ReportsServiceImpl implements IReportsService {
         PushNotificationRequest notificationRequest = new PushNotificationRequest();
         notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
         notificationRequest.setMessage("Submitted you an expense report.");
+        //Add Exception Here
         notificationRequest.setToken(manager.getToken());
-        System.out.println("TOKEN-" + manager.getToken());
+        System.out.println("TOKEN: " + manager.getToken());
 
         pushNotificationService.sendPushNotificationToToken(notificationRequest);
     }
@@ -408,7 +409,7 @@ public class ReportsServiceImpl implements IReportsService {
         Employee employee = employeeServices.getEmployeeById(employeeId);
 
         PushNotificationRequest notificationRequest = new PushNotificationRequest();
-        notificationRequest.setTitle("[REJECTED]: " + re.getReportTitle());
+        notificationRequest.setTitle(re.getReportTitle()); //"[REJECTED]: " +
         notificationRequest.setMessage(employee.getManagerName() + " rejected your expense report.");
         notificationRequest.setToken(employee.getToken());
         System.out.println("TOKEN-" + employee.getToken());
@@ -449,7 +450,7 @@ public class ReportsServiceImpl implements IReportsService {
             Employee employee = employeeServices.getEmployeeById(employeeId);
 
             PushNotificationRequest notificationRequest = new PushNotificationRequest();
-            notificationRequest.setTitle("[PUSHED TO REIMBURSEMENT]: " + re.getReportTitle());
+            notificationRequest.setTitle(re.getReportTitle()); //"[PUSHED TO REIMBURSEMENT]: " +
             notificationRequest.setMessage("Your expense report is pushed to reimbursement.");
             notificationRequest.setToken(employee.getToken());
             System.out.println("TOKEN-" + employee.getToken());
@@ -487,7 +488,7 @@ public class ReportsServiceImpl implements IReportsService {
         Employee employee = employeeServices.getEmployeeById(employeeId);
 
         PushNotificationRequest notificationRequest = new PushNotificationRequest();
-        notificationRequest.setTitle("[REJECTED]: " + re.getReportTitle());
+        notificationRequest.setTitle(re.getReportTitle()); //"[REJECTED]: " +
         notificationRequest.setMessage("Accounts admin rejected your expense report.");
         notificationRequest.setToken(employee.getToken());
         System.out.println("TOKEN-" + employee.getToken());
