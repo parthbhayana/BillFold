@@ -2,10 +2,12 @@ package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.UserDTO;
+import com.nineleaps.expensemanagementproject.service.IEmailService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class UserController {
     @Autowired
     private IEmployeeService employeeService;
+
+    @Autowired
+    private IEmailService emailService;
     @SuppressWarnings("unused")
     @Autowired
     private JwtUtil jwtUtil;
@@ -68,12 +73,13 @@ public class UserController {
     }
 
     @PostMapping("/theProfile")
-    public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response) {
+    public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response) throws MessagingException {
         Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
         if (employee == null) {
             employeeService.insertUser(userDTO);
             employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
             String email = employee.getEmployeeEmail();
+            emailService.welcomeEmail(email);
             return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
 
         } else {
