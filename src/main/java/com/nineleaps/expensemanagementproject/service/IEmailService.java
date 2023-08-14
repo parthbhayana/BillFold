@@ -14,9 +14,9 @@ public interface IEmailService {
 
 	void userApprovedNotification(Long reportId, List<Long> expenseIds) throws IOException,MessagingException;
 
-	void financeReimbursedNotification(Long reportId);
+	void userReimbursedNotification(Long reportId);
 
-	void financeRejectedNotification(Long reportId);
+	void userRejectedByFinanceNotification(Long reportId);
 
 	public void userPartialApprovedExpensesNotification(Long reportId);
 
@@ -25,8 +25,10 @@ public interface IEmailService {
     void reminderMailToManager(List<Long> reportIds);
 
 
-	void financeNotificationToReimburse(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
+	void financeNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
 	void welcomeEmail(String employeeEmail) throws MessagingException;
+
+	void notifyHr(Long reportId, String hrEmail, String hrName) throws MessagingException;
 
 }

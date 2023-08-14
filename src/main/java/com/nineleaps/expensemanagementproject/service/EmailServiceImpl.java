@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.service;
 
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class EmailServiceImpl implements IEmailService {
     private IReportsService reportsService;
     @Autowired
     private ExpenseRepository expenseRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private IExpenseService expenseService;
@@ -94,6 +98,24 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
+    public void notifyHr(Long reportId, String hrEmail, String hrName) throws MessagingException {
+        Reports report = reportsService.getReportById(reportId);
+        if (reportId != null) {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper eMail = new MimeMessageHelper(message, true);
+            eMail.setFrom(CONSTANT1);
+            eMail.setTo(hrEmail);
+            eMail.setSubject("Expense Report: " + report.getReportTitle()); //
+            eMail.setText("Dear " + hrName + ",\n\n"
+                    + "CONTENT HERE!!"
+                    + CONSTANT3 + "\n\nThanks!");
+            javaMailSender.send(message);
+        } else {
+            throw new IllegalStateException("Employee does not exist!");
+        }
+    }
+
+    @Override
     public void managerNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response)
             throws IOException, MessagingException {
         Reports report = reportsService.getReportById(reportId);
@@ -107,8 +129,9 @@ public class EmailServiceImpl implements IEmailService {
                 eMail.setFrom(CONSTANT1);
                 eMail.setTo(employee.getManagerEmail());
                 eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
-                eMail.setText(employee.getFirstName() + " " + employee.getLastName()
-                        + " has submitted you a report for approval. As a designated approver, we kindly request your prompt attention to review and take necessary action on the report."
+                eMail.setText(CONSTANT6 + employee.getManagerName() + ".\n\n"
+                        + employee.getFirstName() + " " + employee.getLastName()
+                        + " has submitted you a report for approval. As a designated manager, we kindly request your prompt attention to review and take necessary action on the report."
                         + "\n\nBelow are the details of the report submission:" + CONSTANT2 + report.getReportTitle()
                         + "\nSubmitter's Name: " + employee.getFirstName() + " " + employee.getLastName()
                         + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: "
@@ -185,7 +208,7 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void financeReimbursedNotification(Long reportId) {
+    public void userReimbursedNotification(Long reportId) {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
         if (!expenseList.isEmpty()) {
@@ -194,9 +217,9 @@ public class EmailServiceImpl implements IEmailService {
             SimpleMailMessage eMail = new SimpleMailMessage();
             eMail.setFrom(CONSTANT1);
             eMail.setTo(employee.getEmployeeEmail());
-            eMail.setSubject("[REIMBURSED] Expense Report: " + report.getReportTitle());
+            eMail.setSubject("[PUSHED TO REIMBURSEMENT] Expense Report: " + report.getReportTitle());
             eMail.setText(CONSTANT6 + employee.getFirstName() + " " + employee.getLastName() + ","
-                    + "\n\nCongratulations! Your expense report has been reimbursed by the finance department. The details of the reimbursement are as follows:"
+                    + "\n\nCongratulations! Your expense report has been pushed to reimbursement by the finance department. The details of the reimbursement are as follows:"
                     + CONSTANT2 + report.getReportTitle() + "\n\nAmount Reimbursed: " + report.getTotalAmountCurrency()
                     + report.getCurrency() + "\nReimbursement Date: " + report.getFinanceActionDate()
                     + "\n\nPlease check your bank account for the credited amount. If you have any questions or concerns regarding the reimbursement, please reach out to the finance department."
@@ -209,7 +232,7 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void financeRejectedNotification(Long reportId) {
+    public void userRejectedByFinanceNotification(Long reportId) {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
 
@@ -235,10 +258,12 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void financeNotificationToReimburse(Long reportId, List<Long> expenseIds, HttpServletResponse response)
+    public void financeNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response)
             throws IOException, MessagingException {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
+        Employee admin = employeeRepository.findByRole("FINANCE_ADMIN");
+        String adminEmail = admin.getEmployeeEmail();
 
         if (!expenseList.isEmpty()) {
             Expense expense = expenseList.get(0);
@@ -246,9 +271,9 @@ public class EmailServiceImpl implements IEmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper eMail = new MimeMessageHelper(message, true);
             eMail.setFrom(CONSTANT1);
-            eMail.setTo(employee.getFirstName() + " " + employee.getLastName());
+            eMail.setTo(adminEmail);
             eMail.setSubject("Expense Reimbursement Request: " + report.getReportTitle());
-            eMail.setText(CONSTANT6 + employee.getFirstName() + " " + employee.getLastName() + ","
+            eMail.setText(CONSTANT6 + admin.getFirstName() + ","
                     + "\n\nYou have received a request for expense reimbursement from employee "
                     + employee.getFirstName() + " " + employee.getLastName()
                     + ". The details of the expense report are as follows:" + CONSTANT2 + report.getReportTitle()
@@ -261,6 +286,7 @@ public class EmailServiceImpl implements IEmailService {
             ByteArrayResource resource = new ByteArrayResource(fileData);
             eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
+            System.out.println("Finance Email Sent to" + adminEmail);
         } else {
             throw new IllegalStateException(CONSTANT5 + report.getReportTitle());
         }

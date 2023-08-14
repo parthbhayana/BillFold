@@ -9,5 +9,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	Employee findByRole(String string);
 
-
 }
