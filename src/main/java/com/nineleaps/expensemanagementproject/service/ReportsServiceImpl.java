@@ -395,8 +395,17 @@ public class ReportsServiceImpl implements IReportsService {
         re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
         reportsRepository.save(re);
 
-        //Push Notification Functionality
+        //Email Notification
+        List<Expense> expenseList1 = expenseServices.getExpenseByReportId(reportId);
+        ArrayList<Long> expenseIds = new ArrayList<>();
+        for (Expense expense : expenseList1) {
+            expenseIds.add(expense.getExpenseId());
+        }
+        emailService.financeNotification(reportId,expenseIds, response);
+        emailService.userApprovedNotification(reportId, expenseIds);
 
+        //Push Notification Functionality
+            //To Employee
         Employee employee = employeeServices.getEmployeeById(employeeId);
 
         PushNotificationRequest notificationRequest = new PushNotificationRequest();
@@ -404,8 +413,10 @@ public class ReportsServiceImpl implements IReportsService {
         notificationRequest.setMessage(employee.getManagerName() + " approved your expense report.");
         notificationRequest.setToken(employee.getToken());
         System.out.println("TOKEN-" + employee.getToken());
-
         pushNotificationService.sendPushNotificationToToken(notificationRequest);
+
+            //To Admin ---??
+
     }
 
     @Override
@@ -437,6 +448,7 @@ public class ReportsServiceImpl implements IReportsService {
             exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
             expenseRepository.save(exp);
         }
+        //Email Notification ------------- ???????
 
         //Push Notification Functionality
 
@@ -472,7 +484,7 @@ public class ReportsServiceImpl implements IReportsService {
             re.setFinanceComments(comments);
             re.setFinanceActionDate(LocalDate.now());
             reportsRepository.save(re);
-            emailService.financeReimbursedNotification(reportId);
+            emailService.userReimbursedNotification(reportId);
             //Update Expenses Status
             List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
             for (Expense exp : expenseList) {
@@ -510,7 +522,7 @@ public class ReportsServiceImpl implements IReportsService {
             re.setFinanceComments(comments);
             re.setFinanceActionDate(LocalDate.now());
             reportsRepository.save(re);
-            emailService.financeRejectedNotification(reportId);
+            emailService.userRejectedByFinanceNotification(reportId);
             List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
             for (Expense exp : expenseList) {
                 exp.setFinanceApprovalStatus(FinanceApprovalStatus.REJECTED);
@@ -747,6 +759,16 @@ public class ReportsServiceImpl implements IReportsService {
 
         reportsRepository.save(report);
 
+    }
+
+    @Override
+    public void notifyHR(Long reportId) throws MessagingException {
+        Reports report = getReportById(reportId);
+        Long employeeId = report.getEmployeeId();
+        Employee employee = employeeServices.getEmployeeById(employeeId);
+        String hrEmail = employee.getHrEmail();
+        String hrName = employee.getHrName();
+        emailService.notifyHr(reportId,hrEmail,hrName);
     }
 
 

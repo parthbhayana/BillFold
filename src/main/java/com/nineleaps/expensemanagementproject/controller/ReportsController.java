@@ -156,7 +156,10 @@ public class ReportsController {
         return reportsService.totalApprovedAmountCurrency(reportId);
     }
 
-
+    @PostMapping("/notifyHr/{reportId}")
+    public void notifyHr(@RequestParam Long reportId) throws MessagingException {
+        reportsService.notifyHR(reportId);
+    }
 
     @PostMapping("/updateExpenseStatus/{reportId}")
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,HttpServletResponse response) throws  ParseException {
@@ -201,4 +204,5 @@ public class ReportsController {
             throw new RuntimeException(e);
         }
     }
+
 }
