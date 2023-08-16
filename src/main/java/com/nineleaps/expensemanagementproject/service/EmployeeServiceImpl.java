@@ -30,6 +30,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		employee.setLastName(employeeDTO.getLastName());
 		employee.setManagerEmail(employeeDTO.getManagerEmail());
 		employee.setManagerName(employeeDTO.getManagerName());
+		employee.setHrEmail(employeeDTO.getHrEmail());
+		employee.setHrName(employeeDTO.getHrName());
 		employee.setMiddleName(employeeDTO.getMiddleName());
 		employee.setMobileNumber(employeeDTO.getMobileNumber());
 		employee.setOfficialEmployeeId(employeeDTO.getOfficialEmployeeId());
@@ -71,6 +73,19 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
+	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail, Long mobileNumber, String managerName, String hrEmail, String hrName) {
+		Employee employee = getEmployeeById(employeeId);
+		employee.setOfficialEmployeeId(officialEmployeeId);
+		employee.setManagerEmail(managerEmail);
+		employee.setMobileNumber(mobileNumber);
+		employee.setManagerName(managerName);
+		employee.setHrName(hrName);
+		employee.setHrEmail(hrEmail);
+		employeeRepository.save(employee);
+		return getEmployeeDetails(employeeId);
+	}
+
+	@Override
 	public Optional<Employee> getEmployeeDetails(Long employeeId) {
 		return employeeRepository.findById(employeeId);
 	}
@@ -83,6 +98,18 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		employee.setMobileNumber(mobileNumber);
 		employee.setOfficialEmployeeId(officialEmployeeId);
 		employee.setManagerName(managerName);
+		employeeRepository.save(employee);
+	}
+
+	@Override
+	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName, String hrEmail, String hrName) {
+		Employee employee = getEmployeeById(employeeId);
+		employee.setManagerEmail(managerEmail);
+		employee.setMobileNumber(mobileNumber);
+		employee.setOfficialEmployeeId(officialEmployeeId);
+		employee.setManagerName(managerName);
+		employee.setHrEmail(hrEmail);
+		employee.setHrName(hrName);
 		employeeRepository.save(employee);
 	}
 

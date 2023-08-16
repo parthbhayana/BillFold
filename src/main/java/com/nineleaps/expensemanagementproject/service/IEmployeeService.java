@@ -40,7 +40,12 @@ public interface IEmployeeService {
 	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
 			Long mobileNumber, String managerName);
 
+	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
+														Long mobileNumber, String managerName, String hrEmail, String hrName);
+
 	public Optional<Employee> getEmployeeDetails(Long employeeId);
 
 	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName);
+
+	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName, String hrEmail, String hrName);
 }

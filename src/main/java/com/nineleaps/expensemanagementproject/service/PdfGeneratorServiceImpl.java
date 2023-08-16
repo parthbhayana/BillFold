@@ -157,7 +157,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         Font fontParagraph13 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph13.setSize(20);
         Paragraph pdfParagraph03 = new Paragraph(report.getReportTitle(), fontParagraph13);
-        pdfParagraph03.setAlignment(ALIGN_CENTER);
+        pdfParagraph03.setAlignment(ALIGN_LEFT);
         Paragraph pdfParagraph011 = new Paragraph();
         pdfParagraph011.setAlignment(ALIGN_RIGHT);
         pdfParagraph011.add("Total Amount: ");
@@ -195,7 +195,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 		historyContent.add(createdMessage);
 		historyContent.add(Chunk.NEWLINE);
 
-		String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
+		String submissionMessage = "Report submitted to you on:\n" + dateSubmitted.format(formatter);
 		historyContent.add(submissionMessage);
 
 
@@ -204,7 +204,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
         fontParagraph14.setSize(14);
         Paragraph pdfParagraph04 = new Paragraph(report.getReportDescription(), fontParagraph14);
-        pdfParagraph04.setAlignment(ALIGN_CENTER);
+        pdfParagraph04.setAlignment(ALIGN_LEFT);
         titleAndDescriptionCell.addElement(pdfParagraph04);
 
 

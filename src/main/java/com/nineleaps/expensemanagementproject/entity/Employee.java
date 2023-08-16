@@ -36,9 +36,11 @@ public class Employee {
 	private String managerEmail;
 
 	@Column(name = "manager_name")
+	@ApiModelProperty(hidden = true)
 	private String managerName;
 
 	@Column(name = "hr_name")
+	@ApiModelProperty(hidden = true)
 	private String hrName;
 
 	@Column(name = "hr_email")
@@ -75,28 +77,11 @@ public class Employee {
 
 	}
 
-//	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
-//					String employeeEmail, String managerEmail, String managerName, Long mobileNumber, Boolean isFinanceAdmin,
-//					String imageUrl, Boolean isHidden, List<Expense> expenseList, String role) {
-//		super();
-//		this.employeeId = employeeId;
-//		this.officialEmployeeId = officialEmployeeId;
-//		this.firstName = firstName;
-//		this.middleName = middleName;
-//		this.lastName = lastName;
-//		this.employeeEmail = employeeEmail;
-//		this.managerEmail = managerEmail;
-//		this.managerName = managerName;
-//		this.mobileNumber = mobileNumber;
-//		this.isFinanceAdmin = isFinanceAdmin;
-//		this.imageUrl = imageUrl;
-//		this.isHidden = isHidden;
-//		this.expenseList = expenseList;
-//		this.role = role;
-//	}
-
-
-	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName, String employeeEmail, String managerEmail, String managerName, Long mobileNumber, Boolean isFinanceAdmin, String imageUrl, Boolean isHidden, List<Expense> expenseList, String role, String token) {
+	public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
+			String employeeEmail, String managerEmail, String managerName, String hrName, String hrEmail,
+			Long mobileNumber, Boolean isFinanceAdmin, String imageUrl, Boolean isHidden, List<Expense> expenseList,
+			String role, String token) {
+		super();
 		this.employeeId = employeeId;
 		this.officialEmployeeId = officialEmployeeId;
 		this.firstName = firstName;
@@ -105,6 +90,8 @@ public class Employee {
 		this.employeeEmail = employeeEmail;
 		this.managerEmail = managerEmail;
 		this.managerName = managerName;
+		this.hrName = hrName;
+		this.hrEmail = hrEmail;
 		this.mobileNumber = mobileNumber;
 		this.isFinanceAdmin = isFinanceAdmin;
 		this.imageUrl = imageUrl;
@@ -178,6 +165,22 @@ public class Employee {
 		this.managerName = managerName;
 	}
 
+	public String getHrName() {
+		return hrName;
+	}
+
+	public void setHrName(String hrName) {
+		this.hrName = hrName;
+	}
+
+	public String getHrEmail() {
+		return hrEmail;
+	}
+
+	public void setHrEmail(String hrEmail) {
+		this.hrEmail = hrEmail;
+	}
+
 	public Long getMobileNumber() {
 		return mobileNumber;
 	}
@@ -233,4 +236,5 @@ public class Employee {
 	public void setToken(String token) {
 		this.token = token;
 	}
+
 }

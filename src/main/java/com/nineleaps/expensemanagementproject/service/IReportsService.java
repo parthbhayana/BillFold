@@ -67,5 +67,5 @@ public interface IReportsService {
 
     void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime, HttpServletResponse response) throws MessagingException, IOException;
 
-    void notifyHR(Long reportId);
+    void notifyHR(Long reportId) throws MessagingException;
 }
