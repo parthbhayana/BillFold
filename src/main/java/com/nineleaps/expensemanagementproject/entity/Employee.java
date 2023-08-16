@@ -38,6 +38,12 @@ public class Employee {
 	@Column(name = "manager_name")
 	private String managerName;
 
+	@Column(name = "hr_name")
+	private String hrName;
+
+	@Column(name = "hr_email")
+	private String hrEmail;
+
 	@Column(name = "mobile_number")
 	private Long mobileNumber;
 

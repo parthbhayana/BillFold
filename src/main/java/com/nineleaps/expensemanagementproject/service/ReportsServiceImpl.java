@@ -749,6 +749,11 @@ public class ReportsServiceImpl implements IReportsService {
 
     }
 
+    @Override
+    public void notifyHR(Long reportId) {
+
+    }
+
 
     @Scheduled(cron = "0 0 12 * * *")
     public void sendReportNotApprovedByManagerReminder() {
