@@ -48,56 +48,9 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Autowired
     private PushNotificationService pushNotificationService;
 
-//    @Transactional
-//    @Override
-//    public Expense addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
-//        Employee employee = employeeService.getEmployeeById(employeeId);
-//        Expense expense = new Expense();
-//        expense.setEmployee(employee);
-//        LocalDateTime now = LocalDateTime.now();
-//        expense.setDateCreated(now);
-//        String curr = expenseDTO.getCurrency();
-//        String date = expenseDTO.getDate().toString();
-//        double rate = currencyExchange.getExchangeRate(curr, date);
-//        double amountInInr = expenseDTO.getAmount() * rate;
-//        expense.setAmountINR((float) amountInInr);
-//        Category category = categoryRepository.getCategoryByCategoryId(categoryId);
-//        String categoryDescription = category.getCategoryDescription();
-//
-//        //Check for potential duplicate
-//        List<Expense> potentialDuplicateExpense =
-//                expenseRepository.findByAmountAndDateAndCategoryAndMerchantName(expenseDTO.getAmount(), expenseDTO.getDate(), category, expenseDTO.getMerchantName());
-//        System.out.println("Potential Duplicate List = " + potentialDuplicateExpense);
-//
-//        if (potentialDuplicateExpense.isEmpty()) {
-//            expense.setDescription(expenseDTO.getDescription());
-//            expense.setAmount(expenseDTO.getAmount());
-//            expense.setCurrency(expenseDTO.getCurrency());
-//            expense.setMerchantName(expenseDTO.getMerchantName());
-//            expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
-//            expense.setDate(expenseDTO.getDate());
-//            expense.setCategory(category);
-//            expense.setCategoryDescription(categoryDescription);
-//            return expenseRepository.save(expense);
-//        }
-//        else {
-//            expense.setDescription(expenseDTO.getDescription());
-//            expense.setAmount(expenseDTO.getAmount());
-//            expense.setCurrency(expenseDTO.getCurrency());
-//            expense.setMerchantName(expenseDTO.getMerchantName());
-//            expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
-//            expense.setDate(expenseDTO.getDate());
-//            expense.setCategory(category);
-//            expense.setCategoryDescription(categoryDescription);
-//            expense.setIsHidden(true);
-//            expense.setPotentialDuplicate(true);
-//            return expenseRepository.save(expense);
-//        }
-//    }
-
     @Transactional
     @Override
-    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
+    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) throws IllegalAccessException {
         Employee employee = employeeService.getEmployeeById(employeeId);
         Expense expense = new Expense();
         expense.setEmployee(employee);
@@ -113,7 +66,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 
         //Check for potential duplicate
         List<Expense> potentialDuplicateExpense =
-                expenseRepository.findByAmountAndDateAndCategoryAndMerchantName(expenseDTO.getAmount(), expenseDTO.getDate(), category, expenseDTO.getMerchantName());
+                expenseRepository.findByEmployeeAndAmountAndDateAndCategoryAndMerchantName(employee, expenseDTO.getAmount(), expenseDTO.getDate(), category, expenseDTO.getMerchantName());
         System.out.println("Potential Duplicate List = " + potentialDuplicateExpense);
 
         if (potentialDuplicateExpense.isEmpty()) {
@@ -126,22 +79,37 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setCategory(category);
             expense.setCategoryDescription(categoryDescription);
             expenseRepository.save(expense);
-            return "Success";
+            return "Success!";
+        } else {
+            return "Expense might be a potential duplicate!";
         }
-        else {
-            expense.setDescription(expenseDTO.getDescription());
-            expense.setAmount(expenseDTO.getAmount());
-            expense.setCurrency(expenseDTO.getCurrency());
-            expense.setMerchantName(expenseDTO.getMerchantName());
-            expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
-            expense.setDate(expenseDTO.getDate());
-            expense.setCategory(category);
-            expense.setCategoryDescription(categoryDescription);
-            expense.setIsHidden(true);
-            expense.setPotentialDuplicate(true);
-            expenseRepository.save(expense);
-            return "Expense ID: " + expense.getExpenseId() + " might be a potential duplicate";
-        }
+    }
+
+    @Transactional
+    @Override
+    public Expense addPotentialDuplicateExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
+        Employee employee = employeeService.getEmployeeById(employeeId);
+        Expense expense = new Expense();
+        expense.setEmployee(employee);
+        LocalDateTime now = LocalDateTime.now();
+        expense.setDateCreated(now);
+        String curr = expenseDTO.getCurrency();
+        String date = expenseDTO.getDate().toString();
+        double rate = currencyExchange.getExchangeRate(curr, date);
+        double amountInInr = expenseDTO.getAmount() * rate;
+        expense.setAmountINR((float) amountInInr);
+        Category category = categoryRepository.getCategoryByCategoryId(categoryId);
+        String categoryDescription = category.getCategoryDescription();
+        expense.setDescription(expenseDTO.getDescription());
+        expense.setAmount(expenseDTO.getAmount());
+        expense.setCurrency(expenseDTO.getCurrency());
+        expense.setMerchantName(expenseDTO.getMerchantName());
+        expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
+        expense.setDate(expenseDTO.getDate());
+        expense.setCategory(category);
+        expense.setCategoryDescription(categoryDescription);
+        expense.setPotentialDuplicate(true);
+        return expenseRepository.save(expense);
     }
 
     @Override

@@ -11,37 +11,33 @@ import com.nineleaps.expensemanagementproject.entity.Category;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
-	List<Expense> findByReports(Reports reports);
+    List<Expense> findByReports(Reports reports);
 
-	List<Expense> findByReportsAndIsHidden(Reports reports, Boolean b);
+    List<Expense> findByReportsAndIsHidden(Reports reports, Boolean b);
 
-	List<Expense> findExpenseByReportsAndIsReportedAndIsHidden(Reports report, Boolean a, Boolean b);
+    List<Expense> findExpenseByReportsAndIsReportedAndIsHidden(Reports report, Boolean a, Boolean b);
 
-	Optional<Expense> findReportByEmployee(Long fkEmpId);
+    List<Expense> findByEmployeeAndIsHidden(Employee employee, Boolean b);
 
-	List<Expense> findByEmployee(Employee employee);
+    List<Expense> findByEmployeeAndIsReported(Employee employee, boolean b);
 
-	List<Expense> findByEmployeeAndIsHidden(Employee employee, Boolean b);
+    Expense getExpenseByexpenseId(Long expenseID);
 
-	List<Expense> findByEmployeeAndIsReported(Employee employee, boolean b);
+    List<Expense> findByDateBetween(LocalDate startDate, LocalDate endDate);
 
-	Expense getExpenseByexpenseId(Long expenseID);
+    List<Expense> findByDateBetweenAndIsReported(LocalDate startDate, LocalDate endDate, Boolean bool);
 
-	List<Expense> findByDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Expense> findByIsReportedAndDateBefore(boolean b, LocalDate sixtyDaysAgo);
 
-	List<Expense> findByDateBetweenAndIsReported(LocalDate startDate, LocalDate endDate, Boolean bool);
+    List<Expense> findByCategoryAndIsReported(Category category, boolean b);
 
-	List<Expense> findByIsReportedAndDateBefore(boolean b, LocalDate sixtyDaysAgo);
+    List<Expense> findByCategory(Category category);
 
-	List<Expense> findByCategoryAndIsReported(Category category, boolean b);
+    List<Expense> findByIsReportedAndIsHidden(boolean b, boolean b1);
 
-	List<Expense> findByCategory(Category category);
-
-	Employee findEmployeeByExpenseId(Long expenseId);
-
-	List<Expense> findByIsReportedAndIsHidden(boolean b, boolean b1);
-	
-	List<Expense> findByAmountAndDateAndCategoryAndMerchantName(Long amount, LocalDate date, Category category, String merchantName);
-	
-	List<Expense> findByEmployeeAndAmountAndDateAndCategoryAndMerchantName(Employee employee, Long amount, LocalDate date, Category category, String merchantName);
+    List<Expense> findByEmployeeAndAmountAndDateAndCategoryAndMerchantName(Employee employee,
+                                                                           Long amount,
+                                                                           LocalDate date,
+                                                                           Category category,
+                                                                           String merchantName);
 }
