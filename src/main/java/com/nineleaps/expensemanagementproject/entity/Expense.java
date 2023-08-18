@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.*;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,7 +26,7 @@ public class Expense {
 	@Column(name = "date", nullable = false)
 	private LocalDate date;
 
-	@Column(name = "created_time")
+	@Column(name = "date_created")
 	@ApiModelProperty(hidden = true)
 	private LocalDateTime dateCreated;
 
@@ -76,6 +77,10 @@ public class Expense {
 	@Enumerated(EnumType.STRING)
 	private ManagerApprovalStatusExpense managerApprovalStatusExpense;
 
+	@Column(name = "potential_duplicate")
+	@ApiModelProperty(hidden = true)
+	private Boolean potentialDuplicate = false;
+
 	@Lob
 	@Column(name = "supporting_documents", nullable = true)
 	private byte[] supportingDocuments;
@@ -105,7 +110,9 @@ public class Expense {
 			Long amount, float amountINR, String description, String categoryDescription, Boolean isReported,
 			Boolean isHidden, String reportTitle, Float amountApproved, Double amountApprovedINR,
 			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
-			byte[] supportingDocuments, Employee employee, Reports reports, Category category) {
+			Boolean potentialDuplicate, byte[] supportingDocuments, Employee employee, Reports reports,
+			Category category) {
+		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
@@ -122,6 +129,7 @@ public class Expense {
 		this.amountApprovedINR = amountApprovedINR;
 		this.financeApprovalStatus = financeApprovalStatus;
 		this.managerApprovalStatusExpense = managerApprovalStatusExpense;
+		this.potentialDuplicate = potentialDuplicate;
 		this.supportingDocuments = supportingDocuments;
 		this.employee = employee;
 		this.reports = reports;
@@ -232,6 +240,14 @@ public class Expense {
 		this.amountApproved = amountApproved;
 	}
 
+	public Double getAmountApprovedINR() {
+		return amountApprovedINR;
+	}
+
+	public void setAmountApprovedINR(Double amountApprovedINR) {
+		this.amountApprovedINR = amountApprovedINR;
+	}
+
 	public FinanceApprovalStatus getFinanceApprovalStatus() {
 		return financeApprovalStatus;
 	}
@@ -246,6 +262,14 @@ public class Expense {
 
 	public void setManagerApprovalStatusExpense(ManagerApprovalStatusExpense managerApprovalStatusExpense) {
 		this.managerApprovalStatusExpense = managerApprovalStatusExpense;
+	}
+
+	public Boolean getPotentialDuplicate() {
+		return potentialDuplicate;
+	}
+
+	public void setPotentialDuplicate(Boolean potentialDuplicate) {
+		this.potentialDuplicate = potentialDuplicate;
 	}
 
 	public byte[] getSupportingDocuments() {
@@ -278,14 +302,6 @@ public class Expense {
 
 	public void setCategory(Category category) {
 		this.category = category;
-	}
-
-	public Double getAmountApprovedINR() {
-		return amountApprovedINR;
-	}
-
-	public void setAmountApprovedINR(Double amountApprovedINR) {
-		this.amountApprovedINR = amountApprovedINR;
 	}
 
 }
