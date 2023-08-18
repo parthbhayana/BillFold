@@ -24,8 +24,14 @@ public class ExpenseController {
     @Autowired
     private ExpenseRepository expenseRepository;
 
+//    @PostMapping("/insertExpenses/{employeeId}")
+//    public Expense saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId, @RequestParam Long categoryId) {
+//        return expenseService.addExpense(expenseDTO, employeeId, categoryId);
+//    }
+
     @PostMapping("/insertExpenses/{employeeId}")
-    public Expense saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId, @RequestParam Long categoryId) {
+    public String saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
+                         @RequestParam Long categoryId) {
         return expenseService.addExpense(expenseDTO, employeeId, categoryId);
     }
 

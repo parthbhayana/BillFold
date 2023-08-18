@@ -6,13 +6,26 @@
   <component name="ChangeListManager">
     <list default="true" id="94bfa920-06b9-4576-94da-b4b35c6fb711" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/ExpenseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/ExpenseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/ReportsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/controller/ReportsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/entity/Expense.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/entity/Expense.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/repository/ExpenseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/repository/ExpenseRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/CurrencyExchangeServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/CurrencyExchangeServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/IExpenseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/IExpenseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/IReportsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/IReportsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/ExpenseControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/controller/ExpenseControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/maven/com.nineleaps/ExpenseManagementProject/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/META-INF/maven/com.nineleaps/ExpenseManagementProject/pom.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/ReportsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/ReportsController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Expense.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Expense.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/ExpenseRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/repository/ExpenseRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/EmailServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/EmailServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IEmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IEmailService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IReportsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/IReportsService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl$1FooterEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl$1FooterEvent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ExpenseTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/nineleaps/expensemanagementproject/entity/ExpenseTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +93,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Java&quot;
   }
 }</component>
   <component name="RecentsManager">

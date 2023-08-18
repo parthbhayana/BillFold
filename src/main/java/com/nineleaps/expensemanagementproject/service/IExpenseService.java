@@ -23,7 +23,9 @@ public interface IExpenseService {
 
     public Expense updateExpenses(ExpenseDTO expense, Long expenseId);
 
-    public Expense addExpense(ExpenseDTO expense, Long employeeid, Long catId);
+//    public Expense addExpense(ExpenseDTO expense, Long employeeid, Long catId);
+
+    public String addExpense(ExpenseDTO expense, Long employeeid, Long catId);
 
     public Expense removeTaggedExpense(Long expenseId);
 
