@@ -64,7 +64,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         Category category = categoryRepository.getCategoryByCategoryId(categoryId);
         String categoryDescription = category.getCategoryDescription();
 
-        //Check for potential duplicate
+        //Check for Potential duplicate
         List<Expense> potentialDuplicateExpense =
                 expenseRepository.findByEmployeeAndAmountAndDateAndCategoryAndMerchantName(employee, expenseDTO.getAmount(), expenseDTO.getDate(), category, expenseDTO.getMerchantName());
         System.out.println("Potential Duplicate List = " + potentialDuplicateExpense);
