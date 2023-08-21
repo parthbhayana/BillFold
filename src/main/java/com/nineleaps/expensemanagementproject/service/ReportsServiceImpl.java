@@ -670,12 +670,7 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public void updateExpenseStatus(Long reportId,
-                                    List<Long> approveExpenseIds,
-                                    List<Long> rejectExpenseIds,
-                                    Map<Long, Float> partiallyApprovedMap,
-                                    String reviewTime,
-                                    HttpServletResponse response) throws MessagingException, IOException {
+    public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime, String comments, HttpServletResponse response) throws MessagingException, IOException {
         Reports report = getReportById(reportId);
         if (Boolean.TRUE.equals(report.getIsHidden())) {
             throw new IllegalStateException(CONSTANT2 + reportId + CONSTANT1);
@@ -690,10 +685,10 @@ public class ReportsServiceImpl implements IReportsService {
         for (Long expenseId : approveExpenseIds) {
             Expense expense = expenseServices.getExpenseById(expenseId);
             if (expense.getIsHidden()) {
-                throw new IllegalStateException(CONSTANT3 + expenseId + CONSTANT1);
+                throw new IllegalStateException(
+                        CONSTANT3 + expenseId + CONSTANT1);
             }
-            if (expense.getIsReported() &&
-                    expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
+            if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
                 expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
                 expense.setAmountApproved(Float.valueOf(expense.getAmount()));
                 //Setting Approved Amount INR
@@ -708,10 +703,10 @@ public class ReportsServiceImpl implements IReportsService {
         for (Long expenseId : rejectExpenseIds) {
             Expense expense = expenseServices.getExpenseById(expenseId);
             if (expense.getIsHidden()) {
-                throw new IllegalStateException(CONSTANT3 + expenseId + CONSTANT1);
+                throw new IllegalStateException(
+                        CONSTANT3 + expenseId + CONSTANT1);
             }
-            if (expense.getIsReported() &&
-                    expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
+            if (expense.getIsReported() && expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
                 expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
                 expense.setAmountApproved(0F);
                 expenseRepository.save(expense);
@@ -734,6 +729,7 @@ public class ReportsServiceImpl implements IReportsService {
         }
         report.setManagerReviewTime(reviewTime);
         report.setManagerActionDate(managerActionDate);
+        report.setManagerComments(comments);
 
         //If all the expenses are approved then report status will be "APPROVED"
         if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
@@ -765,6 +761,7 @@ public class ReportsServiceImpl implements IReportsService {
 
     }
 
+
     @Override
     public void notifyHR(Long reportId) throws MessagingException {
         Reports report = getReportById(reportId);
@@ -776,22 +773,22 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
 
-    @Scheduled(cron = "0 0 12 * * *")
+    @Scheduled(cron = "0 0 12 22,24 * ?")
     public void sendReportNotApprovedByManagerReminder() {
         LocalDate currentDate = LocalDate.now();
 
         List<Reports> reportsList = reportsRepository.findBymanagerapprovalstatus(ManagerApprovalStatus.PENDING);
         List<Long> reportIds = new ArrayList<>();
         for (Reports report : reportsList) {
-            LocalDate submissionDate = report.getDateSubmitted();
-            LocalDate expirationDate = submissionDate.plusDays(60);
 
-            if (currentDate.isAfter(expirationDate.minusDays(5)) && currentDate.isBefore(expirationDate)) {
+            if (currentDate.getDayOfMonth() == 22 || currentDate.getDayOfMonth() == 24) {
                 reportIds.add(report.getReportId());
             }
         }
+
         emailService.reminderMailToManager(reportIds);
-        //Push Notification Functionality
+
+        // Push Notification Functionality
         for (Long report : reportIds) {
             Reports re = getReportById(report);
             String managerEmail = re.getManagerEmail();
