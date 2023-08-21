@@ -167,13 +167,10 @@ public class ReportsController {
     }
 
     @PostMapping("/updateExpenseStatus/{reportId}")
-    public void updateExpenseStatus(@PathVariable Long reportId,
-                                    @RequestParam String reviewTime,
-                                    @RequestParam String json,
-                                    HttpServletResponse response) throws ParseException {
+    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,@RequestParam String comments, HttpServletResponse response) throws  ParseException {
         JSONParser parser = new JSONParser();
         try {
-            Map<Long, Float> partialApprovedMap = new HashMap<>();
+            Map<Long,Float> partialApprovedMap = new HashMap<>();
             List<Long> approvedIds = new ArrayList<>();
             List<Long> rejectedIds = new ArrayList<>();
             JSONArray jsonArray = (JSONArray) parser.parse(json);
@@ -184,19 +181,19 @@ public class ReportsController {
                 float amountApproved = (Long) jsonObject.get("amountApproved");
                 String status = (String) jsonObject.get("status");
 
-                if (Objects.equals(status, "approved")) {
+                if(Objects.equals(status, "approved")){
                     approvedIds.add(expenseId);
                 }
-                if (Objects.equals(status, "rejected")) {
+                if(Objects.equals(status, "rejected")){
                     rejectedIds.add(expenseId);
                 }
-                if (Objects.equals(status, "partiallyApproved")) {
-                    partialApprovedMap.put(expenseId, amountApproved);
+                if(Objects.equals(status, "partiallyApproved")){
+                    partialApprovedMap.put(expenseId,amountApproved);
                 }
 
 
             }
-            reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime, response);
+            reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime,comments,response);
             Reports report = getReportByReportId(reportId);
             if (!rejectedIds.isEmpty()) {
                 report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
