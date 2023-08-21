@@ -19,21 +19,16 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "reports")
 public class Reports {
 
-//	@Id
-//	@Column(name = "report_id", nullable = false)
-//	@GeneratedValue(strategy = GenerationType.AUTO)
-//	@ApiModelProperty(hidden = true)
-//	private Long reportId;
-
 	@Id
-	@GeneratedValue(generator = "customIdGenerator")
-	@GenericGenerator(name = "customIdGenerator", strategy = "com.nineleaps.expensemanagementproject.entity.CustomIdGenerator")
 	@Column(name = "report_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@ApiModelProperty(hidden = true)
 	private Long reportId;
 
 	@Column(name = "employee_id")

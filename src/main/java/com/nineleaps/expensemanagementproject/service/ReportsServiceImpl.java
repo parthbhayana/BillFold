@@ -61,17 +61,19 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public Long getNextReportSerialNumber() {
-        String queryString = "SELECT MAX(SUBSTRING(r.reportId, 9)) FROM Report r WHERE SUBSTRING(r.reportId, 1, 6) = :yearMonth";
-        Query query = entityManager.createQuery(queryString);
-
-        String yearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
-        query.setParameter("yearMonth", yearMonth);
-
-        Long maxSerialNumber = (Long) query.getSingleResult();
-        if (maxSerialNumber == null) {
-            maxSerialNumber = 0L;
-        }
-        return maxSerialNumber + 1;
+//        String queryString = "SELECT MAX(SUBSTRING(r.reportId, 9)) FROM Report r WHERE SUBSTRING(r.reportId, 1, 6) = :yearMonth";
+//        Query query = entityManager.createQuery(queryString);
+//
+//        String yearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+//        query.setParameter("yearMonth", yearMonth);
+//
+//        Long maxSerialNumber = (Long) query.getSingleResult();
+//        if (maxSerialNumber == null) {
+//            maxSerialNumber = 0L;
+//        }
+//        return maxSerialNumber + 1;
+        Long latestSerialNumber = reportsRepository.findLatestReportSerialNumber();
+        return (latestSerialNumber != null) ? latestSerialNumber + 1 : 1L;
     }
 
     @Override
