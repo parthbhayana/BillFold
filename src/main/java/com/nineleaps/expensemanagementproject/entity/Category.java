@@ -3,15 +3,9 @@ package com.nineleaps.expensemanagementproject.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -45,10 +39,12 @@ public class Category {
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private List<Expense> expenseList = new ArrayList<>();
 
-
+	public Category() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
-					List<Expense> expenseList) {
+			List<Expense> expenseList) {
 		super();
 		this.categoryId = categoryId;
 		this.categoryDescription = categoryDescription;
@@ -56,15 +52,6 @@ public class Category {
 		this.isHidden = isHidden;
 		this.expenseList = expenseList;
 	}
-
-	
-
-	public Category() {
-		
-	}
-
-
-
 
 	public Long getCategoryId() {
 		return categoryId;
@@ -106,8 +93,4 @@ public class Category {
 		this.expenseList = expenseList;
 	}
 
-
-
 }
-
-

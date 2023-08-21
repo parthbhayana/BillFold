@@ -2,9 +2,13 @@ package com.nineleaps.expensemanagementproject.service;
 
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.io.IOException;
 import javax.mail.MessagingException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
@@ -51,6 +55,26 @@ public class ReportsServiceImpl implements IReportsService {
     private static final String CONSTANT8 = "Report ";
     private static final String CONSTANT9 = " is not Submitted!";
 
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Override
+    public Long getNextReportSerialNumber() {
+//        String queryString = "SELECT MAX(SUBSTRING(r.reportId, 9)) FROM Report r WHERE SUBSTRING(r.reportId, 1, 6) = :yearMonth";
+//        Query query = entityManager.createQuery(queryString);
+//
+//        String yearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+//        query.setParameter("yearMonth", yearMonth);
+//
+//        Long maxSerialNumber = (Long) query.getSingleResult();
+//        if (maxSerialNumber == null) {
+//            maxSerialNumber = 0L;
+//        }
+//        return maxSerialNumber + 1;
+        Long latestSerialNumber = reportsRepository.findLatestReportSerialNumber();
+        return (latestSerialNumber != null) ? latestSerialNumber + 1 : 1L;
+    }
 
     @Override
     public List<Reports> getAllReports() {

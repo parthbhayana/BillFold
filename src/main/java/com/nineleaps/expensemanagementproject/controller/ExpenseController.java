@@ -24,16 +24,20 @@ public class ExpenseController {
     @Autowired
     private ExpenseRepository expenseRepository;
 
-//    @PostMapping("/insertExpenses/{employeeId}")
-//    public Expense saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId, @RequestParam Long categoryId) {
-//        return expenseService.addExpense(expenseDTO, employeeId, categoryId);
-//    }
-
     @PostMapping("/insertExpenses/{employeeId}")
-    public String saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
-                         @RequestParam Long categoryId) {
+    public String saveExpense(@RequestBody ExpenseDTO expenseDTO,
+                               @PathVariable Long employeeId,
+                               @RequestParam Long categoryId) throws IllegalAccessException {
         return expenseService.addExpense(expenseDTO, employeeId, categoryId);
     }
+
+    @PostMapping("/addPotentialDuplicateExpense/{employeeId}")
+    public Expense addPotentialDuplicateExpense(@RequestBody ExpenseDTO expenseDTO,
+                                                @PathVariable Long employeeId,
+                                                @RequestParam Long categoryId) {
+        return expenseService.addPotentialDuplicateExpense(expenseDTO, employeeId, categoryId);
+    }
+
 
     @GetMapping("/showAllExpenses")
     public List<Expense> getAllExpenses() {
@@ -74,7 +78,6 @@ public class ExpenseController {
     public void hideExpense(@PathVariable Long expenseId) {
         expenseService.hideExpense(expenseId);
     }
-
 
 
 }

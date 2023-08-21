@@ -2,12 +2,10 @@ package com.nineleaps.expensemanagementproject.repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.nineleaps.expensemanagementproject.entity.Category;
-
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
@@ -16,10 +14,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 	List<Expense> findByReportsAndIsHidden(Reports reports, Boolean b);
 
 	List<Expense> findExpenseByReportsAndIsReportedAndIsHidden(Reports report, Boolean a, Boolean b);
-
-	Optional<Expense> findReportByEmployee(Long fkEmpId);
-
-	List<Expense> findByEmployee(Employee employee);
 
 	List<Expense> findByEmployeeAndIsHidden(Employee employee, Boolean b);
 
@@ -37,11 +31,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
 	List<Expense> findByCategory(Category category);
 
-	Employee findEmployeeByExpenseId(Long expenseId);
-
 	List<Expense> findByIsReportedAndIsHidden(boolean b, boolean b1);
-	
-	List<Expense> findByAmountAndDateAndCategoryAndMerchantName(Long amount, LocalDate date, Category category, String merchantName);
-	
-	List<Expense> findByEmployeeAndAmountAndDateAndCategoryAndMerchantName(Employee employee, Long amount, LocalDate date, Category category, String merchantName);
+
+	List<Expense> findByEmployeeAndAmountAndDateAndCategoryAndMerchantName(Employee employee, Long amount,
+			LocalDate date, Category category, String merchantName);
 }

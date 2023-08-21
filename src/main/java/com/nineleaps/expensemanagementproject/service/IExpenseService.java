@@ -23,9 +23,9 @@ public interface IExpenseService {
 
     public Expense updateExpenses(ExpenseDTO expense, Long expenseId);
 
-//    public Expense addExpense(ExpenseDTO expense, Long employeeid, Long catId);
+    public String addExpense(ExpenseDTO expense, Long employeeid, Long catId) throws IllegalAccessException;
 
-    public String addExpense(ExpenseDTO expense, Long employeeid, Long catId);
+    public Expense addPotentialDuplicateExpense(ExpenseDTO expense, Long employeeid, Long catId);
 
     public Expense removeTaggedExpense(Long expenseId);
 
@@ -33,7 +33,6 @@ public interface IExpenseService {
     public List<Expense> getExpensesByEmployeeId(Long employeeId);
 
     public void hideExpense(Long expId);
-
 
     List<Expense> getRejectedExpensesByReportId(Long reportId);
 }
