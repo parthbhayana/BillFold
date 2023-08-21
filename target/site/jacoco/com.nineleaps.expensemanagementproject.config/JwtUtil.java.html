@@ -63,15 +63,25 @@ import io.jsonwebtoken.SignatureAlgorithm;
 <span class="fc" id="L63">            this.refreshToken = refreshToken;</span>
 <span class="fc" id="L64">        }</span>
 
+
+
+
         @SuppressWarnings(&quot;unused&quot;)
         public String getAccessToken() {
-<span class="fc" id="L68">            return accessToken;</span>
+<span class="fc" id="L71">            return accessToken;</span>
         }
 
         @SuppressWarnings(&quot;unused&quot;)
         public String getRefreshToken() {
-<span class="fc" id="L73">            return refreshToken;</span>
+<span class="fc" id="L76">            return refreshToken;</span>
         }
+
+        public String setAccessToken(String testToken){
+<span class="nc" id="L80">            return accessToken;</span>
+        }
+
+
+
     }
 
 }

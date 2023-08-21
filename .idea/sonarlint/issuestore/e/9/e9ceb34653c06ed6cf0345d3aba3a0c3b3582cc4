@@ -1,10 +1,10 @@
 
-B
-java:S1640×"Convert this Map to an EnumMap.(Ò½¿«ûÿÿÿÿ8ıÅ¼½–1
-Y
-java:S1854t"<Remove this useless assignment to local variable "expenses".(ÄÕ£Ø8ÀÉ¼½–1
-J
-java:S1481t"-Remove this unused "expenses" local variable.(ÄÕ£Ø8ÌÉ¼½–1
-Y	java:S125¼"<This block of commented-out lines of code should be removed.(Æë8×É¼½–1
-^	java:S125Ã"<This block of commented-out lines of code should be removed.(·ìÄ‹ıÿÿÿÿ8×É¼½–1
-Y	java:S125ƒ"<This block of commented-out lines of code should be removed.(á‚é8áÉ¼½–1
+;
+java:S1640×"Convert this Map to an EnumMap.(Ò½¿«ûÿÿÿÿ
+R
+java:S1854t"<Remove this useless assignment to local variable "expenses".(ÄÕ£Ø
+C
+java:S1481t"-Remove this unused "expenses" local variable.(ÄÕ£Ø
+R	java:S125¼"<This block of commented-out lines of code should be removed.(Æë
+W	java:S125Ã"<This block of commented-out lines of code should be removed.(·ìÄ‹ıÿÿÿÿ
+R	java:S125ƒ"<This block of commented-out lines of code should be removed.(á‚é

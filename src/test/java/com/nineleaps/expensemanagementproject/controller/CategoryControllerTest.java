@@ -2,20 +2,32 @@ package com.nineleaps.expensemanagementproject.controller;
 
 import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import com.nineleaps.expensemanagementproject.entity.Category;
+import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
+import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.service.ICategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class CategoryControllerTest {
     @Mock
     private ICategoryService categoryService;
+
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
+    private ExpenseRepository expenseRepository;
 
     @InjectMocks
     private CategoryController categoryController;
@@ -119,8 +131,84 @@ class CategoryControllerTest {
         verify(categoryService).hideCategory(categoryId);
     }
 
+    @Test
+    void testGetCategoryTotalAmount() {
+        // Mock input parameters
+        LocalDate startDate = LocalDate.of(2023, 1, 1);
+        LocalDate endDate = LocalDate.of(2023, 12, 31);
 
+        // Mock the expected result
+        HashMap<String, Float> expected = new HashMap<>();
+        expected.put("Category1", 100.0f);
+        expected.put("Category2", 200.0f);
 
+        // Mock the categoryService method
+        when(categoryService.getCategoryTotalAmount(startDate, endDate)).thenReturn(expected);
+
+        // Call the controller method
+        Map<String, Float> result = categoryController.getCategoryTotalAmount(startDate, endDate);
+
+        // Verify the result
+        assertEquals(expected, result);
+    }
+    @Test
+    void testGetCategoryAnalytics() {
+        // Mock input parameter
+        Long categoryId = 1L;
+
+        // Mock the expected result
+        HashMap<String, Object> expected = new HashMap<>();
+        expected.put("Year", 2023);
+        expected.put("Category1", 100.0f);
+        expected.put("Category2", 200.0f);
+
+        // Mock the categoryService method
+        when(categoryService.getCategoryAnalyticsYearly(categoryId)).thenReturn(expected);
+
+        // Call the controller method
+        Map<String, Object> result = categoryController.getCategoryAnalytics(categoryId);
+
+        // Verify the result
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testGetYearlyCategoryAnalyticsForAllCategories() {
+        // Mock the expected result
+        HashMap<String, Object> expected = new HashMap<>();
+        expected.put("Year", 2023);
+        expected.put("Category1", 100.0f);
+        expected.put("Category2", 200.0f);
+
+        // Mock the categoryService method
+        when(categoryService.getYearlyCategoryAnalyticsForAllCategories()).thenReturn(expected);
+
+        // Call the controller method
+        Map<String, Object> result = categoryController.getYearlyCategoryAnalyticsForAllCategories();
+
+        // Verify the result
+        assertEquals(expected, result);
+    }
+    @Test
+    void testGetMonthlyCategoryAnalyticsForAllCategories() {
+        // Mock input parameter
+        Long year = 2023L;
+
+        // Mock the expected result
+        HashMap<String, Object> expected = new HashMap<>();
+        expected.put("Month", "January");
+        expected.put("Category1", 100.0f);
+        expected.put("Category2", 200.0f);
+
+        // Mock the categoryService method
+        when(categoryService.getMonthlyCategoryAnalyticsForAllCategories(year)).thenReturn(expected);
+
+        // Call the controller method
+        Map<String, Object> result = categoryController.getMonthlyCategoryAnalyticsForAllCategories(year);
+
+        // Verify the result
+        assertEquals(expected, result);
+    }
 
 
 }

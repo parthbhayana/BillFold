@@ -68,92 +68,92 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
     @PostMapping(&quot;/addReport/{employeeId}&quot;)
     public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
                              @RequestParam List&lt;Long&gt; expenseIds) {
-<span class="nc" id="L71">        return reportsService.addReport(reportsDTO, employeeId, expenseIds);</span>
+<span class="fc" id="L71">        return reportsService.addReport(reportsDTO, employeeId, expenseIds);</span>
     }
 
     @PatchMapping(&quot;/addExpenseToReport/{reportId}&quot;)
     public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam List&lt;Long&gt; expenseIds) {
-<span class="nc" id="L76">        return reportsService.addExpenseToReport(reportId, expenseIds);</span>
+<span class="fc" id="L76">        return reportsService.addExpenseToReport(reportId, expenseIds);</span>
     }
 
 
     @PostMapping(&quot;/submitReport/{reportId}&quot;)
     public void submitReport(@PathVariable Long reportId, HttpServletResponse response) throws MessagingException,  IOException {
 
-<span class="nc" id="L83">        reportsService.submitReport(reportId, response);</span>
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L83">        reportsService.submitReport(reportId, response);</span>
+<span class="fc" id="L84">    }</span>
 
 
     @PatchMapping(&quot;/editReport/{reportId}&quot;)
     public List&lt;Reports&gt; editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
                                     @RequestParam String reportDescription, @RequestParam List&lt;Long&gt; addExpenseIds,
                                     @RequestParam List&lt;Long&gt; removeExpenseIds) {
-<span class="nc" id="L91">        return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);</span>
+<span class="fc" id="L91">        return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);</span>
     }
 
     @PostMapping(&quot;/approveReportByManager/{reportId}&quot;)
     public void approveReportByManager(@PathVariable Long reportId,
                                        @RequestParam(value = &quot;comments&quot;, defaultValue = &quot;null&quot;) String comments,HttpServletResponse response) throws MessagingException, IOException {
-<span class="nc" id="L97">        reportsService.approveReportByManager(reportId, comments,response);</span>
-<span class="nc" id="L98">    }</span>
+<span class="fc" id="L97">        reportsService.approveReportByManager(reportId, comments,response);</span>
+<span class="fc" id="L98">    }</span>
 
     @PostMapping(&quot;/rejectReportByManager/{reportId}&quot;)
     public void rejectReportByManager(@PathVariable Long reportId,
                                       @RequestParam(value = &quot;comments&quot;, defaultValue = &quot;null&quot;) String comments,HttpServletResponse response) throws MessagingException,IOException {
-<span class="nc" id="L103">        reportsService.rejectReportByManager(reportId, comments,response);</span>
-<span class="nc" id="L104">    }</span>
+<span class="fc" id="L103">        reportsService.rejectReportByManager(reportId, comments,response);</span>
+<span class="fc" id="L104">    }</span>
 
     @PostMapping(&quot;/approveReportByFinance&quot;)
     public void reimburseReportByFinance(@RequestParam ArrayList&lt;Long&gt; reportIds,
                                          @RequestParam(value = &quot;comments&quot;, defaultValue = &quot;null&quot;) String comments) {
-<span class="nc" id="L109">        reportsService.reimburseReportByFinance(reportIds, comments);</span>
-<span class="nc" id="L110">    }</span>
+<span class="fc" id="L109">        reportsService.reimburseReportByFinance(reportIds, comments);</span>
+<span class="fc" id="L110">    }</span>
 
     @PostMapping(&quot;/rejectReportByFinance/{reportId}&quot;)
     public void rejectReportByFinance(@PathVariable Long reportId,
                                       @RequestParam(value = &quot;comments&quot;, defaultValue = &quot;null&quot;) String comments) {
-<span class="nc" id="L115">        reportsService.rejectReportByFinance(reportId, comments);</span>
-<span class="nc" id="L116">    }</span>
+<span class="fc" id="L115">        reportsService.rejectReportByFinance(reportId, comments);</span>
+<span class="fc" id="L116">    }</span>
 
     @PostMapping(&quot;/hideReport/{reportId}&quot;)
     public void hideReport(@PathVariable Long reportId) {
-<span class="nc" id="L120">        reportsService.hideReport(reportId);</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L120">        reportsService.hideReport(reportId);</span>
+<span class="fc" id="L121">    }</span>
 
     @GetMapping(&quot;/getTotalAmountInrByReportId&quot;)
     public float totalAmountINR(@RequestParam Long reportId) {
-<span class="nc" id="L125">        return reportsService.totalAmountINR(reportId);</span>
+<span class="fc" id="L125">        return reportsService.totalAmountINR(reportId);</span>
     }
 
     @GetMapping(&quot;/getTotalAmountCurrencyByReportId&quot;)
     public float totalAmountCurrency(@RequestParam Long reportId) {
-<span class="nc" id="L130">        return reportsService.totalAmountCurrency(reportId);</span>
+<span class="fc" id="L130">        return reportsService.totalAmountCurrency(reportId);</span>
     }
 
     @GetMapping(&quot;/getReportsInDateRange&quot;)
     public List&lt;Reports&gt; getReportsInDateRange(
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) {
-<span class="nc" id="L137">        return reportsService.getReportsInDateRange(startDate, endDate);</span>
+<span class="fc" id="L137">        return reportsService.getReportsInDateRange(startDate, endDate);</span>
     }
 
     @GetMapping(&quot;/getReportsSubmittedToUserInDateRange&quot;)
     public List&lt;Reports&gt; getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
                                                               @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
                                                               @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate, @RequestParam String request) {
-<span class="nc" id="L144">        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);</span>
+<span class="fc" id="L144">        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);</span>
     }
 
     @GetMapping(&quot;/getAmountOfReportsInDateRange&quot;)
     public String getAmountOfReportsInDateRange(
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) {
-<span class="nc" id="L151">        return reportsService.getAmountOfReportsInDateRange(startDate, endDate);</span>
+<span class="fc" id="L151">        return reportsService.getAmountOfReportsInDateRange(startDate, endDate);</span>
     }
 
     @GetMapping(&quot;/getTotalApprovedAmount&quot;)
     public float totalApprovedAmount(Long reportId) {
-<span class="nc" id="L156">        return reportsService.totalApprovedAmountCurrency(reportId);</span>
+<span class="fc" id="L156">        return reportsService.totalApprovedAmountCurrency(reportId);</span>
     }
 
 

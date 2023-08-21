@@ -63,6 +63,9 @@ public class JwtUtil {
             this.refreshToken = refreshToken;
         }
 
+
+
+
         @SuppressWarnings("unused")
         public String getAccessToken() {
             return accessToken;
@@ -72,6 +75,13 @@ public class JwtUtil {
         public String getRefreshToken() {
             return refreshToken;
         }
+
+        public String setAccessToken(String testToken){
+            return accessToken;
+        }
+
+
+
     }
 
 }

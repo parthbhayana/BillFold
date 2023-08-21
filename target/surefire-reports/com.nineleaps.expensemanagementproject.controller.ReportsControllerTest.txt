@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nineleaps.expensemanagementproject.controller.ReportsControllerTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.34 s - in com.nineleaps.expensemanagementproject.controller.ReportsControllerTest
+Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.913 s - in com.nineleaps.expensemanagementproject.controller.ReportsControllerTest

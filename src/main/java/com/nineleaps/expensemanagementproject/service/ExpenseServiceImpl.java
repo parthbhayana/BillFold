@@ -43,7 +43,7 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Autowired
     private IEmailService emailService;
 
-@Transactional
+    @Transactional
     @Override
     public Expense addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
@@ -85,20 +85,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         return expenseRepository.findById(expenseId).get();
     }
 
-    @Override
-    public Expense updateExpense(Long reportId, Long employeeId) {
-        Expense expense = getExpenseById(employeeId);
-        Reports report = reportServices.getReportById(reportId);
-        String reportTitle = report.getReportTitle();
-        boolean reportedStatus = true;
-        if (expense != null) {
-            expense.setReports(report);
-            expense.setIsReported(reportedStatus);
-            expense.setReportTitle(reportTitle);
-            expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
-        }
-        return expenseRepository.save(expense);
-    }
+
 
     @Override
     public void deleteExpenseById(Long expenseId) {
@@ -111,10 +98,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         return expenseRepository.findByEmployeeAndIsHidden(employee, false);
     }
 
-    @Override
-    public Expense updateSupportingDocument(String supportingDoc, Long expenseId) {
-        return null;
-    }
+
 
     @Override
     public Expense updateExpenses(ExpenseDTO expenseDTO, Long expenseId) {
@@ -134,7 +118,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             double rate = currencyExchange.getExchangeRate(curr, date);
             double amountInInr = expense.getAmount() * rate;
             expense.setAmountINR((float) amountInInr);
-            expenseRepository.save(expense);
+
         }
         if (expense.getIsHidden()) {
             throw new IllegalStateException("Expense " + expenseId + " does not exist!");
@@ -207,6 +191,10 @@ public class ExpenseServiceImpl implements IExpenseService {
 
         emailService.reminderMailToEmployee(expenseIds);
     }
+
+
+
+
 
 
 }

@@ -192,15 +192,15 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 <span class="fc" id="L192">					String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);</span>
 <span class="fc" id="L193">					String monthKey = year + &quot;_&quot; + month;</span>
 
-<span class="pc bpc" id="L195" title="1 of 2 branches missed.">					if (yearlyReimbursementRatioMap.containsKey(monthKey)) {</span>
-<span class="nc" id="L196">						float totalReimbursedAmount = yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();</span>
-<span class="nc" id="L197">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);</span>
-<span class="nc" id="L198">						float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">					if (yearlyReimbursementRatioMap.containsKey(monthKey)) {</span>
+<span class="fc" id="L196">						float totalReimbursedAmount = yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();</span>
+<span class="fc" id="L197">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);</span>
+<span class="fc" id="L198">						float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
-<span class="nc" id="L200">						yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);</span>
-<span class="nc" id="L201">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (float) totalNumberOfExpenses);</span>
-<span class="nc" id="L202">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);</span>
-<span class="nc" id="L203">					} else {</span>
+<span class="fc" id="L200">						yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);</span>
+<span class="fc" id="L201">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (float) totalNumberOfExpenses);</span>
+<span class="fc" id="L202">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);</span>
+<span class="fc" id="L203">					} else {</span>
 <span class="fc" id="L204">						yearlyReimbursementRatioMap.put(monthKey, expense.getAmountINR());</span>
 <span class="fc" id="L205">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1F);</span>
 <span class="fc" id="L206">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountINR());</span>
@@ -213,34 +213,34 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 	}
 	@Override
 	public HashMap&lt;String, Object&gt; getCategoryAnalyticsYearly(Long categoryId) {
-<span class="nc" id="L216">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L216">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
 
-<span class="nc" id="L218">		Category category = getCategoryById(categoryId);</span>
-<span class="nc bnc" id="L219" title="All 2 branches missed.">		if (category != null) {</span>
-<span class="nc" id="L220">			HashMap&lt;String, Float&gt; categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);</span>
-<span class="nc" id="L221">			HashMap&lt;String, Float&gt; yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);</span>
+<span class="fc" id="L218">		Category category = getCategoryById(categoryId);</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">		if (category != null) {</span>
+<span class="fc" id="L220">			HashMap&lt;String, Float&gt; categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);</span>
+<span class="fc" id="L221">			HashMap&lt;String, Float&gt; yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);</span>
 
-<span class="nc" id="L223">			analyticsData.put(&quot;categoryTotalAmountByYear&quot;, categoryTotalAmountByYear);</span>
-<span class="nc" id="L224">			analyticsData.put(&quot;yearlyReimbursementRatio&quot;, yearlyReimbursementRatio);</span>
+<span class="fc" id="L223">			analyticsData.put(&quot;categoryTotalAmountByYear&quot;, categoryTotalAmountByYear);</span>
+<span class="fc" id="L224">			analyticsData.put(&quot;yearlyReimbursementRatio&quot;, yearlyReimbursementRatio);</span>
 		}
 
-<span class="nc" id="L227">		return analyticsData;</span>
+<span class="fc" id="L227">		return analyticsData;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Object&gt; getCategoryAnalyticsMonthly(Long categoryId, Long year) {
-<span class="nc" id="L232">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L232">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
 
-<span class="nc" id="L234">		Category category = getCategoryById(categoryId);</span>
-<span class="nc bnc" id="L235" title="All 2 branches missed.">		if (category != null) {</span>
-<span class="nc" id="L236">			HashMap&lt;String, Float&gt; categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId, year);</span>
-<span class="nc" id="L237">			HashMap&lt;String, Float&gt; monthlyReimbursementRatio = getMonthlyReimbursementRatio(categoryId, year);</span>
+<span class="fc" id="L234">		Category category = getCategoryById(categoryId);</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">		if (category != null) {</span>
+<span class="fc" id="L236">			HashMap&lt;String, Float&gt; categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId, year);</span>
+<span class="fc" id="L237">			HashMap&lt;String, Float&gt; monthlyReimbursementRatio = getMonthlyReimbursementRatio(categoryId, year);</span>
 
-<span class="nc" id="L239">			analyticsData.put(&quot;categoryTotalAmountByMonth&quot;, categoryTotalAmountByMonth);</span>
-<span class="nc" id="L240">			analyticsData.put(&quot;monthlyReimbursementRatio&quot;, monthlyReimbursementRatio);</span>
+<span class="fc" id="L239">			analyticsData.put(&quot;categoryTotalAmountByMonth&quot;, categoryTotalAmountByMonth);</span>
+<span class="fc" id="L240">			analyticsData.put(&quot;monthlyReimbursementRatio&quot;, monthlyReimbursementRatio);</span>
 		}
 
-<span class="nc" id="L243">		return analyticsData;</span>
+<span class="fc" id="L243">		return analyticsData;</span>
 	}
 
 
@@ -270,20 +270,20 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 <span class="fc" id="L270">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);</span>
 <span class="fc" id="L271">		HashMap&lt;String, Float&gt; result = new HashMap&lt;&gt;();</span>
 
-<span class="fc bfc" id="L273" title="All 2 branches covered.">		for (Expense expense : expenses) {</span>
-<span class="fc" id="L274">			LocalDate expenseDate = expense.getDate();</span>
-<span class="pc bpc" id="L275" title="1 of 2 branches missed.">			if (expenseDate.getYear() == year) {</span>
-<span class="fc" id="L276">				String monthYear = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);</span>
-<span class="fc" id="L277">				Float amount = expense.getAmountINR();</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">		for (Expense expense : expenses) {</span>
+<span class="nc" id="L274">			LocalDate expenseDate = expense.getDate();</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">			if (expenseDate.getYear() == year) {</span>
+<span class="nc" id="L276">				String monthYear = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);</span>
+<span class="nc" id="L277">				Float amount = expense.getAmountINR();</span>
 
-<span class="pc bpc" id="L279" title="1 of 2 branches missed.">				if (result.containsKey(monthYear)) {</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">				if (result.containsKey(monthYear)) {</span>
 <span class="nc" id="L280">					Float previousAmount = result.get(monthYear);</span>
 <span class="nc" id="L281">					result.put(monthYear, previousAmount + amount);</span>
 <span class="nc" id="L282">				} else {</span>
-<span class="fc" id="L283">					result.put(monthYear, amount);</span>
+<span class="nc" id="L283">					result.put(monthYear, amount);</span>
 				}
 			}
-<span class="fc" id="L286">		}</span>
+<span class="nc" id="L286">		}</span>
 
 <span class="fc" id="L288">		return result;</span>
 	}
@@ -352,27 +352,27 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 	}
 	@Override
 	public HashMap&lt;String, Object&gt; getYearlyCategoryAnalyticsForAllCategories() {
-<span class="nc" id="L355">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L355">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
 
-<span class="nc" id="L357">		HashMap&lt;String, Float&gt; totalAmountByYear = getTotalAmountByYearForAllCategories();</span>
-<span class="nc" id="L358">		HashMap&lt;String, Float&gt; yearlyReimbursementRatio = getYearlyReimbursementRatioForAllCategories();</span>
+<span class="fc" id="L357">		HashMap&lt;String, Float&gt; totalAmountByYear = getTotalAmountByYearForAllCategories();</span>
+<span class="fc" id="L358">		HashMap&lt;String, Float&gt; yearlyReimbursementRatio = getYearlyReimbursementRatioForAllCategories();</span>
 
-<span class="nc" id="L360">		analyticsData.put(&quot;categoryTotalAmountByYear&quot;, totalAmountByYear);</span>
-<span class="nc" id="L361">		analyticsData.put(&quot;yearlyReimbursementRatio&quot;, yearlyReimbursementRatio);</span>
+<span class="fc" id="L360">		analyticsData.put(&quot;categoryTotalAmountByYear&quot;, totalAmountByYear);</span>
+<span class="fc" id="L361">		analyticsData.put(&quot;yearlyReimbursementRatio&quot;, yearlyReimbursementRatio);</span>
 
-<span class="nc" id="L363">		return analyticsData;</span>
+<span class="fc" id="L363">		return analyticsData;</span>
 	}
 
 	@Override
 	public HashMap&lt;String,Object&gt; getMonthlyCategoryAnalyticsForAllCategories(Long year)
 	{
-<span class="nc" id="L369">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L370">			HashMap&lt;String, Float&gt; categoryTotalAmountByMonth = getTotalAmountByMonthForAllCategories(year);</span>
-<span class="nc" id="L371">			HashMap&lt;String, Float&gt; monthlyReimbursementRatio = getMonthlyReimbursementRatioForAllCategories(year);</span>
+<span class="fc" id="L369">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L370">			HashMap&lt;String, Float&gt; categoryTotalAmountByMonth = getTotalAmountByMonthForAllCategories(year);</span>
+<span class="fc" id="L371">			HashMap&lt;String, Float&gt; monthlyReimbursementRatio = getMonthlyReimbursementRatioForAllCategories(year);</span>
 
-<span class="nc" id="L373">			analyticsData.put(&quot;categoryTotalAmountByMonth&quot;, categoryTotalAmountByMonth);</span>
-<span class="nc" id="L374">			analyticsData.put(&quot;monthlyReimbursementRatio&quot;, monthlyReimbursementRatio);</span>
-<span class="nc" id="L375">		return analyticsData;</span>
+<span class="fc" id="L373">			analyticsData.put(&quot;categoryTotalAmountByMonth&quot;, categoryTotalAmountByMonth);</span>
+<span class="fc" id="L374">			analyticsData.put(&quot;monthlyReimbursementRatio&quot;, monthlyReimbursementRatio);</span>
+<span class="fc" id="L375">		return analyticsData;</span>
 	}
 
 }

@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
+import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
 
@@ -19,8 +20,10 @@ public interface IReportsService {
 
      Reports addReport(ReportsDTO newReport, Long employeeId, List<Long> expenseids);
 
-     List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
-                                    List<Long> addExpenseIds, List<Long> removeExpenseIds);
+    Expense updateExpense(Long reportId, Long employeeId);
+
+    List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
+                             List<Long> addExpenseIds, List<Long> removeExpenseIds);
 
      List<Reports> getReportByEmpId(Long employeeId, String request);
 

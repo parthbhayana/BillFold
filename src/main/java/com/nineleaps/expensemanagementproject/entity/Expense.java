@@ -128,6 +128,10 @@ public class Expense {
 		this.category = category;
 	}
 
+	public Expense(long l, String expense1, LocalDate of, float v, Category category1) {
+	}
+
+
 	public Long getExpenseId() {
 		return expenseId;
 	}

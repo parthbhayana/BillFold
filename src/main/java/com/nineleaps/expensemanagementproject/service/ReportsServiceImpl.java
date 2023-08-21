@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
-import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +19,8 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReportsServiceImpl implements IReportsService {
 
     @Autowired
@@ -47,6 +50,8 @@ public class ReportsServiceImpl implements IReportsService {
     private static final String CONSTANT8="Report ";
     private static final String CONSTANT9=" is not Submitted!";
 
+    public ReportsServiceImpl(ReportsRepository reportsRepository, ExpenseRepository expenseRepository, EmployeeServiceImpl employeeService) {
+    }
 
 
     @Override
@@ -110,6 +115,47 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
+    public Reports addExpenseToReport(Long reportId, List<Long> expenseids) {
+        Reports report = getReportById(reportId);
+        if ( report.getIsHidden()) {
+            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
+        }
+        for (Long expenseid : expenseids) {
+            Expense expense = expenseServices.getExpenseById(expenseid);
+            if (expense.getIsReported()) {
+                throw new IllegalStateException(
+                        CONSTANT3 + expenseid + " is already reported in another report!");
+            }
+            if (!expense.getIsReported()) {
+                updateExpense(reportId, expenseid);
+            }
+        }
+        Reports re = getReportById(reportId);
+        re.setTotalAmountINR(totalAmountINR(reportId));
+        re.setTotalAmountCurrency(totalAmountCurrency(reportId));
+        return reportsRepository.save(re);
+    }
+
+
+    @Override
+    public Expense updateExpense(Long reportId, Long employeeId) {
+        Expense expense =expenseServices.getExpenseById(employeeId);
+        Reports report = getReportById(reportId);
+        String reportTitle = report.getReportTitle();
+        boolean reportedStatus = true;
+        if (expense != null) {
+            expense.setReports(report);
+            expense.setIsReported(reportedStatus);
+            expense.setReportTitle(reportTitle);
+            expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
+        }
+        return expenseRepository.save(expense);
+    }
+
+
+
+
+    @Override
     public List<Reports> editReport(Long reportId, String reportTitle, String reportDescription,
                                     List<Long> addExpenseIds, List<Long> removeExpenseIds) {
         Long empId = null;
@@ -144,7 +190,7 @@ public class ReportsServiceImpl implements IReportsService {
                             CONSTANT3 + expenseid + " is already reported in another report!");
                 }
                 if (report != null && !expense.getIsReported()) {
-                    expenseServices.updateExpense(reportId, expenseid);
+                    updateExpense(reportId, expenseid);
                 }
             }
             // Removing Expenses
@@ -169,27 +215,6 @@ public class ReportsServiceImpl implements IReportsService {
         return getReportByEmpId(empId, "drafts");
     }
 
-    @Override
-    public Reports addExpenseToReport(Long reportId, List<Long> expenseids) {
-        Reports report = getReportById(reportId);
-        if ( report.getIsHidden()) {
-            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
-        }
-        for (Long expenseid : expenseids) {
-            Expense expense = expenseServices.getExpenseById(expenseid);
-            if (expense.getIsReported()) {
-                throw new IllegalStateException(
-                        CONSTANT3 + expenseid + " is already reported in another report!");
-            }
-            if (!expense.getIsReported()) {
-                expenseServices.updateExpense(reportId, expenseid);
-            }
-        }
-        Reports re = getReportById(reportId);
-        re.setTotalAmountINR(totalAmountINR(reportId));
-        re.setTotalAmountCurrency(totalAmountCurrency(reportId));
-        return reportsRepository.save(re);
-    }
 
     @Override
     public List<Reports> getReportByEmpId(Long employeeId, String request) {

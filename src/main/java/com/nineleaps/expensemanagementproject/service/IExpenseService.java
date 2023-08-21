@@ -11,9 +11,7 @@ public interface IExpenseService {
 
     public Expense getExpenseById(Long expenseId);
 
-    public Expense updateSupportingDocument(String supportingDoc, Long expenseId);
 
-    public Expense updateExpense(Long reportId, Long employeeId);
 
     public void deleteExpenseById(Long expenseId);
 

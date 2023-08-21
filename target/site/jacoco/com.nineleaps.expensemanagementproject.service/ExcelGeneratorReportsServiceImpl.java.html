@@ -28,16 +28,16 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 <span class="fc" id="L28">public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsService {</span>
 
     @Autowired
-    private ReportsRepository reportRepository;
+    ReportsRepository reportRepository;
 
     @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
 
     @Autowired
-    private IExpenseService expenseService;
+    IExpenseService expenseService;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    EmployeeRepository employeeRepository;
     private static final String CONSTANT1=&quot;Sl.no.&quot;;
     private static final String CONSTANT2=&quot;Employee Official Id&quot;;
     private static final String CONSTANT3=&quot;Employee Email&quot;;

@@ -63,7 +63,8 @@ public class Category {
 		
 	}
 
-
+	public Category(long l, String category1) {
+	}
 
 
 	public Long getCategoryId() {
