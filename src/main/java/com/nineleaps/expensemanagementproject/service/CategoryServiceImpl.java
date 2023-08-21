@@ -59,10 +59,17 @@ public class CategoryServiceImpl implements ICategoryService {
 
 	@Override
 	public Category addCategory(CategoryDTO categoryDTO) {
+		String categoryDescription = categoryDTO.getCategoryDescription();
+
+		if (categoryRepository.existsByCategoryDescription(categoryDescription)) {
+			throw new IllegalArgumentException("Category with description '" + categoryDescription + "' already exists.");
+		}
+
 		Category category = new Category();
-		category.setCategoryDescription(categoryDTO.getCategoryDescription());
+		category.setCategoryDescription(categoryDescription);
 		return categoryRepository.save(category);
 	}
+
 
 	@Override
 	public void hideCategory(Long categoryId) {
