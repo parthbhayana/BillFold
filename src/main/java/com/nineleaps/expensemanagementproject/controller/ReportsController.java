@@ -91,19 +91,21 @@ public class ReportsController {
         return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
 
-    @PostMapping("/approveReportByManager/{reportId}")
-    public void approveReportByManager(@PathVariable Long reportId,
-                                       @RequestParam(value = "comments", defaultValue = "null") String comments,
-                                       HttpServletResponse response) throws MessagingException, IOException {
-        reportsService.approveReportByManager(reportId, comments, response);
-    }
 
-    @PostMapping("/rejectReportByManager/{reportId}")
-    public void rejectReportByManager(@PathVariable Long reportId,
-                                      @RequestParam(value = "comments", defaultValue = "null") String comments,
-                                      HttpServletResponse response) throws MessagingException, IOException {
-        reportsService.rejectReportByManager(reportId, comments, response);
-    }
+//    @PostMapping("/approveReportByManager/{reportId}")
+//    public void approveReportByManager(@PathVariable Long reportId,
+//                                       @RequestParam(value = "comments", defaultValue = "null") String comments,
+//                                       HttpServletResponse response) throws MessagingException, IOException {
+//        reportsService.approveReportByManager(reportId, comments, response);
+//    }
+//
+//    @PostMapping("/rejectReportByManager/{reportId}")
+//    public void rejectReportByManager(@PathVariable Long reportId,
+//                                      @RequestParam(value = "comments", defaultValue = "null") String comments,
+//                                      HttpServletResponse response) throws MessagingException, IOException {
+//        reportsService.rejectReportByManager(reportId, comments, response);
+//    }
+
 
     @PostMapping("/approveReportByFinance")
     public void reimburseReportByFinance(@RequestParam ArrayList<Long> reportIds,
@@ -162,6 +164,7 @@ public class ReportsController {
     public void notifyHr(@RequestParam Long reportId) throws MessagingException {
         reportsService.notifyHR(reportId);
     }
+
 
     @PostMapping("/updateExpenseStatus/{reportId}")
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,@RequestParam String comments, HttpServletResponse response) throws  ParseException {

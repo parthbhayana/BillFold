@@ -1,23 +1,13 @@
 package com.nineleaps.expensemanagementproject.service;
 
 
-import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.entity.Reports;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSender;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 class EmailServiceTest {
 
@@ -28,7 +18,7 @@ class EmailServiceTest {
     private IExpenseService expenseService;
 
     @Mock
-    private IPdfGeneratorService pdfGeneratorService;
+    private IPdfManagerGeneratorService pdfGeneratorService;
 
     @Mock
     private JavaMailSender javaMailSender;
