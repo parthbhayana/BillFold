@@ -9,10 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,8 +24,9 @@ import io.swagger.annotations.ApiModelProperty;
 public class Reports {
 
 	@Id
+	@GeneratedValue(generator = "custom_serial_number")
+	@GenericGenerator(name = "custom_serial_number", strategy = "com.nineleaps.expensemanagementproject.entity.CustomIdGenerator")
 	@Column(name = "report_id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
 	private Long reportId;
 

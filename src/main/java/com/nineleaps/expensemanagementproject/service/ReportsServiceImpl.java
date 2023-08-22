@@ -57,10 +57,22 @@ public class ReportsServiceImpl implements IReportsService {
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @Override
     public Long getNextReportSerialNumber() {
-        return null;
+//        String queryString = "SELECT MAX(SUBSTRING(r.reportId, 9)) FROM Report r WHERE SUBSTRING(r.reportId, 1, 6)
+//        = :yearMonth";
+//        Query query = entityManager.createQuery(queryString);
+//
+//        String yearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+//        query.setParameter("yearMonth", yearMonth);
+//
+//        Long maxSerialNumber = (Long) query.getSingleResult();
+//        if (maxSerialNumber == null) {
+//            maxSerialNumber = 0L;
+//        }
+//        return maxSerialNumber + 1;
+        Long latestSerialNumber = reportsRepository.findLatestReportSerialNumber();
+        return (latestSerialNumber != null) ? latestSerialNumber + 1 : 1L;
     }
 
     @Override
@@ -129,13 +141,13 @@ public class ReportsServiceImpl implements IReportsService {
                                     List<Long> addExpenseIds, List<Long> removeExpenseIds) {
         Long empId = null;
         Reports report = getReportById(reportId);
-        if (report.getIsSubmitted()) {
+        if (report.getIsSubmitted() && report.getManagerapprovalstatus() == ManagerApprovalStatus.PENDING) {
             throw new IllegalStateException(
                     "Can not edit Report with ReportId:" + reportId + " as it is already submitted!");
         } else if (report.getIsHidden()) {
             throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
         } else if (!report.getIsHidden() ||
-                report.getIsSubmitted() && report.getManagerapprovalstatus() == ManagerApprovalStatus.ACTION_REQUIRED) {
+                report.getIsSubmitted() && report.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED) {
             report.setReportTitle(reportTitle);
             report.setReportDescription(reportDescription);
             reportsRepository.save(report);
@@ -373,7 +385,107 @@ public class ReportsServiceImpl implements IReportsService {
         }
     }
 
-
+//    @Override
+//    public void approveReportByManager(Long reportId, String comments,
+//                                       HttpServletResponse response) throws MessagingException, IOException {
+//        Reports re = getReportById(reportId);
+//        Long employeeId = re.getEmployeeId();
+//        if (!re.getIsSubmitted()) {
+//            throw new IllegalStateException(CONSTANT8 + reportId + CONSTANT9);
+//        }
+//        if (re.getIsHidden()) {
+//            throw new ObjectNotFoundException(reportId, CONSTANT8 + reportId + CONSTANT1);
+//        }
+//        if (!re.getIsHidden() && re.getIsSubmitted()) {
+//            re.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+//            re.setManagerComments(comments);
+//            re.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
+//            re.setManagerActionDate(LocalDate.now());
+//            reportsRepository.save(re);
+//            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+//            List<Long> expenseIds = new ArrayList<>();
+//            for (Expense expense : expenseList) {
+//                expenseIds.add(expense.getExpenseId());
+//            }
+//        }
+//        //Update Expenses Status
+//        List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+//        for (Expense exp : expenseList) {
+//            exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+//            expenseRepository.save(exp);
+//        }
+//        re.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
+//        re.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
+//        reportsRepository.save(re);
+//
+//        //Email Notification
+//        List<Expense> expenseList1 = expenseServices.getExpenseByReportId(reportId);
+//        ArrayList<Long> expenseIds = new ArrayList<>();
+//        for (Expense expense : expenseList1) {
+//            expenseIds.add(expense.getExpenseId());
+//        }
+//        emailService.financeNotification(reportId, expenseIds, response);
+//        emailService.userApprovedNotification(reportId, expenseIds);
+//
+//        //Push Notification Functionality
+//        //To Employee
+//        Employee employee = employeeServices.getEmployeeById(employeeId);
+//
+//        PushNotificationRequest notificationRequest = new PushNotificationRequest();
+//        notificationRequest.setTitle("[APPROVED]: " + re.getReportTitle());
+//        notificationRequest.setMessage(employee.getManagerName() + " approved your expense report.");
+//        notificationRequest.setToken(employee.getToken());
+//        System.out.println("TOKEN-" + employee.getToken());
+//        pushNotificationService.sendPushNotificationToToken(notificationRequest);
+//
+//        //To Admin ---??
+//
+//    }
+//
+//    @Override
+//    public void rejectReportByManager(Long reportId, String comments,
+//                                      HttpServletResponse response) throws MessagingException, IOException {
+//        ManagerApprovalStatus approvalStatus = ManagerApprovalStatus.REJECTED;
+//        Reports re = getReportById(reportId);
+//        Long employeeId = re.getEmployeeId();
+//        if (!re.getIsSubmitted()) {
+//            throw new IllegalStateException(CONSTANT8 + reportId + CONSTANT9);
+//        }
+//        if (re.getIsHidden()) {
+//            throw new ObjectNotFoundException(reportId, CONSTANT8 + reportId + CONSTANT1);
+//        }
+//        if (!re.getIsHidden() && re.getIsSubmitted()) {
+//            re.setManagerApprovalStatus(approvalStatus);
+//            re.setManagerComments(comments);
+//            re.setManagerActionDate(LocalDate.now());
+//            reportsRepository.save(re);
+//            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+//            List<Long> expenseIds = new ArrayList<>();
+//            for (Expense expense : expenseList) {
+//                expenseIds.add(expense.getExpenseId());
+//            }
+//            emailService.userRejectedNotification(reportId, expenseIds);
+//        }
+//        //Update Expenses Status
+//        List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+//        for (Expense exp : expenseList) {
+//            exp.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
+//            expenseRepository.save(exp);
+//        }
+//        //Email Notification ------------- ???????
+//
+//        //Push Notification Functionality
+//
+//        Employee employee = employeeServices.getEmployeeById(employeeId);
+//
+//        PushNotificationRequest notificationRequest = new PushNotificationRequest();
+//        notificationRequest.setTitle("[REJECTED]: " + re.getReportTitle());
+//        notificationRequest.setMessage(employee.getManagerName() + " rejected your expense report.");
+//        notificationRequest.setToken(employee.getToken());
+//        System.out.println("TOKEN-" + employee.getToken());
+//
+//        pushNotificationService.sendPushNotificationToToken(notificationRequest);
+//    }
 
 
     @Override
@@ -714,6 +826,15 @@ public class ReportsServiceImpl implements IReportsService {
         emailService.notifyHr(reportId, hrEmail, hrName);
     }
 
+    @Override
+    public void notifyLnD(Long reportId) throws MessagingException {
+        Reports report = getReportById(reportId);
+        Long employeeId = report.getEmployeeId();
+        Employee employee = employeeServices.getEmployeeById(employeeId);
+        String lndEmail = employee.getLndEmail();
+        String lndName = employee.getLndName();
+        emailService.notifyLnD(reportId,lndEmail,lndName);
+    }
 
     @Scheduled(cron = "0 0 12 22,24 * ?")
     public void sendReportNotApprovedByManagerReminder() {

@@ -30,10 +30,6 @@ public class ReportsController {
 
     @Autowired
     private IReportsService reportsService;
-    @Autowired
-    private ReportsRepository reportsRepository;
-
-
 
     @GetMapping("/getAllReports")
     public List<Reports> getAllReports() {
@@ -66,7 +62,8 @@ public class ReportsController {
     }
 
     @PostMapping("/addReport/{employeeId}")
-    public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
+    public Reports addReport(@RequestBody ReportsDTO reportsDTO,
+                             @PathVariable Long employeeId,
                              @RequestParam List<Long> expenseIds) {
         return reportsService.addReport(reportsDTO, employeeId, expenseIds);
     }
@@ -78,19 +75,36 @@ public class ReportsController {
 
 
     @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId, HttpServletResponse response) throws MessagingException,  IOException {
+    public void submitReport(@PathVariable Long reportId,
+                             HttpServletResponse response) throws MessagingException, IOException {
 
         reportsService.submitReport(reportId, response);
     }
 
 
     @PatchMapping("/editReport/{reportId}")
-    public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
-                                    @RequestParam String reportDescription, @RequestParam List<Long> addExpenseIds,
+    public List<Reports> editReport(@PathVariable Long reportId,
+                                    @RequestParam String reportTitle,
+                                    @RequestParam String reportDescription,
+                                    @RequestParam List<Long> addExpenseIds,
                                     @RequestParam List<Long> removeExpenseIds) {
         return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
 
+
+//    @PostMapping("/approveReportByManager/{reportId}")
+//    public void approveReportByManager(@PathVariable Long reportId,
+//                                       @RequestParam(value = "comments", defaultValue = "null") String comments,
+//                                       HttpServletResponse response) throws MessagingException, IOException {
+//        reportsService.approveReportByManager(reportId, comments, response);
+//    }
+//
+//    @PostMapping("/rejectReportByManager/{reportId}")
+//    public void rejectReportByManager(@PathVariable Long reportId,
+//                                      @RequestParam(value = "comments", defaultValue = "null") String comments,
+//                                      HttpServletResponse response) throws MessagingException, IOException {
+//        reportsService.rejectReportByManager(reportId, comments, response);
+//    }
 
 
     @PostMapping("/approveReportByFinance")
@@ -121,23 +135,23 @@ public class ReportsController {
     }
 
     @GetMapping("/getReportsInDateRange")
-    public List<Reports> getReportsInDateRange(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,@RequestParam String request) {
-        return reportsService.getReportsInDateRange(startDate, endDate,request);
+    public List<Reports> getReportsInDateRange(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                               @RequestParam String request) {
+        return reportsService.getReportsInDateRange(startDate, endDate, request);
     }
 
     @GetMapping("/getReportsSubmittedToUserInDateRange")
     public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam String request) {
+                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                                              @RequestParam String request) {
         return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
-    public String getAmountOfReportsInDateRange(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+    public String getAmountOfReportsInDateRange(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
     }
 
@@ -151,8 +165,9 @@ public class ReportsController {
         reportsService.notifyHR(reportId);
     }
 
+
     @PostMapping("/updateExpenseStatus/{reportId}")
-    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,@RequestParam String comments ,HttpServletResponse response) throws  ParseException {
+    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,@RequestParam String comments, HttpServletResponse response) throws  ParseException {
         JSONParser parser = new JSONParser();
         try {
             Map<Long,Float> partialApprovedMap = new HashMap<>();
@@ -175,25 +190,12 @@ public class ReportsController {
                 if(Objects.equals(status, "partiallyApproved")){
                     partialApprovedMap.put(expenseId,amountApproved);
                 }
-
-
             }
-
             reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime,comments,response);
-            Reports report = getReportByReportId(reportId);
-            if (!rejectedIds.isEmpty()) {
-                report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-                report.setIsSubmitted(false);
-            }
-            reportsRepository.save(report);
-
         } catch (ParseException e) {
             e.printStackTrace();
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (MessagingException | IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
