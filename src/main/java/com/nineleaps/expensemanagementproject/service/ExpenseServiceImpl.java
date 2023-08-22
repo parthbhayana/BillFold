@@ -78,8 +78,10 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setDate(expenseDTO.getDate());
             expense.setCategory(category);
             expense.setCategoryDescription(categoryDescription);
+            Currency currency = Currency.valueOf(expense.getCurrency());
+            expense.setCurrencySymbol(currency.getSymbol());
             expenseRepository.save(expense);
-            return "Success!";
+            return "Expense Added!";
         } else {
             return "Expense might be a potential duplicate!";
         }
