@@ -24,11 +24,12 @@ public interface IEmailService {
 
     void reminderMailToManager(List<Long> reportIds);
 
-
 	void financeNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
 	void welcomeEmail(String employeeEmail) throws MessagingException;
 
 	void notifyHr(Long reportId, String hrEmail, String hrName) throws MessagingException;
+
+	void notifyLnD(Long reportId, String lndEmail, String lndName) throws MessagingException;
 
 }

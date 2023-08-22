@@ -116,6 +116,24 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
+    public void notifyLnD(Long reportId, String lndEmail, String lndName) throws MessagingException {
+        Reports report = reportsService.getReportById(reportId);
+        if (reportId != null) {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper eMail = new MimeMessageHelper(message, true);
+            eMail.setFrom(CONSTANT1);
+            eMail.setTo(lndEmail);
+            eMail.setSubject("Expense Report: " + report.getReportTitle()); //
+            eMail.setText("Dear " + lndName + ",\n\n"
+                    + "CONTENT HERE!!"
+                    + CONSTANT3 + "\n\nThanks!");
+            javaMailSender.send(message);
+        } else {
+            throw new IllegalStateException("Employee does not exist!");
+        }
+    }
+
+    @Override
     public void managerNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response)
             throws IOException, MessagingException {
         Reports report = reportsService.getReportById(reportId);

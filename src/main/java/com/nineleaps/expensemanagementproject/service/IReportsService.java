@@ -21,10 +21,7 @@ public interface IReportsService {
 
     Reports addReport(ReportsDTO newReport, Long employeeId, List<Long> expenseids);
 
-    List<Reports> editReport(Long reportId,
-                             String reportTitle,
-                             String reportDescription,
-                             List<Long> addExpenseIds,
+    List<Reports> editReport(Long reportId, String reportTitle, String reportDescription, List<Long> addExpenseIds,
                              List<Long> removeExpenseIds);
 
     List<Reports> getReportByEmpId(Long employeeId, String request);
@@ -57,25 +54,26 @@ public interface IReportsService {
 
     List<Reports> getReportsInDateRange(LocalDate startDate, LocalDate endDate, String request);
 
-    List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail,
-                                                       LocalDate startDate,
-                                                       LocalDate endDate,
+    List<Reports> getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate, LocalDate endDate,
                                                        String request);
 
     void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
 
-//     void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long,Float> partiallyApprovedMap, String reviewTime);
+//     void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long,
+//     Float> partiallyApprovedMap, String reviewTime);
 
-    void approveReportByManager(Long reportId,
-                                String comments,
+    void approveReportByManager(Long reportId, String comments,
                                 HttpServletResponse response) throws MessagingException, IOException;
 
-    void rejectReportByManager(Long reportId,
-                               String comments,
+    void rejectReportByManager(Long reportId, String comments,
                                HttpServletResponse response) throws MessagingException, IOException;
 
 
-    void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime, String comments, HttpServletResponse response) throws MessagingException, IOException;
+    void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds,
+                             Map<Long, Float> partiallyApprovedMap, String reviewTime, String comments,
+                             HttpServletResponse response) throws MessagingException, IOException;
 
     void notifyHR(Long reportId) throws MessagingException;
+
+    void notifyLnD(Long reportId) throws MessagingException;
 }

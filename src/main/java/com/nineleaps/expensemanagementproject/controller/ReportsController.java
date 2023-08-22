@@ -30,9 +30,6 @@ public class ReportsController {
 
     @Autowired
     private IReportsService reportsService;
-    @Autowired
-    private ReportsRepository reportsRepository;
-
 
     @GetMapping("/getAllReports")
     public List<Reports> getAllReports() {
@@ -190,24 +187,12 @@ public class ReportsController {
                 if(Objects.equals(status, "partiallyApproved")){
                     partialApprovedMap.put(expenseId,amountApproved);
                 }
-
-
             }
             reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime,comments,response);
-            Reports report = getReportByReportId(reportId);
-            if (!rejectedIds.isEmpty()) {
-                report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-                report.setIsSubmitted(false);
-            }
-            reportsRepository.save(report);
-
         } catch (ParseException e) {
             e.printStackTrace();
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (MessagingException | IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
