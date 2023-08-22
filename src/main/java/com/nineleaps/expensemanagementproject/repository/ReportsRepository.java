@@ -31,9 +31,7 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 	List<Reports> findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
 			ManagerApprovalStatus managerStatus, FinanceApprovalStatus financeStatus, Boolean a, Boolean b);
 
-	List<Reports> findByManagerEmailAndDateSubmittedBetween(String managerEmail, LocalDate startDate,
-			LocalDate endDate);
-	
+
 	List<Reports> findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(String managerEmail, LocalDate startDate,
 			LocalDate endDate, ManagerApprovalStatus managerStatus, Boolean a, Boolean b);
 
@@ -46,7 +44,6 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
 
     List<Reports> findByManagerEmailAndManagerapprovalstatusAndIsHidden(String managerEmail, ManagerApprovalStatus managerApprovalStatus, boolean b);
-
 
 
 	List<Reports> findByfinanceapprovalstatus(FinanceApprovalStatus financeApprovalStatus);

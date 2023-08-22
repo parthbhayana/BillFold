@@ -8,11 +8,14 @@ import java.util.List;
 public interface IEmailService {
 
 
-	void userRejectedNotification(Long reportId, List<Long> expenseIds) throws IOException, MessagingException;
+
 
 	void managerNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
-	void userApprovedNotification(Long reportId, List<Long> expenseIds) throws IOException,MessagingException;
+
+	void userRejectedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
+
+	void userApprovedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
 	void userReimbursedNotification(Long reportId);
 

@@ -13,7 +13,9 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 
 public interface IReportsService {
 
-     List<Reports> getAllReports();
+    Long getNextReportSerialNumber();
+
+    List<Reports> getAllReports();
 
      Reports getReportById(Long reportId);
 
@@ -58,14 +60,10 @@ public interface IReportsService {
 
      void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
 
-//     void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long,Float> partiallyApprovedMap, String reviewTime);
 
-    void approveReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException;
-
-    void rejectReportByManager(Long reportId, String comments, HttpServletResponse response) throws MessagingException, IOException;
-
-
-    void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap, String reviewTime, HttpServletResponse response) throws MessagingException, IOException;
+    void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds,
+                             Map<Long, Float> partiallyApprovedMap, String reviewTime, String comments,
+                             HttpServletResponse response) throws MessagingException, IOException;
 
     void notifyHR(Long reportId) throws MessagingException;
 }

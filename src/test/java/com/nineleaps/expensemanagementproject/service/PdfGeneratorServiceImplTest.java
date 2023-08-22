@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 class PdfGeneratorServiceImplTest {
 
-    private PdfGeneratorServiceImpl pdfGeneratorService;
+    private PdfManagerGeneratorServiceImpl pdfGeneratorService;
 
 
     @Mock
@@ -40,7 +40,7 @@ class PdfGeneratorServiceImplTest {
         ReportsRepository reportsRepository = mock(ReportsRepository.class);
         EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
         IExpenseService expenseService = mock(IExpenseService.class);
-        pdfGeneratorService = new PdfGeneratorServiceImpl();
+        pdfGeneratorService = new PdfManagerGeneratorServiceImpl();
         pdfGeneratorService.expenseRepository = expenseRepository;
         pdfGeneratorService.reportsRepository = reportsRepository;
         pdfGeneratorService.employeeRepository = employeeRepository;

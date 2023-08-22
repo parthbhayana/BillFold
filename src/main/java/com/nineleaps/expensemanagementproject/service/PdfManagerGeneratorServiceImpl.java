@@ -15,7 +15,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-
 import com.lowagie.text.pdf.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -38,10 +37,10 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 import static com.lowagie.text.Element.ALIGN_LEFT;
 import static com.lowagie.text.Element.ALIGN_RIGHT;
 import static com.lowagie.text.Element.ALIGN_CENTER;
-import java.util.Base64;
+
 
 @Service
-public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
+public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorService {
     @Autowired
     ExpenseRepository expenseRepository;
     @Autowired
@@ -81,7 +80,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
 
         document.open();
         Font fontheader01 = FontFactory.getFont(FontFactory.TIMES);
-        fontheader01.setSize(14);
+        fontheader01.setSize(10);
         Paragraph headerParagraph01 = new Paragraph("Report_id: " + reportId, fontheader01);
         headerParagraph01.setAlignment(ALIGN_LEFT);
 
@@ -92,13 +91,13 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         headerParagraph.setAlignment(ALIGN_CENTER);
         PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100);
-        Font font = FontFactory.getFont(FontFactory.TIMES, 14);
+        Font font = FontFactory.getFont(FontFactory.TIMES, 12);
         table.addCell(getCenterAlignedCell("Date", font));
         table.addCell(getCenterAlignedCell("Merchant", font));
         table.addCell(getCenterAlignedCell("Description", font));
         table.addCell(getCenterAlignedCell("Amount", font));
         Font fontParagraph = FontFactory.getFont(FontFactory.TIMES);
-        fontParagraph.setSize(14);
+        fontParagraph.setSize(12);
         Reports report = reportsRepository.findById(reportId).get();
         List<Expense> expenses = expenseRepository.findByReports(report);
         Employee employee = null;
@@ -148,15 +147,15 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         Paragraph pdfParagraph = new Paragraph("Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
         pdfParagraph.setAlignment(ALIGN_LEFT);
         Font fontParagraph12 = FontFactory.getFont(FontFactory.TIMES);
-        fontParagraph12.setSize(14);
+        fontParagraph12.setSize(12);
         Paragraph pdfParagraph02 = new Paragraph("Employee Email : " + employee.getEmployeeEmail(), fontParagraph);
         pdfParagraph02.setAlignment(ALIGN_LEFT);
-        Paragraph pdfParagraph002 = new Paragraph("Employee Official Id : " + employee.getOfficialEmployeeId());
+        Paragraph pdfParagraph002 = new Paragraph("Employee Official ID : " + employee.getOfficialEmployeeId());
         pdfParagraph002.setAlignment(ALIGN_LEFT);
         Paragraph emptyParagraph = new Paragraph(" ");
         Font fontParagraph13 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph13.setSize(20);
-        Paragraph pdfParagraph03 = new Paragraph(report.getReportTitle(), fontParagraph13);
+        Paragraph pdfParagraph03 = new Paragraph("Report Title : "+report.getReportTitle(), fontParagraph13);
         pdfParagraph03.setAlignment(ALIGN_LEFT);
         Paragraph pdfParagraph011 = new Paragraph();
         pdfParagraph011.setAlignment(ALIGN_RIGHT);
@@ -173,44 +172,46 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
                 "----------------------------------------------------------------------------------------------------------------------------------");
         lineSeparator.setAlignment(Element.ALIGN_CENTER);
         lineSeparator.setSpacingAfter(10);
-        PdfPCell titleAndDescriptionCell = new PdfPCell();
-        titleAndDescriptionCell.addElement(pdfParagraph03);
+
+
+
 
 
 
 
         Paragraph historyTitle = new Paragraph("Report History and comments:",
-				FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
-		historyTitle.setAlignment(Element.ALIGN_LEFT);
-		historyTitle.setSpacingAfter(10);
-		Paragraph historyContent = new Paragraph();
-		historyContent.setAlignment(Element.ALIGN_LEFT);
-		historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
+                FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
+        historyTitle.setAlignment(Element.ALIGN_LEFT);
+        historyTitle.setSpacingAfter(10);
+        Paragraph historyContent = new Paragraph();
+        historyContent.setAlignment(Element.ALIGN_LEFT);
+        historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
 
-		LocalDate dateTimeCreated = report.getDateCreated();
-		LocalDate dateSubmitted = report.getDateSubmitted();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
+        LocalDate dateTimeCreated = report.getDateCreated();
+        LocalDate dateSubmitted = report.getDateSubmitted();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
 
-		String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);
-		historyContent.add(createdMessage);
-		historyContent.add(Chunk.NEWLINE);
+        String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);
+        historyContent.add(createdMessage);
+        historyContent.add(Chunk.NEWLINE);
 
-		String submissionMessage = "Report submitted to you on:\n" + dateSubmitted.format(formatter);
-		historyContent.add(submissionMessage);
+        String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
+        historyContent.add(submissionMessage);
 
 
 
 
         Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
         fontParagraph14.setSize(14);
-        Paragraph pdfParagraph04 = new Paragraph(report.getReportDescription(), fontParagraph14);
+        Paragraph pdfParagraph04 = new Paragraph("Report Description : "+report.getReportDescription(), fontParagraph14);
         pdfParagraph04.setAlignment(ALIGN_LEFT);
-        titleAndDescriptionCell.addElement(pdfParagraph04);
 
 
 
 
+        document.add(headerParagraph01);
         document.add(headerParagraph);
+        document.add(lineSeparator);
         document.add(emptyParagraph);
         document.add(emptyParagraph);
         document.add(pdfParagraph03);
@@ -230,34 +231,83 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         document.add(emptyParagraph);
         document.add(noteParagraph);
         document.add(lineSeparator);
+        document.add(historyTitle);
+        document.add(historyContent);
 
-		document.add(historyTitle);
-		document.add(historyContent);
 
+        int supportingPdfStartPage = writer.getPageNumber();
 
         document.newPage();
-        for (Long expense : expenseIds) {
-            Expense expenseList = expenseService.getExpenseById(expense);
-            if (expenseList.getSupportingDocuments() == null)
-                continue;
-            if (expenseList.getSupportingDocuments() != null) {
-                byte[] imageData = expenseList.getSupportingDocuments();
-                InputStream in = new ByteArrayInputStream(imageData);
-                BufferedImage bufferedImage = ImageIO.read(in);
-                Image image = Image.getInstance(bufferedImage, null);
-                image.scaleAbsolute(600f, 600f);
-                image.setAlignment(Image.MIDDLE);
-                document.add(image);
-                document.newPage();
+//        for (Long expense : expenseIds) {
+//            Expense expenseList = expenseService.getExpenseById(expense);
+//            if (expenseList.getSupportingDocuments() == null)
+//                continue;
+//            if (expenseList.getSupportingDocuments() != null) {
+//                byte[] imageData = expenseList.getSupportingDocuments();
+//                InputStream in = new ByteArrayInputStream(imageData);
+//                BufferedImage bufferedImage = ImageIO.read(in);
+//                Image image = Image.getInstance(bufferedImage, null);
+//                image.scaleAbsolute(600f, 600f);
+//                image.setAlignment(Image.MIDDLE);
+//                document.add(image);
+//                document.newPage();
+//            }
+//        }
+
+
+        for (Long expenseId : expenseIds) {
+            Expense expense = expenseService.getExpenseById(expenseId);
+            byte[] supportingDocument = expense.getSupportingDocuments();
+
+            if (supportingDocument != null) {
+                if (isPdfFormat(supportingDocument)) {
+                    PdfReader pdfReader = new PdfReader(supportingDocument);
+                    int numPages = pdfReader.getNumberOfPages();
+
+                    for (int pageNum = 1; pageNum <= numPages; pageNum++) {
+                        PdfImportedPage page = writer.getImportedPage(pdfReader, pageNum);
+                        document.newPage();
+                        PdfContentByte contentByte = writer.getDirectContent();
+                        contentByte.addTemplate(page, 0, 0);
+                    }
+
+                    pdfReader.close();
+                } else if (isImageFormat(supportingDocument)) {
+                    document.newPage();
+                    InputStream imageInputStream = new ByteArrayInputStream(supportingDocument);
+                    BufferedImage bufferedImage = ImageIO.read(imageInputStream);
+                    Image image = Image.getInstance(bufferedImage, null);
+                    image.scaleAbsolute(600f, 600f);
+                    image.setAlignment(Image.MIDDLE);
+                    document.add(image);
+                    document.newPage();
+                }
             }
         }
 
-
-
+        writer.setPageCount(supportingPdfStartPage - 1);
         document.close();
         writer.close();
-
         return baos.toByteArray();
+    }
+
+    private boolean isImageFormat(byte[] data) {
+        try {
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(data));
+            return bufferedImage != null;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private boolean isPdfFormat(byte[] data) {
+        try {
+            PdfReader pdfReader = new PdfReader(data);
+            pdfReader.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
 

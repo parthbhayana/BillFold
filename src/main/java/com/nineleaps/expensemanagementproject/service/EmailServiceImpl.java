@@ -40,7 +40,9 @@ public class EmailServiceImpl implements IEmailService {
     @Autowired
     private ReportsRepository reportsRepository;
     @Autowired
-    private IPdfGeneratorService pdfGeneratorService;
+    private IPdfManagerGeneratorService pdfGeneratorService;
+    @Autowired
+    private IPdfEmployeeGeneratorService pdfEmployeeGeneratorService;
 
     private final JavaMailSender javaMailSender;
     private static final String CONSTANT1 = "billfold.noreply@gmail.com";
@@ -151,7 +153,7 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void userRejectedNotification(Long reportId, List<Long> expenseIds) throws IOException, MessagingException {
+    public void userRejectedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
 
@@ -170,9 +172,9 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nPlease review the feedback provided by your manager and make the necessary revisions to your expense report. Once you have made the required changes, resubmit the report for further processing."
                     + "\n\nIf you have any questions or need clarification regarding the rejection, please reach out to your manager or the HR department."
                     + "\n\nThank you for your understanding and cooperation." + CONSTANT7 + CONSTANT8 + CONSTANT3);
-//            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
-//            ByteArrayResource resource = new ByteArrayResource(fileData);
-//            eMail.addAttachment(CONSTANT4, resource);
+            byte[] fileData = pdfEmployeeGeneratorService.export(reportId, expenseIds, response);
+            ByteArrayResource resource = new ByteArrayResource(fileData);
+            eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
         } else {
             throw new IllegalStateException(CONSTANT5 + report.getReportTitle());
@@ -180,7 +182,7 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void userApprovedNotification(Long reportId, List<Long> expenseIds) throws IOException, MessagingException {
+    public void userApprovedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException {
         Reports report = reportsService.getReportById(reportId);
         List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
         if (!expenseList.isEmpty()) {
@@ -198,9 +200,9 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nIf you have any questions or need further assistance, please feel free to contact your manager or the HR department."
                     + CONSTANT9 + CONSTANT7 + CONSTANT8 + CONSTANT3);
 
-//            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
-//            ByteArrayResource resource = new ByteArrayResource(fileData);
-//            eMail.addAttachment(CONSTANT4, resource);
+            byte[] fileData = pdfEmployeeGeneratorService.export(reportId, expenseIds, response);
+            ByteArrayResource resource = new ByteArrayResource(fileData);
+            eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
         } else {
             throw new IllegalStateException(CONSTANT5 + report.getReportTitle());

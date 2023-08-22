@@ -91,17 +91,7 @@ public class ReportsController {
         return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
 
-    @PostMapping("/approveReportByManager/{reportId}")
-    public void approveReportByManager(@PathVariable Long reportId,
-                                       @RequestParam(value = "comments", defaultValue = "null") String comments,HttpServletResponse response) throws MessagingException, IOException {
-        reportsService.approveReportByManager(reportId, comments,response);
-    }
 
-    @PostMapping("/rejectReportByManager/{reportId}")
-    public void rejectReportByManager(@PathVariable Long reportId,
-                                      @RequestParam(value = "comments", defaultValue = "null") String comments,HttpServletResponse response) throws MessagingException,IOException {
-        reportsService.rejectReportByManager(reportId, comments,response);
-    }
 
     @PostMapping("/approveReportByFinance")
     public void reimburseReportByFinance(@RequestParam ArrayList<Long> reportIds,
@@ -162,7 +152,7 @@ public class ReportsController {
     }
 
     @PostMapping("/updateExpenseStatus/{reportId}")
-    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,HttpServletResponse response) throws  ParseException {
+    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,@RequestParam String comments ,HttpServletResponse response) throws  ParseException {
         JSONParser parser = new JSONParser();
         try {
             Map<Long,Float> partialApprovedMap = new HashMap<>();
@@ -188,7 +178,8 @@ public class ReportsController {
 
 
             }
-            reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime,response);
+
+            reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime,comments,response);
             Reports report = getReportByReportId(reportId);
             if (!rejectedIds.isEmpty()) {
                 report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
