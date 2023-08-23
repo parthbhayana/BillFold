@@ -324,6 +324,7 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
+        System.out.println("Old API");
         boolean submissionStatus = true;
         Reports re = getReportById(reportId);
         Long employeeId = re.getEmployeeId();
@@ -382,6 +383,91 @@ public class ReportsServiceImpl implements IReportsService {
             System.out.println("TOKEN-" + manager.getToken());
 
             pushNotificationService.sendPushNotificationToToken(notificationRequest);
+        }
+    }
+
+    @Override
+    public void submitReport(Long reportId, String managerEmail,
+                             HttpServletResponse response) throws MessagingException, IOException {
+        System.out.println("New API");
+        boolean submissionStatus = true;
+        Reports re = getReportById(reportId);
+        Long employeeId = re.getEmployeeId();
+
+        if (re == null || re.getIsHidden()) {
+            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
+        }
+
+        // Check if the report is already submitted and not rejected
+        if (re.getIsSubmitted() && re.getManagerapprovalstatus() != ManagerApprovalStatus.REJECTED) {
+            throw new IllegalStateException(CONSTANT2 + reportId + " is already submitted!");
+        }
+
+        // Check if the report is not submitted or was previously rejected by the manager
+        if (!re.getIsSubmitted() || re.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED) {
+            List<Expense> rejectedExpenses = expenseServices.getRejectedExpensesByReportId(reportId);
+            for (Expense expense : rejectedExpenses) {
+                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
+                expenseRepository.save(expense);
+            }
+            re.setIsSubmitted(submissionStatus);
+            re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
+            re.setDateSubmitted(LocalDate.now());
+            re.setTotalAmountINR(totalAmountINR(reportId));
+            re.setTotalAmountCurrency(totalAmountCurrency(reportId));
+
+            // Fetch the manager's email and set it in the report
+            Employee employee = employeeServices.getEmployeeById(employeeId);
+            String managerEmailDB = employee.getManagerEmail();
+            if (managerEmailDB == null) {
+                throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
+            }
+            if(Objects.equals(managerEmail, managerEmailDB)){
+                re.setManagerEmail(managerEmailDB);
+                reportsRepository.save(re);
+                // Send email notification to the manager
+                List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+                ArrayList<Long> expenseIds = new ArrayList<>();
+                for (Expense expense : expenseList) {
+                    expenseIds.add(expense.getExpenseId());
+                }
+                emailService.managerNotification(reportId, expenseIds,managerEmailDB, response);
+                // Push Notification Functionality
+                Employee manager = employeeServices.getEmployeeByEmail(managerEmailDB);
+                if (manager != null && manager.getToken() != null) {
+//                    Employee employee = employeeServices.getEmployeeById(employeeId);
+                    PushNotificationRequest notificationRequest = new PushNotificationRequest();
+                    notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
+                    notificationRequest.setMessage("Submitted you an expense report.");
+                    notificationRequest.setToken(manager.getToken());
+                    System.out.println("TOKEN-" + manager.getToken());
+
+                    pushNotificationService.sendPushNotificationToToken(notificationRequest);
+                }
+            }
+            else {
+                re.setManagerEmail(managerEmail);
+                reportsRepository.save(re);
+                // Send email notification to the manager
+                List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+                ArrayList<Long> expenseIds = new ArrayList<>();
+                for (Expense expense : expenseList) {
+                    expenseIds.add(expense.getExpenseId());
+                }
+                emailService.managerNotification(reportId, expenseIds,managerEmail, response);
+                // Push Notification Functionality
+                Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
+                if (manager != null && manager.getToken() != null) {
+//                    Employee employee = employeeServices.getEmployeeById(employeeId);
+                    PushNotificationRequest notificationRequest = new PushNotificationRequest();
+                    notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
+                    notificationRequest.setMessage("Submitted you an expense report.");
+                    notificationRequest.setToken(manager.getToken());
+                    System.out.println("TOKEN-" + manager.getToken());
+
+                    pushNotificationService.sendPushNotificationToToken(notificationRequest);
+                }
+            }
         }
     }
 

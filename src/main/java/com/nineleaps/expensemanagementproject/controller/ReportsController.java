@@ -62,8 +62,7 @@ public class ReportsController {
     }
 
     @PostMapping("/addReport/{employeeId}")
-    public Reports addReport(@RequestBody ReportsDTO reportsDTO,
-                             @PathVariable Long employeeId,
+    public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
                              @RequestParam List<Long> expenseIds) {
         return reportsService.addReport(reportsDTO, employeeId, expenseIds);
     }
@@ -81,12 +80,16 @@ public class ReportsController {
         reportsService.submitReport(reportId, response);
     }
 
+    @PostMapping("/submitReportToManager/{reportId}")
+    public void submitReport(@PathVariable Long reportId, @RequestParam String managerEmail,
+                             HttpServletResponse response) throws MessagingException, IOException {
+
+        reportsService.submitReport(reportId, managerEmail, response);
+    }
 
     @PatchMapping("/editReport/{reportId}")
-    public List<Reports> editReport(@PathVariable Long reportId,
-                                    @RequestParam String reportTitle,
-                                    @RequestParam String reportDescription,
-                                    @RequestParam List<Long> addExpenseIds,
+    public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
+                                    @RequestParam String reportDescription, @RequestParam List<Long> addExpenseIds,
                                     @RequestParam List<Long> removeExpenseIds) {
         return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
@@ -135,9 +138,9 @@ public class ReportsController {
     }
 
     @GetMapping("/getReportsInDateRange")
-    public List<Reports> getReportsInDateRange(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-                                               @RequestParam String request) {
+    public List<Reports> getReportsInDateRange(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam String request) {
         return reportsService.getReportsInDateRange(startDate, endDate, request);
     }
 
@@ -150,8 +153,9 @@ public class ReportsController {
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
-    public String getAmountOfReportsInDateRange(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+    public String getAmountOfReportsInDateRange(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return reportsService.getAmountOfReportsInDateRange(startDate, endDate);
     }
 
@@ -165,12 +169,18 @@ public class ReportsController {
         reportsService.notifyHR(reportId);
     }
 
+    @PostMapping("/notifyLnD/{reportId}")
+    public void notifyLnD(@RequestParam Long reportId) throws MessagingException {
+        reportsService.notifyLnD(reportId);
+    }
 
     @PostMapping("/updateExpenseStatus/{reportId}")
-    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,@RequestParam String json,@RequestParam String comments, HttpServletResponse response) throws  ParseException {
+    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,
+                                    @RequestParam String json, @RequestParam String comments,
+                                    HttpServletResponse response) throws ParseException {
         JSONParser parser = new JSONParser();
         try {
-            Map<Long,Float> partialApprovedMap = new HashMap<>();
+            Map<Long, Float> partialApprovedMap = new HashMap<>();
             List<Long> approvedIds = new ArrayList<>();
             List<Long> rejectedIds = new ArrayList<>();
             JSONArray jsonArray = (JSONArray) parser.parse(json);
@@ -181,17 +191,18 @@ public class ReportsController {
                 float amountApproved = (Long) jsonObject.get("amountApproved");
                 String status = (String) jsonObject.get("status");
 
-                if(Objects.equals(status, "approved")){
+                if (Objects.equals(status, "approved")) {
                     approvedIds.add(expenseId);
                 }
-                if(Objects.equals(status, "rejected")){
+                if (Objects.equals(status, "rejected")) {
                     rejectedIds.add(expenseId);
                 }
-                if(Objects.equals(status, "partiallyApproved")){
-                    partialApprovedMap.put(expenseId,amountApproved);
+                if (Objects.equals(status, "partiallyApproved")) {
+                    partialApprovedMap.put(expenseId, amountApproved);
                 }
             }
-            reportsService.updateExpenseStatus(reportId,approvedIds,rejectedIds,partialApprovedMap,reviewTime,comments,response);
+            reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,
+                    comments, response);
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (MessagingException | IOException e) {

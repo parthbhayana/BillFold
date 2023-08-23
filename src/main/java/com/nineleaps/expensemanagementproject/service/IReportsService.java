@@ -16,9 +16,6 @@ public interface IReportsService {
     Long getNextReportSerialNumber();
 
 
-
-
-
     List<Reports> getAllReports();
 
     Reports getReportById(Long reportId);
@@ -33,6 +30,9 @@ public interface IReportsService {
     Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
     void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException;
+
+    void submitReport(Long reportId, String managerEmail,
+                      HttpServletResponse response) throws MessagingException, IOException;
 
     void rejectReportByFinance(Long reportId, String comments);
 
