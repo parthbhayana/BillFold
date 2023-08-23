@@ -3,7 +3,7 @@ package com.nineleaps.expensemanagementproject.DTO;
 import java.time.LocalDate;
 
 public class ExpenseDTO {
-    private Long amount;
+    private Float amount;
     private String currency;
     private String description;
     private String merchantName;
@@ -13,7 +13,7 @@ public class ExpenseDTO {
     public ExpenseDTO() {
     }
 
-    public ExpenseDTO(Long amount, String currency, String description, String merchantName, byte[] supportingDocuments,LocalDate date) {
+    public ExpenseDTO(Float amount, String currency, String description, String merchantName, byte[] supportingDocuments,LocalDate date) {
         this.amount = amount;
         this.currency = currency;
         this.description = description;
@@ -23,11 +23,11 @@ public class ExpenseDTO {
     }
 
 
-    public Long getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(Float amount) {
         this.amount = amount;
     }
 

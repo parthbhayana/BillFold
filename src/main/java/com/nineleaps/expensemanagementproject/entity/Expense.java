@@ -38,7 +38,7 @@ public class Expense {
 	private String currencySymbol;
 
 	@Column(name = "amount", nullable = false)
-	private Long amount;
+	private Float amount;
 
 	@Column(name = "amount_INR", nullable = false)
 	@ApiModelProperty(hidden = true)
@@ -111,7 +111,7 @@ public class Expense {
 	}
 
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
-			String currencySymbol, Long amount, float amountINR, String description, String categoryDescription,
+			String currencySymbol, Float amount, float amountINR, String description, String categoryDescription,
 			Boolean isReported, Boolean isHidden, String reportTitle, Float amountApproved, Double amountApprovedINR,
 			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
 			Boolean potentialDuplicate, byte[] supportingDocuments, Employee employee, Reports reports,
@@ -189,11 +189,11 @@ public class Expense {
 		this.currencySymbol = currencySymbol;
 	}
 
-	public Long getAmount() {
+	public Float getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Long amount) {
+	public void setAmount(Float amount) {
 		this.amount = amount;
 	}
 
