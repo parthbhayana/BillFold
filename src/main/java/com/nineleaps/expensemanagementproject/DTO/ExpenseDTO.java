@@ -3,73 +3,73 @@ package com.nineleaps.expensemanagementproject.DTO;
 import java.time.LocalDate;
 
 public class ExpenseDTO {
-    private Float amount;
-    private String currency;
-    private String description;
-    private String merchantName;
-    private byte[] supportingDocuments;
-    private LocalDate date;
+	private Float amount;
+	private String currency;
+	private String description;
+	private String merchantName;
+	private byte[] supportingDocuments;
+	private LocalDate date;
 
-    public ExpenseDTO() {
-    }
+	public ExpenseDTO() {
+	}
 
-    public ExpenseDTO(Float amount, String currency, String description, String merchantName, byte[] supportingDocuments,LocalDate date) {
-        this.amount = amount;
-        this.currency = currency;
-        this.description = description;
-        this.merchantName = merchantName;
-        this.supportingDocuments = supportingDocuments;
-        this.date=date;
-    }
+	public ExpenseDTO(Float amount, String currency, String description, String merchantName,
+			byte[] supportingDocuments, LocalDate date) {
+		super();
+		this.amount = amount;
+		this.currency = currency;
+		this.description = description;
+		this.merchantName = merchantName;
+		this.supportingDocuments = supportingDocuments;
+		this.date = date;
+	}
 
+	public Float getAmount() {
+		return amount;
+	}
 
-    public Float getAmount() {
-        return amount;
-    }
+	public void setAmount(Float amount) {
+		this.amount = amount;
+	}
 
-    public void setAmount(Float amount) {
-        this.amount = amount;
-    }
+	public String getCurrency() {
+		return currency;
+	}
 
-    public String getCurrency() {
-        return currency;
-    }
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setMerchantName(String merchantName) {
-        this.merchantName = merchantName;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setSupportingDocuments(byte[] supportingDocuments) {
-        this.supportingDocuments = supportingDocuments;
-    }
+	public String getMerchantName() {
+		return merchantName;
+	}
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public byte[] getSupportingDocuments() {
+		return supportingDocuments;
+	}
 
-    public String getMerchantName() {
-        return merchantName;
-    }
+	public void setSupportingDocuments(byte[] supportingDocuments) {
+		this.supportingDocuments = supportingDocuments;
+	}
 
-    public byte[] getSupportingDocuments() {
-        return supportingDocuments;
-    }
+	public LocalDate getDate() {
+		return date;
+	}
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
 
 }

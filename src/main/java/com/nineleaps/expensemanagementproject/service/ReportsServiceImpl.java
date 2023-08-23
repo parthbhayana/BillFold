@@ -758,6 +758,7 @@ public class ReportsServiceImpl implements IReportsService {
         if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
             report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
             report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
+            reportsRepository.save(report);
             //Email Notification
             emailService.userApprovedNotification(reportId, approveExpenseIds,response);
             emailService.financeNotification(reportId, approveExpenseIds, response);
@@ -775,9 +776,9 @@ public class ReportsServiceImpl implements IReportsService {
 
         }
         //If any of the expenses are rejected then report status will be "REJECTED"
-        else if (!rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
+        else if (!rejectExpenseIds.isEmpty()) {
             report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-            report.setIsSubmitted(false);
+            reportsRepository.save(report);
             //Email Notification
             emailService.userRejectedNotification(reportId, rejectExpenseIds,response);
             //Push Notification to Employee
@@ -796,6 +797,7 @@ public class ReportsServiceImpl implements IReportsService {
         else if (rejectExpenseIds.isEmpty() && !partiallyApprovedMap.isEmpty()) {
             report.setManagerApprovalStatus(ManagerApprovalStatus.PARTIALLY_APPROVED);
             report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
+            reportsRepository.save(report);
             //Email Notification
             emailService.userPartialApprovedExpensesNotification(reportId);
             //Push Notification to Employee
@@ -808,7 +810,6 @@ public class ReportsServiceImpl implements IReportsService {
             notificationRequest.setToken(employee.getToken());
             System.out.println("TOKEN-" + employee.getToken());
             pushNotificationService.sendPushNotificationToToken(notificationRequest);
-
         }
         report.setTotalApprovedAmountCurrency(totalApprovedAmountCurrency(reportId));
         report.setTotalApprovedAmountINR(totalApprovedAmountINR(reportId));
