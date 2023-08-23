@@ -12,6 +12,8 @@ public interface IEmailService {
 
 	void managerNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
+	void managerNotification(Long reportId, List<Long> expenseIds, String managerEmail, HttpServletResponse response) throws IOException,
+			MessagingException;
 
 	void userRejectedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
