@@ -154,8 +154,8 @@ public class EmailServiceImpl implements IEmailService {
                         + " has submitted you a report for approval. As a designated manager, we kindly request your prompt attention to review and take necessary action on the report."
                         + "\n\nBelow are the details of the report submission:" + CONSTANT2 + report.getReportTitle()
                         + "\nSubmitter's Name: " + employee.getFirstName() + " " + employee.getLastName()
-                        + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: "
-                        + report.getTotalAmountINR() + " INR"
+                        + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: ₹"
+                        + report.getTotalAmountINR()
                         + "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
                         + CONSTANT3 + "\n\nThanks!");
                 byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
@@ -185,13 +185,13 @@ public class EmailServiceImpl implements IEmailService {
                 eMail.setFrom(CONSTANT1);
                 eMail.setTo(managerEmail);
                 eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
-                eMail.setText(CONSTANT6 + employee.getManagerName() + ".\n\n"
+                eMail.setText(CONSTANT6 + employee.getManagerName() + ",\n\n"
                         + employee.getFirstName() + " " + employee.getLastName()
                         + " has submitted you a report for approval. As a designated manager, we kindly request your prompt attention to review and take necessary action on the report."
                         + "\n\nBelow are the details of the report submission:" + CONSTANT2 + report.getReportTitle()
                         + "\nSubmitter's Name: " + employee.getFirstName() + " " + employee.getLastName()
-                        + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: "
-                        + report.getTotalAmountINR() + " INR"
+                        + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: ₹"
+                        + report.getTotalAmountINR()
                         + "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
                         + CONSTANT3 + "\n\nThanks!");
                 byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
@@ -249,7 +249,7 @@ public class EmailServiceImpl implements IEmailService {
             eMail.setSubject("[APPROVED] Expense Report: " + report.getReportTitle());
             eMail.setText(CONSTANT6 + employee.getFirstName() + " " + employee.getLastName() + ","
                     + "\n\nCongratulations! Your expense report has been approved by your manager. The details of the approval are as follows:"
-                    + CONSTANT2 + report.getReportTitle() + "\nComments: " + report.getManagerComments()
+                    + CONSTANT2 + report.getReportTitle() + "\nApproved Amount: ₹" + report.getTotalApprovedAmountINR()
                     + "\nApproval Date: " + report.getManagerActionDate()
                     + "\n\nIf you have any questions or need further assistance, please feel free to contact your manager or the HR department."
                     + CONSTANT9 + CONSTANT7 + CONSTANT8 + CONSTANT3);
@@ -276,8 +276,8 @@ public class EmailServiceImpl implements IEmailService {
             eMail.setSubject("[PUSHED TO REIMBURSEMENT] Expense Report: " + report.getReportTitle());
             eMail.setText(CONSTANT6 + employee.getFirstName() + " " + employee.getLastName() + ","
                     + "\n\nCongratulations! Your expense report has been pushed to reimbursement by the finance department. The details of the reimbursement are as follows:"
-                    + CONSTANT2 + report.getReportTitle() + "\n\nAmount Reimbursed: " + report.getTotalAmountCurrency()
-                    + report.getCurrency() + "\nReimbursement Date: " + report.getFinanceActionDate()
+                    + CONSTANT2 + report.getReportTitle() + "\n\nAmount Reimbursed: ₹" + report.getTotalApprovedAmountINR()
+                    + "\nReimbursement Date: " + report.getFinanceActionDate()
                     + "\n\nPlease check your bank account for the credited amount. If you have any questions or concerns regarding the reimbursement, please reach out to the finance department."
                     + CONSTANT9 + CONSTANT7 + CONSTANT8 + CONSTANT3);
 
@@ -333,8 +333,8 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nYou have received a request for expense reimbursement from employee "
                     + employee.getFirstName() + " " + employee.getLastName()
                     + ". The details of the expense report are as follows:" + CONSTANT2 + report.getReportTitle()
-                    + "\nEmployee: " + employee.getFirstName() + " " + employee.getLastName() + "\nTotal Amount: "
-                    + report.getTotalAmountINR() + " " + report.getCurrency()
+                    + "\nEmployee: " + employee.getFirstName() + " " + employee.getLastName() + "\nTotal Amount: ₹"
+                    + report.getTotalApprovedAmountINR() + " "
                     + "\n\nPlease review the attached expense report and process the reimbursement accordingly. If there are any additional details required or if you have any questions, please reach out to the employee or the HR department."
                     + "\n\nThank you for your attention to this matter." + CONSTANT7 + CONSTANT8 + CONSTANT3);
 

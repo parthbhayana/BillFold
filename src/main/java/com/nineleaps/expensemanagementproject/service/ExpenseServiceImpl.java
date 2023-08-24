@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -266,17 +267,21 @@ public class ExpenseServiceImpl implements IExpenseService {
     }
 
     @Override
+//    public List<Expense> getRejectedExpensesByReportId(Long reportId) {
+//        List<Expense> rejectedExpenses = new ArrayList<>();
+//        List<Expense> expenses = getExpenseByReportId(reportId);
+//
+//        for (Expense expense : expenses) {
+//            if (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED) {
+//                rejectedExpenses.add(expense);
+//            }
+//        }
+//        return rejectedExpenses;
+//    }
     public List<Expense> getRejectedExpensesByReportId(Long reportId) {
-        List<Expense> rejectedExpenses = new ArrayList<>();
-        List<Expense> expenses = getExpenseByReportId(reportId);
-
-        for (Expense expense : expenses) {
-            if (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED) {
-                rejectedExpenses.add(expense);
-            }
-        }
-        return rejectedExpenses;
+        return getExpenseByReportId(reportId)
+                .stream()
+                .filter(expense -> expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED)
+                .collect(Collectors.toList());
     }
-
-
 }
