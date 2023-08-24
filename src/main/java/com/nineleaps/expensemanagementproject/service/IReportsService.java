@@ -13,8 +13,6 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 
 
 public interface IReportsService {
-    Long getNextReportSerialNumber();
-
 
     List<Reports> getAllReports();
 

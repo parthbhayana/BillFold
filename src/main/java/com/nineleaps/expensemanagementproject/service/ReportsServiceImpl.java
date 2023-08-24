@@ -1,12 +1,9 @@
 package com.nineleaps.expensemanagementproject.service;
 
-
 import java.time.LocalDate;
 import java.util.*;
 import java.io.IOException;
 import javax.mail.MessagingException;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
@@ -53,28 +50,6 @@ public class ReportsServiceImpl implements IReportsService {
     private static final String CONSTANT8 = "Report ";
     private static final String CONSTANT9 = " is not Submitted!";
 
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Override
-    public Long getNextReportSerialNumber() {
-//        String queryString = "SELECT MAX(SUBSTRING(r.reportId, 9)) FROM Report r WHERE SUBSTRING(r.reportId, 1, 6)
-//        = :yearMonth";
-//        Query query = entityManager.createQuery(queryString);
-//
-//        String yearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
-//        query.setParameter("yearMonth", yearMonth);
-//
-//        Long maxSerialNumber = (Long) query.getSingleResult();
-//        if (maxSerialNumber == null) {
-//            maxSerialNumber = 0L;
-//        }
-//        return maxSerialNumber + 1;
-        Long latestSerialNumber = reportsRepository.findLatestReportSerialNumber();
-        return (latestSerialNumber != null) ? latestSerialNumber + 1 : 1L;
-    }
-
     @Override
     public List<Reports> getAllReports() {
         return reportsRepository.findAll();
@@ -102,13 +77,6 @@ public class ReportsServiceImpl implements IReportsService {
         newReport.setOfficialEmployeeId(officialEmployeeId);
         newReport.setDateCreated(LocalDate.now());
         newReport.setEmployeeId(employeeId);
-        String currency = null;
-        if (!expenseids.isEmpty()) {
-            Long firstExpenseId = expenseids.get(0);
-            Expense ep = expenseRepository.getExpenseByexpenseId(firstExpenseId);
-            currency = ep.getCurrency();
-        }
-        newReport.setCurrency(currency);
         reportsRepository.save(newReport);
         Long id = newReport.getReportId();
         List<Expense> expp = expenseRepository.findAllById(expenseids);
@@ -324,7 +292,6 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Override
     public void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
-        System.out.println("Old API");
         boolean submissionStatus = true;
         Reports re = getReportById(reportId);
         Long employeeId = re.getEmployeeId();
@@ -389,7 +356,6 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public void submitReport(Long reportId, String managerEmail,
                              HttpServletResponse response) throws MessagingException, IOException {
-        System.out.println("New API");
         boolean submissionStatus = true;
         Reports re = getReportById(reportId);
         Long employeeId = re.getEmployeeId();
@@ -422,52 +388,51 @@ public class ReportsServiceImpl implements IReportsService {
             if (managerEmailDB == null) {
                 throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
             }
-            if(Objects.equals(managerEmail, managerEmailDB)){
-                re.setManagerEmail(managerEmailDB);
-                reportsRepository.save(re);
-                // Send email notification to the manager
-                List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-                ArrayList<Long> expenseIds = new ArrayList<>();
-                for (Expense expense : expenseList) {
-                    expenseIds.add(expense.getExpenseId());
-                }
-                emailService.managerNotification(reportId, expenseIds,managerEmailDB, response);
-                // Push Notification Functionality
-                Employee manager = employeeServices.getEmployeeByEmail(managerEmailDB);
-                if (manager != null && manager.getToken() != null) {
-//                    Employee employee = employeeServices.getEmployeeById(employeeId);
-                    PushNotificationRequest notificationRequest = new PushNotificationRequest();
-                    notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
-                    notificationRequest.setMessage("Submitted you an expense report.");
-                    notificationRequest.setToken(manager.getToken());
-                    System.out.println("TOKEN-" + manager.getToken());
-
-                    pushNotificationService.sendPushNotificationToToken(notificationRequest);
-                }
+//            if (Objects.equals(managerEmail, managerEmailDB)) {
+//                re.setManagerEmail(managerEmailDB);
+//                reportsRepository.save(re);
+//                // Send email notification to the manager
+//                List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+//                ArrayList<Long> expenseIds = new ArrayList<>();
+//                for (Expense expense : expenseList) {
+//                    expenseIds.add(expense.getExpenseId());
+//                }
+//                emailService.managerNotification(reportId, expenseIds, managerEmailDB, response);
+//                // Push Notification Functionality
+//                Employee manager = employeeServices.getEmployeeByEmail(managerEmailDB);
+//                if (manager != null && manager.getToken() != null) {
+////                    Employee employee = employeeServices.getEmployeeById(employeeId);
+//                    PushNotificationRequest notificationRequest = new PushNotificationRequest();
+//                    notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
+//                    notificationRequest.setMessage("Submitted you an expense report.");
+//                    notificationRequest.setToken(manager.getToken());
+//                    System.out.println("TOKEN-" + manager.getToken());
+//
+//                    pushNotificationService.sendPushNotificationToToken(notificationRequest);
+//                }
+//            } else {
+            re.setManagerEmail(managerEmail);
+            reportsRepository.save(re);
+            // Send email notification to the manager
+            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+            ArrayList<Long> expenseIds = new ArrayList<>();
+            for (Expense expense : expenseList) {
+                expenseIds.add(expense.getExpenseId());
             }
-            else {
-                re.setManagerEmail(managerEmail);
-                reportsRepository.save(re);
-                // Send email notification to the manager
-                List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-                ArrayList<Long> expenseIds = new ArrayList<>();
-                for (Expense expense : expenseList) {
-                    expenseIds.add(expense.getExpenseId());
-                }
-                emailService.managerNotification(reportId, expenseIds,managerEmail, response);
-                // Push Notification Functionality
-                Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
-                if (manager != null && manager.getToken() != null) {
+            emailService.managerNotification(reportId, expenseIds, managerEmail, response);
+            // Push Notification Functionality
+            Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
+            if (manager != null && manager.getToken() != null) {
 //                    Employee employee = employeeServices.getEmployeeById(employeeId);
-                    PushNotificationRequest notificationRequest = new PushNotificationRequest();
-                    notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
-                    notificationRequest.setMessage("Submitted you an expense report.");
-                    notificationRequest.setToken(manager.getToken());
-                    System.out.println("TOKEN-" + manager.getToken());
+                PushNotificationRequest notificationRequest = new PushNotificationRequest();
+                notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
+                notificationRequest.setMessage("Submitted you an expense report.");
+                notificationRequest.setToken(manager.getToken());
+                System.out.println("TOKEN-" + manager.getToken());
 
-                    pushNotificationService.sendPushNotificationToToken(notificationRequest);
-                }
+                pushNotificationService.sendPushNotificationToToken(notificationRequest);
             }
+//            }
         }
     }
 
@@ -846,7 +811,7 @@ public class ReportsServiceImpl implements IReportsService {
             report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);
             reportsRepository.save(report);
             //Email Notification
-            emailService.userApprovedNotification(reportId, approveExpenseIds,response);
+            emailService.userApprovedNotification(reportId, approveExpenseIds, response);
             emailService.financeNotification(reportId, approveExpenseIds, response);
 
             //Push Notification to Employee
@@ -866,7 +831,7 @@ public class ReportsServiceImpl implements IReportsService {
             report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
             reportsRepository.save(report);
             //Email Notification
-            emailService.userRejectedNotification(reportId, rejectExpenseIds,response);
+            emailService.userRejectedNotification(reportId, rejectExpenseIds, response);
             //Push Notification to Employee
             Long employeeId = report.getEmployeeId();
             Employee employee = employeeServices.getEmployeeById(employeeId);
@@ -920,7 +885,7 @@ public class ReportsServiceImpl implements IReportsService {
         Employee employee = employeeServices.getEmployeeById(employeeId);
         String lndEmail = employee.getLndEmail();
         String lndName = employee.getLndName();
-        emailService.notifyLnD(reportId,lndEmail,lndName);
+        emailService.notifyLnD(reportId, lndEmail, lndName);
     }
 
     @Scheduled(cron = "0 0 12 22,24 * ?")

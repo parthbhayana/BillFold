@@ -127,7 +127,7 @@ public class PdfEmployeeGeneratorServiceImpl implements IPdfEmployeeGeneratorSer
 
             Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES_BOLD);
             fontParagraph1.setSize(14);
-            Chunk currencyChunk = new Chunk(report.getCurrency(), fontParagraph1);
+            Chunk currencyChunk = new Chunk("INR", fontParagraph1);
             Chunk totalChunk = new Chunk(String.valueOf(total), fontParagraph1);
             Paragraph pdfParagraph01 = new Paragraph();
             pdfParagraph01.setAlignment(ALIGN_RIGHT);
