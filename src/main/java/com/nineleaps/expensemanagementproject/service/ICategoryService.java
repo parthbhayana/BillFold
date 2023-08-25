@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.service;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import com.nineleaps.expensemanagementproject.entity.Category;
@@ -15,21 +16,21 @@ public interface ICategoryService {
 	Category addCategory(CategoryDTO category);
 
 	void hideCategory(Long categoryId);
-	HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate);
-	HashMap<String, Float> getCategoryTotalAmountByYearAndCategory(Long categoryId);
-	HashMap<String, Float> getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year);
-    HashMap<String, Float> getYearlyReimbursementRatio(Long categoryId);
-	HashMap<String, Float> getMonthlyReimbursementRatio(Long categoryId, Long year);
+	HashMap<String, Double> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate);
+	Map<String, Double> getCategoryTotalAmountByYearAndCategory(Long categoryId);
+	HashMap<String, Double> getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year);
+    HashMap<String, Double> getYearlyReimbursementRatio(Long categoryId);
+	HashMap<String, Double> getMonthlyReimbursementRatio(Long categoryId, Long year);
 	HashMap<String, Object> getCategoryAnalyticsYearly(Long categoryId);
 	HashMap<String, Object> getCategoryAnalyticsMonthly(Long categoryId, Long year);
 
-	HashMap<String, Float> getTotalAmountByYearForAllCategories();
+	HashMap<String, Double> getTotalAmountByYearForAllCategories();
 
-	HashMap<String, Float> getTotalAmountByMonthForAllCategories(Long year);
+	HashMap<String, Double> getTotalAmountByMonthForAllCategories(Long year);
 
-	HashMap<String, Float> getYearlyReimbursementRatioForAllCategories();
+	HashMap<String, Double> getYearlyReimbursementRatioForAllCategories();
 
-	HashMap<String, Float> getMonthlyReimbursementRatioForAllCategories(Long year);
+	HashMap<String, Double> getMonthlyReimbursementRatioForAllCategories(Long year);
 
 	HashMap<String, Object> getYearlyCategoryAnalyticsForAllCategories();
 

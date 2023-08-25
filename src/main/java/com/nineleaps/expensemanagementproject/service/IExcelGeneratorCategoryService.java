@@ -18,7 +18,7 @@ public interface IExcelGeneratorCategoryService {
 
 	int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException;
 
-	HashMap<String, Float> CategoryTotalAmount(LocalDate startDate, LocalDate endDate);
+	HashMap<String, Double> CategoryTotalAmount(LocalDate startDate, LocalDate endDate);
 
 	boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
 			String attachmentFilename);

@@ -61,7 +61,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         String date = expenseDTO.getDate().toString();
         double rate = currencyExchange.getExchangeRate(curr, date);
         double amountInInr = expenseDTO.getAmount() * rate;
-        expense.setAmountINR((float) amountInInr);
+        expense.setAmountINR(amountInInr);
         Category category = categoryRepository.getCategoryByCategoryId(categoryId);
         String categoryDescription = category.getCategoryDescription();
 
@@ -101,7 +101,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         String date = expenseDTO.getDate().toString();
         double rate = currencyExchange.getExchangeRate(curr, date);
         double amountInInr = expenseDTO.getAmount() * rate;
-        expense.setAmountINR((float) amountInInr);
+        expense.setAmountINR(amountInInr);
         Category category = categoryRepository.getCategoryByCategoryId(categoryId);
         String categoryDescription = category.getCategoryDescription();
         expense.setDescription(expenseDTO.getDescription());
@@ -180,7 +180,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             String date = expense.getDate().toString();
             double rate = currencyExchange.getExchangeRate(curr, date);
             double amountInInr = expense.getAmount() * rate;
-            expense.setAmountINR((float) amountInInr);
+            expense.setAmountINR(amountInInr);
             expenseRepository.save(expense);
         }
         if (expense.getIsHidden()) {
