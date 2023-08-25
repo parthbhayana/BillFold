@@ -42,7 +42,7 @@ public class Expense {
 
 	@Column(name = "amount_INR", nullable = false)
 	@ApiModelProperty(hidden = true)
-	private Double amountINR;
+	private double amountINR;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -111,11 +111,11 @@ public class Expense {
 	}
 
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
-			String currencySymbol, Double amount, Double amountINR, String description, String categoryDescription,
-			Boolean isReported, Boolean isHidden, String reportTitle, Double amountApproved, Double amountApprovedINR,
-			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
-			Boolean potentialDuplicate, byte[] supportingDocuments, Employee employee, Reports reports,
-			Category category) {
+				   String currencySymbol, Double amount, Double amountINR, String description, String categoryDescription,
+				   Boolean isReported, Boolean isHidden, String reportTitle, Double amountApproved, Double amountApprovedINR,
+				   FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
+				   Boolean potentialDuplicate, byte[] supportingDocuments, Employee employee, Reports reports,
+				   Category category) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
@@ -201,7 +201,7 @@ public class Expense {
 		return amountINR;
 	}
 
-	public void setAmountINR(Double amountINR) {
+	public void setAmountINR(double amountINR) {
 		this.amountINR = amountINR;
 	}
 
@@ -216,7 +216,6 @@ public class Expense {
 	public String getCategoryDescription() {
 		return categoryDescription;
 	}
-
 	public void setCategoryDescription(String categoryDescription) {
 		this.categoryDescription = categoryDescription;
 	}

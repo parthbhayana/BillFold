@@ -3,6 +3,7 @@ package com.nineleaps.expensemanagementproject.DTO;
 import java.time.LocalDate;
 
 public class ExpenseDTO {
+
     private Double amount;
     private String currency;
     private String description;

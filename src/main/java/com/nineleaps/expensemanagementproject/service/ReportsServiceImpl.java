@@ -648,7 +648,7 @@ public class ReportsServiceImpl implements IReportsService {
         List<Expense> expenseList = expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
         float totalApprovedAmount = 0;
         for (Expense expense2 : expenseList) {
-            Double amountApproved = expense2.getAmountApproved();
+            Double amountApproved = Double.valueOf(expense2.getAmountApproved());
             if (amountApproved != null) {
                 totalApprovedAmount += amountApproved;
             }

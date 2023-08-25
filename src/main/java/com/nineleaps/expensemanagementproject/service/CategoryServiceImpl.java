@@ -87,7 +87,7 @@ public class CategoryServiceImpl implements ICategoryService {
 		for (Expense expense : expenseList) {
 			Category category = expense.getCategory();
 			String categoryName = category.getCategoryDescription();
-			Double amt = expense.getAmountINR();
+			Double amt = Double.valueOf(expense.getAmountINR());
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Double previousAmt = categoryAmountMap.get(categoryName);
 				categoryAmountMap.put(categoryName, (double) (previousAmt + amt));
@@ -110,7 +110,7 @@ public class CategoryServiceImpl implements ICategoryService {
 				for (Expense expense : expenseList) {
 					LocalDate expenseDate = expense.getDate();
 					String year = String.valueOf(expenseDate.getYear());
-					Double amount = expense.getAmountINR();
+					Double amount = Double.valueOf(expense.getAmountINR());
 
 					if (categoryAmountMap.containsKey(year)) {
 						Double previousAmount = Double.valueOf(categoryAmountMap.get(year));
@@ -140,7 +140,7 @@ public class CategoryServiceImpl implements ICategoryService {
 				LocalDate expenseDate = expense.getDate();
 				if (expenseDate.getYear() == year) {
 					String month = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
-					Double amount = expense.getAmountINR();
+					Double amount = Double.valueOf(expense.getAmountINR());
 
 					if (categoryAmountMap.containsKey(month)) {
 						Double previousAmount = categoryAmountMap.get(month);

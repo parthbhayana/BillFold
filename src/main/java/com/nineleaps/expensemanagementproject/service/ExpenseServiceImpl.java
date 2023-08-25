@@ -61,7 +61,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         String date = expenseDTO.getDate().toString();
         double rate = currencyExchange.getExchangeRate(curr, date);
         double amountInInr = expenseDTO.getAmount() * rate;
-        expense.setAmountINR(amountInInr);
+        expense.setAmountINR((float) amountInInr);
         Category category = categoryRepository.getCategoryByCategoryId(categoryId);
         String categoryDescription = category.getCategoryDescription();
 
@@ -101,7 +101,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         String date = expenseDTO.getDate().toString();
         double rate = currencyExchange.getExchangeRate(curr, date);
         double amountInInr = expenseDTO.getAmount() * rate;
-        expense.setAmountINR(amountInInr);
+        expense.setAmountINR((float) amountInInr);
         Category category = categoryRepository.getCategoryByCategoryId(categoryId);
         String categoryDescription = category.getCategoryDescription();
         expense.setDescription(expenseDTO.getDescription());
@@ -115,7 +115,6 @@ public class ExpenseServiceImpl implements IExpenseService {
         expense.setPotentialDuplicate(true);
         return expenseRepository.save(expense);
     }
-
     @Override
     public List<Expense> getAllExpenses() {
         LocalDate sixtyDaysAgo = LocalDate.now().minusDays(60);
