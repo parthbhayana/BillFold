@@ -80,17 +80,17 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	@Override
-	public HashMap<String, Float> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
+	public HashMap<String, Double> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
 		List<Expense> expenseList = expenseRepository.findByDateBetweenAndIsReported(startDate, endDate, true);
-		HashMap<String, Float> categoryAmountMap = new HashMap<>();
+		HashMap<String, Double> categoryAmountMap = new HashMap<>();
 
 		for (Expense expense : expenseList) {
 			Category category = expense.getCategory();
 			String categoryName = category.getCategoryDescription();
-			Float amt = expense.getAmountINR();
+			Double amt = Double.valueOf(expense.getAmountINR());
 			if (categoryAmountMap.containsKey(categoryName)) {
-				Float previousAmt = categoryAmountMap.get(categoryName);
-				categoryAmountMap.put(categoryName, previousAmt + amt);
+				Double previousAmt = categoryAmountMap.get(categoryName);
+				categoryAmountMap.put(categoryName, (double) (previousAmt + amt));
 			} else {
 				categoryAmountMap.put(categoryName, amt);
 			}
@@ -99,10 +99,10 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	@Override
-	public HashMap<String, Float> getCategoryTotalAmountByYearAndCategory(Long categoryId) {
+	public Map<String, Double> getCategoryTotalAmountByYearAndCategory(Long categoryId) {
 
 			Category category = getCategoryById(categoryId);
-			Map<String, Float> categoryAmountMap = new HashMap<>();
+			Map<String, Double> categoryAmountMap = new HashMap<>();
 
 			if (category != null) {
 				List<Expense> expenseList = expenseRepository.findByCategoryAndIsReported(category, true);
@@ -110,18 +110,18 @@ public class CategoryServiceImpl implements ICategoryService {
 				for (Expense expense : expenseList) {
 					LocalDate expenseDate = expense.getDate();
 					String year = String.valueOf(expenseDate.getYear());
-					Float amount = expense.getAmountINR();
+					Double amount = Double.valueOf(expense.getAmountINR());
 
 					if (categoryAmountMap.containsKey(year)) {
-						Float previousAmount = categoryAmountMap.get(year);
-						categoryAmountMap.put(year, previousAmount + amount);
+						Double previousAmount = Double.valueOf(categoryAmountMap.get(year));
+						categoryAmountMap.put(year, (double) (previousAmount + amount));
 					} else {
 						categoryAmountMap.put(year, amount);
 					}
 				}
 			}
 
-			return (HashMap<String, Float>) categoryAmountMap;
+			return categoryAmountMap;
 		}
 
 
@@ -129,9 +129,9 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
 	@Override
-	public HashMap<String, Float> getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year) {
+	public HashMap<String, Double> getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year) {
 		Category category = getCategoryById(categoryId);
-		HashMap<String, Float> categoryAmountMap = new HashMap<>();
+		HashMap<String, Double> categoryAmountMap = new HashMap<>();
 
 		if (category != null) {
 			List<Expense> expenseList = expenseRepository.findByCategoryAndIsReported(category, true);
@@ -140,11 +140,11 @@ public class CategoryServiceImpl implements ICategoryService {
 				LocalDate expenseDate = expense.getDate();
 				if (expenseDate.getYear() == year) {
 					String month = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
-					Float amount = expense.getAmountINR();
+					Double amount = Double.valueOf(expense.getAmountINR());
 
 					if (categoryAmountMap.containsKey(month)) {
-						Float previousAmount = categoryAmountMap.get(month);
-						categoryAmountMap.put(month, previousAmount + amount);
+						Double previousAmount = categoryAmountMap.get(month);
+						categoryAmountMap.put(month, (double) (previousAmount + amount));
 					} else {
 						categoryAmountMap.put(month, amount);
 					}
@@ -156,9 +156,9 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	@Override
-	public HashMap<String, Float> getYearlyReimbursementRatio(Long categoryId) {
+	public HashMap<String, Double> getYearlyReimbursementRatio(Long categoryId) {
 		Category category = getCategoryById(categoryId);
-		HashMap<String, Float> yearlyReimbursementRatioMap = new HashMap<>();
+		HashMap<String, Double> yearlyReimbursementRatioMap = new HashMap<>();
 
 		if (category != null) {
 			List<Expense> expenseList = expenseRepository.findByCategory(category);
@@ -168,16 +168,16 @@ public class CategoryServiceImpl implements ICategoryService {
 					String year = String.valueOf(expense.getDate().getYear());
 
 					if (yearlyReimbursementRatioMap.containsKey(year)) {
-						float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountINR();
+						Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountINR();
 						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);
-						float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
+						Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 						yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);
-						yearlyReimbursementRatioMap.put(year + CONSTANT2, (float) totalNumberOfExpenses);
+						yearlyReimbursementRatioMap.put(year + CONSTANT2, (double) totalNumberOfExpenses);
 						yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);
 					} else {
 						yearlyReimbursementRatioMap.put(year, expense.getAmountINR());
-						yearlyReimbursementRatioMap.put(year + CONSTANT2, 1F);
+						yearlyReimbursementRatioMap.put(year + CONSTANT2, 1.0);
 						yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountINR());
 					}
 				}
@@ -187,9 +187,9 @@ public class CategoryServiceImpl implements ICategoryService {
 		return yearlyReimbursementRatioMap;
 	}
 	@Override
-	public HashMap<String, Float> getMonthlyReimbursementRatio(Long categoryId, Long year) {
+	public HashMap<String, Double> getMonthlyReimbursementRatio(Long categoryId, Long year) {
 		Category category = getCategoryById(categoryId);
-		HashMap<String, Float> yearlyReimbursementRatioMap = new HashMap<>();
+		HashMap<String, Double> yearlyReimbursementRatioMap = new HashMap<>();
 
 		if (category != null) {
 			List<Expense> expenseList = expenseRepository.findByCategory(category);
@@ -200,16 +200,16 @@ public class CategoryServiceImpl implements ICategoryService {
 					String monthKey = year + "_" + month;
 
 					if (yearlyReimbursementRatioMap.containsKey(monthKey)) {
-						float totalReimbursedAmount = yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();
+						Double totalReimbursedAmount = (Double) (yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR());
 						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
-						float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
+						Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 						yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);
-						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (float) totalNumberOfExpenses);
+						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (double) totalNumberOfExpenses);
 						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);
 					} else {
 						yearlyReimbursementRatioMap.put(monthKey, expense.getAmountINR());
-						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1F);
+						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1.0);
 						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountINR());
 					}
 				}
@@ -224,8 +224,8 @@ public class CategoryServiceImpl implements ICategoryService {
 
 		Category category = getCategoryById(categoryId);
 		if (category != null) {
-			HashMap<String, Float> categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);
-			HashMap<String, Float> yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);
+			Map<String, Double> categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);
+			HashMap<String, Double> yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);
 
 			analyticsData.put("categoryTotalAmountByYear", categoryTotalAmountByYear);
 			analyticsData.put("yearlyReimbursementRatio", yearlyReimbursementRatio);
@@ -240,8 +240,8 @@ public class CategoryServiceImpl implements ICategoryService {
 
 		Category category = getCategoryById(categoryId);
 		if (category != null) {
-			HashMap<String, Float> categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId, year);
-			HashMap<String, Float> monthlyReimbursementRatio = getMonthlyReimbursementRatio(categoryId, year);
+			HashMap<String, Double> categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId, year);
+			HashMap<String, Double> monthlyReimbursementRatio = getMonthlyReimbursementRatio(categoryId, year);
 
 			analyticsData.put("categoryTotalAmountByMonth", categoryTotalAmountByMonth);
 			analyticsData.put("monthlyReimbursementRatio", monthlyReimbursementRatio);
@@ -252,17 +252,17 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
 	@Override
-	public HashMap<String, Float> getTotalAmountByYearForAllCategories() {
+	public HashMap<String, Double> getTotalAmountByYearForAllCategories() {
 		List<Expense> expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);
-		HashMap<String, Float> result = new HashMap<>();
+		HashMap<String, Double> result = new HashMap<>();
 
 		for (Expense expense : expenses) {
 			LocalDate expenseDate = expense.getDate();
 			String year = String.valueOf(expenseDate.getYear());
-			Float amount = expense.getAmountINR();
+			Double amount = expense.getAmountINR();
 
 			if (result.containsKey(year)) {
-				Float previousAmount = result.get(year);
+				Double previousAmount = result.get(year);
 				result.put(year, previousAmount + amount);
 			} else {
 				result.put(year, amount);
@@ -273,18 +273,18 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	@Override
-	public HashMap<String, Float> getTotalAmountByMonthForAllCategories(Long year) {
+	public HashMap<String, Double> getTotalAmountByMonthForAllCategories(Long year) {
 		List<Expense> expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);
-		HashMap<String, Float> result = new HashMap<>();
+		HashMap<String, Double> result = new HashMap<>();
 
 		for (Expense expense : expenses) {
 			LocalDate expenseDate = expense.getDate();
 			if (expenseDate.getYear() == year) {
 				String monthYear = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
-				Float amount = expense.getAmountINR();
+				Double amount = expense.getAmountINR();
 
 				if (result.containsKey(monthYear)) {
-					Float previousAmount = result.get(monthYear);
+					Double previousAmount = result.get(monthYear);
 					result.put(monthYear, previousAmount + amount);
 				} else {
 					result.put(monthYear, amount);
@@ -295,33 +295,33 @@ public class CategoryServiceImpl implements ICategoryService {
 		return result;
 	}
 @Override
-	public HashMap<String, Float> getYearlyReimbursementRatioForAllCategories() {
+	public HashMap<String, Double> getYearlyReimbursementRatioForAllCategories() {
 		List<Expense> expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);
-		HashMap<String, Float> yearlyReimbursementRatioMap = new HashMap<>();
+		HashMap<String, Double> yearlyReimbursementRatioMap = new HashMap<>();
 
 		for (Expense expense : expenses) {
 			String year = String.valueOf(expense.getDate().getYear());
 
 			if (yearlyReimbursementRatioMap.containsKey(year)) {
-				float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountINR();
+				double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountINR();
 				int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);
-				float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
+				double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 				yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);
-				yearlyReimbursementRatioMap.put(year + CONSTANT2, (float) totalNumberOfExpenses);
+				yearlyReimbursementRatioMap.put(year + CONSTANT2, (double) totalNumberOfExpenses);
 				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);
 			} else {
 				yearlyReimbursementRatioMap.put(year, expense.getAmountINR());
-				yearlyReimbursementRatioMap.put(year + CONSTANT2, 1F);
+				yearlyReimbursementRatioMap.put(year + CONSTANT2, 1.0);
 				yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountINR());
 			}
 		}
 		for (String yearKey : yearlyReimbursementRatioMap.keySet()) {
 			if (!yearKey.contains("_")) {
 				String year = yearKey;
-				float totalReimbursedAmount = yearlyReimbursementRatioMap.get(year);
-				Float totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + CONSTANT2));
-				float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
+				Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year);
+				Double totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + CONSTANT2));
+				double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);
 			}
 		}
@@ -329,9 +329,9 @@ public class CategoryServiceImpl implements ICategoryService {
 		return yearlyReimbursementRatioMap;
 	}
 @Override
-	public HashMap<String, Float> getMonthlyReimbursementRatioForAllCategories(Long year) {
+	public HashMap<String, Double> getMonthlyReimbursementRatioForAllCategories(Long year) {
 		List<Expense> expenses = expenseRepository.findByIsReportedAndIsHidden(true,false);
-		HashMap<String, Float> monthlyReimbursementRatioMap = new HashMap<>();
+		HashMap<String, Double> monthlyReimbursementRatioMap = new HashMap<>();
 
 		for (Expense expense : expenses) {
 			int expenseYear = expense.getDate().getYear();
@@ -340,16 +340,16 @@ public class CategoryServiceImpl implements ICategoryService {
 				String month =  expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
 				String monthKey = year + "_" + month;
 				if (monthlyReimbursementRatioMap.containsKey(monthKey)) {
-					float totalReimbursedAmount = monthlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR();
-					Float totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
-					float reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
+					Double totalReimbursedAmount = (Double) (monthlyReimbursementRatioMap.get(monthKey) + expense.getAmountINR());
+					double totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
+					Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
 					monthlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);
-					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, (float) totalNumberOfExpenses);
+					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, (double) totalNumberOfExpenses);
 					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);
 				} else {
 					monthlyReimbursementRatioMap.put(monthKey, expense.getAmountINR());
-					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1F);
+					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1.0);
 					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountINR());
 				}
 			}
@@ -361,8 +361,8 @@ public class CategoryServiceImpl implements ICategoryService {
 	public HashMap<String, Object> getYearlyCategoryAnalyticsForAllCategories() {
 		HashMap<String, Object> analyticsData = new HashMap<>();
 
-		HashMap<String, Float> totalAmountByYear = getTotalAmountByYearForAllCategories();
-		HashMap<String, Float> yearlyReimbursementRatio = getYearlyReimbursementRatioForAllCategories();
+		HashMap<String, Double> totalAmountByYear = getTotalAmountByYearForAllCategories();
+		HashMap<String, Double> yearlyReimbursementRatio = getYearlyReimbursementRatioForAllCategories();
 
 		analyticsData.put("categoryTotalAmountByYear", totalAmountByYear);
 		analyticsData.put("yearlyReimbursementRatio", yearlyReimbursementRatio);
@@ -374,8 +374,8 @@ public class CategoryServiceImpl implements ICategoryService {
 	public HashMap<String,Object> getMonthlyCategoryAnalyticsForAllCategories(Long year)
 	{
 		HashMap<String, Object> analyticsData = new HashMap<>();
-			HashMap<String, Float> categoryTotalAmountByMonth = getTotalAmountByMonthForAllCategories(year);
-			HashMap<String, Float> monthlyReimbursementRatio = getMonthlyReimbursementRatioForAllCategories(year);
+			HashMap<String, Double> categoryTotalAmountByMonth = getTotalAmountByMonthForAllCategories(year);
+			HashMap<String, Double> monthlyReimbursementRatio = getMonthlyReimbursementRatioForAllCategories(year);
 
 			analyticsData.put("categoryTotalAmountByMonth", categoryTotalAmountByMonth);
 			analyticsData.put("monthlyReimbursementRatio", monthlyReimbursementRatio);

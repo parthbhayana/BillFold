@@ -648,7 +648,7 @@ public class ReportsServiceImpl implements IReportsService {
         List<Expense> expenseList = expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);
         float totalApprovedAmount = 0;
         for (Expense expense2 : expenseList) {
-            Float amountApproved = expense2.getAmountApproved();
+            Double amountApproved = Double.valueOf(expense2.getAmountApproved());
             if (amountApproved != null) {
                 totalApprovedAmount += amountApproved;
             }
@@ -764,7 +764,7 @@ public class ReportsServiceImpl implements IReportsService {
             if (expense.getIsReported() &&
                     expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
                 expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
-                expense.setAmountApproved(Float.valueOf(expense.getAmount()));
+                expense.setAmountApproved(expense.getAmount());
                 //Setting Approved Amount INR
                 String curr = expense.getCurrency();
                 String date = expense.getDate().toString();
@@ -782,7 +782,7 @@ public class ReportsServiceImpl implements IReportsService {
             if (expense.getIsReported() &&
                     expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
                 expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
-                expense.setAmountApproved(0F);
+                expense.setAmountApproved(0.0);
                 expenseRepository.save(expense);
             }
         }
@@ -791,7 +791,7 @@ public class ReportsServiceImpl implements IReportsService {
             Float amt = entry.getValue();
             Expense expense = expenseServices.getExpenseById(expId);
             expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PARTIALLY_APPROVED);
-            expense.setAmountApproved(amt);
+            expense.setAmountApproved(Double.valueOf(amt));
             expenseRepository.save(expense);
 
             String curr = expense.getCurrency();

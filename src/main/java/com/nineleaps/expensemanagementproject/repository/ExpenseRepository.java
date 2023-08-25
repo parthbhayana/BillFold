@@ -33,7 +33,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
 	List<Expense> findByIsReportedAndIsHidden(boolean b, boolean b1);
 
-	List<Expense> findByEmployeeAndAmountAndDateAndCategoryAndMerchantNameAndIsHidden(Employee employee, Float amount,
+	List<Expense> findByEmployeeAndAmountAndDateAndCategoryAndMerchantNameAndIsHidden(Employee employee, Double amount,
 																		   LocalDate date, Category category,
 																					  String merchantName, boolean a);
+
 }

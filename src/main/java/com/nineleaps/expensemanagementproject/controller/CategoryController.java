@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
@@ -57,7 +58,7 @@ public class CategoryController {
     }
 
     @GetMapping("/categoryTotalAmount")
-    public Map<String, Float> getCategoryTotalAmount(
+    public HashMap<String, Double> getCategoryTotalAmount(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return categoryService.getCategoryTotalAmount(startDate, endDate);

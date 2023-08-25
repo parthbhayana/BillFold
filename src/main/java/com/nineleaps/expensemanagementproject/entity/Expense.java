@@ -38,11 +38,11 @@ public class Expense {
 	private String currencySymbol;
 
 	@Column(name = "amount", nullable = false)
-	private Float amount;
+	private Double amount;
 
 	@Column(name = "amount_INR", nullable = false)
 	@ApiModelProperty(hidden = true)
-	private float amountINR;
+	private double amountINR;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -65,7 +65,7 @@ public class Expense {
 
 	@Column(name = "amount_approved")
 	@ApiModelProperty(hidden = true)
-	private Float amountApproved;
+	private Double amountApproved;
 
 	@Column(name = "amount_approved_INR")
 	@ApiModelProperty(hidden = true)
@@ -111,11 +111,11 @@ public class Expense {
 	}
 
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
-			String currencySymbol, Float amount, float amountINR, String description, String categoryDescription,
-			Boolean isReported, Boolean isHidden, String reportTitle, Float amountApproved, Double amountApprovedINR,
-			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
-			Boolean potentialDuplicate, byte[] supportingDocuments, Employee employee, Reports reports,
-			Category category) {
+				   String currencySymbol, Double amount, Double amountINR, String description, String categoryDescription,
+				   Boolean isReported, Boolean isHidden, String reportTitle, Double amountApproved, Double amountApprovedINR,
+				   FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
+				   Boolean potentialDuplicate, byte[] supportingDocuments, Employee employee, Reports reports,
+				   Category category) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
@@ -189,19 +189,19 @@ public class Expense {
 		this.currencySymbol = currencySymbol;
 	}
 
-	public Float getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Float amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 
-	public float getAmountINR() {
+	public Double getAmountINR() {
 		return amountINR;
 	}
 
-	public void setAmountINR(float amountINR) {
+	public void setAmountINR(double amountINR) {
 		this.amountINR = amountINR;
 	}
 
@@ -216,7 +216,6 @@ public class Expense {
 	public String getCategoryDescription() {
 		return categoryDescription;
 	}
-
 	public void setCategoryDescription(String categoryDescription) {
 		this.categoryDescription = categoryDescription;
 	}
@@ -245,11 +244,11 @@ public class Expense {
 		this.reportTitle = reportTitle;
 	}
 
-	public Float getAmountApproved() {
+	public Double getAmountApproved() {
 		return amountApproved;
 	}
 
-	public void setAmountApproved(Float amountApproved) {
+	public void setAmountApproved(Double amountApproved) {
 		this.amountApproved = amountApproved;
 	}
 

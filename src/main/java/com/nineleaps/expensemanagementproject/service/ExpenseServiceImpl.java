@@ -115,7 +115,6 @@ public class ExpenseServiceImpl implements IExpenseService {
         expense.setPotentialDuplicate(true);
         return expenseRepository.save(expense);
     }
-
     @Override
     public List<Expense> getAllExpenses() {
         LocalDate sixtyDaysAgo = LocalDate.now().minusDays(60);
@@ -180,7 +179,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             String date = expense.getDate().toString();
             double rate = currencyExchange.getExchangeRate(curr, date);
             double amountInInr = expense.getAmount() * rate;
-            expense.setAmountINR((float) amountInInr);
+            expense.setAmountINR(amountInInr);
             expenseRepository.save(expense);
         }
         if (expense.getIsHidden()) {
