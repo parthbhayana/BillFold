@@ -67,7 +67,8 @@ public class ExpenseServiceImpl implements IExpenseService {
 
         //Check for Potential duplicate
         List<Expense> potentialDuplicateExpense =
-                expenseRepository.findByEmployeeAndAmountAndDateAndCategoryAndMerchantName(employee, expenseDTO.getAmount(), expenseDTO.getDate(), category, expenseDTO.getMerchantName());
+                expenseRepository.findByEmployeeAndAmountAndDateAndCategoryAndMerchantNameAndIsHidden(employee,
+                        expenseDTO.getAmount(), expenseDTO.getDate(), category, expenseDTO.getMerchantName(), false);
         System.out.println("Potential Duplicate List = " + potentialDuplicateExpense);
 
         if (potentialDuplicateExpense.isEmpty()) {
@@ -279,9 +280,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 //        return rejectedExpenses;
 //    }
     public List<Expense> getRejectedExpensesByReportId(Long reportId) {
-        return getExpenseByReportId(reportId)
-                .stream()
-                .filter(expense -> expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED)
-                .collect(Collectors.toList());
+        return getExpenseByReportId(reportId).stream().filter(expense -> expense.getManagerApprovalStatusExpense() ==
+                ManagerApprovalStatusExpense.REJECTED).collect(Collectors.toList());
     }
 }

@@ -37,8 +37,8 @@ public interface IEmployeeService {
 
 	public void setFinanceAdmin(Long employeeId);
 
-	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
-			Long mobileNumber, String managerName);
+//	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
+//			Long mobileNumber, String managerName);
 
 	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
 														Long mobileNumber, String managerName, String hrEmail, String hrName);
