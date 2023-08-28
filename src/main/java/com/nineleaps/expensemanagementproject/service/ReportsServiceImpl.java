@@ -687,6 +687,8 @@ public class ReportsServiceImpl implements IReportsService {
             exp.setReports(null);
             exp.setReportTitle(null);
             exp.setManagerApprovalStatusExpense(null);
+            exp.setAmountApprovedINR(null);
+            exp.setAmountApproved(null);
             expenseRepository.save(exp);
         }
         report.setIsHidden(hidden);
@@ -772,6 +774,7 @@ public class ReportsServiceImpl implements IReportsService {
                 double rate = currencyExchange.getExchangeRate(curr, date);
                 double approvedAmountInInr = expense.getAmountApproved() * rate;
                 expense.setAmountApprovedINR(approvedAmountInInr);
+                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
                 expenseRepository.save(expense);
             }
         }
@@ -784,6 +787,7 @@ public class ReportsServiceImpl implements IReportsService {
                     expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {
                 expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
                 expense.setAmountApproved(0.0);
+                expense.setAmountApprovedINR(0.0);
                 expenseRepository.save(expense);
             }
         }

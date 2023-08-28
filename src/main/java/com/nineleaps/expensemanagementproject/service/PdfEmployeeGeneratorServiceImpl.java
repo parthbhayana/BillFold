@@ -115,7 +115,12 @@ public class PdfEmployeeGeneratorServiceImpl implements IPdfEmployeeGeneratorSer
                 else {
                     table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
                 }
-                table.addCell(getCenterAlignedCells(String.valueOf(expenseList.getManagerApprovalStatusExpense()), font));
+//                table.addCell(getCenterAlignedCells(String.valueOf(expenseList.getManagerApprovalStatusExpense()),
+//                        font));
+                table.addCell(getCenterAlignedCells(
+                        convertToCustomCase(String.valueOf(expenseList.getManagerApprovalStatusExpense())),
+                        font
+                ));
 
                 total += (expenseList.getAmountApprovedINR() != null) ? expenseList.getAmountApprovedINR() : expenseList.getAmount();
             }
@@ -347,6 +352,41 @@ public class PdfEmployeeGeneratorServiceImpl implements IPdfEmployeeGeneratorSer
             outputStream.close();
             return pdfBytes;
         }
+
+//    public static String convertToCustomCase(String input) {
+//        if (input == null || input.isEmpty()) {
+//            return input;
+//        }
+//
+//        String firstLetter = input.substring(0, 1).toUpperCase();
+//        String restOfTheString = input.substring(1).toLowerCase();
+//
+//        return firstLetter + restOfTheString;
+//    }
+public static String convertToCustomCase(String input) {
+    if (input == null || input.isEmpty()) {
+        return input;
+    }
+
+    StringBuilder result = new StringBuilder();
+    boolean capitalizeNext = true;
+
+    for (char c : input.toCharArray()) {
+        if (c == '_') {
+            result.append(' ');
+            capitalizeNext = true;
+        } else {
+            if (capitalizeNext) {
+                result.append(Character.toUpperCase(c));
+                capitalizeNext = false;
+            } else {
+                result.append(Character.toLowerCase(c));
+            }
+        }
+    }
+
+    return result.toString();
+}
     }
 
 
