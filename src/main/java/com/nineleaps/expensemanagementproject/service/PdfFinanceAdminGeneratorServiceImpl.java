@@ -81,8 +81,8 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         document.open();
         Font fontheader01 = FontFactory.getFont(FontFactory.TIMES);
         fontheader01.setSize(10);
-        Paragraph headerParagraph01 = new Paragraph("Report_Id: " + reportId, fontheader01);
-        headerParagraph01.setAlignment(ALIGN_LEFT);
+        Paragraph headerParagraph01 = new Paragraph("Report Id: " + reportId, fontheader01);
+        headerParagraph01.setAlignment(ALIGN_RIGHT);
 
 
         Font fontHeader = FontFactory.getFont(FontFactory.TIMES);

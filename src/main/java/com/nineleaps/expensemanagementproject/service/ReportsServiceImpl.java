@@ -388,51 +388,51 @@ public class ReportsServiceImpl implements IReportsService {
             if (managerEmailDB == null) {
                 throw new NullPointerException("Manager Email not found for Employee ID: " + employee.getEmployeeId());
             }
-//            if (Objects.equals(managerEmail, managerEmailDB)) {
-//                re.setManagerEmail(managerEmailDB);
-//                reportsRepository.save(re);
-//                // Send email notification to the manager
-//                List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-//                ArrayList<Long> expenseIds = new ArrayList<>();
-//                for (Expense expense : expenseList) {
-//                    expenseIds.add(expense.getExpenseId());
-//                }
-//                emailService.managerNotification(reportId, expenseIds, managerEmailDB, response);
-//                // Push Notification Functionality
-//                Employee manager = employeeServices.getEmployeeByEmail(managerEmailDB);
-//                if (manager != null && manager.getToken() != null) {
-////                    Employee employee = employeeServices.getEmployeeById(employeeId);
-//                    PushNotificationRequest notificationRequest = new PushNotificationRequest();
-//                    notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
-//                    notificationRequest.setMessage("Submitted you an expense report.");
-//                    notificationRequest.setToken(manager.getToken());
-//                    System.out.println("TOKEN-" + manager.getToken());
-//
-//                    pushNotificationService.sendPushNotificationToToken(notificationRequest);
-//                }
-//            } else {
-            re.setManagerEmail(managerEmail);
-            reportsRepository.save(re);
-            // Send email notification to the manager
-            List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-            ArrayList<Long> expenseIds = new ArrayList<>();
-            for (Expense expense : expenseList) {
-                expenseIds.add(expense.getExpenseId());
-            }
-            emailService.managerNotification(reportId, expenseIds, managerEmail, response);
-            // Push Notification Functionality
-            Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
-            if (manager != null && manager.getToken() != null) {
+            if (Objects.equals(managerEmail, managerEmailDB)) {
+                re.setManagerEmail(managerEmailDB);
+                reportsRepository.save(re);
+                // Send email notification to the manager
+                List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+                ArrayList<Long> expenseIds = new ArrayList<>();
+                for (Expense expense : expenseList) {
+                    expenseIds.add(expense.getExpenseId());
+                }
+                emailService.managerNotification(reportId, expenseIds, managerEmailDB, response);
+                // Push Notification Functionality
+                Employee manager = employeeServices.getEmployeeByEmail(managerEmailDB);
+                if (manager != null && manager.getToken() != null) {
 //                    Employee employee = employeeServices.getEmployeeById(employeeId);
-                PushNotificationRequest notificationRequest = new PushNotificationRequest();
-                notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
-                notificationRequest.setMessage("Submitted you an expense report.");
-                notificationRequest.setToken(manager.getToken());
-                System.out.println("TOKEN-" + manager.getToken());
+                    PushNotificationRequest notificationRequest = new PushNotificationRequest();
+                    notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
+                    notificationRequest.setMessage("Submitted you an expense report.");
+                    notificationRequest.setToken(manager.getToken());
+                    System.out.println("TOKEN-" + manager.getToken());
 
-                pushNotificationService.sendPushNotificationToToken(notificationRequest);
+                    pushNotificationService.sendPushNotificationToToken(notificationRequest);
+                }
+            } else {
+                re.setManagerEmail(managerEmail);
+                reportsRepository.save(re);
+                // Send email notification to the manager
+                List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+                ArrayList<Long> expenseIds = new ArrayList<>();
+                for (Expense expense : expenseList) {
+                    expenseIds.add(expense.getExpenseId());
+                }
+                emailService.managerNotification(reportId, expenseIds, managerEmail, response);
+                // Push Notification Functionality
+                Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
+                if (manager != null && manager.getToken() != null) {
+//                    Employee employee = employeeServices.getEmployeeById(employeeId);
+                    PushNotificationRequest notificationRequest = new PushNotificationRequest();
+                    notificationRequest.setTitle(employee.getFirstName() + " " + employee.getLastName());
+                    notificationRequest.setMessage("Submitted you an expense report.");
+                    notificationRequest.setToken(manager.getToken());
+                    System.out.println("TOKEN-" + manager.getToken());
+
+                    pushNotificationService.sendPushNotificationToToken(notificationRequest);
+                }
             }
-//            }
         }
     }
 
@@ -686,6 +686,7 @@ public class ReportsServiceImpl implements IReportsService {
             exp.setIsReported(isReported);
             exp.setReports(null);
             exp.setReportTitle(null);
+            exp.setManagerApprovalStatusExpense(null);
             expenseRepository.save(exp);
         }
         report.setIsHidden(hidden);
