@@ -9,6 +9,7 @@ import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -226,7 +227,13 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nPlease review the feedback provided by your manager and make the necessary revisions to your expense report. Once you have made the required changes, resubmit the report for further processing."
                     + "\n\nIf you have any questions or need clarification regarding the rejection, please reach out to your manager or the HR department."
                     + "\n\nThank you for your understanding and cooperation." + CONSTANT7 + CONSTANT8 + CONSTANT3);
-            byte[] fileData = pdfEmployeeGeneratorService.export(reportId, expenseIds, response);
+//            byte[] fileData = pdfEmployeeGeneratorService.export(reportId, expenseIds, response);
+            List<Expense> expenses = expenseService.getExpenseByReportId(reportId);
+            List<Long> expIds = new ArrayList<>();
+            for(Expense exp : expenses){
+                expIds.add(exp.getExpenseId());
+            }
+            byte[] fileData = pdfEmployeeGeneratorService.export(reportId, expIds, response);
             ByteArrayResource resource = new ByteArrayResource(fileData);
             eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
