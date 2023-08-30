@@ -13,10 +13,9 @@ class ReportsDTOTest {
         String reportTitle = "Test Report";
         String reportDescription = "This is a test report";
 
-        ReportsDTO reportsDTO = new ReportsDTO(reportTitle, reportDescription);
+        ReportsDTO reportsDTO = new ReportsDTO(reportTitle);
 
         assertEquals(reportTitle, reportsDTO.getReportTitle());
-        assertEquals(reportDescription, reportsDTO.getReportDescription());
     }
 
     @Test
@@ -29,17 +28,5 @@ class ReportsDTOTest {
         reportsDTO.setReportTitle(reportTitle);
 
         assertEquals(reportTitle, reportsDTO.getReportTitle());
-    }
-
-    @Test
-    void testGetSetReportDescription() {
-        ReportsDTO reportsDTO = new ReportsDTO();
-
-        assertNull(reportsDTO.getReportDescription());
-
-        String reportDescription = "This is a test report";
-        reportsDTO.setReportDescription(reportDescription);
-
-        assertEquals(reportDescription, reportsDTO.getReportDescription());
     }
 }
