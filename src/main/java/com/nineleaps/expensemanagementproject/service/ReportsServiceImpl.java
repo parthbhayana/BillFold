@@ -70,7 +70,6 @@ public class ReportsServiceImpl implements IReportsService {
         String officialEmployeeId = employee.getOfficialEmployeeId();
         Reports newReport = new Reports();
         newReport.setReportTitle(reportsDTO.getReportTitle());
-        newReport.setReportDescription(reportsDTO.getReportDescription());
         newReport.setEmployeeMail(employeeEmail);
         newReport.setManagerEmail(managerEmail);
         newReport.setEmployeeName(employeeName);
@@ -117,7 +116,6 @@ public class ReportsServiceImpl implements IReportsService {
         } else if (!report.getIsHidden() ||
                 report.getIsSubmitted() && report.getManagerapprovalstatus() == ManagerApprovalStatus.REJECTED) {
             report.setReportTitle(reportTitle);
-            report.setReportDescription(reportDescription);
             reportsRepository.save(report);
             // Updating Report Title in existing expenses
             List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);

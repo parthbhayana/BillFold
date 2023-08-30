@@ -46,9 +46,6 @@ public class Reports {
     @Column(name = "report_title", nullable = false)
     private String reportTitle;
 
-    @Column(name = "report_description", nullable = true)
-    private String reportDescription;
-
     @Column(name = "manager_comments")
     @ApiModelProperty(hidden = true)
     private String managerComments;
@@ -129,8 +126,8 @@ public class Reports {
     }
 
     public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
-                   String reportDescription, String managerComments, String financeComments, Boolean isSubmitted,
-                   String employeeMail, LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate,
+                   String managerComments, String financeComments, Boolean isSubmitted, String employeeMail,
+                   LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate,
                    LocalDate financeActionDate, float totalAmountINR, float totalApprovedAmountINR,
                    float totalAmountCurrency, float totalApprovedAmountCurrency, Boolean isHidden, String managerEmail,
                    String managerReviewTime, FinanceApprovalStatus financeapprovalstatus,
@@ -141,7 +138,6 @@ public class Reports {
         this.employeeName = employeeName;
         this.officialEmployeeId = officialEmployeeId;
         this.reportTitle = reportTitle;
-        this.reportDescription = reportDescription;
         this.managerComments = managerComments;
         this.financeComments = financeComments;
         this.isSubmitted = isSubmitted;
@@ -200,14 +196,6 @@ public class Reports {
 
     public void setReportTitle(String reportTitle) {
         this.reportTitle = reportTitle;
-    }
-
-    public String getReportDescription() {
-        return reportDescription;
-    }
-
-    public void setReportDescription(String reportDescription) {
-        this.reportDescription = reportDescription;
     }
 
     public String getManagerComments() {

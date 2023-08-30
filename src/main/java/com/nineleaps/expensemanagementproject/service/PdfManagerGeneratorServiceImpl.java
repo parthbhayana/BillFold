@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import com.lowagie.text.pdf.*;
+import org.jfree.data.json.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -95,7 +96,7 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         table.addCell(getCenterAlignedCell("Date", font));
         table.addCell(getCenterAlignedCell("Merchant", font));
         table.addCell(getCenterAlignedCell("Description", font));
-        table.addCell(getCenterAlignedCell("Amount", font));
+        table.addCell(getCenterAlignedCell("Amount (INR)", font));
         Font fontParagraph = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph.setSize(12);
         Reports report = reportsRepository.findById(reportId).get();
@@ -144,13 +145,16 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         Font fontParagraph11 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph11.setSize(14);
         @SuppressWarnings("null")
+//        Paragraph paragraph =
+//                new Paragraph(employee.getFirstName()+ " " + employee.getLastName() + "(" + employee.getEmployeeEmail() + ") \u2192 " + employee.getManagerName() + "(" + employee.getEmployeeEmail() + ")",
+//                fontParagraph);
         Paragraph pdfParagraph = new Paragraph("Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
         pdfParagraph.setAlignment(ALIGN_LEFT);
         Font fontParagraph12 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph12.setSize(12);
         Paragraph pdfParagraph02 = new Paragraph("Employee Email : " + employee.getEmployeeEmail(), fontParagraph);
         pdfParagraph02.setAlignment(ALIGN_LEFT);
-        Paragraph pdfParagraph002 = new Paragraph("Employee Official ID : " + employee.getOfficialEmployeeId());
+        Paragraph pdfParagraph002 = new Paragraph("Employee ID : " + employee.getOfficialEmployeeId(), fontParagraph);
         pdfParagraph002.setAlignment(ALIGN_LEFT);
         Paragraph emptyParagraph = new Paragraph(" ");
         Font fontParagraph13 = FontFactory.getFont(FontFactory.TIMES);
@@ -203,8 +207,6 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
 
         Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
         fontParagraph14.setSize(14);
-        Paragraph pdfParagraph04 = new Paragraph("Report Description : "+report.getReportDescription(), fontParagraph14);
-        pdfParagraph04.setAlignment(ALIGN_LEFT);
 
 
 
@@ -215,11 +217,11 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         document.add(emptyParagraph);
         document.add(emptyParagraph);
         document.add(pdfParagraph03);
-        document.add(pdfParagraph04);
         document.add(emptyParagraph);
         document.add(pdfParagraph002);
         document.add(pdfParagraph);
         document.add(pdfParagraph02);
+//        document.add(paragraph);
         document.add(emptyParagraph);
         document.add(emptyParagraph);
         document.add(emptyParagraph);

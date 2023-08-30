@@ -96,7 +96,7 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         table.addCell(getCenterAlignedCell("Date", font));
         table.addCell(getCenterAlignedCell("Merchant", font));
         table.addCell(getCenterAlignedCell("Description", font));
-        table.addCell(getCenterAlignedCell("Amount", font));
+        table.addCell(getCenterAlignedCell("Amount (INR)", font));
         table.addCell(getCenterAlignedCell("Status", font));
 
         Font fontParagraph = FontFactory.getFont(FontFactory.TIMES);
@@ -200,9 +200,6 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
 
         Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
         fontParagraph14.setSize(14);
-        Paragraph pdfParagraph04 =
-                new Paragraph("Report Description : " + report.getReportDescription(), fontParagraph14);
-        pdfParagraph04.setAlignment(ALIGN_LEFT);
 
 
         document.add(headerParagraph01);
@@ -211,7 +208,6 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         document.add(emptyParagraph);
         document.add(emptyParagraph);
         document.add(pdfParagraph03);
-        document.add(pdfParagraph04);
         document.add(emptyParagraph);
         document.add(pdfParagraph002);
         document.add(pdfParagraph);
