@@ -8,4 +8,6 @@ import java.net.URL;
 public interface ICurrencyExchange {
 
 	public double getExchangeRate(String baseCurrency,String date);
+
+	public double getExchangeAmountINR(Double amount, String baseCurrency,String date);
 }
