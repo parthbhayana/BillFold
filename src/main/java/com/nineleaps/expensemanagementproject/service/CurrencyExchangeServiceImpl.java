@@ -94,4 +94,10 @@ public class CurrencyExchangeServiceImpl implements ICurrencyExchange {
             return exchangeValue;
         }
     }
+
+    @Override
+    public double getExchangeAmountINR(Double amount, String baseCurrency, String date) {
+        double rate = getExchangeRate(baseCurrency, date);
+        return amount*rate;
+    }
 }
