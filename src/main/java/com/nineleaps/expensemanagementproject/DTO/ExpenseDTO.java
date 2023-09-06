@@ -8,69 +8,83 @@ public class ExpenseDTO {
     private String currency;
     private String description;
     private String merchantName;
-    private byte[] supportingDocuments;
+    private byte[] file;
+
+    private String fileName;
     private LocalDate date;
 
     public ExpenseDTO() {
-    }
+		
+	}
 
-    public ExpenseDTO(Double amount, String currency, String description, String merchantName, byte[] supportingDocuments,LocalDate date) {
-        this.amount = amount;
-        this.currency = currency;
-        this.description = description;
-        this.merchantName = merchantName;
-        this.supportingDocuments = supportingDocuments;
-        this.date=date;
-    }
+	public ExpenseDTO(Double amount, String currency, String description, String merchantName, byte[] file,
+			String fileName, LocalDate date) {
+		super();
+		this.amount = amount;
+		this.currency = currency;
+		this.description = description;
+		this.merchantName = merchantName;
+		this.file = file;
+		this.fileName = fileName;
+		this.date = date;
+	}
 
+	public Double getAmount() {
+		return amount;
+	}
 
-    public Double getAmount() {
-        return amount;
-    }
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
+	public String getCurrency() {
+		return currency;
+	}
 
-    public String getCurrency() {
-        return currency;
-    }
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setMerchantName(String merchantName) {
-        this.merchantName = merchantName;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setSupportingDocuments(byte[] supportingDocuments) {
-        this.supportingDocuments = supportingDocuments;
-    }
+	public String getMerchantName() {
+		return merchantName;
+	}
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public byte[] getFile() {
+		return file;
+	}
 
-    public String getMerchantName() {
-        return merchantName;
-    }
+	public void setFile(byte[] file) {
+		this.file = file;
+	}
 
-    public byte[] getSupportingDocuments() {
-        return supportingDocuments;
-    }
+	public String getFileName() {
+		return fileName;
+	}
 
-    public LocalDate getDate() {
-        return date;
-    }
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
+	public LocalDate getDate() {
+		return date;
+	}
 
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+    
+    
 
 }

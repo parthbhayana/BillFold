@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import com.lowagie.text.pdf.*;
-import org.jfree.data.json.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -259,7 +258,7 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
 
         for (Long expenseId : expenseIds) {
             Expense expense = expenseService.getExpenseById(expenseId);
-            byte[] supportingDocument = expense.getSupportingDocuments();
+            byte[] supportingDocument = expense.getFile();
 
             if (supportingDocument != null) {
                 if (isPdfFormat(supportingDocument)) {

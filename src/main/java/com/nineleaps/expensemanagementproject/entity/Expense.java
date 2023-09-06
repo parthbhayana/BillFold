@@ -87,8 +87,12 @@ public class Expense {
 
 	@Lob
 	@Column(name = "supporting_documents", nullable = true)
-	private byte[] supportingDocuments;
+	private byte[] file;
 
+	@Column(name = "file_name")
+	@ApiModelProperty(hidden = true)
+	private String fileName;
+	
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -111,11 +115,11 @@ public class Expense {
 	}
 
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
-				   String currencySymbol, Double amount, Double amountINR, String description, String categoryDescription,
-				   Boolean isReported, Boolean isHidden, String reportTitle, Double amountApproved, Double amountApprovedINR,
-				   FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
-				   Boolean potentialDuplicate, byte[] supportingDocuments, Employee employee, Reports reports,
-				   Category category) {
+			String currencySymbol, Double amount, double amountINR, String description, String categoryDescription,
+			Boolean isReported, Boolean isHidden, String reportTitle, Double amountApproved, Double amountApprovedINR,
+			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
+			Boolean potentialDuplicate, byte[] file, String fileName, Employee employee, Reports reports,
+			Category category) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
@@ -135,7 +139,8 @@ public class Expense {
 		this.financeApprovalStatus = financeApprovalStatus;
 		this.managerApprovalStatusExpense = managerApprovalStatusExpense;
 		this.potentialDuplicate = potentialDuplicate;
-		this.supportingDocuments = supportingDocuments;
+		this.file = file;
+		this.fileName = fileName;
 		this.employee = employee;
 		this.reports = reports;
 		this.category = category;
@@ -197,7 +202,7 @@ public class Expense {
 		this.amount = amount;
 	}
 
-	public Double getAmountINR() {
+	public double getAmountINR() {
 		return amountINR;
 	}
 
@@ -216,6 +221,7 @@ public class Expense {
 	public String getCategoryDescription() {
 		return categoryDescription;
 	}
+
 	public void setCategoryDescription(String categoryDescription) {
 		this.categoryDescription = categoryDescription;
 	}
@@ -284,12 +290,20 @@ public class Expense {
 		this.potentialDuplicate = potentialDuplicate;
 	}
 
-	public byte[] getSupportingDocuments() {
-		return supportingDocuments;
+	public byte[] getFile() {
+		return file;
 	}
 
-	public void setSupportingDocuments(byte[] supportingDocuments) {
-		this.supportingDocuments = supportingDocuments;
+	public void setFile(byte[] file) {
+		this.file = file;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	public Employee getEmployee() {
@@ -315,5 +329,7 @@ public class Expense {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+
+	
 
 }

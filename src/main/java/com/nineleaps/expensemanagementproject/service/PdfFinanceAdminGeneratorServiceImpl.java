@@ -249,7 +249,7 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
 
         for (Long expenseId : expenseIds) {
             Expense expense = expenseService.getExpenseById(expenseId);
-            byte[] supportingDocument = expense.getSupportingDocuments();
+            byte[] supportingDocument = expense.getFile();
 
             if (supportingDocument != null) {
                 if (isPdfFormat(supportingDocument)) {

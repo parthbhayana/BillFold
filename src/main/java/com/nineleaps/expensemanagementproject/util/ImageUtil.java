@@ -11,7 +11,7 @@ public class ImageUtil {
 
 	public static BufferedImage convertToBufferedImage(Expense expense) throws IOException {
 
-		byte[] imageData = expense.getSupportingDocuments();
+		byte[] imageData = expense.getFile();
 		InputStream in = new ByteArrayInputStream(imageData);
 		BufferedImage image = ImageIO.read(in);
 		return image;

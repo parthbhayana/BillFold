@@ -253,16 +253,16 @@ class ExpenseTest {
     void getSupportingDocuments() {
         byte[] supportingDocuments = {1, 2, 3};
         Expense expense = new Expense();
-        expense.setSupportingDocuments(supportingDocuments);
-        assertArrayEquals(supportingDocuments, expense.getSupportingDocuments());
+        expense.setFile(supportingDocuments);
+        assertArrayEquals(supportingDocuments, expense.getFile());
     }
 
     @Test
     void setSupportingDocuments() {
         byte[] supportingDocuments = {4, 5, 6};
         Expense expense = new Expense();
-        expense.setSupportingDocuments(supportingDocuments);
-        assertArrayEquals(supportingDocuments, expense.getSupportingDocuments());
+        expense.setFile(supportingDocuments);
+        assertArrayEquals(supportingDocuments, expense.getFile());
     }
 
     @Test
@@ -374,7 +374,7 @@ class ExpenseTest {
         assertEquals(amountApprovedINR, expense.getAmountApprovedINR());
         assertEquals(financeApprovalStatus, expense.getFinanceApprovalStatus());
         assertEquals(managerApprovalStatusExpense, expense.getManagerApprovalStatusExpense());
-        assertEquals(supportingDocuments, expense.getSupportingDocuments());
+        assertEquals(supportingDocuments, expense.getFile());
         assertEquals(employee, expense.getEmployee());
         assertEquals(reports, expense.getReports());
         assertEquals(category, expense.getCategory());

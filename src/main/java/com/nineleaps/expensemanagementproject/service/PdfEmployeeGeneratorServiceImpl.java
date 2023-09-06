@@ -240,7 +240,7 @@ public class PdfEmployeeGeneratorServiceImpl implements IPdfEmployeeGeneratorSer
 
         for (Long expenseId : expenseIds) {
             Expense expense = expenseService.getExpenseById(expenseId);
-            byte[] supportingDocument = expense.getSupportingDocuments();
+            byte[] supportingDocument = expense.getFile();
 
             if (supportingDocument != null) {
                 if (isPdfFormat(supportingDocument)) {
