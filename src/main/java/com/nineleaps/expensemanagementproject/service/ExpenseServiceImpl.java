@@ -76,7 +76,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setAmount(expenseDTO.getAmount());
             expense.setCurrency(expenseDTO.getCurrency());
             expense.setMerchantName(expenseDTO.getMerchantName());
-            expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
+            expense.setFile(expenseDTO.getFile());
             expense.setDate(expenseDTO.getDate());
             expense.setCategory(category);
             expense.setCategoryDescription(categoryDescription);
@@ -108,7 +108,8 @@ public class ExpenseServiceImpl implements IExpenseService {
         expense.setAmount(expenseDTO.getAmount());
         expense.setCurrency(expenseDTO.getCurrency());
         expense.setMerchantName(expenseDTO.getMerchantName());
-        expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
+        expense.setFile(expenseDTO.getFile());
+        expense.setFileName(expenseDTO.getFileName());
         expense.setDate(expenseDTO.getDate());
         expense.setCategory(category);
         expense.setCategoryDescription(categoryDescription);
@@ -171,7 +172,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setDate(expenseDTO.getDate());
             expense.setAmount(expenseDTO.getAmount());
             expense.setDescription(expenseDTO.getDescription());
-            expense.setSupportingDocuments(expenseDTO.getSupportingDocuments());
+            expense.setFile(expenseDTO.getFile());
             LocalDateTime now = LocalDateTime.now();
             expense.setDateCreated(now);
             expense.setCurrency(expenseDTO.getCurrency());

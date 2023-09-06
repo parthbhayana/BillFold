@@ -11,20 +11,22 @@ class ExpenseDTOTest {
 
     @Test
     void testExpenseDTOConstructor() {
-        Long amount = 1000L;
+        Double amount = (double) 1000L;
         String currency = "USD";
         String description = "Test Expense";
         String merchantName = "Test Merchant";
-        byte[] supportingDocuments = new byte[]{1, 2, 3};
+        String fileName = "Test File";
+        byte[] file = new byte[]{1, 2, 3};
         LocalDate date = LocalDate.now();
 
-        ExpenseDTO expenseDTO = new ExpenseDTO(amount, currency, description, merchantName, supportingDocuments, date);
+        ExpenseDTO expenseDTO = new ExpenseDTO(amount, currency, description, merchantName, file, fileName, date);
 
         assertEquals(amount, expenseDTO.getAmount());
         assertEquals(currency, expenseDTO.getCurrency());
         assertEquals(description, expenseDTO.getDescription());
         assertEquals(merchantName, expenseDTO.getMerchantName());
-        assertArrayEquals(supportingDocuments, expenseDTO.getSupportingDocuments());
+        assertEquals(fileName, expenseDTO.getFileName());
+        assertArrayEquals(file, expenseDTO.getFile());
         assertEquals(date, expenseDTO.getDate());
     }
 
@@ -36,28 +38,30 @@ class ExpenseDTOTest {
         assertNull(expenseDTO.getCurrency());
         assertNull(expenseDTO.getDescription());
         assertNull(expenseDTO.getMerchantName());
-        assertNull(expenseDTO.getSupportingDocuments());
+        assertNull(expenseDTO.getFile());
+        assertNull(expenseDTO.getFileName());
         assertNull(expenseDTO.getDate());
 
-        Long amount = 1000L;
+        Double amount = (double) 1000L;
         String currency = "USD";
         String description = "Test Expense";
         String merchantName = "Test Merchant";
-        byte[] supportingDocuments = new byte[]{1, 2, 3};
+        String fileName = "Test File";
+        byte[] file = new byte[]{1, 2, 3};
         LocalDate date = LocalDate.now();
 
         expenseDTO.setAmount(amount);
         expenseDTO.setCurrency(currency);
         expenseDTO.setDescription(description);
         expenseDTO.setMerchantName(merchantName);
-        expenseDTO.setSupportingDocuments(supportingDocuments);
+        expenseDTO.setFile(file);
         expenseDTO.setDate(date);
 
         assertEquals(amount, expenseDTO.getAmount());
         assertEquals(currency, expenseDTO.getCurrency());
         assertEquals(description, expenseDTO.getDescription());
         assertEquals(merchantName, expenseDTO.getMerchantName());
-        assertArrayEquals(supportingDocuments, expenseDTO.getSupportingDocuments());
+        assertArrayEquals(file, expenseDTO.getFile());
         assertEquals(date, expenseDTO.getDate());
     }
 }
