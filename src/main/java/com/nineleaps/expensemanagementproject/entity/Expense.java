@@ -2,6 +2,7 @@ package com.nineleaps.expensemanagementproject.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -85,9 +86,19 @@ public class Expense {
 	@ApiModelProperty(hidden = true)
 	private Boolean potentialDuplicate = false;
 
+<<<<<<< Updated upstream
 	@Lob
 	@Column(name = "supporting_documents", nullable = true)
 	private byte[] file;
+=======
+//	@Lob
+//	@Column(name = "supporting_documents", nullable = true)
+//	private byte[] supportingDocuments;
+@Lob
+@ElementCollection
+@Column(name = "supporting_documents", nullable = true)
+private List<byte[]> supportingDocuments;
+>>>>>>> Stashed changes
 
 	@Column(name = "file_name")
 	@ApiModelProperty(hidden = true)
@@ -115,11 +126,19 @@ public class Expense {
 	}
 
 	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
+<<<<<<< Updated upstream
 			String currencySymbol, Double amount, double amountINR, String description, String categoryDescription,
 			Boolean isReported, Boolean isHidden, String reportTitle, Double amountApproved, Double amountApprovedINR,
 			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
 			Boolean potentialDuplicate, byte[] file, String fileName, Employee employee, Reports reports,
 			Category category) {
+=======
+				   String currencySymbol, Double amount, Double amountINR, String description, String categoryDescription,
+				   Boolean isReported, Boolean isHidden, String reportTitle, Double amountApproved, Double amountApprovedINR,
+				   FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
+				   Boolean potentialDuplicate, List<byte[]> supportingDocuments, Employee employee, Reports reports,
+				   Category category) {
+>>>>>>> Stashed changes
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
@@ -290,6 +309,7 @@ public class Expense {
 		this.potentialDuplicate = potentialDuplicate;
 	}
 
+<<<<<<< Updated upstream
 	public byte[] getFile() {
 		return file;
 	}
@@ -305,6 +325,15 @@ public class Expense {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+=======
+//	public byte[] getSupportingDocuments() {
+//		return supportingDocuments;
+//	}
+//
+//	public void setSupportingDocuments(byte[] supportingDocuments) {
+//		this.supportingDocuments = supportingDocuments;
+//	}
+>>>>>>> Stashed changes
 
 	public Employee getEmployee() {
 		return employee;
@@ -330,6 +359,38 @@ public class Expense {
 		this.category = category;
 	}
 
+<<<<<<< Updated upstream
 	
+=======
+	public List<byte[]> getSupportingDocuments() {
+		return supportingDocuments;
+	}
+
+	public void setSupportingDocuments(List<byte[]> supportingDocuments
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	) {
+		this.supportingDocuments = supportingDocuments;
+	}
+>>>>>>> Stashed changes
 
 }

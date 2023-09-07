@@ -1,0 +1,21 @@
+
+v
+java:S1192b"YDefine a constant instead of duplicating this literal "Employee does not exist!" 3 times.(‘¯Æ8—éà£1
+f
+java:S1192_"JDefine a constant instead of duplicating this literal "
+
+Thanks!" 5 times.(œ‘%8—éà£1
+q
+java:S1192G"OUse already-defined constant 'CONSTANT6' instead of duplicating its value here.(ËÇØûÿÿÿÿ8—éà£1
+q
+java:S1192"SDefine a constant instead of duplicating this literal "
+Total Amount: â‚¹" 3 times.(ãÒô8˜éà£1
+f
+java:S1192G"DDefine a constant instead of duplicating this literal ",
+
+" 4 times.(ËÇØûÿÿÿÿ8˜éà£1
+X
+java:S3655“"5Call "report.isPresent()" before accessing the value.(´Ï„êıÿÿÿÿ8»éà£1
+Y
+java:S3655û"6Call "expense.isPresent()" before accessing the value.(ã™–ùøÿÿÿÿ8ºéà£1
+[	java:S106Ù"9Replace this use of System.out or System.err by a logger.(€¢õ£úÿÿÿÿ8äéà£1

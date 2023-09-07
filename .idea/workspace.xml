@@ -8,11 +8,19 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/DTO/ExpenseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/DTO/ExpenseDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/entity/Expense.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/entity/Expense.java" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.java" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/reports,txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/reports.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/IEmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/IEmailService.java" afterDir="false" />
+>>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/PdfEmployeeGeneratorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/PdfEmployeeGeneratorServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/PdfFinanceAdminGeneratorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/PdfFinanceAdminGeneratorServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/PdfManagerGeneratorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/service/PdfManagerGeneratorServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/util/ImageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nineleaps/expensemanagementproject/util/ImageUtil.java" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/DTO/ExpenseDTOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/DTO/ExpenseDTOTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/entity/ExpenseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/nineleaps/expensemanagementproject/entity/ExpenseTest.java" afterDir="false" />
@@ -22,6 +30,11 @@
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExcelGeneratorCategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExcelGeneratorCategoryServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.class" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Expense.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/entity/Expense.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/service/ExpenseServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/nineleaps/expensemanagementproject/util/ImageUtil.class" beforeDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

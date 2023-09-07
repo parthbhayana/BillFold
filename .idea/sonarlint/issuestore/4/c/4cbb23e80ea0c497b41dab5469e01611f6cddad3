@@ -1,0 +1,21 @@
+
+T
+java:S3655_"7Call "Optional#isPresent()" before accessing the value.(ç‘›ú8þ´Êà£1
+Y
+java:S1854`"<Remove this useless assignment to local variable "expenses".(ÄÕ£Ø8‚•­à£1
+‰
+java:S11300"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(ùß»’8ÄðÊà£1
+J
+java:S1481`"-Remove this unused "expenses" local variable.(ÄÕ£Ø8¾•­à£1
+Y	java:S125²"<This block of commented-out lines of code should be removed.(Æë8Ì•­à£1
+Y	java:S125å"<This block of commented-out lines of code should be removed.(á‚é8Ñ•­à£1
+Y	java:S125ì"<This block of commented-out lines of code should be removed.(ïÕ”˜8Ò•­à£1
+^	java:S125ý"<This block of commented-out lines of code should be removed.(ñ”‘Áüÿÿÿÿ8ñÊà£1
+O
+java:S1128"3Remove this unused import 'com.lowagie.text.Image'.(§ˆÃf8®ñÊà£1
+M
+java:S1128"0Remove this unused import 'java.io.InputStream'.(¹»º8¯ñÊà£1
+P
+java:S1144¡"2Remove this unused private "isImageFormat" method.(ø°ã›8±ñÊà£1
+N
+java:S1144ª"0Remove this unused private "isPdfFormat" method.(’ß®¥8±ñÊà£1

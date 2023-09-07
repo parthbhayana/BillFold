@@ -1,0 +1,31 @@
+
+F
+java:S5411Â"(Use a primitive boolean expression here.(¾¦Ë¬8ˆŸ—à£1
+F
+java:S5411Å"(Use a primitive boolean expression here.(±”£‚8‰Ÿ—à£1
+K
+java:S5411Ú"(Use a primitive boolean expression here.(ª”Áìşÿÿÿÿ8ŠŸ—à£1
+K
+java:S5411î"(Use a primitive boolean expression here.(ˆ°¹™úÿÿÿÿ8ŠŸ—à£1
+K
+java:S5411ñ"(Use a primitive boolean expression here.(Æô„õøÿÿÿÿ8ŠŸ—à£1
+U
+java:S3655Ø"7Call "Optional#isPresent()" before accessing the value.(’ò´¡8ßŸ—à£1
+U
+java:S3655å"7Call "Optional#isPresent()" before accessing the value.(ç‘›ú8ßŸ—à£1
+U
+java:S3655Ò"7Call "Optional#isPresent()" before accessing the value.(¥ä¢Ÿ8ßŸ—à£1
+U
+java:S3655Œ"7Call "Optional#isPresent()" before accessing the value.(£™ÕÙ8ŞŸ—à£1
+U
+java:S3655¥"7Call "Optional#isPresent()" before accessing the value.(¥ä¢Ÿ8ßŸ—à£1
+©
+java:S4449›"ŠAnnotate the parameter with @javax.annotation.Nullable in method 'save' declaration, or make sure that null can not be passed as argument.(á·‚Ì8ßŸ—à£1
+Z	java:S106I"9Replace this use of System.out or System.err by a logger.(îàúÿÿÿÿÿ8äš¼Ü¢1
+]	java:S125P"<This block of commented-out lines of code should be removed.(ö¹ãåûÿÿÿÿ8¦ÎÚà£1
+Y	java:S125ú"<This block of commented-out lines of code should be removed.(‡ş„‡8Ÿ —à£1
+Y	java:S125—"<This block of commented-out lines of code should be removed.(Ùîâ¥8æš¼Ü¢1
+
+java:S1128"dRemove this unused import 'com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest'.(¶‡Ô¶8æÅİà£1
+r
+java:S1128"PRemove this unused import 'org.springframework.scheduling.annotation.Scheduled'.(‚¡®Üûÿÿÿÿ8æÅİà£1

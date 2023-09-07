@@ -1,6 +1,7 @@
 package com.nineleaps.expensemanagementproject.DTO;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class ExpenseDTO {
 
@@ -8,6 +9,7 @@ public class ExpenseDTO {
     private String currency;
     private String description;
     private String merchantName;
+<<<<<<< Updated upstream
     private byte[] file;
 
     private String fileName;
@@ -86,5 +88,80 @@ public class ExpenseDTO {
 	}
     
     
+=======
+//    private byte[] supportingDocuments;
+
+    private List<byte[]> supportingDocuments;
+    private LocalDate date;
+
+    public ExpenseDTO() {
+    }
+
+    public ExpenseDTO(Double amount, String currency, String description, String merchantName, List<byte[]> supportingDocuments,LocalDate date) {
+        this.amount = amount;
+        this.currency = currency;
+        this.description = description;
+        this.merchantName = merchantName;
+        this.supportingDocuments = supportingDocuments;
+        this.date=date;
+    }
+
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
+
+//    public void setSupportingDocuments(byte[] supportingDocuments) {
+//        this.supportingDocuments = supportingDocuments;
+//    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+//    public byte[] getSupportingDocuments() {
+//        return supportingDocuments;
+//    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+    public List<byte[]> getSupportingDocuments() {
+        return supportingDocuments;
+    }
+
+    public void setSupportingDocuments(List<byte[]> supportingDocuments) {
+        this.supportingDocuments = supportingDocuments;
+    }
+
+>>>>>>> Stashed changes
 
 }

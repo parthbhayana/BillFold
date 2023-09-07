@@ -1,0 +1,13 @@
+
+T
+java:S3655g"7Call "Optional#isPresent()" before accessing the value.(ç‘›ú8ü‰šà£1
+Y
+java:S1854h"<Remove this useless assignment to local variable "expenses".(ÄÕ£Ø8Ššà£1
+J
+java:S1481h"-Remove this unused "expenses" local variable.(ÄÕ£Ø8¬Ššà£1
+Y	java:S125ô"<This block of commented-out lines of code should be removed.(ïÕ”˜8ÅŠšà£1
+^	java:S125…"<This block of commented-out lines of code should be removed.(ñ”‘Áüÿÿÿÿ8”¥Ëà£1
+P
+java:S1144©"2Remove this unused private "isImageFormat" method.(ø°ã›8§¥Ëà£1
+N
+java:S1144²"0Remove this unused private "isPdfFormat" method.(’ß®¥8§¥Ëà£1

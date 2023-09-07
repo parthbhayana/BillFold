@@ -246,6 +246,7 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
 //            }
 //        }
 
+<<<<<<< Updated upstream
 
         for (Long expenseId : expenseIds) {
             Expense expense = expenseService.getExpenseById(expenseId);
@@ -276,6 +277,38 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
                 }
             }
         }
+=======
+//
+//        for (Long expenseId : expenseIds) {
+//            Expense expense = expenseService.getExpenseById(expenseId);
+//            byte[] supportingDocument = expense.getSupportingDocuments();
+//
+//            if (supportingDocument != null) {
+//                if (isPdfFormat(supportingDocument)) {
+//                    PdfReader pdfReader = new PdfReader(supportingDocument);
+//                    int numPages = pdfReader.getNumberOfPages();
+//
+//                    for (int pageNum = 1; pageNum <= numPages; pageNum++) {
+//                        PdfImportedPage page = writer.getImportedPage(pdfReader, pageNum);
+//                        document.newPage();
+//                        PdfContentByte contentByte = writer.getDirectContent();
+//                        contentByte.addTemplate(page, 0, 0);
+//                    }
+//
+//                    pdfReader.close();
+//                } else if (isImageFormat(supportingDocument)) {
+//                    document.newPage();
+//                    InputStream imageInputStream = new ByteArrayInputStream(supportingDocument);
+//                    BufferedImage bufferedImage = ImageIO.read(imageInputStream);
+//                    Image image = Image.getInstance(bufferedImage, null);
+//                    image.scaleAbsolute(600f, 600f);
+//                    image.setAlignment(Image.MIDDLE);
+//                    document.add(image);
+//                    document.newPage();
+//                }
+//            }
+//        }
+>>>>>>> Stashed changes
 
         writer.setPageCount(supportingPdfStartPage - 1);
         document.close();

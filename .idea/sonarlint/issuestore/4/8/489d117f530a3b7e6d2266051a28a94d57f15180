@@ -1,0 +1,10 @@
+
+a	java:S112Ρ"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òιόÿÿÿÿ
+„
+java:S1319r"iThe type of "reportIds" should be an interface such as "List" rather than the implementation "ArrayList".(άίκόÿÿÿÿ
+Q	java:S125e"<This block of commented-out lines of code should be removed.(‘ς°©
+v
+java:S1128
+"`Remove this unused import 'com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus'.(µª³ό
+v
+java:S1128"`Remove this unused import 'com.nineleaps.expensemanagementproject.repository.ReportsRepository'.(“²ÿγ
