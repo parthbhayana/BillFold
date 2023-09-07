@@ -10,6 +10,7 @@ import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationService;
+import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,6 +26,8 @@ public class ReportsServiceImpl implements IReportsService {
 
     @Autowired
     private ExpenseRepository expenseRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private IExpenseService expenseServices;
@@ -51,9 +54,20 @@ public class ReportsServiceImpl implements IReportsService {
     private static final String CONSTANT9 = " is not Submitted!";
 
     @Override
-    public List<Reports> getAllReports() {
-        return reportsRepository.findAll();
+    public Set<Reports> getAllReports(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId).get();
+        List<Expense> expenses=expenseRepository.findByEmployeeAndIsHidden(employee,false);
+        Set<Reports> reportsList = new HashSet<>();
+        for (Expense expense : expenses) {
+            Reports reports = expense.getReports();
+            if (reports != null) {
+                reportsList.add(reports);
+            }
+        }
+
+        return  reportsList;
     }
+
 
     @Override
     public Reports getReportById(Long reportId) {
@@ -164,6 +178,7 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public Reports addExpenseToReport(Long reportId, List<Long> expenseids) {
         Reports report = getReportById(reportId);
+        Long count= 0L;
         if (report.getIsHidden()) {
             throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
         }
@@ -173,10 +188,14 @@ public class ReportsServiceImpl implements IReportsService {
                 throw new IllegalStateException(CONSTANT3 + expenseid + " is already reported in another report!");
             }
             if (!expense.getIsReported()) {
+                count++;
+                System.out.println(count+"hihihihihihi");
+
                 expenseServices.updateExpense(reportId, expenseid);
             }
         }
         Reports re = getReportById(reportId);
+        re.setExpensesCount(count);
         re.setTotalAmountINR(totalAmountINR(reportId));
         re.setTotalAmountCurrency(totalAmountCurrency(reportId));
         return reportsRepository.save(re);
@@ -879,6 +898,7 @@ public class ReportsServiceImpl implements IReportsService {
         String hrEmail = employee.getHrEmail();
         String hrName = employee.getHrName();
         emailService.notifyHr(reportId, hrEmail, hrName);
+
     }
 
     @Override
@@ -918,6 +938,19 @@ public class ReportsServiceImpl implements IReportsService {
 
             pushNotificationService.sendPushNotificationToToken(notificationRequest);
         }
+    }
+
+    @Override
+    public int numberOfExpenses(Long reportId)
+    {
+        int count=0;
+        List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+        for (Expense expense:expenseList)
+        {
+            count++;
+        }
+        return count;
+
     }
 }
 

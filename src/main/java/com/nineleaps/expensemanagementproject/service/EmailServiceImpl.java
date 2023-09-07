@@ -108,7 +108,7 @@ public class EmailServiceImpl implements IEmailService {
             MimeMessageHelper eMail = new MimeMessageHelper(message, true);
             eMail.setFrom(CONSTANT1);
             eMail.setTo(hrEmail);
-            eMail.setSubject("Expense Report: " + report.getReportTitle()); //
+            eMail.setSubject("Expense Report: " + report.getReportTitle());
             eMail.setText("Dear " + hrName + ",\n\n"
                     + "CONTENT HERE!!"
                     + CONSTANT3 + "\n\nThanks!");

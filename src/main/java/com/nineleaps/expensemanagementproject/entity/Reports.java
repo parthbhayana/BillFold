@@ -3,15 +3,7 @@ package com.nineleaps.expensemanagementproject.entity;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
@@ -116,10 +108,17 @@ public class Reports {
     @Enumerated(EnumType.STRING)
     private ManagerApprovalStatus managerapprovalstatus;
 
+    @Column(name="expenses_count",nullable=true)
+    @ApiModelProperty(hidden=true)
+    private Long expensesCount;
+
+
     @JsonIgnore
     @OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private final List<Expense> expenseList = new ArrayList<>();
+
+
 
     public Reports() {
 
@@ -131,7 +130,7 @@ public class Reports {
                    LocalDate financeActionDate, float totalAmountINR, float totalApprovedAmountINR,
                    float totalAmountCurrency, float totalApprovedAmountCurrency, Boolean isHidden, String managerEmail,
                    String managerReviewTime, FinanceApprovalStatus financeapprovalstatus,
-                   ManagerApprovalStatus managerapprovalstatus) {
+                   ManagerApprovalStatus managerapprovalstatus,Long expensesCount) {
         super();
         this.reportId = reportId;
         this.employeeId = employeeId;
@@ -155,6 +154,7 @@ public class Reports {
         this.managerReviewTime = managerReviewTime;
         this.financeapprovalstatus = financeapprovalstatus;
         this.managerapprovalstatus = managerapprovalstatus;
+        this.expensesCount=expensesCount;
 
     }
 
@@ -333,5 +333,16 @@ public class Reports {
     public void setManagerApprovalStatus(ManagerApprovalStatus managerapprovalstatus) {
         this.managerapprovalstatus = managerapprovalstatus;
     }
+    public Long getExpensesCount() {
+        return reportId;
+    }
+
+    public void setExpensesCount(Long expensesCount)
+    {
+        this.expensesCount = expensesCount;
+    }
+
+
+
 
 }
