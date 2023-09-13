@@ -176,7 +176,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		for (Expense expense : expenseList) {
 			Category category = expense.getCategory();
 			String categoryName = category.getCategoryDescription();
-			Double amt = expense.getAmountINR();
+			Double amt = expense.getAmountApproved();
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Double previousAmt = categoryAmountMap.get(categoryName);
 				categoryAmountMap.put(categoryName, previousAmt + amt);

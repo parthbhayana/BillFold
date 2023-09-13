@@ -31,39 +31,42 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
 	Optional<Reports> findById(Long reportId);
 
-	List<Reports> getReportsByEmployeeIdAndManagerapprovalstatusAndIsSubmittedAndIsHidden(Long employeeId,
+	List<Reports> getReportsByEmployeeIdAndManagerApprovalStatusAndIsSubmittedAndIsHidden(Long employeeId,
 			ManagerApprovalStatus managerStatus, Boolean a, Boolean b);
 
 	List<Reports> getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Long employeeId, Boolean a, Boolean b);
 
 	List<Reports> findByManagerEmail(String managerEmail);
 
-	List<Reports> findByManagerEmailAndManagerapprovalstatusAndIsSubmittedAndIsHidden(String managerEmail,
+	List<Reports> findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(String managerEmail,
 			ManagerApprovalStatus managerStatus, Boolean a, Boolean b);
 
 	List<Reports> findByManagerEmailAndIsSubmittedAndIsHidden(String managerEmail, Boolean a, Boolean b);
 
-	List<Reports> findByManagerapprovalstatusAndFinanceapprovalstatusAndIsSubmittedAndIsHidden(
+	List<Reports> findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
 			ManagerApprovalStatus managerStatus, FinanceApprovalStatus financeStatus, Boolean a, Boolean b);
 
 
-	List<Reports> findByManagerEmailAndDateSubmittedBetweenAndManagerapprovalstatusAndIsSubmittedAndIsHidden(String managerEmail, LocalDate startDate,
+	List<Reports> findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(String managerEmail, LocalDate startDate,
 			LocalDate endDate, ManagerApprovalStatus managerStatus, Boolean a, Boolean b);
 
 	List<Reports> findByDateSubmittedBetween(LocalDate startDate, LocalDate endDate);
 
 
-	List<Reports> findBymanagerapprovalstatus(ManagerApprovalStatus managerApprovalStatus);
+	List<Reports> findBymanagerApprovalStatus(ManagerApprovalStatus managerApprovalStatus);
 
-	List<Reports> getReportsByEmployeeIdAndManagerapprovalstatusAndIsHidden(Long employeeId, ManagerApprovalStatus managerApprovalStatus, boolean b);
-
-
-    List<Reports> findByManagerEmailAndManagerapprovalstatusAndIsHidden(String managerEmail, ManagerApprovalStatus managerApprovalStatus, boolean b);
+	List<Reports> getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(Long employeeId,
+																			ManagerApprovalStatus managerApprovalStatus, boolean b);
 
 
-	List<Reports> findByfinanceapprovalstatus(FinanceApprovalStatus financeApprovalStatus);
+    List<Reports> findByManagerEmailAndManagerApprovalStatusAndIsHidden(String managerEmail,
+																		ManagerApprovalStatus managerApprovalStatus, boolean b);
 
-    List<Reports> findByDateSubmittedBetweenAndFinanceapprovalstatus(LocalDate startDate, LocalDate endDate, FinanceApprovalStatus financeApprovalStatus);
+
+	List<Reports> findByfinanceApprovalStatus(FinanceApprovalStatus financeApprovalStatus);
+
+    List<Reports> findByDateSubmittedBetweenAndFinanceApprovalStatus(LocalDate startDate, LocalDate endDate,
+																	 FinanceApprovalStatus financeApprovalStatus);
 
 
 }

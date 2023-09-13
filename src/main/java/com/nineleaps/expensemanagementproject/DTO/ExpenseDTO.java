@@ -4,24 +4,21 @@ import java.time.LocalDate;
 
 public class ExpenseDTO {
 
-    private Double amount;
-    private String currency;
-    private String description;
-    private String merchantName;
-    private byte[] file;
+	private Double amount;
+	private String description;
+	private String merchantName;
+	private byte[] file;
+	private String fileName;
+	private LocalDate date;
 
-    private String fileName;
-    private LocalDate date;
+	public ExpenseDTO() {
 
-    public ExpenseDTO() {
-		
 	}
 
-	public ExpenseDTO(Double amount, String currency, String description, String merchantName, byte[] file,
-			String fileName, LocalDate date) {
+	public ExpenseDTO(Double amount, String description, String merchantName, byte[] file, String fileName,
+			LocalDate date) {
 		super();
 		this.amount = amount;
-		this.currency = currency;
 		this.description = description;
 		this.merchantName = merchantName;
 		this.file = file;
@@ -35,14 +32,6 @@ public class ExpenseDTO {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
 	}
 
 	public String getDescription() {
@@ -84,7 +73,5 @@ public class ExpenseDTO {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-    
-    
 
 }
