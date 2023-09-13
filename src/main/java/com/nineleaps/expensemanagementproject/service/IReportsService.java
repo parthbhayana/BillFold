@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +15,8 @@ import com.nineleaps.expensemanagementproject.entity.Reports;
 
 public interface IReportsService {
 
-    List<Reports> getAllReports();
+
+    Set<Reports> getAllReports(Long employeeId);
 
     Reports getReportById(Long reportId);
 
@@ -77,4 +79,6 @@ public interface IReportsService {
     void notifyHR(Long reportId) throws MessagingException;
 
     void notifyLnD(Long reportId) throws MessagingException;
+
+    int numberOfExpenses(Long reportId);
 }

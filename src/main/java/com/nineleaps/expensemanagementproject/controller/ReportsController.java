@@ -31,9 +31,9 @@ public class ReportsController {
     @Autowired
     private IReportsService reportsService;
 
-    @GetMapping("/getAllReports")
-    public List<Reports> getAllReports() {
-        return reportsService.getAllReports();
+    @GetMapping("/getAllReports/{employeeId}")
+    public Set<Reports> getAllReports(@PathVariable Long employeeId) {
+        return reportsService.getAllReports(employeeId);
     }
 
     @GetMapping("/getByReportId/{reportId}")
@@ -172,6 +172,11 @@ public class ReportsController {
     @PostMapping("/notifyLnD/{reportId}")
     public void notifyLnD(@RequestParam Long reportId) throws MessagingException {
         reportsService.notifyLnD(reportId);
+    }
+    @GetMapping("/numberOfExpenses/{reportId}")
+    public int numberOfExpenses(@RequestParam Long reportId)
+    {
+       return  reportsService.numberOfExpenses(reportId);
     }
 
     @PostMapping("/updateExpenseStatus/{reportId}")

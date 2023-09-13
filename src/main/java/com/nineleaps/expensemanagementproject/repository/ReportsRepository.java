@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.nineleaps.expensemanagementproject.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
@@ -63,4 +64,6 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 	List<Reports> findByfinanceapprovalstatus(FinanceApprovalStatus financeApprovalStatus);
 
     List<Reports> findByDateSubmittedBetweenAndFinanceapprovalstatus(LocalDate startDate, LocalDate endDate, FinanceApprovalStatus financeApprovalStatus);
+
+
 }
