@@ -5,7 +5,8 @@ import java.util.*;
 import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
@@ -56,7 +57,8 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public Set<Reports> getAllReports(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).get();
-        List<Expense> expenses=expenseRepository.findByEmployeeAndIsHidden(employee,false);
+        Sort sort = Sort.by(Direction.DESC, "dateCreated"); // Sort by dateCreated in descending order
+        List<Expense> expenses = expenseRepository.findByEmployeeAndIsHidden(employee, false, sort);
         Set<Reports> reportsList = new HashSet<>();
         for (Expense expense : expenses) {
             Reports reports = expense.getReports();
@@ -65,7 +67,7 @@ public class ReportsServiceImpl implements IReportsService {
             }
         }
 
-        return  reportsList;
+        return reportsList;
     }
 
 
@@ -953,4 +955,3 @@ public class ReportsServiceImpl implements IReportsService {
 
     }
 }
-

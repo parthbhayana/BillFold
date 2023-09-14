@@ -15,7 +15,8 @@ import com.nineleaps.expensemanagementproject.firebase.PushNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
@@ -155,7 +156,8 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Override
     public List<Expense> getExpenseByEmployeeId(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).get();
-        return expenseRepository.findByEmployeeAndIsHidden(employee, false);
+        Sort sort = Sort.by(Direction.DESC, "dateCreated"); // Sort by dateCreated in descending order
+        return expenseRepository.findByEmployeeAndIsHidden(employee, false, sort);
     }
 
     @Override
