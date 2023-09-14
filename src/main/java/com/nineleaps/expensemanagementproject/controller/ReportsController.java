@@ -140,13 +140,13 @@ public class ReportsController {
 	}
 
 	@PostMapping("/notifyHr/{reportId}")
-	public void notifyHr(@RequestParam Long reportId) throws MessagingException {
-		reportsService.notifyHR(reportId);
+	public void notifyHr(@RequestParam Long reportId, HttpServletResponse response) throws MessagingException, IOException {
+		reportsService.notifyHR(reportId, response);
 	}
 
 	@PostMapping("/notifyLnD/{reportId}")
-	public void notifyLnD(@RequestParam Long reportId) throws MessagingException {
-		reportsService.notifyLnD(reportId);
+	public void notifyLnD(@RequestParam Long reportId , HttpServletResponse response) throws MessagingException, IOException {
+		reportsService.notifyLnD(reportId,response);
 	}
 
 	@GetMapping("/numberOfExpenses/{reportId}")
