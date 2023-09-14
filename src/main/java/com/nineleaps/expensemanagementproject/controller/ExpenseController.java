@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
@@ -70,6 +71,16 @@ public class ExpenseController {
 	@PostMapping("/hideExpense/{expenseId}")
 	public void hideExpense(@PathVariable Long expenseId) {
 		expenseService.hideExpense(expenseId);
+	}
+
+	@GetMapping("/expenseCount/{reportId}")
+	public Long expenseCount(@RequestParam Long reportId){
+		List<Expense> expenseList = expenseService.getExpenseByReportId(reportId);
+		List<Long> expenseIds = new ArrayList<>();
+		for (Expense exp : expenseList) {
+			expenseIds.add(exp.getExpenseId());
+		}
+		return (long) expenseIds.size();
 	}
 
 }

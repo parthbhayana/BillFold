@@ -53,7 +53,7 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public Set<Reports> getAllReports(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).get();
-        List<Expense> expenses=expenseRepository.findByEmployeeAndIsHidden(employee,false);
+        List<Expense> expenses = expenseRepository.findByEmployeeAndIsHidden(employee, false);
         Set<Reports> reportsList = new HashSet<>();
         for (Expense expense : expenses) {
             Reports reports = expense.getReports();
@@ -62,7 +62,7 @@ public class ReportsServiceImpl implements IReportsService {
             }
         }
 
-        return  reportsList;
+        return reportsList;
     }
 
 
@@ -105,6 +105,13 @@ public class ReportsServiceImpl implements IReportsService {
                 expenseRepository.save(exp2);
             }
         }
+        reportsRepository.save(newReport);
+        List<Expense> expenseList = expenseServices.getExpenseByReportId(newReport.getReportId());
+        List<Long> expenseIds = new ArrayList<>();
+        for (Expense exp1 : expenseList) {
+            expenseIds.add(exp1.getExpenseId());
+        }
+        newReport.setExpensesCount((long) expenseIds.size());
         return reportsRepository.save(newReport);
     }
 
@@ -162,13 +169,20 @@ public class ReportsServiceImpl implements IReportsService {
         Reports re = getReportById(reportId);
         re.setTotalAmount(totalAmount(reportId));
         re.setTotalApprovedAmount(totalApprovedAmount(reportId));
+        //Setting Expense Count
+        List<Expense> expenseList = expenseServices.getExpenseByReportId(re.getReportId());
+        List<Long> expenseIds = new ArrayList<>();
+        for (Expense exp1 : expenseList) {
+            expenseIds.add(exp1.getExpenseId());
+        }
+        re.setExpensesCount((long) expenseIds.size());
+        reportsRepository.save(re);
         return getReportByEmpId(empId, "drafts");
     }
 
     @Override
     public Reports addExpenseToReport(Long reportId, List<Long> expenseids) {
         Reports report = getReportById(reportId);
-        Long count= 0L;
         if (report.getIsHidden()) {
             throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);
         }
@@ -178,17 +192,13 @@ public class ReportsServiceImpl implements IReportsService {
                 throw new IllegalStateException(CONSTANT3 + expenseid + " is already reported in another report!");
             }
             if (!expense.getIsReported()) {
-                count++;
-                System.out.println(count+"hihihihihihi");
                 Reports rep = getReportById(reportId);
-                rep.setExpensesCount(count);
                 rep.setTotalAmount(totalAmount(reportId));
 
                 expenseServices.updateExpense(reportId, expenseid);
             }
         }
         Reports re = getReportById(reportId);
-        re.setExpensesCount(count);
         re.setTotalAmount(totalAmount(reportId));
         return reportsRepository.save(re);
     }
@@ -885,12 +895,10 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public int numberOfExpenses(Long reportId)
-    {
-        int count=0;
+    public int numberOfExpenses(Long reportId) {
+        int count = 0;
         List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
-        for (Expense expense:expenseList)
-        {
+        for (Expense expense : expenseList) {
             count++;
         }
         return count;
