@@ -33,8 +33,8 @@ public interface IEmailService {
 
 	void welcomeEmail(String employeeEmail) throws MessagingException;
 
-	void notifyHr(Long reportId, String hrEmail, String hrName) throws MessagingException;
+	void notifyHr(Long reportId, String hrEmail, String hrName, HttpServletResponse response) throws MessagingException, IOException;
 
-	void notifyLnD(Long reportId, String lndEmail, String lndName) throws MessagingException;
+	void notifyLnD(Long reportId, String lndEmail, String lndName, HttpServletResponse response) throws MessagingException, IOException;
 
 }

@@ -180,6 +180,9 @@ public class ReportsServiceImpl implements IReportsService {
             if (!expense.getIsReported()) {
                 count++;
                 System.out.println(count+"hihihihihihi");
+                Reports rep = getReportById(reportId);
+                rep.setExpensesCount(count);
+                rep.setTotalAmount(totalAmount(reportId));
 
                 expenseServices.updateExpense(reportId, expenseid);
             }
@@ -832,24 +835,24 @@ public class ReportsServiceImpl implements IReportsService {
 
 
     @Override
-    public void notifyHR(Long reportId) throws MessagingException {
+    public void notifyHR(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
         Reports report = getReportById(reportId);
         Long employeeId = report.getEmployeeId();
         Employee employee = employeeServices.getEmployeeById(employeeId);
         String hrEmail = employee.getHrEmail();
         String hrName = employee.getHrName();
-        emailService.notifyHr(reportId, hrEmail, hrName);
+        emailService.notifyHr(reportId, hrEmail, hrName, response);
 
     }
 
     @Override
-    public void notifyLnD(Long reportId) throws MessagingException {
+    public void notifyLnD(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
         Reports report = getReportById(reportId);
         Long employeeId = report.getEmployeeId();
         Employee employee = employeeServices.getEmployeeById(employeeId);
         String lndEmail = employee.getLndEmail();
         String lndName = employee.getLndName();
-        emailService.notifyLnD(reportId, lndEmail, lndName);
+        emailService.notifyLnD(reportId, lndEmail, lndName, response);
     }
 
     @Scheduled(cron = "0 0 12 22,24 * ?")
