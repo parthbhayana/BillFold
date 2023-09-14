@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
+
 @Service
 public class ReportsServiceImpl implements IReportsService {
 
@@ -94,6 +95,8 @@ public class ReportsServiceImpl implements IReportsService {
         Long id = newReport.getReportId();
         List<Expense> expp = expenseRepository.findAllById(expenseids);
         //Setting Amounts
+        Long expensesCount = (long) expenseids.size();
+        newReport.setExpensesCount(expensesCount);
         float amt = 0;
         for (Expense expense2 : expp) {
             amt += expense2.getAmountINR();
@@ -188,17 +191,16 @@ public class ReportsServiceImpl implements IReportsService {
                 throw new IllegalStateException(CONSTANT3 + expenseid + " is already reported in another report!");
             }
             if (!expense.getIsReported()) {
-                count++;
-                System.out.println(count+"hihihihihihi");
 
                 expenseServices.updateExpense(reportId, expenseid);
             }
         }
-        Reports re = getReportById(reportId);
-        re.setExpensesCount(count);
-        re.setTotalAmountINR(totalAmountINR(reportId));
-        re.setTotalAmountCurrency(totalAmountCurrency(reportId));
-        return reportsRepository.save(re);
+
+        report.setTotalAmountINR(totalAmountINR(reportId));
+        report.setTotalAmountCurrency(totalAmountCurrency(reportId));
+
+
+        return reportsRepository.save(report);
     }
 
     @Override

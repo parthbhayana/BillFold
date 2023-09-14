@@ -333,16 +333,12 @@ public class Reports {
     public void setManagerApprovalStatus(ManagerApprovalStatus managerapprovalstatus) {
         this.managerapprovalstatus = managerapprovalstatus;
     }
+
     public Long getExpensesCount() {
-        return reportId;
+        return expensesCount;
     }
 
-    public void setExpensesCount(Long expensesCount)
-    {
+    public void setExpensesCount(Long expensesCount) {
         this.expensesCount = expensesCount;
     }
-
-
-
-
 }
