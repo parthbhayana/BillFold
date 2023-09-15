@@ -40,7 +40,6 @@ import static com.lowagie.text.Element.ALIGN_LEFT;
 import static com.lowagie.text.Element.ALIGN_RIGHT;
 import static com.lowagie.text.Element.ALIGN_CENTER;
 
-
 @Service
 public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGeneratorService {
     @Autowired
@@ -54,11 +53,10 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
     @Autowired
     IExpenseService expenseService;
 
-
     public byte[] generatePdf(Long reportId, List<Long> expenseIds) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document document = new Document(PageSize.A4);
-        @SuppressWarnings("unused") PdfWriter writer = PdfWriter.getInstance(document, baos);
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
         class FooterEvent extends PdfPageEventHelper {
             @Override
             public void onEndPage(PdfWriter writer, Document document) {
@@ -85,7 +83,6 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         Paragraph headerParagraph01 = new Paragraph("Report Id: " + reportId, fontheader01);
         headerParagraph01.setAlignment(ALIGN_RIGHT);
 
-
         Font fontHeader = FontFactory.getFont(FontFactory.TIMES);
         fontHeader.setSize(22);
         Paragraph headerParagraph = new Paragraph("BillFold - Expense Report", fontHeader);
@@ -102,6 +99,7 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         Font fontParagraph = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph.setSize(12);
         Reports report = reportsRepository.findById(reportId).get();
+        @SuppressWarnings("unused")
         List<Expense> expenses = expenseRepository.findByReports(report);
         Employee employee = null;
         if (!expenseIds.isEmpty()) {
@@ -117,21 +115,11 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
             table.addCell(getCenterAlignedCells(dateCreated.format(formatter1), font));
             table.addCell(getCenterAlignedCells(expenseList.getMerchantName(), font));
             table.addCell(getCenterAlignedCells(expenseList.getDescription(), font));
-            if (expenseList.getAmountApprovedINR() != null) {
-                table.addCell((getCenterAlignedCells(expenseList.getAmountApprovedINR().toString(), font)));
-            } else {
-                table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
-            }
-//            table.addCell(getCenterAlignedCells(String.valueOf(expenseList.getManagerApprovalStatusExpense()), font));
-
+            table.addCell((getCenterAlignedCells(expenseList.getAmountApproved().toString(), font)));
             table.addCell(getCenterAlignedCells(
-                    convertToCustomCase(String.valueOf(expenseList.getManagerApprovalStatusExpense())),
-                    font
-            ));
-            total += (expenseList.getAmountApprovedINR() !=
-                    null) ? expenseList.getAmountApprovedINR() : expenseList.getAmount();
+                    convertToCustomCase(String.valueOf(expenseList.getManagerApprovalStatusExpense())), font));
+            total += expenseList.getAmountApproved();
         }
-
 
         Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES_BOLD);
         fontParagraph1.setSize(14);
@@ -146,7 +134,8 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
 
         Font fontParagraph11 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph11.setSize(14);
-        @SuppressWarnings("null") Paragraph pdfParagraph = new Paragraph(
+        @SuppressWarnings("null")
+        Paragraph pdfParagraph = new Paragraph(
                 "Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
         pdfParagraph.setAlignment(ALIGN_LEFT);
         Font fontParagraph12 = FontFactory.getFont(FontFactory.TIMES);
@@ -171,15 +160,13 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         noteParagraph.setAlignment(ALIGN_LEFT);
         noteParagraph.setIndentationLeft(20);
         noteParagraph.add("The information on this receipt was manually entered. Please verify for authenticity.\n");
-        Paragraph lineSeparator =
-                new Paragraph(
-                        "----------------------------------------------------------------------------------------------------------------------------------");
+        Paragraph lineSeparator = new Paragraph(
+                "----------------------------------------------------------------------------------------------------------------------------------");
         lineSeparator.setAlignment(Element.ALIGN_CENTER);
         lineSeparator.setSpacingAfter(10);
 
-
-        Paragraph historyTitle =
-                new Paragraph("Report History and comments:", FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
+        Paragraph historyTitle = new Paragraph("Report History and comments:",
+                FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
         historyTitle.setAlignment(Element.ALIGN_LEFT);
         historyTitle.setSpacingAfter(10);
         Paragraph historyContent = new Paragraph();
@@ -197,10 +184,8 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
         historyContent.add(submissionMessage);
 
-
         Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
         fontParagraph14.setSize(14);
-
 
         document.add(headerParagraph01);
         document.add(headerParagraph);
@@ -226,26 +211,9 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         document.add(historyTitle);
         document.add(historyContent);
 
-
         int supportingPdfStartPage = writer.getPageNumber();
 
         document.newPage();
-//        for (Long expense : expenseIds) {
-//            Expense expenseList = expenseService.getExpenseById(expense);
-//            if (expenseList.getSupportingDocuments() == null)
-//                continue;
-//            if (expenseList.getSupportingDocuments() != null) {
-//                byte[] imageData = expenseList.getSupportingDocuments();
-//                InputStream in = new ByteArrayInputStream(imageData);
-//                BufferedImage bufferedImage = ImageIO.read(in);
-//                Image image = Image.getInstance(bufferedImage, null);
-//                image.scaleAbsolute(600f, 600f);
-//                image.setAlignment(Image.MIDDLE);
-//                document.add(image);
-//                document.newPage();
-//            }
-//        }
-
 
         for (Long expenseId : expenseIds) {
             Expense expense = expenseService.getExpenseById(expenseId);
@@ -301,7 +269,6 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
             return false;
         }
     }
-
 
     @Override
     public PdfPCell getCenterAlignedCell(String content, Font font) {
@@ -370,4 +337,3 @@ public class PdfFinanceAdminGeneratorServiceImpl implements IPdfFinanceAdminGene
         return result.toString();
     }
 }
-

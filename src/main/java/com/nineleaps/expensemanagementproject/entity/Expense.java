@@ -30,19 +30,8 @@ public class Expense {
 	@ApiModelProperty(hidden = true)
 	private LocalDateTime dateCreated;
 
-	@Column(name = "currency")
-	private String currency;
-
-	@Column(name = "currency_symbol")
-	@ApiModelProperty(hidden = true)
-	private String currencySymbol;
-
 	@Column(name = "amount", nullable = false)
 	private Double amount;
-
-	@Column(name = "amount_INR", nullable = false)
-	@ApiModelProperty(hidden = true)
-	private double amountINR;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -67,10 +56,6 @@ public class Expense {
 	@ApiModelProperty(hidden = true)
 	private Double amountApproved;
 
-	@Column(name = "amount_approved_INR")
-	@ApiModelProperty(hidden = true)
-	private Double amountApprovedINR;
-
 	@Column(name = "finance_approval_status", nullable = true)
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
@@ -86,13 +71,13 @@ public class Expense {
 	private Boolean potentialDuplicate = false;
 
 	@Lob
-	@Column(name = "supporting_documents", nullable = true)
+	@Column(name = "file", nullable = true)
 	private byte[] file;
 
 	@Column(name = "file_name")
 	@ApiModelProperty(hidden = true)
 	private String fileName;
-	
+
 	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -114,28 +99,23 @@ public class Expense {
 
 	}
 
-	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, String currency,
-			String currencySymbol, Double amount, double amountINR, String description, String categoryDescription,
-			Boolean isReported, Boolean isHidden, String reportTitle, Double amountApproved, Double amountApprovedINR,
-			FinanceApprovalStatus financeApprovalStatus, ManagerApprovalStatusExpense managerApprovalStatusExpense,
-			Boolean potentialDuplicate, byte[] file, String fileName, Employee employee, Reports reports,
-			Category category) {
+	public Expense(Long expenseId, String merchantName, LocalDate date, LocalDateTime dateCreated, Double amount,
+				   String description, String categoryDescription, Boolean isReported, Boolean isHidden, String reportTitle,
+				   Double amountApproved, FinanceApprovalStatus financeApprovalStatus,
+				   ManagerApprovalStatusExpense managerApprovalStatusExpense, Boolean potentialDuplicate, byte[] file,
+				   String fileName, Employee employee, Reports reports, Category category) {
 		super();
 		this.expenseId = expenseId;
 		this.merchantName = merchantName;
 		this.date = date;
 		this.dateCreated = dateCreated;
-		this.currency = currency;
-		this.currencySymbol = currencySymbol;
 		this.amount = amount;
-		this.amountINR = amountINR;
 		this.description = description;
 		this.categoryDescription = categoryDescription;
 		this.isReported = isReported;
 		this.isHidden = isHidden;
 		this.reportTitle = reportTitle;
 		this.amountApproved = amountApproved;
-		this.amountApprovedINR = amountApprovedINR;
 		this.financeApprovalStatus = financeApprovalStatus;
 		this.managerApprovalStatusExpense = managerApprovalStatusExpense;
 		this.potentialDuplicate = potentialDuplicate;
@@ -178,36 +158,12 @@ public class Expense {
 		this.dateCreated = dateCreated;
 	}
 
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	public String getCurrencySymbol() {
-		return currencySymbol;
-	}
-
-	public void setCurrencySymbol(String currencySymbol) {
-		this.currencySymbol = currencySymbol;
-	}
-
 	public Double getAmount() {
 		return amount;
 	}
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
-	}
-
-	public double getAmountINR() {
-		return amountINR;
-	}
-
-	public void setAmountINR(double amountINR) {
-		this.amountINR = amountINR;
 	}
 
 	public String getDescription() {
@@ -256,14 +212,6 @@ public class Expense {
 
 	public void setAmountApproved(Double amountApproved) {
 		this.amountApproved = amountApproved;
-	}
-
-	public Double getAmountApprovedINR() {
-		return amountApprovedINR;
-	}
-
-	public void setAmountApprovedINR(Double amountApprovedINR) {
-		this.amountApprovedINR = amountApprovedINR;
 	}
 
 	public FinanceApprovalStatus getFinanceApprovalStatus() {
@@ -329,7 +277,5 @@ public class Expense {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-
-	
 
 }

@@ -1,25 +1,17 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nineleaps.expensemanagementproject.entity.Currency;
-import com.nineleaps.expensemanagementproject.service.CurrencyExchangeServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.mockito.MockitoAnnotations;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 import java.net.HttpURLConnection;
-import java.net.URL;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class CurrencyControllerTest {

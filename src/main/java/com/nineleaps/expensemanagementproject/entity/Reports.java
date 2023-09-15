@@ -17,8 +17,8 @@ public class Reports {
 
     @Id
     @GeneratedValue(generator = "custom_serial_number")
-    @GenericGenerator(name = "custom_serial_number", strategy = "com.nineleaps.expensemanagementproject.entity" +
-            ".CustomIdGenerator")
+    @GenericGenerator(name = "custom_serial_number", strategy = "com.nineleaps.expensemanagementproject.entity"
+            + ".CustomIdGenerator")
     @Column(name = "report_id", nullable = false)
     @ApiModelProperty(hidden = true)
     private Long reportId;
@@ -70,21 +70,13 @@ public class Reports {
     @ApiModelProperty(hidden = true)
     private LocalDate financeActionDate;
 
-    @Column(name = "total_amount_INR")
+    @Column(name = "total_amount")
     @ApiModelProperty(hidden = true)
-    private float totalAmountINR;
+    private float totalAmount;
 
-    @Column(name = "total_approved_amount_INR")
+    @Column(name = "total_approved_amount")
     @ApiModelProperty(hidden = true)
-    private float totalApprovedAmountINR;
-
-    @Column(name = "total_amount_currency")
-    @ApiModelProperty(hidden = true)
-    private float totalAmountCurrency;
-
-    @Column(name = "total_approved_amount_currency")
-    @ApiModelProperty(hidden = true)
-    private float totalApprovedAmountCurrency;
+    private float totalApprovedAmount;
 
     @Column(name = "is_hidden", nullable = true)
     @ApiModelProperty(hidden = true)
@@ -101,24 +93,21 @@ public class Reports {
     @Column(name = "finance_approval_status", nullable = true)
     @ApiModelProperty(hidden = true)
     @Enumerated(EnumType.STRING)
-    private FinanceApprovalStatus financeapprovalstatus;
+    private FinanceApprovalStatus financeApprovalStatus;
 
     @Column(name = "manager_approval_status", nullable = true)
     @ApiModelProperty(hidden = true)
     @Enumerated(EnumType.STRING)
-    private ManagerApprovalStatus managerapprovalstatus;
+    private ManagerApprovalStatus managerApprovalStatus;
 
-    @Column(name="expenses_count",nullable=true)
-    @ApiModelProperty(hidden=true)
+    @Column(name = "expenses_count", nullable = true)
+    @ApiModelProperty(hidden = true)
     private Long expensesCount;
-
 
     @JsonIgnore
     @OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private final List<Expense> expenseList = new ArrayList<>();
-
-
 
     public Reports() {
 
@@ -126,11 +115,10 @@ public class Reports {
 
     public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
                    String managerComments, String financeComments, Boolean isSubmitted, String employeeMail,
-                   LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate,
-                   LocalDate financeActionDate, float totalAmountINR, float totalApprovedAmountINR,
-                   float totalAmountCurrency, float totalApprovedAmountCurrency, Boolean isHidden, String managerEmail,
-                   String managerReviewTime, FinanceApprovalStatus financeapprovalstatus,
-                   ManagerApprovalStatus managerapprovalstatus,Long expensesCount) {
+                   LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate, LocalDate financeActionDate,
+                   float totalAmount, float totalApprovedAmount, Boolean isHidden, String managerEmail,
+                   String managerReviewTime, FinanceApprovalStatus financeApprovalStatus,
+                   ManagerApprovalStatus managerApprovalStatus, Long expensesCount) {
         super();
         this.reportId = reportId;
         this.employeeId = employeeId;
@@ -145,17 +133,14 @@ public class Reports {
         this.dateCreated = dateCreated;
         this.managerActionDate = managerActionDate;
         this.financeActionDate = financeActionDate;
-        this.totalAmountINR = totalAmountINR;
-        this.totalApprovedAmountINR = totalApprovedAmountINR;
-        this.totalAmountCurrency = totalAmountCurrency;
-        this.totalApprovedAmountCurrency = totalApprovedAmountCurrency;
+        this.totalAmount = totalAmount;
+        this.totalApprovedAmount = totalApprovedAmount;
         this.isHidden = isHidden;
         this.managerEmail = managerEmail;
         this.managerReviewTime = managerReviewTime;
-        this.financeapprovalstatus = financeapprovalstatus;
-        this.managerapprovalstatus = managerapprovalstatus;
-        this.expensesCount=expensesCount;
-
+        this.financeApprovalStatus = financeApprovalStatus;
+        this.managerApprovalStatus = managerApprovalStatus;
+        this.expensesCount = expensesCount;
     }
 
     public Long getReportId() {
@@ -262,36 +247,20 @@ public class Reports {
         this.financeActionDate = financeActionDate;
     }
 
-    public float getTotalAmountINR() {
-        return totalAmountINR;
+    public float getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setTotalAmountINR(float totalAmountINR) {
-        this.totalAmountINR = totalAmountINR;
+    public void setTotalAmount(float totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
-    public float getTotalApprovedAmountINR() {
-        return totalApprovedAmountINR;
+    public float getTotalApprovedAmount() {
+        return totalApprovedAmount;
     }
 
-    public void setTotalApprovedAmountINR(float totalApprovedAmountINR) {
-        this.totalApprovedAmountINR = totalApprovedAmountINR;
-    }
-
-    public float getTotalAmountCurrency() {
-        return totalAmountCurrency;
-    }
-
-    public void setTotalAmountCurrency(float totalAmountCurrency) {
-        this.totalAmountCurrency = totalAmountCurrency;
-    }
-
-    public float getTotalApprovedAmountCurrency() {
-        return totalApprovedAmountCurrency;
-    }
-
-    public void setTotalApprovedAmountCurrency(float totalApprovedAmountCurrency) {
-        this.totalApprovedAmountCurrency = totalApprovedAmountCurrency;
+    public void setTotalApprovedAmount(float totalApprovedAmount) {
+        this.totalApprovedAmount = totalApprovedAmount;
     }
 
     public Boolean getIsHidden() {
@@ -318,31 +287,28 @@ public class Reports {
         this.managerReviewTime = managerReviewTime;
     }
 
-    public FinanceApprovalStatus getFinanceapprovalstatus() {
-        return financeapprovalstatus;
+    public FinanceApprovalStatus getFinanceApprovalStatus() {
+        return financeApprovalStatus;
     }
 
-    public void setFinanceApprovalStatus(FinanceApprovalStatus financeapprovalstatus) {
-        this.financeapprovalstatus = financeapprovalstatus;
+    public void setFinanceApprovalStatus(FinanceApprovalStatus financeApprovalStatus) {
+        this.financeApprovalStatus = financeApprovalStatus;
     }
 
-    public ManagerApprovalStatus getManagerapprovalstatus() {
-        return managerapprovalstatus;
+    public ManagerApprovalStatus getManagerApprovalStatus() {
+        return managerApprovalStatus;
     }
 
-    public void setManagerApprovalStatus(ManagerApprovalStatus managerapprovalstatus) {
-        this.managerapprovalstatus = managerapprovalstatus;
+    public void setManagerApprovalStatus(ManagerApprovalStatus managerApprovalStatus) {
+        this.managerApprovalStatus = managerApprovalStatus;
     }
+
     public Long getExpensesCount() {
-        return reportId;
+        return expensesCount;
     }
 
-    public void setExpensesCount(Long expensesCount)
-    {
+    public void setExpensesCount(Long expensesCount) {
         this.expensesCount = expensesCount;
     }
-
-
-
 
 }

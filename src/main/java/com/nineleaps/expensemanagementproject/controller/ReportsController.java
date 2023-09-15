@@ -7,8 +7,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
-import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
-import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -72,10 +70,9 @@ public class ReportsController {
         return reportsService.addExpenseToReport(reportId, expenseIds);
     }
 
-
     @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId,
-                             HttpServletResponse response) throws MessagingException, IOException {
+    public void submitReport(@PathVariable Long reportId, HttpServletResponse response)
+            throws MessagingException, IOException {
 
         reportsService.submitReport(reportId, response);
     }
@@ -93,22 +90,6 @@ public class ReportsController {
                                     @RequestParam List<Long> removeExpenseIds) {
         return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
-
-
-//    @PostMapping("/approveReportByManager/{reportId}")
-//    public void approveReportByManager(@PathVariable Long reportId,
-//                                       @RequestParam(value = "comments", defaultValue = "null") String comments,
-//                                       HttpServletResponse response) throws MessagingException, IOException {
-//        reportsService.approveReportByManager(reportId, comments, response);
-//    }
-//
-//    @PostMapping("/rejectReportByManager/{reportId}")
-//    public void rejectReportByManager(@PathVariable Long reportId,
-//                                      @RequestParam(value = "comments", defaultValue = "null") String comments,
-//                                      HttpServletResponse response) throws MessagingException, IOException {
-//        reportsService.rejectReportByManager(reportId, comments, response);
-//    }
-
 
     @PostMapping("/approveReportByFinance")
     public void reimburseReportByFinance(@RequestParam ArrayList<Long> reportIds,
@@ -129,12 +110,7 @@ public class ReportsController {
 
     @GetMapping("/getTotalAmountInrByReportId")
     public float totalAmountINR(@RequestParam Long reportId) {
-        return reportsService.totalAmountINR(reportId);
-    }
-
-    @GetMapping("/getTotalAmountCurrencyByReportId")
-    public float totalAmountCurrency(@RequestParam Long reportId) {
-        return reportsService.totalAmountCurrency(reportId);
+        return reportsService.totalAmount(reportId);
     }
 
     @GetMapping("/getReportsInDateRange")
@@ -147,8 +123,7 @@ public class ReportsController {
     @GetMapping("/getReportsSubmittedToUserInDateRange")
     public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-                                                              @RequestParam String request) {
+                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam String request) {
         return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);
     }
 
@@ -161,7 +136,7 @@ public class ReportsController {
 
     @GetMapping("/getTotalApprovedAmount")
     public float totalApprovedAmount(Long reportId) {
-        return reportsService.totalApprovedAmountCurrency(reportId);
+        return reportsService.totalApprovedAmount(reportId);
     }
 
     @PostMapping("/notifyHr/{reportId}")
@@ -173,16 +148,16 @@ public class ReportsController {
     public void notifyLnD(@RequestParam Long reportId) throws MessagingException {
         reportsService.notifyLnD(reportId);
     }
+
     @GetMapping("/numberOfExpenses/{reportId}")
-    public int numberOfExpenses(@RequestParam Long reportId)
-    {
-       return  reportsService.numberOfExpenses(reportId);
+    public int numberOfExpenses(@RequestParam Long reportId) {
+        return reportsService.numberOfExpenses(reportId);
     }
 
     @PostMapping("/updateExpenseStatus/{reportId}")
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,
-                                    @RequestParam String json, @RequestParam String comments,
-                                    HttpServletResponse response) throws ParseException {
+                                    @RequestParam String json, @RequestParam String comments, HttpServletResponse response)
+            throws ParseException {
         JSONParser parser = new JSONParser();
         try {
             Map<Long, Float> partialApprovedMap = new HashMap<>();

@@ -3,7 +3,6 @@ package com.nineleaps.expensemanagementproject.controller;
 import java.util.List;
 
 import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
-import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,23 +20,17 @@ public class ExpenseController {
     @Autowired
     private IExpenseService expenseService;
 
-    @Autowired
-    private ExpenseRepository expenseRepository;
-
     @PostMapping("/insertExpenses/{employeeId}")
-    public String saveExpense(@RequestBody ExpenseDTO expenseDTO,
-                               @PathVariable Long employeeId,
-                               @RequestParam Long categoryId) throws IllegalAccessException {
+    public String saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
+                              @RequestParam Long categoryId) throws IllegalAccessException {
         return expenseService.addExpense(expenseDTO, employeeId, categoryId);
     }
 
     @PostMapping("/addPotentialDuplicateExpense/{employeeId}")
-    public Expense addPotentialDuplicateExpense(@RequestBody ExpenseDTO expenseDTO,
-                                                @PathVariable Long employeeId,
+    public Expense addPotentialDuplicateExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
                                                 @RequestParam Long categoryId) {
         return expenseService.addPotentialDuplicateExpense(expenseDTO, employeeId, categoryId);
     }
-
 
     @GetMapping("/showAllExpenses")
     public List<Expense> getAllExpenses() {
@@ -78,6 +71,5 @@ public class ExpenseController {
     public void hideExpense(@PathVariable Long expenseId) {
         expenseService.hideExpense(expenseId);
     }
-
 
 }

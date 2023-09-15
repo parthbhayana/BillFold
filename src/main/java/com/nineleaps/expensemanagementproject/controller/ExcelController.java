@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +19,14 @@ import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsServ
 public class ExcelController {
 	@Autowired
 	private IExcelGeneratorCategoryService excelService;
-	
+
 	@Autowired
 	private IExcelGeneratorReportsService excelServiceReports;
 
 	@GetMapping("/excel/categoryBreakup")
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
+													  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+													  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
 
 		response.setContentType("application/octet-stream");
 
@@ -47,15 +46,14 @@ public class ExcelController {
 			return ResponseEntity.badRequest().body(result);
 		}
 	}
-	
-	
+
 	@GetMapping("/excel/allReports")
 
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+													  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-			@RequestParam StatusExcel status) throws Exception {
+													  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam StatusExcel status)
+			throws Exception {
 
 		String fileName = "Billfold_All_Submissions_Status.xls";
 		String headerKey = "Content-Disposition";
@@ -97,8 +95,5 @@ public class ExcelController {
 			return ResponseEntity.badRequest().body(result);
 		}
 	}
-
-
-
 
 }

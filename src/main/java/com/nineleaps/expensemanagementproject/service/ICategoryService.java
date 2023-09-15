@@ -19,7 +19,7 @@ public interface ICategoryService {
 	HashMap<String, Double> getCategoryTotalAmount(LocalDate startDate, LocalDate endDate);
 	Map<String, Double> getCategoryTotalAmountByYearAndCategory(Long categoryId);
 	HashMap<String, Double> getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year);
-    HashMap<String, Double> getYearlyReimbursementRatio(Long categoryId);
+	HashMap<String, Double> getYearlyReimbursementRatio(Long categoryId);
 	HashMap<String, Double> getMonthlyReimbursementRatio(Long categoryId, Long year);
 	HashMap<String, Object> getCategoryAnalyticsYearly(Long categoryId);
 	HashMap<String, Object> getCategoryAnalyticsMonthly(Long categoryId, Long year);

@@ -27,7 +27,7 @@ public interface IEmailService {
 
 	void reminderMailToEmployee(List<Long> expenseIds);
 
-    void reminderMailToManager(List<Long> reportIds);
+	void reminderMailToManager(List<Long> reportIds);
 
 	void financeNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 

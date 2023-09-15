@@ -7,23 +7,20 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 public class SecurityConfig {
 
     @Autowired
     private JwtUtil jwtUtil;
-    private static final String CONSTANT1="EMPLOYEE";
-    private static final String CONSTANT2="FINANCE_ADMIN";
+    @SuppressWarnings("unused")
+    private static final String CONSTANT1 = "EMPLOYEE";
+    @SuppressWarnings("unused")
+    private static final String CONSTANT2 = "FINANCE_ADMIN";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests(authorizeRequests ->
-                                authorizeRequests
-                                .antMatchers(AUTH_WHITELIST).permitAll()
+        http.csrf().disable().addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests(authorizeRequests -> authorizeRequests.antMatchers(AUTH_WHITELIST).permitAll()
 //                                        .antMatchers("/theProfile").permitAll()
 //                                        .antMatchers("/getProfileData").hasAnyAuthority(CONSTANT1, CONSTANT2)
 //                                        .antMatchers("/getExpenseByEmployeeId/{employeeId}").hasAnyAuthority(CONSTANT1,CONSTANT2)
@@ -63,13 +60,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    private static final String[] AUTH_WHITELIST = {
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/v2/api-docs/**",
-            "/swagger-resources/**",
-            "/api/v1/auth/**",
-            "/v3/api-docs/.yaml",
-            "/swagger-ui.html"
-    };
+    private static final String[] AUTH_WHITELIST = { "/v3/api-docs/**", "/swagger-ui/**", "/v2/api-docs/**",
+            "/swagger-resources/**", "/api/v1/auth/**", "/v3/api-docs/.yaml", "/swagger-ui.html" };
 }

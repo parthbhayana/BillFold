@@ -21,6 +21,6 @@ public interface IExcelGeneratorCategoryService {
 	HashMap<String, Double> CategoryTotalAmount(LocalDate startDate, LocalDate endDate);
 
 	boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
-			String attachmentFilename);
+									String attachmentFilename);
 
 }

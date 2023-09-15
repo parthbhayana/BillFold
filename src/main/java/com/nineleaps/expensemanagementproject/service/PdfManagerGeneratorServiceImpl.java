@@ -38,7 +38,6 @@ import static com.lowagie.text.Element.ALIGN_LEFT;
 import static com.lowagie.text.Element.ALIGN_RIGHT;
 import static com.lowagie.text.Element.ALIGN_CENTER;
 
-
 @Service
 public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorService {
     @Autowired
@@ -52,11 +51,9 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
     @Autowired
     IExpenseService expenseService;
 
-
     public byte[] generatePdf(Long reportId, List<Long> expenseIds) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document document = new Document(PageSize.A4);
-        @SuppressWarnings("unused")
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         class FooterEvent extends PdfPageEventHelper {
             @Override
@@ -84,7 +81,6 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         Paragraph headerParagraph01 = new Paragraph("Report Id: " + reportId, fontheader01);
         headerParagraph01.setAlignment(ALIGN_RIGHT);
 
-
         Font fontHeader = FontFactory.getFont(FontFactory.TIMES);
         fontHeader.setSize(22);
         Paragraph headerParagraph = new Paragraph("BillFold - Expense Report", fontHeader);
@@ -99,6 +95,7 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         Font fontParagraph = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph.setSize(12);
         Reports report = reportsRepository.findById(reportId).get();
+        @SuppressWarnings("unused")
         List<Expense> expenses = expenseRepository.findByReports(report);
         Employee employee = null;
         if (!expenseIds.isEmpty()) {
@@ -114,21 +111,10 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
             table.addCell(getCenterAlignedCells(dateCreated.format(formatter1), font));
             table.addCell(getCenterAlignedCells(expenseList.getMerchantName(), font));
             table.addCell(getCenterAlignedCells(expenseList.getDescription(), font));
-            if(expenseList.getAmountApprovedINR()!=null)
-            {
-                table.addCell((getCenterAlignedCells(expenseList.getAmountApprovedINR().toString(), font)));
-            }
-            else {
-                table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
-            }
+            table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
 
-            total += (expenseList.getAmountApprovedINR() != null) ? expenseList.getAmountApprovedINR() : expenseList.getAmount();
+            total += expenseList.getAmount();
         }
-
-
-
-
-
 
         Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES_BOLD);
         fontParagraph1.setSize(14);
@@ -147,7 +133,8 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
 //        Paragraph paragraph =
 //                new Paragraph(employee.getFirstName()+ " " + employee.getLastName() + "(" + employee.getEmployeeEmail() + ") \u2192 " + employee.getManagerName() + "(" + employee.getEmployeeEmail() + ")",
 //                fontParagraph);
-        Paragraph pdfParagraph = new Paragraph("Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
+        Paragraph pdfParagraph = new Paragraph(
+                "Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
         pdfParagraph.setAlignment(ALIGN_LEFT);
         Font fontParagraph12 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph12.setSize(12);
@@ -158,7 +145,7 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         Paragraph emptyParagraph = new Paragraph(" ");
         Font fontParagraph13 = FontFactory.getFont(FontFactory.TIMES);
         fontParagraph13.setSize(20);
-        Paragraph pdfParagraph03 = new Paragraph("Report Title : "+report.getReportTitle(), fontParagraph13);
+        Paragraph pdfParagraph03 = new Paragraph("Report Title : " + report.getReportTitle(), fontParagraph13);
         pdfParagraph03.setAlignment(ALIGN_LEFT);
         Paragraph pdfParagraph011 = new Paragraph();
         pdfParagraph011.setAlignment(ALIGN_RIGHT);
@@ -175,12 +162,6 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
                 "----------------------------------------------------------------------------------------------------------------------------------");
         lineSeparator.setAlignment(Element.ALIGN_CENTER);
         lineSeparator.setSpacingAfter(10);
-
-
-
-
-
-
 
         Paragraph historyTitle = new Paragraph("Report History and comments:",
                 FontFactory.getFont(FontFactory.TIMES_BOLD, 12));
@@ -201,14 +182,8 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
         historyContent.add(submissionMessage);
 
-
-
-
         Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
         fontParagraph14.setSize(14);
-
-
-
 
         document.add(headerParagraph01);
         document.add(headerParagraph);
@@ -235,7 +210,6 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         document.add(historyTitle);
         document.add(historyContent);
 
-
         int supportingPdfStartPage = writer.getPageNumber();
 
         document.newPage();
@@ -254,7 +228,6 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
 //                document.newPage();
 //            }
 //        }
-
 
         for (Long expenseId : expenseIds) {
             Expense expense = expenseService.getExpenseById(expenseId);
@@ -311,7 +284,6 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         }
     }
 
-
     @Override
     public PdfPCell getCenterAlignedCell(String content, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
@@ -354,4 +326,3 @@ public class PdfManagerGeneratorServiceImpl implements IPdfManagerGeneratorServi
         return pdfBytes;
     }
 }
-
