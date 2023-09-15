@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
-
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -44,7 +42,7 @@ public class Category {
 	}
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
-			List<Expense> expenseList) {
+					List<Expense> expenseList) {
 		super();
 		this.categoryId = categoryId;
 		this.categoryDescription = categoryDescription;

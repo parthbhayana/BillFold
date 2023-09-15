@@ -16,8 +16,8 @@ public class EmployeeDTO {
 	}
 
 	public EmployeeDTO(String employeeEmail, String firstName, String officialEmployeeId, Long mobileNumber,
-			String middleName, String lastName, String managerEmail, String managerName, String hrEmail,
-			String hrName) {
+					   String middleName, String lastName, String managerEmail, String managerName, String hrEmail,
+					   String hrName) {
 		super();
 		this.employeeEmail = employeeEmail;
 		this.firstName = firstName;

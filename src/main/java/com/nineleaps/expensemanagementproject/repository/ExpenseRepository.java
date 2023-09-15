@@ -18,7 +18,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
 	List<Expense> findByEmployeeAndIsHidden(Employee employee, boolean isHidden, Sort sort);
 
-
 	List<Expense> findByEmployeeAndIsReported(Employee employee, boolean b);
 
 	Expense getExpenseByexpenseId(Long expenseID);

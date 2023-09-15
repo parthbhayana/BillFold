@@ -44,13 +44,9 @@ public interface IReportsService {
 
     void hideReport(Long reportId);
 
-    float totalAmountINR(Long reportId);
+    float totalAmount(Long reportId);
 
-    float totalAmountCurrency(Long reportId);
-
-    float totalApprovedAmountCurrency(Long reportId);
-
-    float totalApprovedAmountINR(Long reportId);
+    float totalApprovedAmount(Long reportId);
 
 
     String getAmountOfReportsInDateRange(LocalDate startDate, LocalDate endDate);

@@ -18,6 +18,7 @@ public class PushNotificationController {
         this.pushNotificationService = pushNotificationService;
     }
 
+    @SuppressWarnings("rawtypes")
     @PostMapping("/notification/token")
     public ResponseEntity sendTokenNotification(@RequestBody PushNotificationRequest request) {
         pushNotificationService.sendPushNotificationToToken(request);

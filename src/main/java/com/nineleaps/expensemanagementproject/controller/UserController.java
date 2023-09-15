@@ -33,7 +33,6 @@ public class UserController {
 
     @Autowired
     private IEmailService emailService;
-    @SuppressWarnings("unused")
     @Autowired
     private JwtUtil jwtUtil;
     JSONObject responseJson;
@@ -46,7 +45,6 @@ public class UserController {
     public List<Employee> getAllUserDetails() {
         return employeeService.getAllUser();
     }
-
 
     @SuppressWarnings("unchecked")
     @GetMapping("/getProfileData")
@@ -73,7 +71,8 @@ public class UserController {
     }
 
     @PostMapping("/theProfile")
-    public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response) throws MessagingException {
+    public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response)
+            throws MessagingException {
         Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
         if (employee == null) {
             employeeService.insertUser(userDTO);

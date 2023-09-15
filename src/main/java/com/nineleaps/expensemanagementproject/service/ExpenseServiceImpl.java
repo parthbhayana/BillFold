@@ -13,10 +13,10 @@ import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
+
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
@@ -43,8 +43,6 @@ public class ExpenseServiceImpl implements IExpenseService {
     private ReportsRepository reportsRepository;
 
     @Autowired
-    private ICurrencyExchange currencyExchange;
-    @Autowired
     private IEmailService emailService;
 
     @Autowired
@@ -58,31 +56,26 @@ public class ExpenseServiceImpl implements IExpenseService {
         expense.setEmployee(employee);
         LocalDateTime now = LocalDateTime.now();
         expense.setDateCreated(now);
-        String curr = expenseDTO.getCurrency();
+        @SuppressWarnings("unused")
         String date = expenseDTO.getDate().toString();
-        double rate = currencyExchange.getExchangeRate(curr, date);
-        double amountInInr = expenseDTO.getAmount() * rate;
-        expense.setAmountINR((float) amountInInr);
         Category category = categoryRepository.getCategoryByCategoryId(categoryId);
         String categoryDescription = category.getCategoryDescription();
 
-        //Check for Potential duplicate
-        List<Expense> potentialDuplicateExpense =
-                expenseRepository.findByEmployeeAndAmountAndDateAndCategoryAndMerchantNameAndIsHidden(employee,
-                        expenseDTO.getAmount(), expenseDTO.getDate(), category, expenseDTO.getMerchantName(), false);
+        // Check for Potential duplicate
+        List<Expense> potentialDuplicateExpense = expenseRepository
+                .findByEmployeeAndAmountAndDateAndCategoryAndMerchantNameAndIsHidden(employee, expenseDTO.getAmount(),
+                        expenseDTO.getDate(), category, expenseDTO.getMerchantName(), false);
         System.out.println("Potential Duplicate List = " + potentialDuplicateExpense);
 
         if (potentialDuplicateExpense.isEmpty()) {
             expense.setDescription(expenseDTO.getDescription());
             expense.setAmount(expenseDTO.getAmount());
-            expense.setCurrency(expenseDTO.getCurrency());
             expense.setMerchantName(expenseDTO.getMerchantName());
             expense.setFile(expenseDTO.getFile());
+            expense.setFileName(expenseDTO.getFileName());
             expense.setDate(expenseDTO.getDate());
             expense.setCategory(category);
             expense.setCategoryDescription(categoryDescription);
-            Currency currency = Currency.valueOf(expense.getCurrency());
-            expense.setCurrencySymbol(currency.getSymbol());
             expenseRepository.save(expense);
             return "Expense Added!";
         } else {
@@ -98,16 +91,12 @@ public class ExpenseServiceImpl implements IExpenseService {
         expense.setEmployee(employee);
         LocalDateTime now = LocalDateTime.now();
         expense.setDateCreated(now);
-        String curr = expenseDTO.getCurrency();
+        @SuppressWarnings("unused")
         String date = expenseDTO.getDate().toString();
-        double rate = currencyExchange.getExchangeRate(curr, date);
-        double amountInInr = expenseDTO.getAmount() * rate;
-        expense.setAmountINR((float) amountInInr);
         Category category = categoryRepository.getCategoryByCategoryId(categoryId);
         String categoryDescription = category.getCategoryDescription();
         expense.setDescription(expenseDTO.getDescription());
         expense.setAmount(expenseDTO.getAmount());
-        expense.setCurrency(expenseDTO.getCurrency());
         expense.setMerchantName(expenseDTO.getMerchantName());
         expense.setFile(expenseDTO.getFile());
         expense.setFileName(expenseDTO.getFileName());
@@ -117,6 +106,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         expense.setPotentialDuplicate(true);
         return expenseRepository.save(expense);
     }
+
     @Override
     public List<Expense> getAllExpenses() {
         LocalDate sixtyDaysAgo = LocalDate.now().minusDays(60);
@@ -156,9 +146,11 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Override
     public List<Expense> getExpenseByEmployeeId(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).get();
-        Sort sort = Sort.by(Direction.DESC, "dateCreated"); // Sort by dateCreated in descending order
+        Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated"); // Sort by dateCreated in descending order
         return expenseRepository.findByEmployeeAndIsHidden(employee, false, sort);
     }
+
+
 
     @Override
     public Expense updateSupportingDocument(String supportingDoc, Long expenseId) {
@@ -168,8 +160,8 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Override
     public Expense updateExpenses(ExpenseDTO expenseDTO, Long expenseId) {
         Expense expense = getExpenseById(expenseId);
-        if ((!expense.getIsHidden() && !expense.getIsReported()) || ((expense.getIsReported()) &&
-                (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED))) {
+        if ((!expense.getIsHidden() && !expense.getIsReported()) || ((expense.getIsReported())
+                && (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED))) {
             expense.setMerchantName(expenseDTO.getMerchantName());
             expense.setDate(expenseDTO.getDate());
             expense.setAmount(expenseDTO.getAmount());
@@ -177,22 +169,17 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setFile(expenseDTO.getFile());
             LocalDateTime now = LocalDateTime.now();
             expense.setDateCreated(now);
-            expense.setCurrency(expenseDTO.getCurrency());
-            String curr = expense.getCurrency();
+            @SuppressWarnings("unused")
             String date = expense.getDate().toString();
-            double rate = currencyExchange.getExchangeRate(curr, date);
-            double amountInInr = expense.getAmount() * rate;
-            expense.setAmountINR(amountInInr);
             expenseRepository.save(expense);
         }
         if (expense.getIsHidden()) {
             throw new IllegalStateException("Expense " + expenseId + " does not exist!");
         }
-        if (expense.getIsReported() &&
-                ((expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) ||
-                        (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.APPROVED) ||
-                        (expense.getManagerApprovalStatusExpense() ==
-                                ManagerApprovalStatusExpense.PARTIALLY_APPROVED))) {
+        if (expense.getIsReported() && ((expense
+                .getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING)
+                || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.APPROVED)
+                || (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PARTIALLY_APPROVED))) {
             throw new IllegalStateException(
                     "Can not edit Expense with ExpenseId:" + expenseId + " as it is already reported!");
         }
@@ -217,13 +204,11 @@ public class ExpenseServiceImpl implements IExpenseService {
         throw new IllegalStateException("Expense " + expenseId + " does not exist!");
     }
 
-
     @Override
     public List<Expense> getExpenseByReportId(Long reportId) {
         Reports report = reportsRepository.findById(reportId).get();
         return expenseRepository.findByReportsAndIsHidden(report, false);
     }
-
 
     @Override
     public void hideExpense(Long expId) {
@@ -233,9 +218,8 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setIsHidden(hidden);
         }
         if (expense.getIsReported()) {
-            throw new IllegalStateException(
-                    "Cannot delete expense " + expId + " as it is already reported in Report: " +
-                            expense.getReportTitle());
+            throw new IllegalStateException("Cannot delete expense " + expId + " as it is already reported in Report: "
+                    + expense.getReportTitle());
         }
         expenseRepository.save(expense);
     }
@@ -254,7 +238,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             }
         }
         emailService.reminderMailToEmployee(expenseIds);
-        //Push Notification Functionality
+        // Push Notification Functionality
         for (Long expense : expenseIds) {
             Expense exp = getExpenseById(expense);
             Long employeeId = exp.getExpenseId();
@@ -282,7 +266,8 @@ public class ExpenseServiceImpl implements IExpenseService {
 //        return rejectedExpenses;
 //    }
     public List<Expense> getRejectedExpensesByReportId(Long reportId) {
-        return getExpenseByReportId(reportId).stream().filter(expense -> expense.getManagerApprovalStatusExpense() ==
-                ManagerApprovalStatusExpense.REJECTED).collect(Collectors.toList());
+        return getExpenseByReportId(reportId).stream()
+                .filter(expense -> expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED)
+                .collect(Collectors.toList());
     }
 }

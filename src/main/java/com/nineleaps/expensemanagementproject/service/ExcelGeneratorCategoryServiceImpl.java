@@ -40,7 +40,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 
 	@Autowired
 	private ExpenseRepository expenseRepository;
-	
+
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
@@ -65,9 +65,9 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
 		generateExcel(excelStream, startDate, endDate);
 		byte[] excelBytes = excelStream.toByteArray();
-		
+
 		Employee financeadmin=employeeRepository.findByRole("FINANCE_ADMIN");
-		
+
 		if(financeadmin==null)
 		{
 			throw new IllegalStateException ("finance admin not found");
@@ -176,7 +176,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		for (Expense expense : expenseList) {
 			Category category = expense.getCategory();
 			String categoryName = category.getCategoryDescription();
-			Double amt = expense.getAmountINR();
+			Double amt = expense.getAmountApproved();
 			if (categoryAmountMap.containsKey(categoryName)) {
 				Double previousAmt = categoryAmountMap.get(categoryName);
 				categoryAmountMap.put(categoryName, previousAmt + amt);
@@ -190,7 +190,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 
 	@Override
 	public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
-			String attachmentFilename) {
+										   String attachmentFilename) {
 
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
