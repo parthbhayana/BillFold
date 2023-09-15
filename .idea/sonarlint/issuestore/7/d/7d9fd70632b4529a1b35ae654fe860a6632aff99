@@ -1,0 +1,10 @@
+
+Z	java:S112P"FDefine and throw a dedicated exception instead of using a generic one.(ÅŠÙP
+Ÿ
+java:S1192,"ƒDefine a constant instead of duplicating this literal "No data available for the selected period.So, Email can't be sent!" 3 times.(¢ð°¨úÿÿÿÿ
+o
+java:S1192""TDefine a constant instead of duplicating this literal "Content-Disposition" 3 times.(ãëã¼øÿÿÿÿ
+t
+java:S1192)"YDefine a constant instead of duplicating this literal "Email sent successfully!" 3 times.(™§ß°øÿÿÿÿ
+ƒ
+java:S1128"mRemove this unused import 'com.nineleaps.expensemanagementproject.service.ExcelGeneratorCategoryServiceImpl'.(Ðà¢Ê

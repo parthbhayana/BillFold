@@ -1,0 +1,14 @@
+
+M
+java:S3655f"7Call "Optional#isPresent()" before accessing the value.(ç‘›ú
+h
+java:S37769"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(ùß»’
+R
+java:S1854g"<Remove this useless assignment to local variable "expenses".(ÄÕ£Ø
+C
+java:S1481g"-Remove this unused "expenses" local variable.(ÄÕ£Ø
+R	java:S125–"<This block of commented-out lines of code should be removed.(ßêËó
+W	java:S125à"<This block of commented-out lines of code should be removed.(Èª¶Îûÿÿÿÿ
+R	java:S125ó"<This block of commented-out lines of code should be removed.(ïÕ”˜
+U
+java:S1128":Remove this unused import 'org.jfree.data.json.JSONUtils'.(ÌþãÇüÿÿÿÿ
