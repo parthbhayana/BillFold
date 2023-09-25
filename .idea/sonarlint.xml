@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SonarLintProjectSettings">
+    <option name="bindingEnabled" value="true" />
     <option name="fileExclusions">
       <list>
         <option value="FILE:src/main/java/com/nineleaps/expensemanagementproject/service/IPdfGeneratorService.java" />
         <option value="FILE:src/main/java/com/nineleaps/expensemanagementproject/service/ReportsServiceImpl.java" />
         <option value="FILE:src/main/java/com/nineleaps/expensemanagementproject/controller/CurrencyController.java" />
+        <option value="FILE:src/main/java/com/nineleaps/expensemanagementproject/entity/CustomIdGenerator.java" />
+        <option value="FILE:src/main/java/com/nineleaps/expense_management_project/entity/CustomIdGenerator.java" />
       </list>
     </option>
+    <option name="projectKey" value="BillFold" />
+    <option name="serverId" value="soanrqube" />
   </component>
 </project>
