@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpenseController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.controller</a> &gt; <span class="el_source">ExpenseController.java</span></div><h1>ExpenseController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.controller;
+
+import java.util.List;
+
+import com.nineleaps.expense_management_project.dto.ExpenseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.nineleaps.expense_management_project.entity.Expense;
+import com.nineleaps.expense_management_project.service.IExpenseService;
+
+@RestController
+<span class="fc" id="L12">public class ExpenseController {</span>
+    @Autowired
+    private IExpenseService expenseService;
+
+    // Endpoint to add an expense for a specific employee and category
+    @PostMapping(&quot;/insertExpenses/{employeeId}&quot;)
+    public String saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
+                              @RequestParam Long categoryId) throws IllegalAccessException {
+<span class="nc" id="L20">        return expenseService.addExpense(expenseDTO, employeeId, categoryId);</span>
+    }
+
+    // Endpoint to add a potential duplicate expense for a specific employee and category
+    @PostMapping(&quot;/addPotentialDuplicateExpense/{employeeId}&quot;)
+    public Expense addPotentialDuplicateExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
+                                                @RequestParam Long categoryId) {
+<span class="nc" id="L27">        return expenseService.addPotentialDuplicateExpense(expenseDTO, employeeId, categoryId);</span>
+    }
+
+    // Endpoint to retrieve a list of all expenses
+    @GetMapping(&quot;/showAllExpenses&quot;)
+    public List&lt;Expense&gt; getAllExpenses() {
+<span class="nc" id="L33">        return expenseService.getAllExpenses();</span>
+    }
+
+    // Endpoint to find an expense by its ID
+    @GetMapping(&quot;/findExpense/{expenseId}&quot;)
+    public Expense getExpenseById(@PathVariable Long expenseId) {
+<span class="nc" id="L39">        return expenseService.getExpenseById(expenseId);</span>
+    }
+
+    // Endpoint to update an expense by its ID
+    @PutMapping(&quot;/updateExpenses/{expenseId}&quot;)
+    public Expense updateExpenses(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long expenseId) {
+<span class="nc" id="L45">        return expenseService.updateExpenses(expenseDTO, expenseId);</span>
+    }
+
+    // Endpoint to get expenses by employee ID
+    @GetMapping(&quot;/getExpenseByEmployeeId/{employeeId}&quot;)
+    public List&lt;Expense&gt; getExpenseByEmpId(@PathVariable Long employeeId) {
+<span class="nc" id="L51">        return expenseService.getExpenseByEmployeeId(employeeId);</span>
+    }
+
+    // Endpoint to get expenses by report ID
+    @GetMapping(&quot;/getExpenseByReportId/{reportId}&quot;)
+    public List&lt;Expense&gt; getExpenseByReportId(@PathVariable Long reportId) {
+<span class="nc" id="L57">        return expenseService.getExpenseByReportId(reportId);</span>
+    }
+
+    // Endpoint to remove a tagged expense by its ID
+    @PostMapping(&quot;/removeTaggedExpense/{expenseId}&quot;)
+    public Expense removeTaggedExpense(@PathVariable Long expenseId) {
+<span class="nc" id="L63">        return expenseService.removeTaggedExpense(expenseId);</span>
+    }
+
+    // Endpoint to get unreported expenses by employee ID
+    @GetMapping(&quot;/getUnreportedExpensesByEmployeeId/{employeeId}&quot;)
+    public List&lt;Expense&gt; getExpensesById(@PathVariable Long employeeId) {
+<span class="nc" id="L69">        return expenseService.getExpensesByEmployeeId(employeeId);</span>
+    }
+
+    // Endpoint to hide an expense by its ID
+    @PostMapping(&quot;/hideExpense/{expenseId}&quot;)
+    public void hideExpense(@PathVariable Long expenseId) {
+<span class="nc" id="L75">        expenseService.hideExpense(expenseId);</span>
+<span class="nc" id="L76">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

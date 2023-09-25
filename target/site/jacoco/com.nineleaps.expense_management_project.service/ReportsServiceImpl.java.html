@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReportsServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.service</a> &gt; <span class="el_source">ReportsServiceImpl.java</span></div><h1>ReportsServiceImpl.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.service;
+
+import java.time.LocalDate;
+import java.util.*;
+import java.io.IOException;
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
+
+import com.nineleaps.expense_management_project.dto.ReportsDTO;
+import com.nineleaps.expense_management_project.entity.*;
+import com.nineleaps.expense_management_project.firebase.PushNotificationRequest;
+import com.nineleaps.expense_management_project.firebase.PushNotificationService;
+import com.nineleaps.expense_management_project.repository.EmployeeRepository;
+import org.hibernate.ObjectNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import com.nineleaps.expense_management_project.repository.ExpenseRepository;
+import com.nineleaps.expense_management_project.repository.ReportsRepository;
+
+
+
+
+@Service
+<span class="fc" id="L26">public class ReportsServiceImpl implements IReportsService {</span>
+
+    @Autowired
+    private ReportsRepository reportsRepository;
+
+    @Autowired
+    private ExpenseRepository expenseRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private IExpenseService expenseServices;
+
+    @Autowired
+    private IEmployeeService employeeServices;
+
+    @Autowired
+    private IEmailService emailService;
+
+    @Autowired
+    private PushNotificationService pushNotificationService;
+    private static final String CONSTANT1 = &quot; does not exist!&quot;;
+    private static final String CONSTANT2 = &quot;Report with ID &quot;;
+    private static final String CONSTANT3 = &quot;Expense with ID &quot;;
+    private static final String CONSTANT4 = &quot;rejected&quot;;
+    private static final String CONSTANT5 = &quot;approved&quot;;
+    private static final String CONSTANT6 = &quot;Enter a valid request !&quot;;
+    private static final String CONSTANT7 = &quot;pending&quot;;
+    private static final String CONSTANT8 = &quot;Report &quot;;
+    private static final String CONSTANT9 = &quot; is not Submitted!&quot;;
+    private static final String CONSTANT10=&quot;Submitted you an expense report.&quot;;
+
+
+
+    @Override
+    public Set&lt;Reports&gt; getAllReports(Long employeeId) {
+<span class="nc" id="L62">        Optional&lt;Employee&gt; employeeOptional = employeeRepository.findById(employeeId);</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (employeeOptional.isPresent()) {</span>
+<span class="nc" id="L65">            Employee employee = employeeOptional.get();</span>
+<span class="nc" id="L66">            Set&lt;Reports&gt; reportsList = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L67">            Sort sort = Sort.by(Sort.Direction.DESC, &quot;dateCreated&quot;); // Sort by dateCreated in descending order</span>
+<span class="nc" id="L68">            List&lt;Expense&gt; expenses = expenseRepository.findByEmployeeAndIsHidden(employee, false, sort);</span>
+
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            for (Expense expense : expenses) {</span>
+<span class="nc" id="L71">                Reports reports = expense.getReports();</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                if (reports != null) {</span>
+<span class="nc" id="L73">                    reportsList.add(reports);</span>
+                }
+<span class="nc" id="L75">            }</span>
+
+<span class="nc" id="L77">            return reportsList;</span>
+        } else {
+<span class="nc" id="L79">            throw new ObjectNotFoundException(&quot;Employee not found with ID: &quot; + employeeId, &quot;Employee&quot;);</span>
+        }
+    }
+
+
+    @Override
+    public Reports getReportById(Long reportId) {
+<span class="nc" id="L86">        Optional&lt;Reports&gt; optionalReport = reportsRepository.findById(reportId);</span>
+<span class="nc" id="L87">        return optionalReport.orElseThrow(() -&gt; new RuntimeException(&quot;Report not found&quot;));</span>
+    }
+
+    @Override
+    public Reports addReport(ReportsDTO reportsDTO, Long employeeId, List&lt;Long&gt; expenseids) {
+<span class="nc" id="L92">        Employee employee = employeeServices.getEmployeeById(employeeId);</span>
+<span class="nc" id="L93">        String employeeEmail = employee.getEmployeeEmail();</span>
+<span class="nc" id="L94">        String managerEmail = employee.getManagerEmail();</span>
+<span class="nc" id="L95">        String employeeName = (employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
+<span class="nc" id="L96">        String officialEmployeeId = employee.getOfficialEmployeeId();</span>
+<span class="nc" id="L97">        Reports newReport = new Reports();</span>
+<span class="nc" id="L98">        newReport.setReportTitle(reportsDTO.getReportTitle());</span>
+<span class="nc" id="L99">        newReport.setEmployeeMail(employeeEmail);</span>
+<span class="nc" id="L100">        newReport.setManagerEmail(managerEmail);</span>
+<span class="nc" id="L101">        newReport.setEmployeeName(employeeName);</span>
+<span class="nc" id="L102">        newReport.setOfficialEmployeeId(officialEmployeeId);</span>
+<span class="nc" id="L103">        newReport.setDateCreated(LocalDate.now());</span>
+<span class="nc" id="L104">        newReport.setEmployeeId(employeeId);</span>
+<span class="nc" id="L105">        reportsRepository.save(newReport);</span>
+<span class="nc" id="L106">        Long id = newReport.getReportId();</span>
+<span class="nc" id="L107">        List&lt;Expense&gt; expp = expenseRepository.findAllById(expenseids);</span>
+        //Setting Amounts
+<span class="nc" id="L109">        Long expensesCount = (long) expenseids.size();</span>
+<span class="nc" id="L110">        newReport.setExpensesCount(expensesCount);</span>
+<span class="nc" id="L111">        float amt = 0;</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        for (Expense expense2 : expp) {</span>
+<span class="nc" id="L113">            amt += expense2.getAmount();</span>
+<span class="nc" id="L114">        }</span>
+<span class="nc" id="L115">        newReport.setTotalAmount(amt);</span>
+<span class="nc" id="L116">        addExpenseToReport(id, expenseids);</span>
+<span class="nc" id="L117">        String reportTitle = newReport.getReportTitle();</span>
+<span class="nc" id="L118">        List&lt;Expense&gt; exp = expenseServices.getExpenseByReportId(id);</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        for (Expense exp2 : exp) {</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (exp != null) {</span>
+<span class="nc" id="L121">                exp2.setReportTitle(reportTitle);</span>
+<span class="nc" id="L122">                expenseRepository.save(exp2);</span>
+            }
+<span class="nc" id="L124">        }</span>
+<span class="nc" id="L125">        return reportsRepository.save(newReport);</span>
+    }
+
+
+
+    @Override
+    public List&lt;Reports&gt; editReport(Long reportId, String reportTitle, String reportDescription,
+                                    List&lt;Long&gt; addExpenseIds, List&lt;Long&gt; removeExpenseIds) {
+<span class="nc" id="L133">        Reports report = getReportById(reportId);</span>
+
+<span class="nc" id="L135">        validateReportForEdit(report);</span>
+
+<span class="nc" id="L137">        updateReportAndExpenseTitles(reportId, reportTitle);</span>
+
+<span class="nc" id="L139">        addExpensesToReport(reportId, addExpenseIds);</span>
+
+<span class="nc" id="L141">        removeExpensesFromReport(removeExpenseIds);</span>
+
+<span class="nc" id="L143">        updateReportTotalAmounts(reportId);</span>
+
+<span class="nc" id="L145">        return getReportByEmpId(report.getEmployeeId(), &quot;drafts&quot;);</span>
+    }
+
+    private void validateReportForEdit(Reports report) {
+<span class="nc bnc" id="L149" title="All 4 branches missed.">        if (Boolean.TRUE.equals(report.getIsSubmitted()) &amp;&amp; report.getManagerApprovalStatus() == ManagerApprovalStatus.PENDING) {</span>
+<span class="nc" id="L150">            throw new IllegalStateException(&quot;Cannot edit a report that is already submitted.&quot;);</span>
+        }
+
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (Boolean.TRUE.equals(report.getIsHidden())) {</span>
+<span class="nc" id="L154">            throw new NullPointerException(&quot;The report is hidden.&quot;);</span>
+        }
+
+<span class="nc bnc" id="L157" title="All 4 branches missed.">        if (Boolean.TRUE.equals(report.getIsSubmitted()) &amp;&amp; report.getManagerApprovalStatus() == ManagerApprovalStatus.REJECTED) {</span>
+<span class="nc" id="L158">            throw new IllegalStateException(&quot;Cannot edit a report that is rejected.&quot;);</span>
+        }
+<span class="nc" id="L160">    }</span>
+
+    private void updateReportAndExpenseTitles(Long reportId, String reportTitle) {
+<span class="nc" id="L163">        Reports report = getReportById(reportId);</span>
+<span class="nc" id="L164">        report.setReportTitle(reportTitle);</span>
+<span class="nc" id="L165">        reportsRepository.save(report);</span>
+
+<span class="nc" id="L167">        List&lt;Expense&gt; expenseList = expenseServices.getExpenseByReportId(reportId);</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        for (Expense exp : expenseList) {</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">            if (exp != null) {</span>
+<span class="nc" id="L170">                exp.setReportTitle(reportTitle);</span>
+<span class="nc" id="L171">                expenseRepository.save(exp);</span>
+            }
+<span class="nc" id="L173">        }</span>
+<span class="nc" id="L174">    }</span>
+
+    private void addExpensesToReport(Long reportId, List&lt;Long&gt; expenseIds) {
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        for (Long expenseId : expenseIds) {</span>
+<span class="nc" id="L178">            Expense expense = expenseServices.getExpenseById(expenseId);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">            if (Boolean.TRUE.equals(expense.getIsReported())) {</span>
+<span class="nc" id="L180">                throw new IllegalStateException(&quot;Expense &quot; + expenseId + &quot; is already reported in another report.&quot;);</span>
+            }
+
+<span class="nc" id="L183">            expenseServices.updateExpense(reportId, expenseId);</span>
+<span class="nc" id="L184">        }</span>
+<span class="nc" id="L185">    }</span>
+
+    private void removeExpensesFromReport(List&lt;Long&gt; expenseIds) {
+<span class="nc" id="L188">        boolean reportedStatus = false;</span>
+
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        for (Long expenseId : expenseIds) {</span>
+<span class="nc" id="L191">            Expense expense = expenseServices.getExpenseById(expenseId);</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">            if (Boolean.TRUE.equals(expense.getIsReported())) {</span>
+<span class="nc" id="L193">                expense.setIsReported(reportedStatus);</span>
+<span class="nc" id="L194">                expense.setReports(null);</span>
+<span class="nc" id="L195">                expense.setReportTitle(null);</span>
+<span class="nc" id="L196">                expenseRepository.save(expense);</span>
+            }
+<span class="nc" id="L198">        }</span>
+<span class="nc" id="L199">    }</span>
+
+    private void updateReportTotalAmounts(Long reportId) {
+<span class="nc" id="L202">        Reports report = getReportById(reportId);</span>
+<span class="nc" id="L203">        report.setTotalAmount(totalAmount(reportId));</span>
+<span class="nc" id="L204">        report.setTotalApprovedAmount(totalApprovedAmount(reportId));</span>
+<span class="nc" id="L205">        reportsRepository.save(report);</span>
+<span class="nc" id="L206">    }</span>
+
+    @Override
+    public Reports addExpenseToReport(Long reportId, List&lt;Long&gt; expenseids) {
+<span class="nc" id="L210">        Reports report = getReportById(reportId);</span>
+
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        if (Boolean.TRUE.equals(report.getIsHidden())) {</span>
+<span class="nc" id="L213">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
+        }
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        for (Long expenseId : expenseids) {</span>
+<span class="nc" id="L216">            Expense expense = expenseServices.getExpenseById(expenseId);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">            if (Boolean.TRUE.equals(expense.getIsReported())) {</span>
+<span class="nc" id="L218">                throw new IllegalStateException(CONSTANT3 + expenseId + &quot; is already reported in another report!&quot;);</span>
+            }
+<span class="nc bnc" id="L220" title="All 2 branches missed.">            if (Boolean.FALSE.equals(expense.getIsReported())) {</span>
+
+<span class="nc" id="L222">                expenseServices.updateExpense(reportId, expenseId);</span>
+            }
+<span class="nc" id="L224">        }</span>
+<span class="nc" id="L225">        Reports re = getReportById(reportId);</span>
+<span class="nc" id="L226">        re.setTotalAmount(totalAmount(reportId));</span>
+<span class="nc" id="L227">        return reportsRepository.save(re);</span>
+    }
+
+    @Override
+    public List&lt;Reports&gt; getReportByEmpId(Long employeeId, String request) {
+<span class="nc bnc" id="L232" title="All 5 branches missed.">        switch (request) {</span>
+            case &quot;drafts&quot;:
+<span class="nc" id="L234">                return reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(employeeId, false, false);</span>
+            case &quot;submitted&quot;:
+<span class="nc" id="L236">                return reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.PENDING, true, false);</span>
+            case CONSTANT4:
+<span class="nc" id="L238">                return reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(employeeId,</span>
+                        ManagerApprovalStatus.REJECTED, false);
+            case CONSTANT5:
+<span class="nc" id="L241">                List&lt;Reports&gt; approvedList =</span>
+<span class="nc" id="L242">                        reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.APPROVED, true, false);</span>
+<span class="nc" id="L243">                List&lt;Reports&gt; partiallyApprovedList =</span>
+<span class="nc" id="L244">                        reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.PARTIALLY_APPROVED, true, false);</span>
+<span class="nc" id="L245">                List&lt;Reports&gt; mergedList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L246">                mergedList.addAll(approvedList);</span>
+<span class="nc" id="L247">                mergedList.addAll(partiallyApprovedList);</span>
+<span class="nc" id="L248">                return mergedList;</span>
+            default:
+<span class="nc" id="L250">                throw new IllegalArgumentException(CONSTANT6 + request);</span>
+        }
+    }
+
+    @Override
+    public List&lt;Reports&gt; getReportsSubmittedToUser(String managerEmail, String request) {
+<span class="nc bnc" id="L256" title="All 4 branches missed.">        switch (request) {</span>
+            case CONSTANT5:
+<span class="nc" id="L258">                List&lt;Reports&gt; approvedList =</span>
+<span class="nc" id="L259">                        reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, ManagerApprovalStatus.APPROVED, true, false);</span>
+<span class="nc" id="L260">                List&lt;Reports&gt; partiallyApprovedList =</span>
+<span class="nc" id="L261">                        reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, ManagerApprovalStatus.PARTIALLY_APPROVED, true, false);</span>
+<span class="nc" id="L262">                List&lt;Reports&gt; mergedList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L263">                mergedList.addAll(approvedList);</span>
+<span class="nc" id="L264">                mergedList.addAll(partiallyApprovedList);</span>
+<span class="nc" id="L265">                return mergedList;</span>
+            case CONSTANT4:
+<span class="nc" id="L267">                return reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsHidden(managerEmail,</span>
+                        ManagerApprovalStatus.REJECTED, false);
+            case CONSTANT7:
+<span class="nc" id="L270">                return reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, ManagerApprovalStatus.PENDING, true, false);</span>
+            default:
+<span class="nc" id="L272">                throw new IllegalArgumentException(CONSTANT6);</span>
+        }
+    }
+
+    @Override
+    public List&lt;Reports&gt; getAllSubmittedReports() {
+<span class="nc" id="L278">        List&lt;Reports&gt; reports = reportsRepository.findAll();</span>
+<span class="nc" id="L279">        List&lt;Reports&gt; submittedReports = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        for (Reports reports2 : reports) {</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            if (Boolean.TRUE.equals(reports2.getIsSubmitted())) {</span>
+<span class="nc" id="L282">                submittedReports.add(reports2);</span>
+            }
+<span class="nc" id="L284">        }</span>
+<span class="nc" id="L285">        return submittedReports;</span>
+    }
+
+    @Override
+    public List&lt;Reports&gt; getAllReportsApprovedByManager(String request) {
+<span class="nc bnc" id="L290" title="All 5 branches missed.">        switch (request) {</span>
+            case CONSTANT5:
+<span class="nc" id="L292">                List&lt;Reports&gt; approvedList1 =</span>
+<span class="nc" id="L293">                        reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.APPROVED, true, false);</span>
+<span class="nc" id="L294">                List&lt;Reports&gt; partiallyApprovedList1 =</span>
+<span class="nc" id="L295">                        reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.APPROVED, true, false);</span>
+<span class="nc" id="L296">                List&lt;Reports&gt; mergedList1 = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L297">                mergedList1.addAll(approvedList1);</span>
+<span class="nc" id="L298">                mergedList1.addAll(partiallyApprovedList1);</span>
+<span class="nc" id="L299">                return mergedList1;</span>
+            case CONSTANT4:
+<span class="nc" id="L301">                List&lt;Reports&gt; approvedList2 =</span>
+<span class="nc" id="L302">                        reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false);</span>
+<span class="nc" id="L303">                List&lt;Reports&gt; partiallyApprovedList2 =</span>
+<span class="nc" id="L304">                        reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REJECTED, true, false);</span>
+<span class="nc" id="L305">                List&lt;Reports&gt; mergedList2 = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L306">                mergedList2.addAll(approvedList2);</span>
+<span class="nc" id="L307">                mergedList2.addAll(partiallyApprovedList2);</span>
+<span class="nc" id="L308">                return mergedList2;</span>
+
+
+            case CONSTANT7:
+<span class="nc" id="L312">                List&lt;Reports&gt; approvedList3 =</span>
+<span class="nc" id="L313">                        reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false);</span>
+<span class="nc" id="L314">                List&lt;Reports&gt; partiallyApprovedList3 =</span>
+<span class="nc" id="L315">                        reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.PENDING, true, false);</span>
+<span class="nc" id="L316">                List&lt;Reports&gt; mergedList3 = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L317">                mergedList3.addAll(approvedList3);</span>
+<span class="nc" id="L318">                mergedList3.addAll(partiallyApprovedList3);</span>
+<span class="nc" id="L319">                return mergedList3;</span>
+            case &quot;reimbursed&quot;:
+<span class="nc" id="L321">                List&lt;Reports&gt; approvedList4 =</span>
+<span class="nc" id="L322">                        reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);</span>
+<span class="nc" id="L323">                List&lt;Reports&gt; partiallyApprovedList4 =</span>
+<span class="nc" id="L324">                        reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REIMBURSED, true, false);</span>
+<span class="nc" id="L325">                List&lt;Reports&gt; mergedList4 = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L326">                mergedList4.addAll(approvedList4);</span>
+<span class="nc" id="L327">                mergedList4.addAll(partiallyApprovedList4);</span>
+<span class="nc" id="L328">                return mergedList4;</span>
+
+
+            default:
+<span class="nc" id="L332">                throw new IllegalArgumentException(CONSTANT6);</span>
+        }
+    }
+
+    @Override
+    public void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
+<span class="nc" id="L338">        boolean submissionStatus = true;</span>
+<span class="nc" id="L339">        Reports re = getReportById(reportId);</span>
+<span class="nc" id="L340">        Long employeeId = re.getEmployeeId();</span>
+
+<span class="nc bnc" id="L342" title="All 2 branches missed.">        if (Boolean.TRUE.equals(re.getIsHidden())) {</span>
+<span class="nc" id="L343">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
+        }
+
+        // Check if the report is already submitted and not rejected
+<span class="nc bnc" id="L347" title="All 4 branches missed.">        if (Boolean.TRUE.equals(re.getIsSubmitted()) &amp;&amp; re.getManagerApprovalStatus() != ManagerApprovalStatus.REJECTED) {</span>
+<span class="nc" id="L348">            throw new IllegalStateException(CONSTANT2 + reportId + &quot; is already submitted!&quot;);</span>
+        }
+
+        // Check if the report is not submitted or was previously rejected by the manager
+<span class="nc bnc" id="L352" title="All 4 branches missed.">        if (Boolean.FALSE.equals(re.getIsSubmitted()) || re.getManagerApprovalStatus() == ManagerApprovalStatus.REJECTED) {</span>
+<span class="nc" id="L353">            List&lt;Expense&gt; rejectedExpenses = expenseServices.getRejectedExpensesByReportId(reportId);</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">            for (Expense expense : rejectedExpenses) {</span>
+<span class="nc" id="L355">                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);</span>
+<span class="nc" id="L356">                expenseRepository.save(expense);</span>
+<span class="nc" id="L357">            }</span>
+<span class="nc" id="L358">            re.setIsSubmitted(submissionStatus);</span>
+<span class="nc" id="L359">            re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);</span>
+<span class="nc" id="L360">            re.setDateSubmitted(LocalDate.now());</span>
+<span class="nc" id="L361">            re.setTotalAmount(totalAmount(reportId));</span>
+
+            // Fetch the manager's email and set it in the report
+<span class="nc" id="L364">            Employee employee = employeeServices.getEmployeeById(employeeId);</span>
+<span class="nc" id="L365">            String managerEmail = employee.getManagerEmail();</span>
+<span class="nc bnc" id="L366" title="All 2 branches missed.">            if (managerEmail == null) {</span>
+<span class="nc" id="L367">                throw new NullPointerException(&quot;Manager Email not found for Employee ID: &quot; + employee.getEmployeeId());</span>
+            }
+<span class="nc" id="L369">            re.setManagerEmail(managerEmail);</span>
+
+<span class="nc" id="L371">            reportsRepository.save(re);</span>
+
+            // Send email notification to the manager
+<span class="nc" id="L374">            List&lt;Expense&gt; expenseList = expenseServices.getExpenseByReportId(reportId);</span>
+<span class="nc" id="L375">            ArrayList&lt;Long&gt; expenseIds = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">            for (Expense expense : expenseList) {</span>
+<span class="nc" id="L377">                expenseIds.add(expense.getExpenseId());</span>
+<span class="nc" id="L378">            }</span>
+<span class="nc" id="L379">            emailService.managerNotification(reportId, expenseIds, response);</span>
+        }
+
+        // Push Notification Functionality
+<span class="nc" id="L383">        String managerEmail = re.getManagerEmail();</span>
+<span class="nc" id="L384">        Employee manager = employeeServices.getEmployeeByEmail(managerEmail);</span>
+
+<span class="nc bnc" id="L386" title="All 4 branches missed.">        if (manager != null &amp;&amp; manager.getToken() != null) {</span>
+<span class="nc" id="L387">            Employee employee = employeeServices.getEmployeeById(employeeId);</span>
+<span class="nc" id="L388">            PushNotificationRequest notificationRequest = new PushNotificationRequest();</span>
+<span class="nc" id="L389">            notificationRequest.setTitle(employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
+<span class="nc" id="L390">            notificationRequest.setMessage(CONSTANT10);</span>
+<span class="nc" id="L391">            notificationRequest.setToken(manager.getToken());</span>
+<span class="nc" id="L392">            pushNotificationService.sendPushNotificationToToken(notificationRequest);</span>
+        }
+<span class="nc" id="L394">    }</span>
+
+
+    @Override
+    public void submitReport(Long reportId, String managerEmail,
+                             HttpServletResponse response) throws MessagingException, IOException {
+<span class="nc" id="L400">        Reports re = getReportById(reportId);</span>
+
+<span class="nc bnc" id="L402" title="All 4 branches missed.">        if (re == null || re.getIsHidden()) {</span>
+<span class="nc" id="L403">            throw new NullPointerException(CONSTANT2 + reportId + CONSTANT1);</span>
+        }
+
+        // Check if the report is already submitted and not rejected
+<span class="nc bnc" id="L407" title="All 4 branches missed.">        if (Boolean.TRUE.equals(re.getIsSubmitted()) &amp;&amp; re.getManagerApprovalStatus() != ManagerApprovalStatus.REJECTED) {</span>
+<span class="nc" id="L408">            throw new IllegalStateException(CONSTANT2 + reportId + &quot; is already submitted!&quot;);</span>
+        }
+
+        // Check if the report is not submitted or was previously rejected by the manager
+<span class="nc bnc" id="L412" title="All 4 branches missed.">        if (Boolean.FALSE.equals(re.getIsSubmitted()) || re.getManagerApprovalStatus() == ManagerApprovalStatus.REJECTED) {</span>
+<span class="nc" id="L413">            List&lt;Expense&gt; rejectedExpenses = expenseServices.getRejectedExpensesByReportId(reportId);</span>
+<span class="nc bnc" id="L414" title="All 2 branches missed.">            for (Expense expense : rejectedExpenses) {</span>
+<span class="nc" id="L415">                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);</span>
+<span class="nc" id="L416">                expenseRepository.save(expense);</span>
+<span class="nc" id="L417">            }</span>
+<span class="nc" id="L418">            re.setIsSubmitted(true);</span>
+<span class="nc" id="L419">            re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);</span>
+<span class="nc" id="L420">            re.setDateSubmitted(LocalDate.now());</span>
+<span class="nc" id="L421">            re.setTotalAmount(totalAmount(reportId));</span>
+
+            // Fetch the associated Employee based on the employeeId in Reports
+<span class="nc" id="L424">            Employee employee = employeeServices.getEmployeeById(re.getEmployeeId());</span>
+
+            // Set the managerEmail from the employee's data
+<span class="nc" id="L427">            re.setManagerEmail(employee.getManagerEmail());</span>
+
+<span class="nc" id="L429">            reportsRepository.save(re);</span>
+
+            // Send email notification to the manager
+<span class="nc" id="L432">            List&lt;Expense&gt; expenseList = expenseServices.getExpenseByReportId(reportId);</span>
+<span class="nc" id="L433">            ArrayList&lt;Long&gt; expenseIds = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L434" title="All 2 branches missed.">            for (Expense expense : expenseList) {</span>
+<span class="nc" id="L435">                expenseIds.add(expense.getExpenseId());</span>
+<span class="nc" id="L436">            }</span>
+<span class="nc" id="L437">            emailService.managerNotification(reportId, expenseIds, re.getManagerEmail(), response);</span>
+
+            // Push Notification Functionality
+<span class="nc" id="L440">            Employee manager = employeeServices.getEmployeeByEmail(re.getManagerEmail());</span>
+<span class="nc bnc" id="L441" title="All 4 branches missed.">            if (manager != null &amp;&amp; manager.getToken() != null) {</span>
+<span class="nc" id="L442">                PushNotificationRequest notificationRequest = new PushNotificationRequest();</span>
+<span class="nc" id="L443">                notificationRequest.setTitle(employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
+<span class="nc" id="L444">                notificationRequest.setMessage(CONSTANT10);</span>
+<span class="nc" id="L445">                notificationRequest.setToken(manager.getToken());</span>
+<span class="nc" id="L446">                pushNotificationService.sendPushNotificationToToken(notificationRequest);</span>
+            }
+        }
+<span class="nc" id="L449">    }</span>
+
+    @Override
+    public void reimburseReportByFinance(ArrayList&lt;Long&gt; reportIds, String comments) {
+<span class="nc" id="L453">        FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.APPROVED;</span>
+<span class="nc bnc" id="L454" title="All 2 branches missed.">        for (Long reportId : reportIds) {</span>
+<span class="nc" id="L455">            Reports re = getReportById(reportId);</span>
+<span class="nc" id="L456">            Long employeeId = re.getEmployeeId();</span>
+<span class="nc bnc" id="L457" title="All 2 branches missed.">            if (Boolean.TRUE.equals(re.getIsHidden())) {</span>
+<span class="nc" id="L458">                throw new ObjectNotFoundException(reportId, CONSTANT8 + reportId + CONSTANT1);</span>
+            }
+<span class="nc bnc" id="L460" title="All 2 branches missed.">            if (Boolean.FALSE.equals(re.getIsSubmitted())) {</span>
+<span class="nc" id="L461">                throw new IllegalStateException(CONSTANT8 + reportId + &quot; is not submitted!&quot;);</span>
+            }
+
+<span class="nc bnc" id="L464" title="All 2 branches missed.">            if (re.getManagerApprovalStatus() != ManagerApprovalStatus.APPROVED &amp;&amp;</span>
+<span class="nc bnc" id="L465" title="All 2 branches missed.">                    re.getManagerApprovalStatus() != ManagerApprovalStatus.PARTIALLY_APPROVED) {</span>
+<span class="nc" id="L466">                throw new IllegalStateException(CONSTANT8 + reportId + &quot; is not approved by the manager!&quot;);</span>
+            }
+<span class="nc" id="L468">            re.setFinanceApprovalStatus(approvalStatus);</span>
+<span class="nc" id="L469">            re.setFinanceComments(comments);</span>
+<span class="nc" id="L470">            re.setFinanceActionDate(LocalDate.now());</span>
+<span class="nc" id="L471">            reportsRepository.save(re);</span>
+<span class="nc" id="L472">            emailService.userReimbursedNotification(reportId);</span>
+            //Update Expenses Status
+<span class="nc" id="L474">            List&lt;Expense&gt; expenseList = expenseServices.getExpenseByReportId(reportId);</span>
+<span class="nc bnc" id="L475" title="All 2 branches missed.">            for (Expense exp : expenseList) {</span>
+<span class="nc" id="L476">                exp.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);</span>
+<span class="nc" id="L477">                expenseRepository.save(exp);</span>
+<span class="nc" id="L478">            }</span>
+            //Push Notification Functionality
+
+<span class="nc" id="L481">            Employee employee = employeeServices.getEmployeeById(employeeId);</span>
+
+<span class="nc" id="L483">            PushNotificationRequest notificationRequest = new PushNotificationRequest();</span>
+<span class="nc" id="L484">            notificationRequest.setTitle(&quot;[PUSHED TO REIMBURSEMENT]: &quot; + re.getReportTitle());</span>
+<span class="nc" id="L485">            notificationRequest.setMessage(&quot;Your expense report is pushed to reimbursement.&quot;);</span>
+<span class="nc" id="L486">            notificationRequest.setToken(employee.getToken());</span>
+<span class="nc" id="L487">            pushNotificationService.sendPushNotificationToToken(notificationRequest);</span>
+<span class="nc" id="L488">        }</span>
+<span class="nc" id="L489">    }</span>
+
+    @Override
+    public void rejectReportByFinance(Long reportId, String comments) {
+<span class="nc" id="L493">        FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECTED;</span>
+<span class="nc" id="L494">        Reports re = getReportById(reportId);</span>
+<span class="nc" id="L495">        Long employeeId = re.getEmployeeId();</span>
+<span class="nc bnc" id="L496" title="All 2 branches missed.">        if (Boolean.FALSE.equals(re.getIsSubmitted())) {</span>
+<span class="nc" id="L497">            throw new IllegalStateException(CONSTANT8 + reportId + CONSTANT9);</span>
+        }
+<span class="nc bnc" id="L499" title="All 2 branches missed.">        if (Boolean.TRUE.equals(re.getIsHidden())) {</span>
+<span class="nc" id="L500">            throw new ObjectNotFoundException(reportId, CONSTANT8 + reportId + CONSTANT1);</span>
+        }
+<span class="nc bnc" id="L502" title="All 4 branches missed.">        if (Boolean.FALSE.equals(re.getIsHidden()) &amp;&amp; Boolean.TRUE.equals(re.getIsSubmitted()) &amp;&amp;</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">                re.getManagerApprovalStatus() == ManagerApprovalStatus.APPROVED) {</span>
+<span class="nc" id="L504">            re.setFinanceApprovalStatus(approvalStatus);</span>
+<span class="nc" id="L505">            re.setFinanceComments(comments);</span>
+<span class="nc" id="L506">            re.setFinanceActionDate(LocalDate.now());</span>
+<span class="nc" id="L507">            reportsRepository.save(re);</span>
+<span class="nc" id="L508">            emailService.userRejectedByFinanceNotification(reportId);</span>
+<span class="nc" id="L509">            List&lt;Expense&gt; expenseList = expenseServices.getExpenseByReportId(reportId);</span>
+<span class="nc bnc" id="L510" title="All 2 branches missed.">            for (Expense exp : expenseList) {</span>
+<span class="nc" id="L511">                exp.setFinanceApprovalStatus(FinanceApprovalStatus.REJECTED);</span>
+<span class="nc" id="L512">                expenseRepository.save(exp);</span>
+<span class="nc" id="L513">            }</span>
+        }
+        //Push Notification Functionality
+
+<span class="nc" id="L517">        Employee employee = employeeServices.getEmployeeById(employeeId);</span>
+
+<span class="nc" id="L519">        PushNotificationRequest notificationRequest = new PushNotificationRequest();</span>
+<span class="nc" id="L520">        notificationRequest.setTitle(&quot;[REJECTED]: &quot; + re.getReportTitle());</span>
+<span class="nc" id="L521">        notificationRequest.setMessage(&quot;Accounts admin rejected your expense report.&quot;);</span>
+<span class="nc" id="L522">        notificationRequest.setToken(employee.getToken());</span>
+<span class="nc" id="L523">        pushNotificationService.sendPushNotificationToToken(notificationRequest);</span>
+<span class="nc" id="L524">    }</span>
+
+    @Override
+    public float totalAmount(Long reportId) {
+<span class="nc" id="L528">        Optional&lt;Reports&gt; reportOptional = reportsRepository.findById(reportId);</span>
+
+<span class="nc bnc" id="L530" title="All 2 branches missed.">        if (reportOptional.isPresent()) {</span>
+<span class="nc" id="L531">            Reports report = reportOptional.get();</span>
+<span class="nc" id="L532">            List&lt;Expense&gt; expenses = expenseRepository.findByReports(Optional.of(report));</span>
+
+<span class="nc" id="L534">            float amtINR = 0;</span>
+<span class="nc bnc" id="L535" title="All 2 branches missed.">            for (Expense expense : expenses) {</span>
+<span class="nc" id="L536">                amtINR += expense.getAmount();</span>
+<span class="nc" id="L537">            }</span>
+<span class="nc" id="L538">            return amtINR;</span>
+        } else {
+
+<span class="nc" id="L541">            return 0;</span>
+        }
+    }
+
+
+    @Override
+    public float totalApprovedAmount(Long reportId) {
+<span class="nc" id="L548">        Reports report = getReportById(reportId);</span>
+<span class="nc" id="L549">        List&lt;Expense&gt; expenseList = expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false);</span>
+<span class="nc" id="L550">        float totalApprovedAmount = 0;</span>
+<span class="nc bnc" id="L551" title="All 2 branches missed.">        for (Expense expense2 : expenseList) {</span>
+<span class="nc" id="L552">            Double amountApproved = expense2.getAmountApproved();</span>
+<span class="nc bnc" id="L553" title="All 2 branches missed.">            if (amountApproved != null) {</span>
+<span class="nc" id="L554">                totalApprovedAmount += amountApproved.floatValue();</span>
+            }
+<span class="nc" id="L556">        }</span>
+<span class="nc" id="L557">        return totalApprovedAmount;</span>
+    }
+
+
+    @Override
+    public void hideReport(Long reportId) {
+<span class="nc" id="L563">        Boolean hidden = true;</span>
+<span class="nc" id="L564">        Boolean isReported = false;</span>
+<span class="nc" id="L565">        Reports report = getReportById(reportId);</span>
+<span class="nc" id="L566">        List&lt;Expense&gt; expenseList = expenseServices.getExpenseByReportId(reportId);</span>
+<span class="nc bnc" id="L567" title="All 2 branches missed.">        for (Expense exp : expenseList) {</span>
+<span class="nc" id="L568">            exp.setIsReported(isReported);</span>
+<span class="nc" id="L569">            exp.setReports(null);</span>
+<span class="nc" id="L570">            exp.setReportTitle(null);</span>
+<span class="nc" id="L571">            exp.setManagerApprovalStatusExpense(null);</span>
+<span class="nc" id="L572">            exp.setAmountApproved(null);</span>
+<span class="nc" id="L573">            expenseRepository.save(exp);</span>
+<span class="nc" id="L574">        }</span>
+<span class="nc" id="L575">        report.setIsHidden(hidden);</span>
+<span class="nc" id="L576">        reportsRepository.save(report);</span>
+<span class="nc" id="L577">    }</span>
+
+    @Override
+    public List&lt;Reports&gt; getReportsInDateRange(LocalDate startDate, LocalDate endDate, String request) {
+
+<span class="nc bnc" id="L582" title="All 5 branches missed.">        switch (request) {</span>
+            case CONSTANT5:
+<span class="nc" id="L584">                return reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(startDate, endDate,</span>
+                        FinanceApprovalStatus.APPROVED);
+            case CONSTANT7:
+<span class="nc" id="L587">                return reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(startDate, endDate,</span>
+                        FinanceApprovalStatus.PENDING);
+            case &quot;reimbursed&quot;:
+<span class="nc" id="L590">                return reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(startDate, endDate,</span>
+                        FinanceApprovalStatus.REIMBURSED);
+            case CONSTANT4:
+<span class="nc" id="L593">                return reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(startDate, endDate,</span>
+                        FinanceApprovalStatus.REJECTED);
+            default:
+<span class="nc" id="L596">                throw new IllegalArgumentException(CONSTANT6);</span>
+
+        }
+
+    }
+
+
+    @Override
+    public List&lt;Reports&gt; getReportsSubmittedToUserInDateRange(String managerEmail, LocalDate startDate,
+                                                              LocalDate endDate, String request) {
+<span class="nc bnc" id="L606" title="All 4 branches missed.">        switch (request) {</span>
+            case CONSTANT5:
+<span class="nc" id="L608">                return reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.APPROVED, true, false);</span>
+            case CONSTANT4:
+<span class="nc" id="L610">                return reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.REJECTED, true, false);</span>
+            case CONSTANT7:
+<span class="nc" id="L612">                return reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.PENDING, true, false);</span>
+
+            default:
+<span class="nc" id="L615">                throw new IllegalArgumentException(CONSTANT6);</span>
+        }
+    }
+
+    @Override
+    public String getAmountOfReportsInDateRange(LocalDate startDate, LocalDate endDate) {
+<span class="nc" id="L621">        List&lt;Reports&gt; reports = reportsRepository.findByDateSubmittedBetween(startDate, endDate);</span>
+<span class="nc" id="L622">        float total = 0;</span>
+<span class="nc bnc" id="L623" title="All 2 branches missed.">        for (Reports report2 : reports) {</span>
+<span class="nc" id="L624">            total += report2.getTotalAmount();</span>
+<span class="nc" id="L625">        }</span>
+<span class="nc" id="L626">        return (total + &quot; INR&quot;);</span>
+    }
+
+
+    @Override
+    public void updateExpenseStatus(Long reportId, List&lt;Long&gt; approveExpenseIds, List&lt;Long&gt; rejectExpenseIds,
+                                    Map&lt;Long, Float&gt; partiallyApprovedMap, String reviewTime, String comments,
+                                    HttpServletResponse response) throws MessagingException, IOException {
+<span class="nc" id="L634">        LocalDate managerActionDate = LocalDate.now();</span>
+<span class="nc" id="L635">        Reports report = getReportById(reportId);</span>
+<span class="nc" id="L636">        validateReport(report, reportId);</span>
+
+
+
+<span class="nc" id="L640">        processApprovedExpenses(approveExpenseIds);</span>
+<span class="nc" id="L641">        processRejectedExpenses(rejectExpenseIds);</span>
+<span class="nc" id="L642">        processPartiallyApprovedExpenses(partiallyApprovedMap);</span>
+
+<span class="nc" id="L644">        updateReportStatus(reportId,report, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, reviewTime, comments, managerActionDate,response);</span>
+<span class="nc" id="L645">    }</span>
+
+    private void validateReport(Reports report, Long reportId) {
+<span class="nc bnc" id="L648" title="All 2 branches missed.">        if (Boolean.TRUE.equals(report.getIsHidden())) {</span>
+<span class="nc" id="L649">            throw new IllegalStateException(CONSTANT2 + reportId + CONSTANT1);</span>
+<span class="nc bnc" id="L650" title="All 2 branches missed.">        } else if (report == null) {</span>
+<span class="nc" id="L651">            throw new NullPointerException(CONSTANT2 + reportId + &quot; does not contain any expenses!&quot;);</span>
+<span class="nc bnc" id="L652" title="All 2 branches missed.">        } else if (Boolean.FALSE.equals(report.getIsSubmitted())) {</span>
+<span class="nc" id="L653">            throw new IllegalStateException(CONSTANT2 + reportId + &quot; is not submitted!&quot;);</span>
+        }
+<span class="nc" id="L655">    }</span>
+
+    private void processApprovedExpenses(List&lt;Long&gt; approveExpenseIds) {
+<span class="nc bnc" id="L658" title="All 2 branches missed.">        for (Long expenseId : approveExpenseIds) {</span>
+<span class="nc" id="L659">            Expense expense = expenseServices.getExpenseById(expenseId);</span>
+<span class="nc" id="L660">            validateExpense(expense, expenseId);</span>
+
+<span class="nc bnc" id="L662" title="All 4 branches missed.">            if (Boolean.TRUE.equals(expense.getIsReported()) &amp;&amp; expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {</span>
+<span class="nc" id="L663">                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);</span>
+<span class="nc" id="L664">                expense.setAmountApproved(expense.getAmount());</span>
+<span class="nc" id="L665">                expenseRepository.save(expense);</span>
+            }
+<span class="nc" id="L667">        }</span>
+<span class="nc" id="L668">    }</span>
+
+    private void processRejectedExpenses(List&lt;Long&gt; rejectExpenseIds) {
+<span class="nc bnc" id="L671" title="All 2 branches missed.">        for (Long expenseId : rejectExpenseIds) {</span>
+<span class="nc" id="L672">            Expense expense = expenseServices.getExpenseById(expenseId);</span>
+<span class="nc" id="L673">            validateExpense(expense, expenseId);</span>
+
+<span class="nc bnc" id="L675" title="All 4 branches missed.">            if (Boolean.TRUE.equals(expense.getIsReported()) &amp;&amp; expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.PENDING) {</span>
+<span class="nc" id="L676">                expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);</span>
+<span class="nc" id="L677">                expense.setAmountApproved(0.0);</span>
+<span class="nc" id="L678">                expenseRepository.save(expense);</span>
+            }
+<span class="nc" id="L680">        }</span>
+<span class="nc" id="L681">    }</span>
+
+    private void processPartiallyApprovedExpenses(Map&lt;Long, Float&gt; partiallyApprovedMap) {
+<span class="nc bnc" id="L684" title="All 2 branches missed.">        for (Map.Entry&lt;Long, Float&gt; entry : partiallyApprovedMap.entrySet()) {</span>
+<span class="nc" id="L685">            Long expId = entry.getKey();</span>
+<span class="nc" id="L686">            Float amt = entry.getValue();</span>
+<span class="nc" id="L687">            Expense expense = expenseServices.getExpenseById(expId);</span>
+<span class="nc" id="L688">            validateExpense(expense, expId);</span>
+
+<span class="nc" id="L690">            expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PARTIALLY_APPROVED);</span>
+<span class="nc" id="L691">            expense.setAmountApproved(Double.valueOf(amt));</span>
+<span class="nc" id="L692">            expenseRepository.save(expense);</span>
+<span class="nc" id="L693">        }</span>
+<span class="nc" id="L694">    }</span>
+
+    private void validateExpense(Expense expense, Long expenseId) {
+<span class="nc bnc" id="L697" title="All 2 branches missed.">        if (Boolean.TRUE.equals(expense.getIsHidden())) {</span>
+<span class="nc" id="L698">            throw new IllegalStateException(CONSTANT3 + expenseId + CONSTANT1);</span>
+        }
+<span class="nc" id="L700">    }</span>
+
+    private void updateReportStatus(Long reportId,Reports report, List&lt;Long&gt; approveExpenseIds, List&lt;Long&gt; rejectExpenseIds,
+                                    Map&lt;Long, Float&gt; partiallyApprovedMap, String reviewTime, String comments, LocalDate managerActionDate,
+                                    HttpServletResponse response)  {
+<span class="nc bnc" id="L705" title="All 4 branches missed.">        if (rejectExpenseIds.isEmpty() &amp;&amp; partiallyApprovedMap.isEmpty()) {</span>
+<span class="nc" id="L706">            report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);</span>
+<span class="nc" id="L707">            report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);</span>
+<span class="nc" id="L708">            reportsRepository.save(report);</span>
+            // Email and push notifications...
+<span class="nc bnc" id="L710" title="All 2 branches missed.">        } else if (!rejectExpenseIds.isEmpty()) {</span>
+<span class="nc" id="L711">            report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);</span>
+<span class="nc" id="L712">            reportsRepository.save(report);</span>
+            // Email and push notifications...
+<span class="nc bnc" id="L714" title="All 4 branches missed.">        } else if (rejectExpenseIds.isEmpty() &amp;&amp; !partiallyApprovedMap.isEmpty()) {</span>
+<span class="nc" id="L715">            report.setManagerApprovalStatus(ManagerApprovalStatus.PARTIALLY_APPROVED);</span>
+<span class="nc" id="L716">            report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);</span>
+<span class="nc" id="L717">            reportsRepository.save(report);</span>
+            // Email and push notifications...
+        }
+<span class="nc" id="L720">        report.setManagerReviewTime(reviewTime);</span>
+<span class="nc" id="L721">        report.setManagerActionDate(managerActionDate);</span>
+<span class="nc" id="L722">        report.setManagerComments(comments);</span>
+
+<span class="nc" id="L724">        report.setTotalApprovedAmount(totalApprovedAmount(reportId));</span>
+<span class="nc" id="L725">        reportsRepository.save(report);</span>
+<span class="nc" id="L726">    }</span>
+
+
+    @Override
+    public void notifyHR(Long reportId) throws MessagingException {
+<span class="nc" id="L731">        Reports report = getReportById(reportId);</span>
+<span class="nc" id="L732">        Long employeeId = report.getEmployeeId();</span>
+<span class="nc" id="L733">        Employee employee = employeeServices.getEmployeeById(employeeId);</span>
+<span class="nc" id="L734">        String hrEmail = employee.getHrEmail();</span>
+<span class="nc" id="L735">        String hrName = employee.getHrName();</span>
+<span class="nc" id="L736">        emailService.notifyHr(reportId, hrEmail, hrName);</span>
+
+<span class="nc" id="L738">    }</span>
+
+    @Override
+    public void notifyLnD(Long reportId) throws MessagingException {
+<span class="nc" id="L742">        Reports report = getReportById(reportId);</span>
+<span class="nc" id="L743">        Long employeeId = report.getEmployeeId();</span>
+<span class="nc" id="L744">        Employee employee = employeeServices.getEmployeeById(employeeId);</span>
+<span class="nc" id="L745">        String lndEmail = employee.getLndEmail();</span>
+<span class="nc" id="L746">        String lndName = employee.getLndName();</span>
+<span class="nc" id="L747">        emailService.notifyLnD(reportId, lndEmail, lndName);</span>
+<span class="nc" id="L748">    }</span>
+
+    @Scheduled(cron = &quot;0 0 12 22,24 * ?&quot;)
+    public void sendReportNotApprovedByManagerReminder() {
+<span class="nc" id="L752">        LocalDate currentDate = LocalDate.now();</span>
+
+<span class="nc" id="L754">        List&lt;Reports&gt; reportsList = reportsRepository.findBymanagerApprovalStatus(ManagerApprovalStatus.PENDING);</span>
+<span class="nc" id="L755">        List&lt;Long&gt; reportIds = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L756" title="All 2 branches missed.">        for (Reports report : reportsList) {</span>
+
+<span class="nc bnc" id="L758" title="All 4 branches missed.">            if (currentDate.getDayOfMonth() == 22 || currentDate.getDayOfMonth() == 24) {</span>
+<span class="nc" id="L759">                reportIds.add(report.getReportId());</span>
+            }
+<span class="nc" id="L761">        }</span>
+
+<span class="nc" id="L763">        emailService.reminderMailToManager(reportIds);</span>
+
+        // Push Notification Functionality
+<span class="nc bnc" id="L766" title="All 2 branches missed.">        for (Long report : reportIds) {</span>
+<span class="nc" id="L767">            Reports re = getReportById(report);</span>
+<span class="nc" id="L768">            String managerEmail = re.getManagerEmail();</span>
+<span class="nc" id="L769">            Employee manager = employeeServices.getEmployeeByEmail(managerEmail);</span>
+<span class="nc" id="L770">            PushNotificationRequest notificationRequest = new PushNotificationRequest();</span>
+<span class="nc" id="L771">            notificationRequest.setTitle(&quot;[REMINDER]: Take Action on pending reports.&quot;);</span>
+<span class="nc" id="L772">            notificationRequest.setToken(manager.getToken());</span>
+<span class="nc" id="L773">            pushNotificationService.sendPushNotificationToToken(notificationRequest);</span>
+<span class="nc" id="L774">        }</span>
+<span class="nc" id="L775">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

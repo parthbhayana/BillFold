@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExcelController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.controller</a> &gt; <span class="el_source">ExcelController.java</span></div><h1>ExcelController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.controller;
+
+import java.time.LocalDate;
+
+import javax.servlet.http.HttpServletResponse;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.nineleaps.expense_management_project.entity.StatusExcel;
+import com.nineleaps.expense_management_project.service.IExcelGeneratorCategoryService;
+import com.nineleaps.expense_management_project.service.IExcelGeneratorReportsService;
+
+@RestController
+<span class="fc" id="L20">public class ExcelController {</span>
+	@Autowired
+	private IExcelGeneratorCategoryService excelService;
+
+	@Autowired
+	private IExcelGeneratorReportsService excelServiceReports;
+
+	private static final String CONSTANT1 = &quot;Email sent successfully!&quot;;
+	private static final String CONSTANT2 = &quot;Content-Disposition&quot;;
+	private static final String CONSTANT3 = &quot;No data available for the selected period. So, Email can't be sent!&quot;;
+
+	// Endpoint to generate an Excel report for category-wise expense analytics and send it via email
+	@GetMapping(&quot;/excel/categoryBreakup&quot;)
+	public ResponseEntity&lt;String&gt; generateExcelReport(HttpServletResponse response,
+													  @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
+													  @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) throws Exception {
+
+<span class="fc" id="L37">		response.setContentType(&quot;application/octet-stream&quot;);</span>
+
+<span class="fc" id="L39">		String headerKey = CONSTANT2;</span>
+<span class="fc" id="L40">		String headerValue = &quot;attachment;filename=Category wise Expense Analytics.xls&quot;;</span>
+
+<span class="fc" id="L42">		response.setHeader(headerKey, headerValue);</span>
+
+<span class="fc" id="L44">		String result = excelService.generateExcelAndSendEmail(response, startDate, endDate);</span>
+
+<span class="fc bfc" id="L46" title="All 2 branches covered.">		if (result.equals(CONSTANT1)) {</span>
+<span class="fc" id="L47">			response.flushBuffer();</span>
+<span class="fc" id="L48">			return ResponseEntity.ok(result);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">		} else if (result.equals(CONSTANT3)) {</span>
+<span class="fc" id="L50">			return ResponseEntity.ok(result);</span>
+		} else {
+<span class="fc" id="L52">			return ResponseEntity.badRequest().body(result);</span>
+		}
+	}
+
+	// Endpoint to generate an Excel report for all reports with a specified status and send it via email
+	@GetMapping(&quot;/excel/allReports&quot;)
+	public ResponseEntity&lt;String&gt; generateExcelReport(HttpServletResponse response,
+													  @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
+													  @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate,
+													  @RequestParam StatusExcel status) throws Exception {
+
+<span class="fc" id="L63">		String fileName = &quot;Billfold_All_Submissions_Status.xls&quot;;</span>
+<span class="fc" id="L64">		String headerKey = CONSTANT2;</span>
+<span class="fc" id="L65">		String headerValue = &quot;attachment; filename=&quot; + fileName;</span>
+
+<span class="fc" id="L67">		response.setContentType(&quot;application/vnd.ms-excel&quot;);</span>
+<span class="fc" id="L68">		response.setHeader(headerKey, headerValue);</span>
+
+<span class="fc" id="L70">		String result = excelServiceReports.generateExcelAndSendEmail(response, startDate, endDate, status);</span>
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">		if (result.equals(CONSTANT1)) {</span>
+<span class="fc" id="L73">			response.flushBuffer();</span>
+<span class="fc" id="L74">			return ResponseEntity.ok(result);</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">		} else if (result.equals(CONSTANT3)) {</span>
+<span class="fc" id="L76">			return ResponseEntity.ok(result);</span>
+		} else {
+<span class="fc" id="L78">			return ResponseEntity.badRequest().body(result);</span>
+		}
+	}
+
+	// Endpoint to reimburse and generate an Excel report for all reports and send it via email
+	@GetMapping(&quot;/reimburse/allReports&quot;)
+	public ResponseEntity&lt;String&gt; reimburseAndGenerateExcel(HttpServletResponse response) throws Exception {
+
+<span class="fc" id="L86">		String fileName = &quot;Billfold_All_Submissions_Status.xls&quot;;</span>
+<span class="fc" id="L87">		String headerKey = CONSTANT2;</span>
+<span class="fc" id="L88">		String headerValue = &quot;attachment; filename=&quot; + fileName;</span>
+
+<span class="fc" id="L90">		response.setContentType(&quot;application/vnd.ms-excel&quot;);</span>
+<span class="fc" id="L91">		response.setHeader(headerKey, headerValue);</span>
+
+<span class="fc" id="L93">		String result = excelServiceReports.reimburseAndGenerateExcel(response);</span>
+
+<span class="fc bfc" id="L95" title="All 2 branches covered.">		if (result.equals(CONSTANT1)) {</span>
+<span class="fc" id="L96">			response.flushBuffer();</span>
+<span class="fc" id="L97">			return ResponseEntity.ok(result);</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">		} else if (result.equals(CONSTANT3)) {</span>
+<span class="fc" id="L99">			return ResponseEntity.ok(result);</span>
+		}else {
+<span class="nc" id="L101">			return ResponseEntity.badRequest().body(result);</span>
+		}
+
+
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

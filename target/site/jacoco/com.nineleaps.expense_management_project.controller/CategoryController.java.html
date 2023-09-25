@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.controller</a> &gt; <span class="el_source">CategoryController.java</span></div><h1>CategoryController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.controller;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import com.nineleaps.expense_management_project.dto.CategoryDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.nineleaps.expense_management_project.entity.Category;
+import com.nineleaps.expense_management_project.service.ICategoryService;
+
+@RestController
+<span class="fc" id="L17">public class CategoryController {</span>
+
+    @Autowired
+    private ICategoryService categoryService;
+
+    // Endpoint to add a new category
+    @PostMapping(&quot;/insertCategory&quot;)
+    public ResponseEntity&lt;Object&gt; addCategory(@RequestBody CategoryDTO categoryDTO) {
+        try {
+<span class="fc" id="L26">            Category addedCategory = categoryService.addCategory(categoryDTO);</span>
+<span class="fc" id="L27">            return new ResponseEntity&lt;&gt;(addedCategory, HttpStatus.CREATED);</span>
+<span class="fc" id="L28">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L29">            return new ResponseEntity&lt;&gt;(e.getMessage(), HttpStatus.BAD_REQUEST);</span>
+        }
+    }
+
+    // Endpoint to retrieve all categories
+    @GetMapping(&quot;/showAllCategories&quot;)
+    public List&lt;Category&gt; getAllCategory() {
+<span class="fc" id="L36">        return categoryService.getAllCategories();</span>
+    }
+
+    // Endpoint to find a category by its ID
+    @GetMapping(&quot;/findCategory/{categoryId}&quot;)
+    public Category getCategoryById(@PathVariable(&quot;categoryId&quot;) Long categoryId) {
+<span class="fc" id="L42">        return categoryService.getCategoryById(categoryId);</span>
+    }
+
+    // Endpoint to update a category by its ID
+    @PutMapping(&quot;/updateCategory/{categoryId}&quot;)
+    public Category updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
+<span class="fc" id="L48">        return categoryService.updateCategory(categoryId, categoryDTO);</span>
+    }
+
+    // Endpoint to hide a category by its ID
+    @PostMapping(&quot;/hideCategory/{categoryId}&quot;)
+    public void hideCategory(@PathVariable Long categoryId) {
+<span class="fc" id="L54">        categoryService.hideCategory(categoryId);</span>
+<span class="fc" id="L55">    }</span>
+
+    // Endpoint to get the total amount spent in categories within a date range
+    @GetMapping(&quot;/categoryTotalAmount&quot;)
+    public Map&lt;String, Double&gt; getCategoryTotalAmount(
+            @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) {
+<span class="fc" id="L62">        return categoryService.getCategoryTotalAmount(startDate, endDate);</span>
+    }
+
+    // Endpoint to get yearly analytics for a specific category
+    @GetMapping(&quot;/getCategoryAnalyticsYearly/{categoryId}&quot;)
+    public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId) {
+<span class="nc" id="L68">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
+    }
+
+    // Endpoint to get monthly analytics for a specific category and year
+    @GetMapping(&quot;/getCategoryAnalyticsMonthly/{categoryId}&quot;)
+    public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId, @RequestParam Long year) {
+<span class="nc" id="L74">        return categoryService.getCategoryAnalyticsMonthly(categoryId, year);</span>
+    }
+
+    // Endpoint to get yearly analytics for all categories
+    @GetMapping(&quot;/getAllCategoryAnalyticsYearly&quot;)
+    public Map&lt;String, Object&gt; getYearlyCategoryAnalyticsForAllCategories() {
+<span class="nc" id="L80">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
+    }
+
+    // Endpoint to get monthly analytics for all categories for a specific year
+    @GetMapping(&quot;/getAllCategoryAnalyticsMonthly&quot;)
+    public Map&lt;String, Object&gt; getMonthlyCategoryAnalyticsForAllCategories(@RequestParam Long year) {
+<span class="nc" id="L86">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

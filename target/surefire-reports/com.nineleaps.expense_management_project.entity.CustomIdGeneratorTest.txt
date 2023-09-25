@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.nineleaps.expense_management_project.entity.CustomIdGeneratorTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.305 s - in com.nineleaps.expense_management_project.entity.CustomIdGeneratorTest

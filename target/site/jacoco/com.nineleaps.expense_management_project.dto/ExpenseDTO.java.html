@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpenseDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.dto</a> &gt; <span class="el_source">ExpenseDTO.java</span></div><h1>ExpenseDTO.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.dto;
+
+import java.time.LocalDate;
+
+// A Data Transfer Object (DTO) class for representing expense information
+public class ExpenseDTO {
+	private Double amount; // Expense amount
+	private String description; // Expense description
+	private String merchantName; // Merchant name
+	private byte[] file; // Expense file data (e.g., receipt image)
+	private String fileName; // Expense file name
+	private LocalDate date; // Expense date
+
+	// Default constructor
+<span class="fc" id="L15">	public ExpenseDTO() {</span>
+
+<span class="fc" id="L17">	}</span>
+
+	// Parameterized constructor to initialize expense information
+	public ExpenseDTO(Double amount, String description, String merchantName, byte[] file, String fileName,
+					  LocalDate date) {
+<span class="fc" id="L22">		super();</span>
+<span class="fc" id="L23">		this.amount = amount;</span>
+<span class="fc" id="L24">		this.description = description;</span>
+<span class="fc" id="L25">		this.merchantName = merchantName;</span>
+<span class="fc" id="L26">		this.file = file;</span>
+<span class="fc" id="L27">		this.fileName = fileName;</span>
+<span class="fc" id="L28">		this.date = date;</span>
+<span class="fc" id="L29">	}</span>
+
+	// Getter method to retrieve the expense amount
+	public Double getAmount() {
+<span class="fc" id="L33">		return amount;</span>
+	}
+
+	// Setter method to set the expense amount
+	public void setAmount(Double amount) {
+<span class="fc" id="L38">		this.amount = amount;</span>
+<span class="fc" id="L39">	}</span>
+
+	// Getter method to retrieve the expense description
+	public String getDescription() {
+<span class="fc" id="L43">		return description;</span>
+	}
+
+	// Setter method to set the expense description
+	public void setDescription(String description) {
+<span class="fc" id="L48">		this.description = description;</span>
+<span class="fc" id="L49">	}</span>
+
+	// Getter method to retrieve the merchant name
+	public String getMerchantName() {
+<span class="fc" id="L53">		return merchantName;</span>
+	}
+
+	// Setter method to set the merchant name
+	public void setMerchantName(String merchantName) {
+<span class="fc" id="L58">		this.merchantName = merchantName;</span>
+<span class="fc" id="L59">	}</span>
+
+	// Getter method to retrieve the expense file data
+	public byte[] getFile() {
+<span class="fc" id="L63">		return file;</span>
+	}
+
+	// Setter method to set the expense file data
+	public void setFile(byte[] file) {
+<span class="fc" id="L68">		this.file = file;</span>
+<span class="fc" id="L69">	}</span>
+
+	// Getter method to retrieve the expense file name
+	public String getFileName() {
+<span class="fc" id="L73">		return fileName;</span>
+	}
+
+	// Setter method to set the expense file name
+	public void setFileName(String fileName) {
+<span class="fc" id="L78">		this.fileName = fileName;</span>
+<span class="fc" id="L79">	}</span>
+
+	// Getter method to retrieve the expense date
+	public LocalDate getDate() {
+<span class="fc" id="L83">		return date;</span>
+	}
+
+	// Setter method to set the expense date
+	public void setDate(LocalDate date) {
+<span class="fc" id="L88">		this.date = date;</span>
+<span class="fc" id="L89">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

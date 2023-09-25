@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.controller;
+
+import java.util.List;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.nineleaps.expense_management_project.dto.UserDTO;
+import com.nineleaps.expense_management_project.service.IEmailService;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.nineleaps.expense_management_project.config.JwtUtil;
+import com.nineleaps.expense_management_project.entity.Employee;
+import com.nineleaps.expense_management_project.service.IEmployeeService;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
+@RestController
+@RequestMapping()
+public class UserController {
+    @Autowired
+    private IEmployeeService employeeService;
+
+    @Autowired
+    private IEmailService emailService;
+    @Autowired
+    private JwtUtil jwtUtil;
+    JSONObject responseJson;
+
+<span class="fc" id="L40">    public UserController(IEmployeeService employeeService) {</span>
+
+<span class="fc" id="L42">    }</span>
+
+    // Endpoint to get a list of all user details
+    @GetMapping(&quot;/listTheUser&quot;)
+    public List&lt;Employee&gt; getAllUserDetails() {
+<span class="nc" id="L47">        return employeeService.getAllUser();</span>
+    }
+
+    // Endpoint to send user profile data
+    @SuppressWarnings(&quot;unchecked&quot;)
+    @GetMapping(&quot;/getProfileData&quot;)
+    public ResponseEntity&lt;JSONObject&gt; sendData(HttpServletRequest request) {
+<span class="nc" id="L54">        String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
+<span class="nc" id="L55">        String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
+<span class="nc" id="L56">        DecodedJWT decodedAccessToken = JWT.decode(token);</span>
+<span class="nc" id="L57">        String employeeEmailFromToken = decodedAccessToken.getSubject();</span>
+<span class="nc" id="L58">        Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);</span>
+<span class="nc" id="L59">        Long employeeId = employee1.getEmployeeId();</span>
+<span class="nc" id="L60">        String email = employee1.getEmployeeEmail();</span>
+<span class="nc" id="L61">        String firstName = employee1.getFirstName();</span>
+<span class="nc" id="L62">        String lastName = employee1.getLastName();</span>
+<span class="nc" id="L63">        String imageUrl = employee1.getImageUrl();</span>
+<span class="nc" id="L64">        JSONObject responsejson = new JSONObject();</span>
+<span class="nc" id="L65">        responsejson.put(&quot;employeeId&quot;, employeeId);</span>
+<span class="nc" id="L66">        responsejson.put(&quot;firstName&quot;, firstName);</span>
+<span class="nc" id="L67">        responsejson.put(&quot;lastName&quot;, lastName);</span>
+<span class="nc" id="L68">        responsejson.put(&quot;imageUrl&quot;, imageUrl);</span>
+<span class="nc" id="L69">        responsejson.put(&quot;email&quot;, email);</span>
+<span class="nc" id="L70">        return ResponseEntity.ok(responsejson);</span>
+    }
+
+    // Endpoint to insert or update user data and generate JWT tokens
+    @PostMapping(&quot;/theProfile&quot;)
+    public ResponseEntity&lt;JwtUtil.TokenResponse&gt; insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response)
+            throws MessagingException {
+<span class="nc" id="L77">        Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (employee == null) {</span>
+<span class="nc" id="L79">            employeeService.insertUser(userDTO);</span>
+<span class="nc" id="L80">            employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());</span>
+<span class="nc" id="L81">            String email = employee.getEmployeeEmail();</span>
+<span class="nc" id="L82">            emailService.welcomeEmail(email);</span>
+<span class="nc" id="L83">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
+
+        } else {
+<span class="nc" id="L86">            String email = employee.getEmployeeEmail();</span>
+<span class="nc" id="L87">            employeeService.updateUser(userDTO);</span>
+<span class="nc" id="L88">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
+
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

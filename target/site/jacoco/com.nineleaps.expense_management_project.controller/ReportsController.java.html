@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReportsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.controller</a> &gt; <span class="el_source">ReportsController.java</span></div><h1>ReportsController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.controller;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
+
+import com.nineleaps.expense_management_project.dto.ReportsDTO;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
+import com.nineleaps.expense_management_project.entity.Reports;
+import com.nineleaps.expense_management_project.service.IReportsService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
+@RestController
+<span class="fc" id="L22">public class ReportsController {</span>
+
+    @Autowired
+    private IReportsService reportsService;
+
+    // Endpoint to get all reports for a specific employee
+    @GetMapping(&quot;/getAllReports/{employeeId}&quot;)
+    public Set&lt;Reports&gt; getAllReports(@PathVariable Long employeeId) {
+<span class="nc" id="L30">        return reportsService.getAllReports(employeeId);</span>
+    }
+
+    // Endpoint to get a report by its ID
+    @GetMapping(&quot;/getByReportId/{reportId}&quot;)
+    public Reports getReportByReportId(@PathVariable Long reportId) {
+<span class="nc" id="L36">        return reportsService.getReportById(reportId);</span>
+    }
+
+    // Endpoint to get reports submitted by an employee
+    @GetMapping(&quot;/getReportByEmployeeId/{employeeId}&quot;)
+    public List&lt;Reports&gt; getReportByEmpId(@PathVariable Long employeeId, @RequestParam String request) {
+<span class="nc" id="L42">        return reportsService.getReportByEmpId(employeeId, request);</span>
+    }
+
+    // Endpoint to get reports submitted to a manager
+    @GetMapping(&quot;/getReportsSubmittedToUser/{managerEmail}&quot;)
+    public List&lt;Reports&gt; getReportsSubmittedToUser(@PathVariable String managerEmail, @RequestParam String request) {
+<span class="nc" id="L48">        return reportsService.getReportsSubmittedToUser(managerEmail, request);</span>
+    }
+
+    // Endpoint to get all submitted reports
+    @GetMapping(&quot;/getAllSubmittedReports&quot;)
+    public List&lt;Reports&gt; getAllSubmittedReports() {
+<span class="nc" id="L54">        return reportsService.getAllSubmittedReports();</span>
+    }
+
+    // Endpoint to get all reports approved by a manager
+    @GetMapping(&quot;/getAllReportsApprovedByManager&quot;)
+    public List&lt;Reports&gt; getAllReportsApprovedByManager(@RequestParam String request) {
+<span class="nc" id="L60">        return reportsService.getAllReportsApprovedByManager(request);</span>
+    }
+
+    // Endpoint to add a new report
+    @PostMapping(&quot;/addReport/{employeeId}&quot;)
+    public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
+                             @RequestParam List&lt;Long&gt; expenseIds) {
+<span class="nc" id="L67">        return reportsService.addReport(reportsDTO, employeeId, expenseIds);</span>
+    }
+
+    // Endpoint to add expenses to a report
+    @PatchMapping(&quot;/addExpenseToReport/{reportId}&quot;)
+    public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam List&lt;Long&gt; expenseIds) {
+<span class="nc" id="L73">        return reportsService.addExpenseToReport(reportId, expenseIds);</span>
+    }
+
+    // Endpoint to submit a report
+    @PostMapping(&quot;/submitReport/{reportId}&quot;)
+    public void submitReport(@PathVariable Long reportId, HttpServletResponse response)
+            throws MessagingException, IOException {
+
+<span class="nc" id="L81">        reportsService.submitReport(reportId, response);</span>
+<span class="nc" id="L82">    }</span>
+
+    // Endpoint to submit a report to a manager
+    @PostMapping(&quot;/submitReportToManager/{reportId}&quot;)
+    public void submitReport(@PathVariable Long reportId, @RequestParam String managerEmail,
+                             HttpServletResponse response) throws MessagingException, IOException {
+
+<span class="nc" id="L89">        reportsService.submitReport(reportId, managerEmail, response);</span>
+<span class="nc" id="L90">    }</span>
+
+    // Endpoint to edit a report
+    @PatchMapping(&quot;/editReport/{reportId}&quot;)
+    public List&lt;Reports&gt; editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
+                                    @RequestParam String reportDescription, @RequestParam List&lt;Long&gt; addExpenseIds,
+                                    @RequestParam List&lt;Long&gt; removeExpenseIds) {
+<span class="nc" id="L97">        return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);</span>
+    }
+
+    // Endpoint to approve reports by finance
+    @PostMapping(&quot;/approveReportByFinance&quot;)
+    public void reimburseReportByFinance(@RequestParam List&lt;Long&gt; reportIds,
+                                         @RequestParam(value = &quot;comments&quot;, defaultValue = &quot;null&quot;) String comments) {
+<span class="nc" id="L104">        reportsService.reimburseReportByFinance((ArrayList&lt;Long&gt;) reportIds, comments);</span>
+<span class="nc" id="L105">    }</span>
+
+    // Endpoint to reject a report by finance
+    @PostMapping(&quot;/rejectReportByFinance/{reportId}&quot;)
+    public void rejectReportByFinance(@PathVariable Long reportId,
+                                      @RequestParam(value = &quot;comments&quot;, defaultValue = &quot;null&quot;) String comments) {
+<span class="nc" id="L111">        reportsService.rejectReportByFinance(reportId, comments);</span>
+<span class="nc" id="L112">    }</span>
+
+    // Endpoint to hide a report
+    @PostMapping(&quot;/hideReport/{reportId}&quot;)
+    public void hideReport(@PathVariable Long reportId) {
+<span class="nc" id="L117">        reportsService.hideReport(reportId);</span>
+<span class="nc" id="L118">    }</span>
+
+    // Endpoint to get the total amount (INR) for a report
+    @GetMapping(&quot;/getTotalAmountInrByReportId&quot;)
+    public float totalAmountINR(@RequestParam Long reportId) {
+<span class="nc" id="L123">        return reportsService.totalAmount(reportId);</span>
+    }
+
+    // Endpoint to get reports in a date range
+    @GetMapping(&quot;/getReportsInDateRange&quot;)
+    public List&lt;Reports&gt; getReportsInDateRange(
+            @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate, @RequestParam String request) {
+<span class="nc" id="L131">        return reportsService.getReportsInDateRange(startDate, endDate, request);</span>
+    }
+
+    // Endpoint to get reports submitted to a user in a date range
+    @GetMapping(&quot;/getReportsSubmittedToUserInDateRange&quot;)
+    public List&lt;Reports&gt; getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
+                                                              @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
+                                                              @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate, @RequestParam String request) {
+<span class="nc" id="L139">        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);</span>
+    }
+
+    // Endpoint to get the amount of reports in a date range
+    @GetMapping(&quot;/getAmountOfReportsInDateRange&quot;)
+    public String getAmountOfReportsInDateRange(
+            @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) {
+<span class="nc" id="L147">        return reportsService.getAmountOfReportsInDateRange(startDate, endDate);</span>
+    }
+
+    // Endpoint to get the total approved amount for a report
+    @GetMapping(&quot;/getTotalApprovedAmount&quot;)
+    public float totalApprovedAmount(Long reportId) {
+<span class="nc" id="L153">        return reportsService.totalApprovedAmount(reportId);</span>
+    }
+
+    // Endpoint to notify HR for a report
+    @PostMapping(&quot;/notifyHr/{reportId}&quot;)
+    public void notifyHr(@RequestParam Long reportId) throws MessagingException {
+<span class="nc" id="L159">        reportsService.notifyHR(reportId);</span>
+<span class="nc" id="L160">    }</span>
+
+    // Endpoint to notify Learning and Development (LnD) for a report
+    @PostMapping(&quot;/notifyLnD/{reportId}&quot;)
+    public void notifyLnD(@RequestParam Long reportId) throws MessagingException {
+<span class="nc" id="L165">        reportsService.notifyLnD(reportId);</span>
+<span class="nc" id="L166">    }</span>
+
+    // Endpoint to update the status of expenses in a report
+    @PostMapping(&quot;/updateExpenseStatus/{reportId}&quot;)
+    public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,
+                                    @RequestParam String json, @RequestParam String comments, HttpServletResponse response)
+            throws ParseException {
+<span class="nc" id="L173">        JSONParser parser = new JSONParser();</span>
+        try {
+<span class="nc" id="L175">            Map&lt;Long, Float&gt; partialApprovedMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L176">            List&lt;Long&gt; approvedIds = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L177">            List&lt;Long&gt; rejectedIds = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L178">            JSONArray jsonArray = (JSONArray) parser.parse(json);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">            for (Object object : jsonArray) {</span>
+<span class="nc" id="L180">                JSONObject jsonObject = (JSONObject) object;</span>
+
+<span class="nc" id="L182">                long expenseId = (Long) jsonObject.get(&quot;expenseId&quot;);</span>
+<span class="nc" id="L183">                float amountApproved = (Long) jsonObject.get(&quot;amountApproved&quot;);</span>
+<span class="nc" id="L184">                String status = (String) jsonObject.get(&quot;status&quot;);</span>
+
+<span class="nc bnc" id="L186" title="All 2 branches missed.">                if (Objects.equals(status, &quot;approved&quot;)) {</span>
+<span class="nc" id="L187">                    approvedIds.add(expenseId);</span>
+                }
+<span class="nc bnc" id="L189" title="All 2 branches missed.">                if (Objects.equals(status, &quot;rejected&quot;)) {</span>
+<span class="nc" id="L190">                    rejectedIds.add(expenseId);</span>
+                }
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                if (Objects.equals(status, &quot;partiallyApproved&quot;)) {</span>
+<span class="nc" id="L193">                    partialApprovedMap.put(expenseId, amountApproved);</span>
+                }
+<span class="nc" id="L195">            }</span>
+<span class="nc" id="L196">            reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,</span>
+                    comments, response);
+<span class="nc" id="L198">        } catch (ParseException e) {</span>
+<span class="nc" id="L199">            e.printStackTrace();</span>
+<span class="nc" id="L200">        } catch (MessagingException | IOException e) {</span>
+<span class="nc" id="L201">            throw new RuntimeException(e);</span>
+<span class="nc" id="L202">        }</span>
+<span class="nc" id="L203">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

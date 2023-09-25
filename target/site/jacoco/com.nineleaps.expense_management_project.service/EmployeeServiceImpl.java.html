@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.service</a> &gt; <span class="el_source">EmployeeServiceImpl.java</span></div><h1>EmployeeServiceImpl.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import com.nineleaps.expense_management_project.dto.EmployeeDTO;
+import com.nineleaps.expense_management_project.dto.UserDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.nineleaps.expense_management_project.entity.Employee;
+import com.nineleaps.expense_management_project.repository.EmployeeRepository;
+
+@Service
+<span class="fc" id="L15">public class EmployeeServiceImpl implements IEmployeeService {</span>
+
+	@Autowired
+	private EmployeeRepository employeeRepository;
+
+	@Override
+	public List&lt;Employee&gt; getAllEmployeeDetails() {
+<span class="fc" id="L22">		return employeeRepository.findAll();</span>
+	}
+
+	@Override
+	public Employee saveEmployeeDetails(EmployeeDTO employeeDTO) {
+<span class="fc" id="L27">		Employee employee=new Employee();</span>
+<span class="fc" id="L28">		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());</span>
+<span class="fc" id="L29">		employee.setFirstName(employeeDTO.getFirstName());</span>
+<span class="fc" id="L30">		employee.setLastName(employeeDTO.getLastName());</span>
+<span class="fc" id="L31">		employee.setManagerEmail(employeeDTO.getManagerEmail());</span>
+<span class="fc" id="L32">		employee.setManagerName(employeeDTO.getManagerName());</span>
+<span class="fc" id="L33">		employee.setHrEmail(employeeDTO.getHrEmail());</span>
+<span class="fc" id="L34">		employee.setHrName(employeeDTO.getHrName());</span>
+<span class="fc" id="L35">		employee.setMiddleName(employeeDTO.getMiddleName());</span>
+<span class="fc" id="L36">		employee.setMobileNumber(employeeDTO.getMobileNumber());</span>
+<span class="fc" id="L37">		employee.setOfficialEmployeeId(employeeDTO.getOfficialEmployeeId());</span>
+<span class="fc" id="L38">		return employeeRepository.save(employee);</span>
+	}
+
+	@Override
+	public Employee getEmployeeById(Long employeeId) {
+<span class="fc" id="L43">		Optional&lt;Employee&gt; optionalEmployee = employeeRepository.findById(employeeId);</span>
+<span class="fc" id="L44">		return optionalEmployee.orElse(null);</span>
+	}
+
+
+	@Override
+	public void deleteEmployeeDetailsById(Long employeeId) {
+<span class="fc" id="L50">		employeeRepository.deleteById(employeeId);</span>
+<span class="fc" id="L51">	}</span>
+
+	@Override
+	public Employee updateEmployeeDetails(EmployeeDTO employeeDTO, Long employeeId) {
+<span class="fc" id="L55">		Employee employee = getEmployeeById(employeeId);</span>
+
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">		if (employee == null) {</span>
+			// Handle the case where the employee is not found
+<span class="fc" id="L59">			throw new NullPointerException(&quot;Employee not found with ID: &quot; + employeeId);</span>
+		}
+
+		// Update employee details
+<span class="nc" id="L63">		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());</span>
+<span class="nc" id="L64">		employee.setFirstName(employeeDTO.getFirstName());</span>
+<span class="nc" id="L65">		employee.setLastName(employeeDTO.getLastName());</span>
+<span class="nc" id="L66">		employee.setMiddleName(employeeDTO.getMiddleName());</span>
+
+<span class="nc" id="L68">		return employeeRepository.save(employee);</span>
+	}
+
+
+
+	@Override
+	public Optional&lt;Employee&gt; additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail, Long mobileNumber, String managerName, String hrEmail, String hrName) {
+<span class="nc" id="L75">		Employee employee = getEmployeeById(employeeId);</span>
+
+		// Check if the employee is null and throw an exception if it is
+<span class="nc bnc" id="L78" title="All 2 branches missed.">		if (employee == null) {</span>
+<span class="nc" id="L79">			throw new NullPointerException(&quot;Employee not found with ID: &quot; + employeeId);</span>
+		}
+
+<span class="nc" id="L82">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
+<span class="nc" id="L83">		employee.setManagerEmail(managerEmail);</span>
+<span class="nc" id="L84">		employee.setMobileNumber(mobileNumber);</span>
+<span class="nc" id="L85">		employee.setManagerName(managerName);</span>
+<span class="nc" id="L86">		employee.setHrName(hrName);</span>
+<span class="nc" id="L87">		employee.setHrEmail(hrEmail);</span>
+<span class="nc" id="L88">		employeeRepository.save(employee);</span>
+<span class="nc" id="L89">		return getEmployeeDetails(employeeId);</span>
+	}
+
+
+	@Override
+	public Optional&lt;Employee&gt; getEmployeeDetails(Long employeeId) {
+<span class="fc" id="L95">		return employeeRepository.findById(employeeId);</span>
+	}
+
+	@Override
+	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber,
+									String officialEmployeeId, String managerName) {
+<span class="fc" id="L101">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="fc" id="L102">		employee.setManagerEmail(managerEmail);</span>
+<span class="fc" id="L103">		employee.setMobileNumber(mobileNumber);</span>
+<span class="fc" id="L104">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
+<span class="fc" id="L105">		employee.setManagerName(managerName);</span>
+<span class="fc" id="L106">		employeeRepository.save(employee);</span>
+<span class="fc" id="L107">	}</span>
+
+	@Override
+	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName, String hrEmail, String hrName) {
+<span class="nc" id="L111">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="nc" id="L112">		employee.setManagerEmail(managerEmail);</span>
+<span class="nc" id="L113">		employee.setMobileNumber(mobileNumber);</span>
+<span class="nc" id="L114">		employee.setOfficialEmployeeId(officialEmployeeId);</span>
+<span class="nc" id="L115">		employee.setManagerName(managerName);</span>
+<span class="nc" id="L116">		employee.setHrEmail(hrEmail);</span>
+<span class="nc" id="L117">		employee.setHrName(hrName);</span>
+<span class="nc" id="L118">		employeeRepository.save(employee);</span>
+<span class="nc" id="L119">	}</span>
+
+	@Override
+	public Employee getEmployeeByEmail(String employeeEmail) {
+<span class="fc" id="L123">		return employeeRepository.findByEmployeeEmail(employeeEmail);</span>
+	}
+
+	@Override
+	public Employee getUserByEmail(String emailToVerify) {
+<span class="nc" id="L128">		return null;</span>
+	}
+
+	@Override
+	public List&lt;Employee&gt; getAllUser() {
+<span class="fc" id="L133">		return employeeRepository.findAll();</span>
+	}
+
+
+
+	@Override
+	public Employee findByEmailId(String emailId) {
+<span class="fc" id="L140">		return employeeRepository.findByEmployeeEmail(emailId);</span>
+	}
+
+	@Override
+	public void hideEmployee(Long employeeId) {
+<span class="nc" id="L145">		Employee employee = getEmployeeById(employeeId);</span>
+
+		// Check if the employee is null and throw a NullPointerException if it is
+<span class="nc bnc" id="L148" title="All 2 branches missed.">		if (employee == null) {</span>
+<span class="nc" id="L149">			throw new NullPointerException(&quot;Employee not found with ID: &quot; + employeeId);</span>
+		}
+
+<span class="nc" id="L152">		Boolean hidden = true;</span>
+<span class="nc" id="L153">		employee.setIsHidden(hidden);</span>
+<span class="nc" id="L154">		employeeRepository.save(employee);</span>
+<span class="nc" id="L155">	}</span>
+
+
+	@Override
+	public void setFinanceAdmin(Long employeeId) {
+<span class="nc" id="L160">		Boolean isAdmin = true;</span>
+<span class="nc" id="L161">		String role = &quot;FINANCE_ADMIN&quot;;</span>
+<span class="nc" id="L162">		Employee employee = getEmployeeById(employeeId);</span>
+<span class="nc" id="L163">		employee.setIsFinanceAdmin(isAdmin);</span>
+<span class="nc" id="L164">		employee.setRole(role);</span>
+
+<span class="nc" id="L166">		employeeRepository.save(employee);</span>
+
+<span class="nc" id="L168">		List&lt;Employee&gt; emp = employeeRepository.findAll();</span>
+<span class="nc" id="L169">		Boolean isAdmins = false;</span>
+<span class="nc" id="L170">		String roles = &quot;EMPLOYEE&quot;;</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">		for (Employee emp1 : emp) {</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">			if (Objects.equals(emp1.getEmployeeId(), employeeId))</span>
+<span class="nc" id="L173">				continue;</span>
+<span class="nc" id="L174">			emp1.setIsFinanceAdmin(isAdmins);</span>
+<span class="nc" id="L175">			emp1.setRole(roles);</span>
+<span class="nc" id="L176">			employeeRepository.save(emp1);</span>
+<span class="nc" id="L177">		}</span>
+
+<span class="nc" id="L179">	}</span>
+
+	@Override
+	public Employee insertUser(UserDTO userDTO) {
+<span class="nc" id="L183">		Employee employee = new Employee();</span>
+<span class="nc" id="L184">		employee.setEmployeeEmail(userDTO.getEmployeeEmail());</span>
+<span class="nc" id="L185">		employee.setImageUrl(userDTO.getImageUrl());</span>
+<span class="nc" id="L186">		employee.setFirstName(userDTO.getFirstName());</span>
+<span class="nc" id="L187">		employee.setMiddleName(userDTO.getMiddleName());</span>
+<span class="nc" id="L188">		employee.setLastName(userDTO.getLastName());</span>
+<span class="nc" id="L189">		employee.setToken(userDTO.getFcmToken());</span>
+<span class="nc" id="L190">		return employeeRepository.save(employee);</span>
+	}
+
+	@Override
+	public Employee updateUser(UserDTO userDTO) {
+<span class="nc" id="L195">		Employee employee = findByEmailId(userDTO.getEmployeeEmail());</span>
+<span class="nc" id="L196">		employee.setEmployeeEmail(userDTO.getEmployeeEmail());</span>
+<span class="nc" id="L197">		employee.setImageUrl(userDTO.getImageUrl());</span>
+<span class="nc" id="L198">		employee.setFirstName(userDTO.getFirstName());</span>
+<span class="nc" id="L199">		employee.setMiddleName(userDTO.getMiddleName());</span>
+<span class="nc" id="L200">		employee.setLastName(userDTO.getLastName());</span>
+<span class="nc" id="L201">		employee.setToken(userDTO.getFcmToken());</span>
+<span class="nc" id="L202">		return employeeRepository.save(employee);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
