@@ -29,7 +29,7 @@ class CategoryControllerTest {
     @Mock
     private ICategoryService categoryService;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
@@ -126,11 +126,11 @@ class CategoryControllerTest {
     void testGetCategoryTotalAmount() {
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
-        Map<String, Double> categoryTotalAmount = new HashMap<>();
+        HashMap<String, Double> categoryTotalAmount = new HashMap<>();
         categoryTotalAmount.put("Food", 500.0);
         categoryTotalAmount.put("Travel", 1000.0);
 
-        when(categoryService.getCategoryTotalAmount(startDate, endDate)).thenReturn((HashMap<String, Double>) categoryTotalAmount);
+        when(categoryService.getCategoryTotalAmount(startDate, endDate)).thenReturn(categoryTotalAmount);
 
         Map<String, Double> response = categoryController.getCategoryTotalAmount(startDate, endDate);
 

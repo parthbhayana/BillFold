@@ -14,19 +14,15 @@ public class PushNotificationController {
 
     private PushNotificationService pushNotificationService;
 
-    // Constructor to inject the PushNotificationService
     public PushNotificationController(PushNotificationService pushNotificationService) {
         this.pushNotificationService = pushNotificationService;
     }
 
-    // Endpoint to send a push notification to a specific token
     @SuppressWarnings("rawtypes")
     @PostMapping("/notification/token")
     public ResponseEntity sendTokenNotification(@RequestBody PushNotificationRequest request) {
-        // Call the PushNotificationService to send the push notification
         pushNotificationService.sendPushNotificationToToken(request);
-
-        // Return a response entity with a success message and HTTP status OK
         return new ResponseEntity<>(new PushNotificationResponse(HttpStatus.OK.value(), "Notification sent."), HttpStatus.OK);
     }
+
 }

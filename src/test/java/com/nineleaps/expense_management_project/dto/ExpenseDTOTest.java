@@ -1,11 +1,12 @@
 package com.nineleaps.expense_management_project.dto;
 
-import com.nineleaps.expense_management_project.dto.ExpenseDTO;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ExpenseDTOTest {
 
@@ -14,12 +15,12 @@ public class ExpenseDTOTest {
         ExpenseDTO expenseDTO = new ExpenseDTO();
 
         // Verify that the default constructor initializes fields to their default values
-        assertEquals(null, expenseDTO.getAmount());
-        assertEquals(null, expenseDTO.getDescription());
-        assertEquals(null, expenseDTO.getMerchantName());
-        assertEquals(null, expenseDTO.getFile());
-        assertEquals(null, expenseDTO.getFileName());
-        assertEquals(null, expenseDTO.getDate());
+        assertNull(expenseDTO.getAmount());
+        assertNull(expenseDTO.getDescription());
+        assertNull(expenseDTO.getMerchantName());
+        assertNull(expenseDTO.getFile());
+        assertNull(expenseDTO.getFileName());
+        assertNull(expenseDTO.getDate());
     }
 
     @Test

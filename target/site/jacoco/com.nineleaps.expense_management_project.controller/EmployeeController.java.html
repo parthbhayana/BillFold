@@ -5,84 +5,84 @@ import java.util.Optional;
 
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.service.IEmployeeService;
 
 @RestController
 @RequestMapping(&quot;/employee&quot;)
-<span class="fc" id="L14">public class EmployeeController {</span>
+<span class="fc" id="L22">public class EmployeeController {</span>
 
     @Autowired
     private IEmployeeService employeeService;
 
-    // Endpoint to retrieve a list of all employee details
     @GetMapping(&quot;/listEmployee&quot;)
     public List&lt;Employee&gt; getAllEmployeeDetails() {
-<span class="fc" id="L22">        return employeeService.getAllEmployeeDetails();</span>
+<span class="fc" id="L29">        return employeeService.getAllEmployeeDetails();</span>
     }
 
-    // Endpoint to insert a new employee
     @PostMapping(&quot;/insertEmployee&quot;)
     public Employee save(@RequestBody EmployeeDTO employeeDTO) {
-<span class="nc" id="L28">        return employeeService.saveEmployeeDetails(employeeDTO);</span>
+<span class="nc" id="L34">        return employeeService.saveEmployeeDetails(employeeDTO);</span>
     }
 
-    // Endpoint to update an employee's details by their ID
     @PutMapping(&quot;/updateEmployee/{employeeId}&quot;)
     public Employee updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId) {
-<span class="fc" id="L34">        return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
+<span class="nc" id="L39">        return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
     }
 
-    // Endpoint to add additional details for an employee
     @PostMapping(&quot;/additionalEmployeeDetails&quot;)
     public Optional&lt;Employee&gt; additionalEmployeeDetails(@RequestParam Long employeeId,
                                                         @RequestParam String officialEmployeeId,
                                                         @RequestParam String managerEmail,
                                                         @RequestParam Long mobileNumber,
-                                                        @RequestParam String managerName,
-                                                        @RequestParam String hrName,
+                                                        @RequestParam String managerName, @RequestParam String hrName,
                                                         @RequestParam String hrEmail) {
-<span class="fc" id="L46">        return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,</span>
+<span class="fc" id="L49">        return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,</span>
                 managerName, hrEmail, hrName);
     }
 
-    // Endpoint to find an employee by their ID
     @GetMapping(&quot;/findEmployee/{employeeId}&quot;)
     public Employee getEmployeeById(@PathVariable Long employeeId) {
-<span class="fc" id="L53">        return employeeService.getEmployeeById(employeeId);</span>
+<span class="fc" id="L55">        return employeeService.getEmployeeById(employeeId);</span>
+
     }
 
-    // Endpoint to delete an employee by their ID
     @DeleteMapping(&quot;/deleteEmployee/{employeeId}&quot;)
     public void deleteEmployeeById(@PathVariable Long employeeId) {
-<span class="fc" id="L59">        employeeService.deleteEmployeeDetailsById(employeeId);</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L61">        employeeService.deleteEmployeeDetailsById(employeeId);</span>
+<span class="fc" id="L62">    }</span>
 
-    // Endpoint to hide an employee by their ID
     @PostMapping(&quot;/hideEmployee/{employeeId}&quot;)
     public void hideEmployee(@PathVariable Long employeeId) {
-<span class="fc" id="L65">        employeeService.hideEmployee(employeeId);</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L66">        employeeService.hideEmployee(employeeId);</span>
+<span class="fc" id="L67">    }</span>
 
-    // Endpoint to set an employee as a finance admin
     @PostMapping(&quot;/setFinanceAdmin&quot;)
     public void setFinanceAdmin(@RequestParam Long employeeId) {
 <span class="fc" id="L71">        employeeService.setFinanceAdmin(employeeId);</span>
 <span class="fc" id="L72">    }</span>
 
-    // Endpoint to get employee details by their ID
     @GetMapping(&quot;/getEmployeeDetails&quot;)
     public Optional&lt;Employee&gt; getEmployeeDetails(@RequestParam Long employeeId) {
-<span class="fc" id="L77">        return employeeService.getEmployeeDetails(employeeId);</span>
+<span class="fc" id="L76">        return employeeService.getEmployeeDetails(employeeId);</span>
     }
 
-    // Endpoint to edit an employee's details
     @PostMapping(&quot;/editEmployeeDetails&quot;)
     public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId,
-                                    String managerName, @RequestParam String hrName,
+                                    String managerName,@RequestParam String hrName,
                                     @RequestParam String hrEmail) {
-<span class="nc" id="L85">        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);</span>
-<span class="nc" id="L86">    }</span>
+<span class="nc" id="L83">        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);</span>
+<span class="nc" id="L84">    }</span>
+
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

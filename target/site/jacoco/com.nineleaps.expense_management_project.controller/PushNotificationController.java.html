@@ -14,20 +14,16 @@ public class PushNotificationController {
 
     private PushNotificationService pushNotificationService;
 
-    // Constructor to inject the PushNotificationService
-<span class="fc" id="L18">    public PushNotificationController(PushNotificationService pushNotificationService) {</span>
-<span class="fc" id="L19">        this.pushNotificationService = pushNotificationService;</span>
-<span class="fc" id="L20">    }</span>
+<span class="fc" id="L17">    public PushNotificationController(PushNotificationService pushNotificationService) {</span>
+<span class="fc" id="L18">        this.pushNotificationService = pushNotificationService;</span>
+<span class="fc" id="L19">    }</span>
 
-    // Endpoint to send a push notification to a specific token
     @SuppressWarnings(&quot;rawtypes&quot;)
     @PostMapping(&quot;/notification/token&quot;)
     public ResponseEntity sendTokenNotification(@RequestBody PushNotificationRequest request) {
-        // Call the PushNotificationService to send the push notification
-<span class="nc" id="L27">        pushNotificationService.sendPushNotificationToToken(request);</span>
-
-        // Return a response entity with a success message and HTTP status OK
-<span class="nc" id="L30">        return new ResponseEntity&lt;&gt;(new PushNotificationResponse(HttpStatus.OK.value(), &quot;Notification sent.&quot;), HttpStatus.OK);</span>
+<span class="nc" id="L24">        pushNotificationService.sendPushNotificationToToken(request);</span>
+<span class="nc" id="L25">        return new ResponseEntity&lt;&gt;(new PushNotificationResponse(HttpStatus.OK.value(), &quot;Notification sent.&quot;), HttpStatus.OK);</span>
     }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

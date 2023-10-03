@@ -1,5 +1,8 @@
 package com.nineleaps.expense_management_project.firebase;
 
+import lombok.Getter;
+
+@Getter
 public class PushNotificationResponse {
 	private int status;
 	private String message;
@@ -12,16 +15,8 @@ public class PushNotificationResponse {
 		this.message = message;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
 	public void setStatus(int status) {
 		this.status = status;
-	}
-
-	public String getMessage() {
-		return message;
 	}
 
 	public void setMessage(String message) {

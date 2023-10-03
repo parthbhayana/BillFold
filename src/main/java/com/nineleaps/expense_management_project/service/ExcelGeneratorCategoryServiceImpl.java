@@ -35,194 +35,174 @@ import com.nineleaps.expense_management_project.repository.ExpenseRepository;
 @Service
 public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategoryService {
 
-	@Autowired
-	private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-	@Autowired
-	private ExpenseRepository expenseRepository;
+    @Autowired
+    private ExpenseRepository expenseRepository;
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-	@Autowired
-	private JavaMailSender mailSender;
+    @Autowired
+    private JavaMailSender mailSender;
 
-	private static final int CHART_IMAGE_WIDTH = 640;
-	private static final int CHART_IMAGE_HEIGHT = 480;
+    private static final int CHART_IMAGE_WIDTH = 640;
+    private static final int CHART_IMAGE_HEIGHT = 480;
 
-	@Override
-	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate)
-			throws Exception {
+    @Override
+    public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate,
+                                            LocalDate endDate) throws Exception {
 
-		@SuppressWarnings("unused")
-		List<Category> categories = categoryRepository.findAll();
-		HashMap<String, Double> categoryAmountMap = categoryTotalAmount(startDate, endDate);
+        @SuppressWarnings("unused") List<Category> categories = categoryRepository.findAll();
+        HashMap<String, Double> categoryAmountMap = categoryTotalAmount(startDate, endDate);
 
-		if (categoryAmountMap.isEmpty()) {
-			return "No data available for the selected period.So, Email can't be sent!";
-		}
+        if (categoryAmountMap.isEmpty()) {
+            return "No data available for the selected period.So, Email can't be sent!";
+        }
 
-		ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
-		generateExcel(excelStream, startDate, endDate);
-		byte[] excelBytes = excelStream.toByteArray();
+        ByteArrayOutputStream excelStream = new ByteArrayOutputStream();
+        generateExcel(excelStream, startDate, endDate);
+        byte[] excelBytes = excelStream.toByteArray();
 
-		Employee financeadmin=employeeRepository.findByRole("FINANCE_ADMIN");
+        Employee financeadmin = employeeRepository.findByRole("FINANCE_ADMIN");
 
-		if(financeadmin==null)
-		{
-			throw new IllegalStateException ("finance admin not found");
-		}
+        if (financeadmin == null) {
+            throw new IllegalStateException("finance admin not found");
+        }
 
-		boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
-				"Please find the attached Excel report.", excelBytes, "report.xls");
-		if (emailsent) {
-			return "Email sent successfully!";
-		} else {
-			return "Email not sent";
-		}
-	}
+        boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
+                "Please find the " + "attached Excel report.", excelBytes, "report.xls");
+        if (emailsent) {
+            return "Email sent successfully!";
+        } else {
+            return "Email not sent";
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate)
-			throws Exception {
+    @SuppressWarnings("unchecked")
+    @Override
+    public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate,
+                              LocalDate endDate) throws Exception {
 
-		List<Category> categories = categoryRepository.findAll();
-		HashMap<String, Double> categoryAmountMap = categoryTotalAmount(startDate, endDate);
+        List<Category> categories = categoryRepository.findAll();
+        HashMap<String, Double> categoryAmountMap = categoryTotalAmount(startDate, endDate);
 
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("Category Wise Expense Analytics");
-		HSSFRow row = sheet.createRow(0);
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("Category Wise Expense Analytics");
+        HSSFRow row = sheet.createRow(0);
 
-		row.createCell(0).setCellValue("Sl.no.");
-		row.createCell(1).setCellValue("Category Name");
-		row.createCell(2).setCellValue("Total Amount");
-		row.createCell(3).setCellValue("Percentage");
-		int dataRowIndex = 1;
-		int sl = 1;
-		float totalAmountSum = 0.0f;
+        row.createCell(0).setCellValue("Sl.no.");
+        row.createCell(1).setCellValue("Category Name");
+        row.createCell(2).setCellValue("Total Amount");
+        row.createCell(3).setCellValue("Percentage");
+        int dataRowIndex = 1;
+        int sl = 1;
+        float totalAmountSum = 0.0f;
 
-		for (Category category : categories) {
-			HSSFRow dataRow = sheet.createRow(dataRowIndex);
-			dataRow.createCell(0).setCellValue(sl);
-			dataRow.createCell(1).setCellValue(category.getCategoryDescription());
+        for (Category category : categories) {
+            HSSFRow dataRow = sheet.createRow(dataRowIndex);
+            dataRow.createCell(0).setCellValue(sl);
+            dataRow.createCell(1).setCellValue(category.getCategoryDescription());
 
-			String categoryName = category.getCategoryDescription();
-			if (categoryAmountMap.containsKey(categoryName)) {
-				Double totalAmount = categoryAmountMap.get(categoryName);
-				dataRow.createCell(2).setCellValue(totalAmount);
-				totalAmountSum += totalAmount;
-			} else {
-				dataRow.createCell(2).setCellValue(0.0f);
-			}
-			sl++;
-			dataRowIndex++;
-		}
+            String categoryName = category.getCategoryDescription();
+            if (categoryAmountMap.containsKey(categoryName)) {
+                Double totalAmount = categoryAmountMap.get(categoryName);
+                dataRow.createCell(2).setCellValue(totalAmount);
+                totalAmountSum += totalAmount;
+            } else {
+                dataRow.createCell(2).setCellValue(0.0f);
+            }
+            sl++;
+            dataRowIndex++;
+        }
 
-		dataRowIndex = 1;
-		for (Category category : categories) {
-			HSSFRow dataRow = sheet.getRow(dataRowIndex);
-			String categoryName = category.getCategoryDescription();
+        dataRowIndex = 1;
+        for (Category category : categories) {
+            HSSFRow dataRow = sheet.getRow(dataRowIndex);
+            String categoryName = category.getCategoryDescription();
+            if (categoryAmountMap.containsKey(categoryName)) {
+                Double totalAmount = categoryAmountMap.get(categoryName);
+                double percentage = (totalAmount / totalAmountSum) * 100;
+                dataRow.createCell(3).setCellValue(percentage);
+            } else {
+                dataRow.createCell(3).setCellValue(0.0f);
+            }
+            dataRowIndex++;
+        }
 
-			if (categoryAmountMap.containsKey(categoryName)) {
-				Double totalAmount = categoryAmountMap.get(categoryName);
+        @SuppressWarnings("rawtypes") DefaultPieDataset dataset = new DefaultPieDataset();
+        for (Category category : categories) {
+            String categoryName = category.getCategoryDescription();
+            if (categoryAmountMap.containsKey(categoryName)) {
+                Double totalAmount = categoryAmountMap.get(categoryName);
+                dataset.setValue(categoryName, totalAmount);
+            } else {
+                dataset.setValue(categoryName, 0.0f);
+            }
+        }
 
-				// Check if totalAmountSum is not zero before performing the division
-				if (totalAmountSum != 0) {
-					double percentage = (totalAmount / totalAmountSum) * 100;
-					dataRow.createCell(3).setCellValue(percentage);
-				} else {
-					// Handle the case where totalAmountSum is zero (e.g., set percentage to 0)
-					dataRow.createCell(3).setCellValue(0.0);
-				}
-			} else {
-				dataRow.createCell(3).setCellValue(0.0);
-			}
+        JFreeChart chart = ChartFactory.createPieChart("Category Wise Expense Analytics", dataset, true, true, false);
+        @SuppressWarnings("rawtypes") PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setLabelGenerator(null);
 
-			dataRowIndex++;
-		}
+        HSSFPatriarch drawing = sheet.createDrawingPatriarch();
+        HSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 20, 15);
+        @SuppressWarnings("unused") HSSFPicture picture =
+                drawing.createPicture(anchor, loadChartImage(chart, CHART_IMAGE_WIDTH, CHART_IMAGE_HEIGHT, workbook));
 
+        workbook.write(excelStream);
+        workbook.close();
+    }
 
-		@SuppressWarnings("rawtypes")
-		DefaultPieDataset dataset = new DefaultPieDataset();
-		for (Category category : categories) {
-			String categoryName = category.getCategoryDescription();
-			if (categoryAmountMap.containsKey(categoryName)) {
-				Double totalAmount = categoryAmountMap.get(categoryName);
-				dataset.setValue(categoryName, totalAmount);
-			} else {
-				dataset.setValue(categoryName, 0.0f);
-			}
-		}
+    @Override
+    public int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException {
+        try (ByteArrayOutputStream chartOut = new ByteArrayOutputStream()) {
+            ChartUtils.writeChartAsPNG(chartOut, chart, width, height);
+            return workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);
+        }
+    }
 
-		JFreeChart chart = ChartFactory.createPieChart("Category Wise Expense Analytics", dataset, true, true, false);
-		@SuppressWarnings("rawtypes")
-		PiePlot plot = (PiePlot) chart.getPlot();
-		plot.setLabelGenerator(null);
+    @Override
+    public HashMap<String, Double> categoryTotalAmount(LocalDate startDate, LocalDate endDate) {
+        List<Expense> expenseList = expenseRepository.findByDateBetween(startDate, endDate);
+        HashMap<String, Double> categoryAmountMap = new HashMap<>();
 
-		HSSFPatriarch drawing = sheet.createDrawingPatriarch();
-		HSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 20, 15);
-		@SuppressWarnings("unused")
-		HSSFPicture picture = drawing.createPicture(anchor,
-				loadChartImage(chart, CHART_IMAGE_WIDTH, CHART_IMAGE_HEIGHT, workbook));
+        for (Expense expense : expenseList) {
+            Category category = expense.getCategory();
+            String categoryName = category.getCategoryDescription();
+            Double amt = expense.getAmountApproved();
+            if (categoryAmountMap.containsKey(categoryName)) {
+                Double previousAmt = categoryAmountMap.get(categoryName);
+                categoryAmountMap.put(categoryName, previousAmt + amt);
+            } else {
+                categoryAmountMap.put(categoryName, amt);
+            }
+        }
+        return categoryAmountMap;
 
-		workbook.write(excelStream);
-		workbook.close();
-	}
+    }
 
-	@Override
-	public int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException {
-		try (ByteArrayOutputStream chartOut = new ByteArrayOutputStream()) {
-			ChartUtils.writeChartAsPNG(chartOut, chart, width, height);
-			return workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);
-		}
-	}
+    @Override
+    public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
+                                           String attachmentFilename) {
 
-	@Override
-	public HashMap<String, Double> categoryTotalAmount(LocalDate startDate, LocalDate endDate) {
-		List<Expense> expenseList = expenseRepository.findByDateBetween(startDate, endDate);
-		HashMap<String, Double> categoryAmountMap = new HashMap<>();
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(toEmail);
+            helper.setSubject(subject);
+            helper.setText(body);
 
-		for (Expense expense : expenseList) {
-			Category category = expense.getCategory();
-			String categoryName = category.getCategoryDescription();
-			Double amt = expense.getAmountApproved();
-			if (categoryAmountMap.containsKey(categoryName)) {
-				Double previousAmt = categoryAmountMap.get(categoryName);
-				categoryAmountMap.put(categoryName, previousAmt + amt);
-			} else {
-				categoryAmountMap.put(categoryName, amt);
-			}
-		}
-		return categoryAmountMap;
+            DataSource attachment = new ByteArrayDataSource(attachmentContent, "application/vnd.ms-excel");
+            helper.addAttachment(attachmentFilename, attachment);
 
-	}
+            mailSender.send(message);
 
-	@Override
-	public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
-										   String attachmentFilename) {
+            return true;
 
-		try {
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true);
-			helper.setTo(toEmail);
-			helper.setSubject(subject);
-			helper.setText(body);
-
-			DataSource attachment = new ByteArrayDataSource(attachmentContent, "application/vnd.ms-excel");
-			helper.addAttachment(attachmentFilename, attachment);
-
-			mailSender.send(message);
-
-			return true;
-
-		} catch (Exception e) {
-
-
-			return false;
-
-		}
-	}
-
-
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

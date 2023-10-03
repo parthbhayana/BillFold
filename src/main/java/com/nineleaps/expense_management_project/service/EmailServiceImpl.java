@@ -1,27 +1,17 @@
 package com.nineleaps.expense_management_project.service;
 
-
-import com.nineleaps.expense_management_project.entity.Employee;
-import com.nineleaps.expense_management_project.entity.Reports;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ExpenseRepository;
 import com.nineleaps.expense_management_project.repository.ReportsRepository;
 import org.springframework.stereotype.Service;
+import com.nineleaps.expense_management_project.entity.Employee;
+import com.nineleaps.expense_management_project.entity.Expense;
+import com.nineleaps.expense_management_project.entity.Reports;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.util.*;
-
-import com.nineleaps.expense_management_project.dto.CategoryDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.nineleaps.expense_management_project.entity.Category;
-import com.nineleaps.expense_management_project.entity.Expense;
-import com.nineleaps.expense_management_project.repository.CategoryRepository;
-import com.nineleaps.expense_management_project.repository.ExpenseRepository;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -51,9 +41,7 @@ public class EmailServiceImpl implements IEmailService {
     @Autowired
     private ReportsRepository reportsRepository;
     @Autowired
-    private IPdfManagerGeneratorService pdfGeneratorService;
-    @Autowired
-    private IPdfEmployeeGeneratorService pdfEmployeeGeneratorService;
+    private IPdfGeneratorService pdfGeneratorService;
 
     private final JavaMailSender javaMailSender;
     private static final String CONSTANT1 = "billfold.noreply@gmail.com";
@@ -65,6 +53,10 @@ public class EmailServiceImpl implements IEmailService {
     private static final String CONSTANT7 = "\n\nBest Regards,";
     private static final String CONSTANT8 = "\nBillFold";
     private static final String CONSTANT9 = "\n\nThank you for your cooperation and timely submission of the expense report.";
+    private static final String CONSTANT10 = "\n\nThanks!";
+    private static final String CONSTANT11 = "\nTotal Amount: ₹";
+    private static final String CONSTANT12 = "Employee does not exist!";
+    private static final String CONSTANT13 = ",\n\n";
 
     public EmailServiceImpl(JavaMailSender mailSender) {
         this.javaMailSender = mailSender;
@@ -79,7 +71,7 @@ public class EmailServiceImpl implements IEmailService {
             eMail.setFrom(CONSTANT1);
             eMail.setTo(employeeEmail);
             eMail.setSubject("Welcome to BillFold!"); //
-            eMail.setText("Dear " + employee.getFirstName() + ",\n\n"
+            eMail.setText(CONSTANT6 + employee.getFirstName() + CONSTANT13
                     + "Welcome to BillFold! We're thrilled to have you onboard. "
                     + "This app is designed to simplify and streamline the process of managing your expenses and reimbursement requests. To get started, follow the steps below:\n\n"
                     + "Step 1: Complete Your Profile\n\n"
@@ -103,10 +95,10 @@ public class EmailServiceImpl implements IEmailService {
                     + "The finance admin will conduct a final review of the approved report. Upon successful review, your reimbursement will be processed, and you'll receive the reimbursed amount as per the company's policy.\n\n"
                     + "Feel free to explore the app's features and familiarize yourself with its functionalities. If you have any questions or encounter any issues, don't hesitate to reach out to our support team at @billfold.noreply@gmail.com.\n\n"
                     + "Thank you for using BillFold. We look forward to making your expense management experience seamless and efficient."
-                    + CONSTANT3 + "\n\nThanks!");
+                    + CONSTANT3 + CONSTANT10);
             javaMailSender.send(message);
         } else {
-            throw new IllegalStateException("Employee does not exist!");
+            throw new IllegalStateException(CONSTANT12);
         }
     }
 
@@ -119,12 +111,12 @@ public class EmailServiceImpl implements IEmailService {
             eMail.setFrom(CONSTANT1);
             eMail.setTo(hrEmail);
             eMail.setSubject("Expense Report: " + report.getReportTitle());
-            eMail.setText("Dear " + hrName + ",\n\n"
+            eMail.setText(CONSTANT6 + hrName + CONSTANT13
                     + "CONTENT HERE!!"
-                    + CONSTANT3 + "\n\nThanks!");
+                    + CONSTANT3 + CONSTANT10);
             javaMailSender.send(message);
         } else {
-            throw new IllegalStateException("Employee does not exist!");
+            throw new IllegalStateException(CONSTANT12);
         }
     }
 
@@ -137,12 +129,12 @@ public class EmailServiceImpl implements IEmailService {
             eMail.setFrom(CONSTANT1);
             eMail.setTo(lndEmail);
             eMail.setSubject("Expense Report: " + report.getReportTitle()); //
-            eMail.setText("Dear " + lndName + ",\n\n"
+            eMail.setText(CONSTANT6 + lndName + CONSTANT13
                     + "CONTENT HERE!!"
-                    + CONSTANT3 + "\n\nThanks!");
+                    + CONSTANT3 + CONSTANT10);
             javaMailSender.send(message);
         } else {
-            throw new IllegalStateException("Employee does not exist!");
+            throw new IllegalStateException(CONSTANT12);
         }
     }
 
@@ -165,11 +157,11 @@ public class EmailServiceImpl implements IEmailService {
                         + " has submitted you a report for approval. As a designated manager, we kindly request your prompt attention to review and take necessary action on the report."
                         + "\n\nBelow are the details of the report submission:" + CONSTANT2 + report.getReportTitle()
                         + "\nSubmitter's Name: " + employee.getFirstName() + " " + employee.getLastName()
-                        + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: ₹"
+                        + "\nSubmission Date: " + report.getDateSubmitted() + CONSTANT11
                         + report.getTotalAmount()
                         + "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
-                        + CONSTANT3 + "\n\nThanks!");
-                byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+                        + CONSTANT3 + CONSTANT10);
+                byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response,"Manager");
                 ByteArrayResource resource = new ByteArrayResource(fileData);
                 eMail.addAttachment(CONSTANT4, resource);
                 javaMailSender.send(message);
@@ -196,16 +188,16 @@ public class EmailServiceImpl implements IEmailService {
                 eMail.setFrom(CONSTANT1);
                 eMail.setTo(managerEmail);
                 eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
-                eMail.setText(CONSTANT6 + employee.getManagerName() + ",\n\n"
+                eMail.setText(CONSTANT6 + employee.getManagerName() + CONSTANT13
                         + employee.getFirstName() + " " + employee.getLastName()
                         + " has submitted you a report for approval. As a designated manager, we kindly request your prompt attention to review and take necessary action on the report."
                         + "\n\nBelow are the details of the report submission:" + CONSTANT2 + report.getReportTitle()
                         + "\nSubmitter's Name: " + employee.getFirstName() + " " + employee.getLastName()
-                        + "\nSubmission Date: " + report.getDateSubmitted() + "\nTotal Amount: ₹"
+                        + "\nSubmission Date: " + report.getDateSubmitted() + CONSTANT11
                         + report.getTotalAmount()
                         + "\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment."
-                        + CONSTANT3 + "\n\nThanks!");
-                byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+                        + CONSTANT3 + CONSTANT10);
+                byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response,"Manager");
                 ByteArrayResource resource = new ByteArrayResource(fileData);
                 eMail.addAttachment(CONSTANT4, resource);
                 javaMailSender.send(message);
@@ -237,13 +229,12 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nPlease review the feedback provided by your manager and make the necessary revisions to your expense report. Once you have made the required changes, resubmit the report for further processing."
                     + "\n\nIf you have any questions or need clarification regarding the rejection, please reach out to your manager or the HR department."
                     + "\n\nThank you for your understanding and cooperation." + CONSTANT7 + CONSTANT8 + CONSTANT3);
-//            byte[] fileData = pdfEmployeeGeneratorService.export(reportId, expenseIds, response);
             List<Expense> expenses = expenseService.getExpenseByReportId(reportId);
             List<Long> expIds = new ArrayList<>();
-            for(Expense exp : expenses){
+            for (Expense exp : expenses) {
                 expIds.add(exp.getExpenseId());
             }
-            byte[] fileData = pdfEmployeeGeneratorService.export(reportId, expIds, response);
+            byte[] fileData = pdfGeneratorService.export(reportId, expIds, response,"Employee");
             ByteArrayResource resource = new ByteArrayResource(fileData);
             eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
@@ -271,7 +262,7 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nIf you have any questions or need further assistance, please feel free to contact your manager or the HR department."
                     + CONSTANT9 + CONSTANT7 + CONSTANT8 + CONSTANT3);
 
-            byte[] fileData = pdfEmployeeGeneratorService.export(reportId, expenseIds, response);
+            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response,"Employee");
             ByteArrayResource resource = new ByteArrayResource(fileData);
             eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
@@ -350,16 +341,15 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nYou have received a request for expense reimbursement from employee "
                     + employee.getFirstName() + " " + employee.getLastName()
                     + ". The details of the expense report are as follows:" + CONSTANT2 + report.getReportTitle()
-                    + "\nEmployee: " + employee.getFirstName() + " " + employee.getLastName() + "\nTotal Amount: ₹"
+                    + "\nEmployee: " + employee.getFirstName() + " " + employee.getLastName() + CONSTANT11
                     + report.getTotalApprovedAmount() + " "
                     + "\n\nPlease review the attached expense report and process the reimbursement accordingly. If there are any additional details required or if you have any questions, please reach out to the employee or the HR department."
                     + "\n\nThank you for your attention to this matter." + CONSTANT7 + CONSTANT8 + CONSTANT3);
 
-            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response);
+            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response,"Finance");
             ByteArrayResource resource = new ByteArrayResource(fileData);
             eMail.addAttachment(CONSTANT4, resource);
             this.javaMailSender.send(message);
-            System.out.println("Finance Email Sent to" + adminEmail);
         } else {
             throw new IllegalStateException(CONSTANT5 + report.getReportTitle());
         }
@@ -392,22 +382,26 @@ public class EmailServiceImpl implements IEmailService {
 
     public void reminderMailToEmployee(List<Long> expenseIds) {
         for (Long expenseId : expenseIds) {
-            Optional<Expense> expense = expenseRepository.findById(expenseId);
-            Employee employee = expense.get().getEmployee();
-            if (employee != null) {
-                SimpleMailMessage email = new SimpleMailMessage();
-                email.setFrom(CONSTANT1);
-                email.setTo(employee.getEmployeeEmail());
-                email.setSubject("[ACTION REQUIRED] Expense Report Submission Reminder");
-                email.setText(CONSTANT6 + employee.getFirstName() + " " + employee.getLastName() + ","
-                        + "\n\nWe hope this email finds you well. We would like to remind you that you have not yet reported some of your expenses.It is important to submit your expense report in a timely manner to ensure accurate reimbursement and compliance with company policies."
-                        + "\n\nPlease note that if your expenses are not reported within 60 days from the end of the reporting period, they will not be eligible for reimbursement. Therefore, we kindly request you to submit your expense report by the submission deadline. This will allow us to review and process your expenses promptly."
-                        + "\n\nTo report your expenses, please access your BillFold account and follow the instructions provided. Ensure that all receipts and necessary supporting documents are attached for proper validation."
-                        + "\n\nIf you have any questions or need assistance with the expense reporting process, please reach out to our HR department or your manager. We are here to help and ensure a smooth reimbursement process for you."
-                        + "Thank you for your attention to this matter. Your cooperation in submitting your expense report within the specified deadline is greatly appreciated."
-                        + CONSTANT7 + CONSTANT8 + CONSTANT3);
+            Optional<Expense> expenseOptional = expenseRepository.findById(expenseId);
 
-                this.javaMailSender.send(email);
+            if (expenseOptional.isPresent()) {
+                Expense expense = expenseOptional.get();
+                Employee employee = expense.getEmployee();
+                if (employee != null) {
+                    SimpleMailMessage email = new SimpleMailMessage();
+                    email.setFrom(CONSTANT1);
+                    email.setTo(employee.getEmployeeEmail());
+                    email.setSubject("[ACTION REQUIRED] Expense Report Submission Reminder");
+                    email.setText(CONSTANT6 + employee.getFirstName() + " " + employee.getLastName() + ","
+                            + "\n\nWe hope this email finds you well. We would like to remind you that you have not yet reported some of your expenses.It is important to submit your expense report in a timely manner to ensure accurate reimbursement and compliance with company policies."
+                            + "\n\nPlease note that if your expenses are not reported within 60 days from the end of the reporting period, they will not be eligible for reimbursement. Therefore, we kindly request you to submit your expense report by the submission deadline. This will allow us to review and process your expenses promptly."
+                            + "\n\nTo report your expenses, please access your BillFold account and follow the instructions provided. Ensure that all receipts and necessary supporting documents are attached for proper validation."
+                            + "\n\nIf you have any questions or need assistance with the expense reporting process, please reach out to our HR department or your manager. We are here to help and ensure a smooth reimbursement process for you."
+                            + "Thank you for your attention to this matter. Your cooperation in submitting your expense report within the specified deadline is greatly appreciated."
+                            + CONSTANT7 + CONSTANT8 + CONSTANT3);
+
+                    this.javaMailSender.send(email);
+                }
             }
         }
     }
@@ -416,20 +410,23 @@ public class EmailServiceImpl implements IEmailService {
     public void reminderMailToManager(List<Long> reportIds) {
 
         for (Long reportId : reportIds) {
-            Optional<Reports> report = reportsRepository.findById(reportId);
-            Long employeeId = report.get().getEmployeeId();
-            Employee employee = employeeService.getEmployeeById(employeeId);
-            SimpleMailMessage email = new SimpleMailMessage();
-            email.setFrom(CONSTANT1);
-            email.setTo(employee.getManagerEmail());
-            email.setSubject("[REMINDER] Pending Action on Expense Reports");
-            email.setText(CONSTANT6 + employee.getManagerName() + ","
-                    + "\n\nThis is a friendly reminder that you have pending expense reports awaiting your action. The reports have been submitted more than 30 days ago and are still pending approval."
-                    + "\n\nPlease review and take appropriate action on the following report:" + "\n\n"
-                    + report.get().getReportTitle()
-                    + "\n\nTo take action on these reports, please log in to the BillFold app."
-                    + "\n\nThank you for your attention to this matter." + CONSTANT7 + CONSTANT8 + CONSTANT3);
-            this.javaMailSender.send(email);
+            Optional<Reports> reportOptional = reportsRepository.findById(reportId);
+            if (reportOptional.isPresent()) {
+                Reports report = reportOptional.get();
+                Long employeeId = report.getEmployeeId();
+                Employee employee = employeeService.getEmployeeById(employeeId);
+                SimpleMailMessage email = new SimpleMailMessage();
+                email.setFrom(CONSTANT1);
+                email.setTo(employee.getManagerEmail());
+                email.setSubject("[REMINDER] Pending Action on Expense Reports");
+                email.setText(CONSTANT6 + employee.getManagerName() + ","
+                        + "\n\nThis is a friendly reminder that you have pending expense reports awaiting your action. The reports have been submitted more than 30 days ago and are still pending approval."
+                        + "\n\nPlease review and take appropriate action on the following report:" + "\n\n"
+                        + report.getReportTitle()
+                        + "\n\nTo take action on these reports, please log in to the BillFold app."
+                        + "\n\nThank you for your attention to this matter." + CONSTANT7 + CONSTANT8 + CONSTANT3);
+                this.javaMailSender.send(email);
+            }
         }
     }
 }

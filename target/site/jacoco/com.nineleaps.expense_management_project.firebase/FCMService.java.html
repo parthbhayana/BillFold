@@ -6,63 +6,50 @@ import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import com.google.firebase.messaging.AndroidConfig;
-import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.Aps;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 @Service
-<span class="fc" id="L21">public class FCMService {</span>
-	public FirebaseMessaging firebaseMessaging;
-<span class="fc" id="L23">	Logger logger = LoggerFactory.getLogger(FCMService.class);</span>
+<span class="fc" id="L18">public class FCMService {</span>
+<span class="fc" id="L19">	private Logger logger = LoggerFactory.getLogger(FCMService.class);</span>
 
 	public void sendMessageToToken(PushNotificationRequest request) throws InterruptedException, ExecutionException {
-<span class="nc" id="L26">		Message message = getPreconfiguredMessageToToken(request);</span>
-<span class="nc" id="L27">		Gson gson = new GsonBuilder().setPrettyPrinting().create();</span>
-<span class="nc" id="L28">		String jsonOutput = gson.toJson(message);</span>
-<span class="nc" id="L29">		String response = sendAndGetResponse(message);</span>
-<span class="nc" id="L30">		logger.info(&quot;Sent message to token. Device token: {}. Response: {}. Message: {}&quot;,</span>
-<span class="nc" id="L31">				request.getToken(), response, jsonOutput);</span>
-<span class="nc" id="L32">	}</span>
+<span class="nc" id="L22">		Message message = getPreconfiguredMessageToToken(request);</span>
+<span class="nc" id="L23">		Gson gson = new GsonBuilder().setPrettyPrinting().create();</span>
+<span class="nc" id="L24">		String jsonOutput = gson.toJson(message);</span>
+<span class="nc" id="L25">		String response = sendAndGetResponse(message);</span>
+<span class="nc" id="L26">		logger.info(&quot;Sent message to token. Device token: {}, {} msg {}&quot;, request.getToken(), response, jsonOutput);</span>
+<span class="nc" id="L27">	}</span>
 
-
-	String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
-<span class="nc" id="L36">		return FirebaseMessaging.getInstance().sendAsync(message).get();</span>
+	private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
+<span class="nc" id="L30">		return FirebaseMessaging.getInstance().sendAsync(message).get();</span>
 	}
 
-	AndroidConfig getAndroidConfig(String topic) {
-<span class="nc" id="L40">		return AndroidConfig.builder().setTtl(Duration.ofMinutes(2).toMillis()).setCollapseKey(topic)</span>
-<span class="nc" id="L41">				.setPriority(AndroidConfig.Priority.HIGH)</span>
-<span class="nc" id="L42">				.setNotification(AndroidNotification.builder().setTag(topic).build()).build();</span>
+	private AndroidConfig getAndroidConfig(String topic) {
+<span class="nc" id="L34">		return AndroidConfig.builder().setTtl(Duration.ofMinutes(2).toMillis()).setCollapseKey(topic)</span>
+<span class="nc" id="L35">				.setPriority(AndroidConfig.Priority.HIGH)</span>
+<span class="nc" id="L36">				.build();</span>
 	}
 
-	ApnsConfig getApnsConfig(String topic) {
-<span class="nc" id="L46">		return ApnsConfig.builder().setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();</span>
+	private ApnsConfig getApnsConfig(String topic) {
+<span class="nc" id="L40">		return ApnsConfig.builder().setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();</span>
 	}
 
-	Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
-<span class="nc" id="L50">		return getPreconfiguredMessageBuilder(request).setToken(request.getToken()).build();</span>
+	private Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
+<span class="nc" id="L44">		return getPreconfiguredMessageBuilder(request).setToken(request.getToken()).build();</span>
 	}
-
 
 	private Message.Builder getPreconfiguredMessageBuilder(PushNotificationRequest request) {
-<span class="nc" id="L55">		AndroidConfig androidConfig = getAndroidConfig(request.getTopic());</span>
-<span class="nc" id="L56">		ApnsConfig apnsConfig = getApnsConfig(request.getTopic());</span>
-<span class="nc" id="L57">		return Message.builder()</span>
-<span class="nc" id="L58">				.setApnsConfig(apnsConfig)</span>
-<span class="nc" id="L59">				.setAndroidConfig(androidConfig)</span>
-<span class="nc" id="L60">				.setNotification(</span>
-<span class="nc" id="L61">						Notification.builder()</span>
-<span class="nc" id="L62">								.setTitle(request.getTitle())</span>
-<span class="nc" id="L63">								.setBody(request.getMessage())</span>
-<span class="nc" id="L64">								.build()</span>
-				);
+<span class="nc" id="L48">		AndroidConfig androidConfig = getAndroidConfig(request.getTopic());</span>
+<span class="nc" id="L49">		ApnsConfig apnsConfig = getApnsConfig(request.getTopic());</span>
+<span class="nc" id="L50">		return Message.builder().setApnsConfig(apnsConfig).setAndroidConfig(androidConfig)</span>
+<span class="nc" id="L51">				.putData(&quot;title&quot;, request.getTitle())</span>
+<span class="nc" id="L52">				.putData(&quot;message&quot;, request.getMessage());</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

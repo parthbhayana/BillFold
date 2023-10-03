@@ -30,7 +30,6 @@ public class CustomIdGenerator implements IdentifierGenerator {
         return Long.parseLong(formattedYear + formattedMonth + formattedSerialNumber);
     }
 
-
     private int getSerialNumberForYearAndMonth(Connection connection, String yearAndMonth) throws HibernateException {
         String query = "SELECT COUNT(*) FROM reports WHERE report_id LIKE ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -45,6 +44,5 @@ public class CustomIdGenerator implements IdentifierGenerator {
         }
         return 1;
     }
-
 
 }

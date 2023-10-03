@@ -53,32 +53,17 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	@Override
 	public Employee updateEmployeeDetails(EmployeeDTO employeeDTO, Long employeeId) {
 		Employee employee = getEmployeeById(employeeId);
-
-		if (employee == null) {
-			// Handle the case where the employee is not found
-			throw new NullPointerException("Employee not found with ID: " + employeeId);
-		}
-
-		// Update employee details
 		employee.setEmployeeEmail(employeeDTO.getEmployeeEmail());
 		employee.setFirstName(employeeDTO.getFirstName());
 		employee.setLastName(employeeDTO.getLastName());
 		employee.setMiddleName(employeeDTO.getMiddleName());
-
 		return employeeRepository.save(employee);
 	}
-
 
 
 	@Override
 	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail, Long mobileNumber, String managerName, String hrEmail, String hrName) {
 		Employee employee = getEmployeeById(employeeId);
-
-		// Check if the employee is null and throw an exception if it is
-		if (employee == null) {
-			throw new NullPointerException("Employee not found with ID: " + employeeId);
-		}
-
 		employee.setOfficialEmployeeId(officialEmployeeId);
 		employee.setManagerEmail(managerEmail);
 		employee.setMobileNumber(mobileNumber);
@@ -88,7 +73,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		employeeRepository.save(employee);
 		return getEmployeeDetails(employeeId);
 	}
-
 
 	@Override
 	public Optional<Employee> getEmployeeDetails(Long employeeId) {
@@ -142,18 +126,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public void hideEmployee(Long employeeId) {
-		Employee employee = getEmployeeById(employeeId);
-
-		// Check if the employee is null and throw a NullPointerException if it is
-		if (employee == null) {
-			throw new NullPointerException("Employee not found with ID: " + employeeId);
-		}
-
 		Boolean hidden = true;
+		Employee employee = getEmployeeById(employeeId);
 		employee.setIsHidden(hidden);
 		employeeRepository.save(employee);
 	}
-
 
 	@Override
 	public void setFinanceAdmin(Long employeeId) {

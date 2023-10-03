@@ -1,9 +1,10 @@
 package com.nineleaps.expense_management_project.dto;
 
-import com.nineleaps.expense_management_project.dto.ReportsDTO;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ReportsDTOTest {
 
@@ -12,7 +13,7 @@ public class ReportsDTOTest {
         ReportsDTO reportsDTO = new ReportsDTO();
 
         // Verify that the default constructor initializes fields to their default values
-        assertEquals(null, reportsDTO.getReportTitle());
+        assertNull(reportsDTO.getReportTitle());
     }
 
     @Test

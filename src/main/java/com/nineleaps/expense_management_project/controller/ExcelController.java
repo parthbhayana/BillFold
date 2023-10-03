@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +22,10 @@ public class ExcelController {
 
 	@Autowired
 	private IExcelGeneratorReportsService excelServiceReports;
+	private static final String CONSTANT1="Email sent successfully!";
+	private static final String CONSTANT2="Content-Disposition";
+	private static final String CONSTANT3="No data available for the selected period.So, Email can't be sent!";
 
-	private static final String CONSTANT1 = "Email sent successfully!";
-	private static final String CONSTANT2 = "Content-Disposition";
-	private static final String CONSTANT3 = "No data available for the selected period. So, Email can't be sent!";
-
-	// Endpoint to generate an Excel report for category-wise expense analytics and send it via email
 	@GetMapping("/excel/categoryBreakup")
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
 													  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
@@ -53,12 +50,13 @@ public class ExcelController {
 		}
 	}
 
-	// Endpoint to generate an Excel report for all reports with a specified status and send it via email
 	@GetMapping("/excel/allReports")
+
 	public ResponseEntity<String> generateExcelReport(HttpServletResponse response,
 													  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-													  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-													  @RequestParam StatusExcel status) throws Exception {
+
+													  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam StatusExcel status)
+			throws Exception {
 
 		String fileName = "Billfold_All_Submissions_Status.xls";
 		String headerKey = CONSTANT2;
@@ -79,7 +77,6 @@ public class ExcelController {
 		}
 	}
 
-	// Endpoint to reimburse and generate an Excel report for all reports and send it via email
 	@GetMapping("/reimburse/allReports")
 	public ResponseEntity<String> reimburseAndGenerateExcel(HttpServletResponse response) throws Exception {
 
@@ -97,11 +94,9 @@ public class ExcelController {
 			return ResponseEntity.ok(result);
 		} else if (result.equals(CONSTANT3)) {
 			return ResponseEntity.ok(result);
-		}else {
+		} else {
 			return ResponseEntity.badRequest().body(result);
 		}
+	}
 
-
-    }
 }
-

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+
+import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModelProperty;
 
-// Represents a category for expenses
+@Getter
 @Entity
 @Table(name = &quot;category&quot;)
 public class Category {
@@ -19,91 +21,58 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = &quot;category_id&quot;)
-	@ApiModelProperty(hidden = true) // Swagger annotation to hide this property in documentation
-	private Long categoryId;
+	@ApiModelProperty(hidden = true)
+<span class="fc" id="L25">	private Long categoryId;</span>
 
 	@Column(name = &quot;category_name&quot;)
-	private String categoryDescription; // Description of the category
+<span class="fc" id="L28">	private String categoryDescription;</span>
 
 	@Column(name = &quot;category_total&quot;)
-	@ApiModelProperty(hidden = true) // Hidden property in Swagger documentation
-	private long categoryTotal;
+	@ApiModelProperty(hidden = true)
+<span class="nc" id="L32">	private long categoryTotal;</span>
 
-<span class="pc" id="L32">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
-	@ApiModelProperty(hidden = true) // Hidden property in Swagger documentation
-<span class="pc" id="L34">	private Boolean isHidden = false;</span>
+<span class="pc" id="L34">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+	@ApiModelProperty(hidden = true)
+<span class="pc" id="L36">	private Boolean isHidden = false;</span>
 
-<span class="pc" id="L36">	@JsonIgnore</span>
+<span class="pc" id="L38">	@JsonIgnore</span>
 	@OneToMany(mappedBy = &quot;category&quot;, cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;(); // List of expenses associated with this category
+<span class="nc" id="L41">	private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();</span>
 
-	// Default constructor
-<span class="fc" id="L42">	public Category() {</span>
-<span class="fc" id="L43">	}</span>
+<span class="fc" id="L43">	public Category() {</span>
 
-	// Parameterized constructor to initialize category information
+<span class="fc" id="L45">	}</span>
+
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
 					List&lt;Expense&gt; expenseList) {
-<span class="nc" id="L48">		super();</span>
-<span class="nc" id="L49">		this.categoryId = categoryId;</span>
-<span class="nc" id="L50">		this.categoryDescription = categoryDescription;</span>
-<span class="nc" id="L51">		this.categoryTotal = categoryTotal;</span>
-<span class="nc" id="L52">		this.isHidden = isHidden;</span>
-<span class="nc" id="L53">		this.expenseList = expenseList;</span>
-<span class="nc" id="L54">	}</span>
+<span class="nc" id="L49">		super();</span>
+<span class="nc" id="L50">		this.categoryId = categoryId;</span>
+<span class="nc" id="L51">		this.categoryDescription = categoryDescription;</span>
+<span class="nc" id="L52">		this.categoryTotal = categoryTotal;</span>
+<span class="nc" id="L53">		this.isHidden = isHidden;</span>
+<span class="nc" id="L54">		this.expenseList = expenseList;</span>
+<span class="nc" id="L55">	}</span>
 
-
-    // Getter method to retrieve the category ID
-	public Long getCategoryId() {
-<span class="fc" id="L59">		return categoryId;</span>
-	}
-
-	// Setter method to set the category ID
 	public void setCategoryId(Long categoryId) {
-<span class="fc" id="L64">		this.categoryId = categoryId;</span>
-<span class="fc" id="L65">	}</span>
+<span class="fc" id="L58">		this.categoryId = categoryId;</span>
+<span class="fc" id="L59">	}</span>
 
-	// Getter method to retrieve the category description
-	public String getCategoryDescription() {
-<span class="fc" id="L69">		return categoryDescription;</span>
-	}
-
-	// Setter method to set the category description
 	public void setCategoryDescription(String categoryDescription) {
-<span class="fc" id="L74">		this.categoryDescription = categoryDescription;</span>
-<span class="fc" id="L75">	}</span>
+<span class="fc" id="L62">		this.categoryDescription = categoryDescription;</span>
+<span class="fc" id="L63">	}</span>
 
-	// Getter method to retrieve the total amount for the category
-	public long getCategoryTotal() {
-<span class="nc" id="L79">		return categoryTotal;</span>
-	}
-
-	// Setter method to set the total amount for the category
 	public void setCategoryTotal(long categoryTotal) {
-<span class="nc" id="L84">		this.categoryTotal = categoryTotal;</span>
-<span class="nc" id="L85">	}</span>
+<span class="nc" id="L66">		this.categoryTotal = categoryTotal;</span>
+<span class="nc" id="L67">	}</span>
 
-	// Getter method to check if the category is hidden
-	public Boolean getIsHidden() {
-<span class="fc" id="L89">		return isHidden;</span>
-	}
-
-	// Setter method to set whether the category is hidden
 	public void setIsHidden(Boolean isHidden) {
-<span class="fc" id="L94">		this.isHidden = isHidden;</span>
-<span class="fc" id="L95">	}</span>
+<span class="fc" id="L70">		this.isHidden = isHidden;</span>
+<span class="fc" id="L71">	}</span>
 
-	// Getter method to retrieve the list of expenses associated with this category
-	public List&lt;Expense&gt; getExpenseList() {
-<span class="nc" id="L99">		return expenseList;</span>
-	}
-
-	// Setter method to set the list of expenses associated with this category
 	public void setExpenseList(List&lt;Expense&gt; expenseList) {
-<span class="nc" id="L104">		this.expenseList = expenseList;</span>
-<span class="nc" id="L105">	}</span>
-
+<span class="nc" id="L74">		this.expenseList = expenseList;</span>
+<span class="nc" id="L75">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,14 +1,11 @@
 package com.nineleaps.expense_management_project.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.nineleaps.expense_management_project.entity.Expense;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,12 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import com.nineleaps.expense_management_project.dto.ExpenseDTO;
 import com.nineleaps.expense_management_project.service.IExpenseService;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -233,20 +226,3 @@ public class ExpenseControllerTest {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

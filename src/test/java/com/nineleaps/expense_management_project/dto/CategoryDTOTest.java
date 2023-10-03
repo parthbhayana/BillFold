@@ -1,6 +1,6 @@
 package com.nineleaps.expense_management_project.dto;
 
-import com.nineleaps.expense_management_project.dto.CategoryDTO;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

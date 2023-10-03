@@ -23,6 +23,7 @@ import com.nineleaps.expense_management_project.config.JwtUtil;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.service.IEmployeeService;
 
+import static com.nineleaps.expense_management_project.config.JwtUtil.ACCESS_TOKEN_EXPIRATION_TIME;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
@@ -41,13 +42,11 @@ public class UserController {
 
     }
 
-    // Endpoint to get a list of all user details
     @GetMapping("/listTheUser")
     public List<Employee> getAllUserDetails() {
         return employeeService.getAllUser();
     }
 
-    // Endpoint to send user profile data
     @SuppressWarnings("unchecked")
     @GetMapping("/getProfileData")
     public ResponseEntity<JSONObject> sendData(HttpServletRequest request) {
@@ -60,6 +59,8 @@ public class UserController {
         String email = employee1.getEmployeeEmail();
         String firstName = employee1.getFirstName();
         String lastName = employee1.getLastName();
+        @SuppressWarnings("unused")
+
         String imageUrl = employee1.getImageUrl();
         JSONObject responsejson = new JSONObject();
         responsejson.put("employeeId", employeeId);
@@ -70,7 +71,6 @@ public class UserController {
         return ResponseEntity.ok(responsejson);
     }
 
-    // Endpoint to insert or update user data and generate JWT tokens
     @PostMapping("/theProfile")
     public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response)
             throws MessagingException {
@@ -88,5 +88,24 @@ public class UserController {
             return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
 
         }
+    }
+
+    @PostMapping("/regenerateToken")
+    public void regenerateToken(HttpServletRequest request,HttpServletResponse response) {
+        String authorisationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorisationHeader.substring("Bearer ".length());
+        System.out.println("refresh token from header"+ token);
+        if(!jwtUtil.isRefreshTokenExpired(token)){
+            DecodedJWT decodedrefreshToken = JWT.decode(token);
+            String employeeEmailFromToken = decodedrefreshToken.getSubject();
+            Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);
+            String AccessToken = jwtUtil.generateToken(employee1.getEmployeeEmail(),employee1.getEmployeeId(),employee1.getRole(),
+                    ACCESS_TOKEN_EXPIRATION_TIME );
+            response.setHeader("Access_Token",AccessToken);
+        }else{
+            System.out.println("refresh Token Expired. Login again");
+        }
+
+
     }
 }

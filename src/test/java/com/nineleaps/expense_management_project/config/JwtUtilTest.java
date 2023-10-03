@@ -2,11 +2,8 @@ package com.nineleaps.expense_management_project.config;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
-
 import javax.servlet.http.HttpServletResponse;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -17,16 +14,6 @@ public class JwtUtilTest {
     @BeforeEach
     void setUp() {
         jwtUtil = new JwtUtil();
-    }
-
-    @Test
-    void testGenerateRandomSecretKey() {
-        String secretKey1 = JwtUtil.generateRandomSecretKey();
-        String secretKey2 = JwtUtil.generateRandomSecretKey();
-
-        assertNotNull(secretKey1);
-        assertNotNull(secretKey2);
-        assertNotEquals(secretKey1, secretKey2);
     }
 
     @Test

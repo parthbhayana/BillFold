@@ -14,6 +14,7 @@ public class ExpenseManagementProjectApplication {
 	public static void main(String[] args) {
 
 		SpringApplication.run(ExpenseManagementProjectApplication.class, args);
+
 	}
 
 }

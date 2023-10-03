@@ -3,6 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+        <!-- Parent project for Spring Boot -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.10</version>
@@ -14,149 +15,196 @@
     <name>ExpenseManagementProject</name>
     <description>Phase 1: Expense Management Project</description>
     <properties>
+        <!-- Java version property -->
         <java.version>1.8</java.version>
     </properties>
     <dependencies>
+        <!-- Compile Dependencies -->
         <dependency>
+            <!-- Spring Boot Data JPA -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
+            <!-- Spring Boot Web -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-spring-boot-starter</artifactId>
+            <version>6.30.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-logback</artifactId>
+            <version>6.30.0</version>
+        </dependency>
+        <dependency>
+            <!-- Spring Boot Devtools -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
+            <scope>runtime</scope> <!-- Devtools for runtime, optional -->
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- MySQL Connector -->
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
+            <scope>runtime</scope> <!-- MySQL Connector for runtime -->
         </dependency>
         <dependency>
+            <!-- Springfox Boot Starter -->
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
             <version>3.0.0</version>
         </dependency>
+
+        <!-- Test Dependencies -->
         <dependency>
+            <!-- Spring Boot Starter Test -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <scope>test</scope> <!-- Test scope -->
         </dependency>
         <dependency>
+            <!-- Maven PMD Plugin -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.13.0</version>
+            <scope>test</scope> <!-- PMD plugin for testing -->
+        </dependency>
+        <dependency>
+            <!-- JUnit -->
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope> <!-- JUnit for testing -->
+        </dependency>
+
+        <dependency>
+            <!-- PDF manipulation library -->
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
             <version>1.3.30</version>
         </dependency>
         <dependency>
+            <!-- Lombok library for boiler code generation -->
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.26</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <!-- JSON processing library -->
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1</version>
         </dependency>
         <dependency>
+            <!-- JWT (JSON Web Tokens) library -->
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
         <dependency>
+            <!-- Auth0 Java JWT library -->
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>3.8.1</version>
         </dependency>
         <dependency>
+            <!-- JavaMail library -->
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
         </dependency>
         <dependency>
+            <!-- JUnit for additional testing -->
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- Spring Boot Starter Mail -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
+            <!-- Apache HttpClient -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>core</artifactId>
-            <version>3.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-            <version>3.4.1</version>
-        </dependency>
-        <dependency>
+            <!-- Jackson Databind for JSON processing -->
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.12.3</version>
         </dependency>
         <dependency>
+            <!-- Additional Apache HttpClient dependency -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
         <dependency>
+            <!-- Apache POI for Office Documents (OOXML) -->
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>4.1.0</version>
         </dependency>
         <dependency>
+            <!-- Apache POI for Office Documents -->
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>3.17</version>
         </dependency>
         <dependency>
+            <!-- JFreeChart for charting -->
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.5.3</version>
         </dependency>
 
         <dependency>
+            <!-- Updated Jackson Databind for JSON processing -->
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.12.5</version>
         </dependency>
 
         <dependency>
+            <!-- Spring Boot Starter Security -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <dependency>
+            <!-- Spring Boot Starter Test for additional testing -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
+            <!-- JSON Simple (for JSON processing) -->
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+
         <dependency>
+            <!-- Firebase Admin SDK -->
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
             <version>6.11.0</version>
         </dependency>
+
+        <!-- ... (other dependencies) -->
     </dependencies>
     <build>
         <plugins>
+            <!-- Code Coverage Plugin -->
             <plugin>
+                <!-- JaCoCo Maven Plugin for code coverage -->
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
@@ -175,11 +223,17 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
+                <!-- Spring Boot Maven Plugin -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- Compiler Plugin -->
             <plugin>
+                <!-- Maven Compiler Plugin for Java version configuration -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>

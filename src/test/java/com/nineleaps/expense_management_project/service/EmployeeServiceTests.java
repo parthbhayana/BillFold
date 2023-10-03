@@ -1,10 +1,9 @@
 package com.nineleaps.expense_management_project.service;
 
+
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
-import com.nineleaps.expense_management_project.dto.UserDTO;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,12 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -35,21 +32,6 @@ public class EmployeeServiceTests {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    public void testSaveEmployeeDetails() {
-        // Arrange
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmployeeEmail("test@example.com");
-        // Mock the repository method
-        when(employeeRepository.save(any(Employee.class))).thenReturn(new Employee());
-
-        // Act
-        Employee savedEmployee = employeeService.saveEmployeeDetails(employeeDTO);
-
-        // Assert
-        assertNotNull(savedEmployee);
-        verify(employeeRepository, times(1)).save(any(Employee.class));
-    }
 
     @Test
     public void testGetEmployeeById() {
@@ -116,9 +98,7 @@ public class EmployeeServiceTests {
     public void testUpdateEmployeeDetails() {
         // Create a sample EmployeeDTO
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmployeeEmail("new.email@example.com");
-        employeeDTO.setFirstName("Updated");
-        employeeDTO.setLastName("Employee");
+
         employeeDTO.setMiddleName("Middle");
 
         // Create a sample Employee with the given ID

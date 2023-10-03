@@ -11,8 +11,6 @@ Qsrc/main/java/com/nineleaps/expense_management_project/service/IEmailService.ja
 Tsrc/main/java/com/nineleaps/expense_management_project/service/IEmployeeService.java,2/4/240e7bb99f29e9a8cae98e877d629e251bc820ed
 ë
 asrc/main/java/com/nineleaps/expense_management_project/service/IExcelGeneratorReportsService.java,5/4/542dc219b640fe76afda39efb74796c46cf2a8f4
-í
-bsrc/main/java/com/nineleaps/expense_management_project/service/PdfManagerGeneratorServiceImpl.java,8/6/8687af48ff4eec415e44dc961519a101fe94c5dc
 à
 Xsrc/main/java/com/nineleaps/expense_management_project/entity/FinanceApprovalStatus.java,3/5/35b66b246686b2d986081aaeab78b0257690c18a
 â
@@ -93,20 +91,10 @@ Wsrc/main/java/com/nineleaps/expense_management_project/service/CategoryServiceI
 bsrc/main/java/com/nineleaps/expense_management_project/service/IExcelGeneratorCategoryService.java,2/2/22a960ef693d066e26cfef8ef91b5063d89e3c07
 É
 Ssrc/main/java/com/nineleaps/expense_management_project/service/IExpenseService.java,a/0/a04a07977d08c6d2b8f1dec6d336c2c2a606fdb1
-ê
-`src/main/java/com/nineleaps/expense_management_project/service/IPdfEmployeeGeneratorService.java,8/1/8152f207dd8a4ee46415588f0378d6f30cec366f
-î
-dsrc/main/java/com/nineleaps/expense_management_project/service/IPdfFinanceAdminGeneratorService.java,9/b/9b4970748f13524212d7f6ce2f3387db9a4b01ac
 É
 Ssrc/main/java/com/nineleaps/expense_management_project/service/IReportsService.java,a/a/aa975a8ddc62f88d42198a99881b9672af8c0e2e
-è
-_src/main/java/com/nineleaps/expense_management_project/service/IPdfManagerGeneratorService.java,5/b/5bf4fc6cb9f7079a89bb53da9bd1f96c0a49dc22
-ì
-csrc/main/java/com/nineleaps/expense_management_project/service/PdfEmployeeGeneratorServiceImpl.java,b/c/bc650a0351c9326c5d260ba1505330abadee00c9
 Ü
 Vsrc/main/java/com/nineleaps/expense_management_project/service/ExpenseServiceImpl.java,3/8/3894201a412e7a801df23e136f76ef9cd0e64c98
-í
-bsrc/test/java/com/nineleaps/expensemanagementproject/ExpenseManagementProjectApplicationTests.java,f/9/f954767c2b8f6c576cd453aa394d0d2bcdc0cccf
 è
 _src/main/java/com/nineleaps/expense_management_project/ExpenseManagementProjectApplication.java,7/f/7fcc70fc86b9ab6ed44b7a9178fcc86518ab4097
 
@@ -133,8 +121,6 @@ esrc/test/java/com/nineleaps/expense_management_project/controller/PushNotificat
 \src/test/java/com/nineleaps/expense_management_project/controller/ReportsControllerTest.java,1/1/11cf1fa7872009ffdd8ea881245887f37a22b352
 
 Osrc/test/java/com/nineleaps/expense_management_project/dto/CategoryDTOTest.java,3/9/39f8d0f826bbf3eaa1de883e1ac005876ad21051
-
-Osrc/test/java/com/nineleaps/expense_management_project/dto/EmployeeDTOTest.java,1/1/11eb7cd30620a7e1fc06c67983ad1037bc382546
 ~
 Nsrc/test/java/com/nineleaps/expense_management_project/dto/ExpenseDTOTest.java,8/2/820711137e9b1de6c84f9f409e593d26f5c2c660
 ~
@@ -145,8 +131,6 @@ Ksrc/test/java/com/nineleaps/expense_management_project/dto/UserDTOTest.java,0/
 Xsrc/test/java/com/nineleaps/expense_management_project/service/EmployeeServiceTests.java,2/0/20e34667baeb78238c6d313d910a3474700d54f3
 ã
 [src/test/java/com/nineleaps/expense_management_project/service/CategoryServiceImplTest.java,3/3/333ea2b86700f52e98ff0d3922ab8e4f969dad8c
-à
-Xsrc/test/java/com/nineleaps/expense_management_project/service/EmailServiceImplTest.java,6/b/6be74f88d55e08f79112356e35e8c3e295f2c519
 ä
 Zsrc/test/java/com/nineleaps/expense_management_project/service/ExpenseServiceImplTest.java,9/8/982bbcc4ac83fa4ea9e9d2159ef24eea6cd1b91c
 ~
@@ -159,5 +143,3 @@ Ysrc/test/java/com/nineleaps/expense_management_project/controller/UserControlle
 `src/test/java/com/nineleaps/expense_management_project/firebase/PushNotificationRequestTest.java,1/f/1f5be52fc2c6610860ab751ae36cd7668ee63c2c
 ë
 asrc/test/java/com/nineleaps/expense_management_project/firebase/PushNotificationResponseTest.java,4/b/4bcfcb546ebebe42b8f44f32c13f16bc16ee5592
-ê
-`src/test/java/com/nineleaps/expense_management_project/firebase/PushNotificationServiceTest.java,f/c/fc8d62302a6d9af9f37573d1ca8207f9fea35fb7

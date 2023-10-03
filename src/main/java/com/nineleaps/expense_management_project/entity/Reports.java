@@ -114,7 +114,7 @@ public class Reports {
     }
 
     public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
-                   String managerComments, String financeComments) {
+                   String managerComments, String financeComments ) {
         super();
         this.reportId = reportId;
         this.employeeId = employeeId;
@@ -124,11 +124,13 @@ public class Reports {
         this.managerComments = managerComments;
         this.financeComments = financeComments;
 
-    }
 
+
+    }
     public Reports(Boolean isSubmitted, String employeeMail,
                    LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate, LocalDate financeActionDate,
                    float totalAmount){
+        super();
         this.isSubmitted = isSubmitted;
         this.employeeMail = employeeMail;
         this.dateSubmitted = dateSubmitted;
@@ -136,13 +138,13 @@ public class Reports {
         this.managerActionDate = managerActionDate;
         this.financeActionDate = financeActionDate;
         this.totalAmount = totalAmount;
-
-
     }
 
     public Reports(float totalApprovedAmount, Boolean isHidden, String managerEmail,
                    String managerReviewTime, FinanceApprovalStatus financeApprovalStatus,
-                   ManagerApprovalStatus managerApprovalStatus, Long expensesCount){
+                   ManagerApprovalStatus managerApprovalStatus, Long expensesCount)
+    {
+        super();
         this.totalApprovedAmount = totalApprovedAmount;
         this.isHidden = isHidden;
         this.managerEmail = managerEmail;
@@ -150,7 +152,6 @@ public class Reports {
         this.financeApprovalStatus = financeApprovalStatus;
         this.managerApprovalStatus = managerApprovalStatus;
         this.expensesCount = expensesCount;
-
     }
 
     public Long getReportId() {

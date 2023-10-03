@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.lang.NonNullApi;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,49 +20,31 @@ import io.jsonwebtoken.Claims;
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
-<span class="fc" id="L22">    public JwtFilter(JwtUtil jwtUtil) {</span>
-<span class="fc" id="L23">        this.jwtUtil = jwtUtil;</span>
-<span class="fc" id="L24">    }</span>
+<span class="fc" id="L23">    public JwtFilter(JwtUtil jwtUtil) {</span>
+<span class="fc" id="L24">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L25">    }</span>
+
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        // Extract the Authorization header from the HTTP request
-<span class="fc" id="L30">        String header = request.getHeader(&quot;Authorization&quot;);</span>
-
-        // Check if the header is not null and starts with &quot;Bearer &quot;
+<span class="fc" id="L32">        String header = request.getHeader(&quot;Authorization&quot;);</span>
 <span class="pc bpc" id="L33" title="1 of 4 branches missed.">        if (header != null &amp;&amp; header.startsWith(&quot;Bearer &quot;)) {</span>
-            // Extract the JWT token (excluding &quot;Bearer &quot;) from the header
-<span class="fc" id="L35">            String token = header.substring(7);</span>
-
-            // Validate the JWT token using the JwtUtil
-<span class="fc bfc" id="L38" title="All 2 branches covered.">            if (jwtUtil.validateToken(token)) {</span>
-                // If the token is valid, extract claims from the token
-<span class="fc" id="L40">                Claims claims = jwtUtil.getClaimsFromToken(token);</span>
-
-                // Extract the email ID from the claims
-<span class="fc" id="L43">                String emailId = claims.getSubject();</span>
-
-                // Extract the role from the claims
-<span class="fc" id="L46">                String role = (String) claims.get(&quot;Role&quot;);</span>
-
-                // Check if the role is not null and not empty
-<span class="pc bpc" id="L49" title="2 of 4 branches missed.">                if (role != null &amp;&amp; !role.isEmpty()) {</span>
-                    // Create a list of GrantedAuthority with the user's role
-<span class="fc" id="L51">                    List&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L52">                    authorities.add(new SimpleGrantedAuthority(role));</span>
-
-                    // Create an Authentication object using email ID, null for password, and authorities
-<span class="fc" id="L55">                    Authentication authentication = new UsernamePasswordAuthenticationToken(emailId, null, authorities);</span>
-
-                    // Set the Authentication object in the security context
-<span class="fc" id="L58">                    SecurityContextHolder.getContext().setAuthentication(authentication);</span>
+<span class="fc" id="L34">            String token = header.substring(7);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">            if (jwtUtil.validateToken(token)) {</span>
+<span class="fc" id="L36">                Claims claims = jwtUtil.getClaimsFromToken(token);</span>
+<span class="fc" id="L37">                String emailId = claims.getSubject();</span>
+<span class="fc" id="L38">                String role = (String) claims.get(&quot;Role&quot;);</span>
+<span class="pc bpc" id="L39" title="2 of 4 branches missed.">                if (role != null &amp;&amp; !role.isEmpty()) {</span>
+<span class="fc" id="L40">                    List&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L41">                    authorities.add(new SimpleGrantedAuthority(role));</span>
+<span class="fc" id="L42">                    Authentication authentication = new UsernamePasswordAuthenticationToken(emailId, null, authorities);</span>
+<span class="fc" id="L43">                    SecurityContextHolder.getContext().setAuthentication(authentication);</span>
                 }
             }
         }
-
-        // Continue the filter chain
-<span class="fc" id="L64">        chain.doFilter(request, response);</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L47">        chain.doFilter(request, response);</span>
+<span class="fc" id="L48">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -24,383 +24,362 @@ import com.nineleaps.expense_management_project.repository.ExpenseRepository;
 	private static final String CONSTANT1 = &quot;_ratio&quot;;
 	private static final String CONSTANT2 = &quot;_count&quot;;
 
-
-
 	@Override
 	public void deleteCategoryById(Long categoryId) {
-<span class="fc" id="L31">		categoryRepository.deleteById(categoryId);</span>
-<span class="fc" id="L32">	}</span>
+<span class="fc" id="L29">		categoryRepository.deleteById(categoryId);</span>
+<span class="fc" id="L30">	}</span>
 
 	@Override
 	public Category updateCategory(Long categoryID, CategoryDTO categoryDTO) {
-<span class="fc" id="L36">		Category category = getCategoryById(categoryID);</span>
-<span class="fc" id="L37">		category.setCategoryDescription(categoryDTO.getCategoryDescription());</span>
-<span class="fc" id="L38">		return categoryRepository.save(category);</span>
+<span class="fc" id="L34">		Category category = getCategoryById(categoryID);</span>
+<span class="fc" id="L35">		category.setCategoryDescription(categoryDTO.getCategoryDescription());</span>
+<span class="fc" id="L36">		return categoryRepository.save(category);</span>
 	}
 
 	@Override
 	public Category getCategoryById(Long categoryId) {
-<span class="fc" id="L43">		Optional&lt;Category&gt; optionalCategory = categoryRepository.findById(categoryId);</span>
-<span class="fc" id="L44">		return optionalCategory.orElse(null);</span>
+<span class="fc" id="L41">		Optional&lt;Category&gt; optionalCategory = categoryRepository.findById(categoryId);</span>
+<span class="fc" id="L42">		return optionalCategory.orElse(null);</span>
 	}
 
 	@Override
 	public List&lt;Category&gt; getAllCategories() {
-<span class="fc" id="L49">		List&lt;Category&gt; category = categoryRepository.findAll();</span>
-<span class="fc" id="L50">		List&lt;Category&gt; nondeletedcategories = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L51" title="All 2 branches covered.">		for (Category cat2 : category) {</span>
-<span class="pc bpc" id="L52" title="1 of 2 branches missed.">			if (!Boolean.TRUE.equals(cat2.getIsHidden())) {</span>
-<span class="fc" id="L53">				nondeletedcategories.add(cat2);</span>
+<span class="fc" id="L47">		List&lt;Category&gt; category = categoryRepository.findAll();</span>
+<span class="fc" id="L48">		List&lt;Category&gt; nondeletedcategories = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">		for (Category cat2 : category) {</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">			if (!Boolean.TRUE.equals(cat2.getIsHidden())) {</span>
+<span class="fc" id="L51">				nondeletedcategories.add(cat2);</span>
 			}
-<span class="fc" id="L55">		}</span>
-<span class="fc" id="L56">		return nondeletedcategories;</span>
+<span class="fc" id="L53">		}</span>
+<span class="fc" id="L54">		return nondeletedcategories;</span>
 	}
 
 	@Override
 	public Category addCategory(CategoryDTO categoryDTO) {
-<span class="fc" id="L61">		String categoryDescription = categoryDTO.getCategoryDescription();</span>
+<span class="fc" id="L59">		String categoryDescription = categoryDTO.getCategoryDescription();</span>
 
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">		if (categoryRepository.existsByCategoryDescription(categoryDescription)) {</span>
-<span class="nc" id="L64">			throw new IllegalArgumentException(</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">		if (categoryRepository.existsByCategoryDescription(categoryDescription)) {</span>
+<span class="nc" id="L62">			throw new IllegalArgumentException(</span>
 					&quot;Category with description '&quot; + categoryDescription + &quot;' already exists.&quot;);
 		}
 
-<span class="fc" id="L68">		Category category = new Category();</span>
-<span class="fc" id="L69">		category.setCategoryDescription(categoryDescription);</span>
-<span class="fc" id="L70">		return categoryRepository.save(category);</span>
+<span class="fc" id="L66">		Category category = new Category();</span>
+<span class="fc" id="L67">		category.setCategoryDescription(categoryDescription);</span>
+<span class="fc" id="L68">		return categoryRepository.save(category);</span>
 	}
 
 	@Override
 	public void hideCategory(Long categoryId) {
-<span class="fc" id="L75">		Boolean hidden = true;</span>
-<span class="fc" id="L76">		Optional&lt;Category&gt; optionalCategory = categoryRepository.findById(categoryId);</span>
-
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		if (optionalCategory.isPresent()) {</span>
-<span class="fc" id="L79">			Category category = optionalCategory.get();</span>
-<span class="fc" id="L80">			category.setIsHidden(hidden);</span>
-<span class="fc" id="L81">			categoryRepository.save(category);</span>
-<span class="fc" id="L82">		} else {</span>
-<span class="nc" id="L83">			throw new IllegalArgumentException(&quot;Category with ID &quot; + categoryId + &quot; not found.&quot;);</span>
-		}
-<span class="fc" id="L85">	}</span>
+<span class="fc" id="L73">		Boolean hidden = true;</span>
+<span class="fc" id="L74">		Category category = getCategoryById(categoryId);</span>
+<span class="fc" id="L75">		category.setIsHidden(hidden);</span>
+<span class="fc" id="L76">		categoryRepository.save(category);</span>
+<span class="fc" id="L77">	}</span>
 
 	@Override
 	public HashMap&lt;String, Double&gt; getCategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
-<span class="fc" id="L89">		List&lt;Expense&gt; expenseList = expenseRepository.findByDateBetweenAndIsReported(startDate, endDate, true);</span>
-<span class="fc" id="L90">		HashMap&lt;String, Double&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L81">		List&lt;Expense&gt; expenseList = expenseRepository.findByDateBetweenAndIsReported(startDate, endDate, true);</span>
+<span class="fc" id="L82">		HashMap&lt;String, Double&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
 
-<span class="fc bfc" id="L92" title="All 2 branches covered.">		for (Expense expense : expenseList) {</span>
-<span class="fc" id="L93">			Category category = expense.getCategory();</span>
-<span class="fc" id="L94">			String categoryName = category.getCategoryDescription();</span>
-<span class="fc" id="L95">			Double amt =expense.getAmount();</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
-<span class="fc" id="L97">				Double previousAmt = categoryAmountMap.get(categoryName);</span>
-<span class="fc" id="L98">				categoryAmountMap.put(categoryName,  (previousAmt + amt));</span>
-<span class="fc" id="L99">			} else {</span>
-<span class="fc" id="L100">				categoryAmountMap.put(categoryName, amt);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">		for (Expense expense : expenseList) {</span>
+<span class="fc" id="L85">			Category category = expense.getCategory();</span>
+<span class="fc" id="L86">			String categoryName = category.getCategoryDescription();</span>
+<span class="fc" id="L87">			Double amt =expense.getAmount();</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">			if (categoryAmountMap.containsKey(categoryName)) {</span>
+<span class="fc" id="L89">				Double previousAmt = categoryAmountMap.get(categoryName);</span>
+<span class="fc" id="L90">				categoryAmountMap.put(categoryName,  (previousAmt + amt));</span>
+<span class="fc" id="L91">			} else {</span>
+<span class="fc" id="L92">				categoryAmountMap.put(categoryName, amt);</span>
 			}
-<span class="fc" id="L102">		}</span>
-<span class="fc" id="L103">		return categoryAmountMap;</span>
+<span class="fc" id="L94">		}</span>
+<span class="fc" id="L95">		return categoryAmountMap;</span>
 	}
 
 	@Override
 	public Map&lt;String, Double&gt; getCategoryTotalAmountByYearAndCategory(Long categoryId) {
 
-<span class="fc" id="L109">		Category category = getCategoryById(categoryId);</span>
-<span class="fc" id="L110">		Map&lt;String, Double&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L101">		Category category = getCategoryById(categoryId);</span>
+<span class="fc" id="L102">		Map&lt;String, Double&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
 
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">		if (category != null) {</span>
-<span class="fc" id="L113">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategoryAndIsReported(category, true);</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">		if (category != null) {</span>
+<span class="fc" id="L105">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategoryAndIsReported(category, true);</span>
 
-<span class="fc bfc" id="L115" title="All 2 branches covered.">			for (Expense expense : expenseList) {</span>
-<span class="fc" id="L116">				LocalDate expenseDate = expense.getDate();</span>
-<span class="fc" id="L117">				String year = String.valueOf(expenseDate.getYear());</span>
-<span class="fc" id="L118">				Double amount = expense.getAmount();</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">			for (Expense expense : expenseList) {</span>
+<span class="fc" id="L108">				LocalDate expenseDate = expense.getDate();</span>
+<span class="fc" id="L109">				String year = String.valueOf(expenseDate.getYear());</span>
+<span class="fc" id="L110">				Double amount = expense.getAmount();</span>
 
-<span class="fc bfc" id="L120" title="All 2 branches covered.">				if (categoryAmountMap.containsKey(year)) {</span>
-<span class="fc" id="L121">					Double previousAmount = categoryAmountMap.get(year);</span>
-<span class="fc" id="L122">					categoryAmountMap.put(year,  (previousAmount + amount));</span>
-<span class="fc" id="L123">				} else {</span>
-<span class="fc" id="L124">					categoryAmountMap.put(year, amount);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">				if (categoryAmountMap.containsKey(year)) {</span>
+<span class="fc" id="L113">					Double previousAmount = categoryAmountMap.get(year);</span>
+<span class="fc" id="L114">					categoryAmountMap.put(year,  (previousAmount + amount));</span>
+<span class="fc" id="L115">				} else {</span>
+<span class="fc" id="L116">					categoryAmountMap.put(year, amount);</span>
 				}
-<span class="fc" id="L126">			}</span>
+<span class="fc" id="L118">			}</span>
 		}
 
-<span class="fc" id="L129">		return categoryAmountMap;</span>
+<span class="fc" id="L121">		return categoryAmountMap;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Double&gt; getCategoryTotalAmountByMonthAndCategory(Long categoryId, Long year) {
-<span class="fc" id="L134">		Category category = getCategoryById(categoryId);</span>
-<span class="fc" id="L135">		HashMap&lt;String, Double&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L126">		Category category = getCategoryById(categoryId);</span>
+<span class="fc" id="L127">		HashMap&lt;String, Double&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
 
-<span class="pc bpc" id="L137" title="1 of 2 branches missed.">		if (category != null) {</span>
-<span class="fc" id="L138">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategoryAndIsReported(category, true);</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">		if (category != null) {</span>
+<span class="fc" id="L130">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategoryAndIsReported(category, true);</span>
 
-<span class="fc bfc" id="L140" title="All 2 branches covered.">			for (Expense expense : expenseList) {</span>
-<span class="fc" id="L141">				LocalDate expenseDate = expense.getDate();</span>
-<span class="fc bfc" id="L142" title="All 2 branches covered.">				if (expenseDate.getYear() == year) {</span>
-<span class="fc" id="L143">					String month = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);</span>
-<span class="fc" id="L144">					Double amount = expense.getAmount();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">			for (Expense expense : expenseList) {</span>
+<span class="fc" id="L133">				LocalDate expenseDate = expense.getDate();</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">				if (expenseDate.getYear() == year) {</span>
+<span class="fc" id="L135">					String month = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);</span>
+<span class="fc" id="L136">					Double amount = expense.getAmount();</span>
 
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">					if (categoryAmountMap.containsKey(month)) {</span>
-<span class="nc" id="L147">						Double previousAmount = categoryAmountMap.get(month);</span>
-<span class="nc" id="L148">						categoryAmountMap.put(month, (previousAmount + amount));</span>
-<span class="nc" id="L149">					} else {</span>
-<span class="fc" id="L150">						categoryAmountMap.put(month, amount);</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">					if (categoryAmountMap.containsKey(month)) {</span>
+<span class="nc" id="L139">						Double previousAmount = categoryAmountMap.get(month);</span>
+<span class="nc" id="L140">						categoryAmountMap.put(month, (previousAmount + amount));</span>
+<span class="nc" id="L141">					} else {</span>
+<span class="fc" id="L142">						categoryAmountMap.put(month, amount);</span>
 					}
 				}
-<span class="fc" id="L153">			}</span>
+<span class="fc" id="L145">			}</span>
 		}
 
-<span class="fc" id="L156">		return categoryAmountMap;</span>
+<span class="fc" id="L148">		return categoryAmountMap;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Double&gt; getYearlyReimbursementRatio(Long categoryId) {
-<span class="fc" id="L161">		Category category = getCategoryById(categoryId);</span>
-<span class="fc" id="L162">		HashMap&lt;String, Double&gt; yearlyReimbursementRatioMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L153">		Category category = getCategoryById(categoryId);</span>
+<span class="fc" id="L154">		HashMap&lt;String, Double&gt; yearlyReimbursementRatioMap = new HashMap&lt;&gt;();</span>
 
-<span class="pc bpc" id="L164" title="1 of 2 branches missed.">		if (category != null) {</span>
-<span class="fc" id="L165">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategory(category);</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">		if (category != null) {</span>
+<span class="fc" id="L157">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategory(category);</span>
 
-<span class="fc bfc" id="L167" title="All 2 branches covered.">			for (Expense expense : expenseList) {</span>
-<span class="pc bpc" id="L168" title="1 of 2 branches missed.">				if (Boolean.TRUE.equals(expense.getIsReported())) {</span>
-<span class="fc" id="L169">					String year = String.valueOf(expense.getDate().getYear());</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">			for (Expense expense : expenseList) {</span>
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">				if (Boolean.TRUE.equals(expense.getIsReported())) {</span>
+<span class="fc" id="L161">					String year = String.valueOf(expense.getDate().getYear());</span>
 
-<span class="pc bpc" id="L171" title="1 of 2 branches missed.">					if (yearlyReimbursementRatioMap.containsKey(year)) {</span>
-<span class="nc" id="L172">						Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year)</span>
-<span class="nc" id="L173">								+ expense.getAmountApproved();</span>
-<span class="nc" id="L174">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);</span>
-<span class="nc" id="L175">						Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">					if (yearlyReimbursementRatioMap.containsKey(year)) {</span>
+<span class="nc" id="L164">						Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year)</span>
+<span class="nc" id="L165">								+ expense.getAmountApproved();</span>
+<span class="nc" id="L166">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);</span>
+<span class="nc" id="L167">						Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
-<span class="nc" id="L177">						yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);</span>
-<span class="nc" id="L178">						yearlyReimbursementRatioMap.put(year + CONSTANT2, (double) totalNumberOfExpenses);</span>
-<span class="nc" id="L179">						yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
-<span class="nc" id="L180">					} else {</span>
-<span class="fc" id="L181">						yearlyReimbursementRatioMap.put(year, expense.getAmountApproved());</span>
-<span class="fc" id="L182">						yearlyReimbursementRatioMap.put(year + CONSTANT2, 1.0);</span>
-<span class="fc" id="L183">						yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountApproved());</span>
+<span class="nc" id="L169">						yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);</span>
+<span class="nc" id="L170">						yearlyReimbursementRatioMap.put(year + CONSTANT2, (double) totalNumberOfExpenses);</span>
+<span class="nc" id="L171">						yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
+<span class="nc" id="L172">					} else {</span>
+<span class="fc" id="L173">						yearlyReimbursementRatioMap.put(year, expense.getAmountApproved());</span>
+<span class="fc" id="L174">						yearlyReimbursementRatioMap.put(year + CONSTANT2, 1.0);</span>
+<span class="fc" id="L175">						yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountApproved());</span>
 					}
 				}
-<span class="fc" id="L186">			}</span>
+<span class="fc" id="L178">			}</span>
 		}
 
-<span class="fc" id="L189">		return yearlyReimbursementRatioMap;</span>
+<span class="fc" id="L181">		return yearlyReimbursementRatioMap;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Double&gt; getMonthlyReimbursementRatio(Long categoryId, Long year) {
-<span class="fc" id="L194">		Category category = getCategoryById(categoryId);</span>
-<span class="fc" id="L195">		HashMap&lt;String, Double&gt; yearlyReimbursementRatioMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L186">		Category category = getCategoryById(categoryId);</span>
+<span class="fc" id="L187">		HashMap&lt;String, Double&gt; yearlyReimbursementRatioMap = new HashMap&lt;&gt;();</span>
 
-<span class="pc bpc" id="L197" title="1 of 2 branches missed.">		if (category != null) {</span>
-<span class="fc" id="L198">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategory(category);</span>
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">		if (category != null) {</span>
+<span class="fc" id="L190">			List&lt;Expense&gt; expenseList = expenseRepository.findByCategory(category);</span>
 
-<span class="fc bfc" id="L200" title="All 2 branches covered.">			for (Expense expense : expenseList) {</span>
-<span class="pc bpc" id="L201" title="1 of 4 branches missed.">				if (Boolean.TRUE.equals(expense.getIsReported()) &amp;&amp; expense.getDate().getYear() == year) {</span>
-<span class="fc" id="L202">					String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);</span>
-<span class="fc" id="L203">					String monthKey = year + &quot;_&quot; + month;</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">			for (Expense expense : expenseList) {</span>
+<span class="pc bpc" id="L193" title="1 of 4 branches missed.">				if (Boolean.TRUE.equals(expense.getIsReported()) &amp;&amp; expense.getDate().getYear() == year) {</span>
+<span class="fc" id="L194">					String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);</span>
+<span class="fc" id="L195">					String monthKey = year + &quot;_&quot; + month;</span>
 
-<span class="pc bpc" id="L205" title="1 of 2 branches missed.">					if (yearlyReimbursementRatioMap.containsKey(monthKey)) {</span>
-<span class="nc" id="L206">						Double totalReimbursedAmount =  yearlyReimbursementRatioMap.get(monthKey)</span>
-<span class="nc" id="L207">								+ expense.getAmountApproved();</span>
-<span class="nc" id="L208">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);</span>
-<span class="nc" id="L209">						Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">					if (yearlyReimbursementRatioMap.containsKey(monthKey)) {</span>
+<span class="nc" id="L198">						Double totalReimbursedAmount =  yearlyReimbursementRatioMap.get(monthKey)</span>
+<span class="nc" id="L199">								+ expense.getAmountApproved();</span>
+<span class="nc" id="L200">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);</span>
+<span class="nc" id="L201">						Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
-<span class="nc" id="L211">						yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);</span>
-<span class="nc" id="L212">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (double) totalNumberOfExpenses);</span>
-<span class="nc" id="L213">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);</span>
-<span class="nc" id="L214">					} else {</span>
-<span class="fc" id="L215">						yearlyReimbursementRatioMap.put(monthKey, expense.getAmountApproved());</span>
-<span class="fc" id="L216">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1.0);</span>
-<span class="fc" id="L217">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountApproved());</span>
+<span class="nc" id="L203">						yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);</span>
+<span class="nc" id="L204">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (double) totalNumberOfExpenses);</span>
+<span class="nc" id="L205">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);</span>
+<span class="nc" id="L206">					} else {</span>
+<span class="fc" id="L207">						yearlyReimbursementRatioMap.put(monthKey, expense.getAmountApproved());</span>
+<span class="fc" id="L208">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1.0);</span>
+<span class="fc" id="L209">						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountApproved());</span>
 					}
 				}
-<span class="fc" id="L220">			}</span>
+<span class="fc" id="L212">			}</span>
 		}
 
-<span class="fc" id="L223">		return yearlyReimbursementRatioMap;</span>
+<span class="fc" id="L215">		return yearlyReimbursementRatioMap;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Object&gt; getCategoryAnalyticsYearly(Long categoryId) {
-<span class="nc" id="L228">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L220">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
 
-<span class="nc" id="L230">		Category category = getCategoryById(categoryId);</span>
-<span class="nc bnc" id="L231" title="All 2 branches missed.">		if (category != null) {</span>
-<span class="nc" id="L232">			Map&lt;String, Double&gt; categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);</span>
-<span class="nc" id="L233">			HashMap&lt;String, Double&gt; yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);</span>
+<span class="nc" id="L222">		Category category = getCategoryById(categoryId);</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">		if (category != null) {</span>
+<span class="nc" id="L224">			Map&lt;String, Double&gt; categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);</span>
+<span class="nc" id="L225">			HashMap&lt;String, Double&gt; yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);</span>
 
-<span class="nc" id="L235">			analyticsData.put(&quot;categoryTotalAmountByYear&quot;, categoryTotalAmountByYear);</span>
-<span class="nc" id="L236">			analyticsData.put(&quot;yearlyReimbursementRatio&quot;, yearlyReimbursementRatio);</span>
+<span class="nc" id="L227">			analyticsData.put(&quot;categoryTotalAmountByYear&quot;, categoryTotalAmountByYear);</span>
+<span class="nc" id="L228">			analyticsData.put(&quot;yearlyReimbursementRatio&quot;, yearlyReimbursementRatio);</span>
 		}
 
-<span class="nc" id="L239">		return analyticsData;</span>
+<span class="nc" id="L231">		return analyticsData;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Object&gt; getCategoryAnalyticsMonthly(Long categoryId, Long year) {
-<span class="nc" id="L244">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L236">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
 
-<span class="nc" id="L246">		Category category = getCategoryById(categoryId);</span>
-<span class="nc bnc" id="L247" title="All 2 branches missed.">		if (category != null) {</span>
-<span class="nc" id="L248">			HashMap&lt;String, Double&gt; categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId,</span>
+<span class="nc" id="L238">		Category category = getCategoryById(categoryId);</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">		if (category != null) {</span>
+<span class="nc" id="L240">			HashMap&lt;String, Double&gt; categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId,</span>
 					year);
-<span class="nc" id="L250">			HashMap&lt;String, Double&gt; monthlyReimbursementRatio = getMonthlyReimbursementRatio(categoryId, year);</span>
+<span class="nc" id="L242">			HashMap&lt;String, Double&gt; monthlyReimbursementRatio = getMonthlyReimbursementRatio(categoryId, year);</span>
 
-<span class="nc" id="L252">			analyticsData.put(&quot;categoryTotalAmountByMonth&quot;, categoryTotalAmountByMonth);</span>
-<span class="nc" id="L253">			analyticsData.put(&quot;monthlyReimbursementRatio&quot;, monthlyReimbursementRatio);</span>
+<span class="nc" id="L244">			analyticsData.put(&quot;categoryTotalAmountByMonth&quot;, categoryTotalAmountByMonth);</span>
+<span class="nc" id="L245">			analyticsData.put(&quot;monthlyReimbursementRatio&quot;, monthlyReimbursementRatio);</span>
 		}
 
-<span class="nc" id="L256">		return analyticsData;</span>
+<span class="nc" id="L248">		return analyticsData;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Double&gt; getTotalAmountByYearForAllCategories() {
-<span class="fc" id="L261">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true, false);</span>
-<span class="fc" id="L262">		HashMap&lt;String, Double&gt; result = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L253">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true, false);</span>
+<span class="fc" id="L254">		HashMap&lt;String, Double&gt; result = new HashMap&lt;&gt;();</span>
 
-<span class="fc bfc" id="L264" title="All 2 branches covered.">		if (expenses == null) {</span>
-<span class="fc" id="L265">			throw new NullPointerException(&quot;expenses is null&quot;);</span>
-		}
+<span class="fc bfc" id="L256" title="All 2 branches covered.">		for (Expense expense : expenses) {</span>
+<span class="fc" id="L257">			LocalDate expenseDate = expense.getDate();</span>
+<span class="fc" id="L258">			String year = String.valueOf(expenseDate.getYear());</span>
+<span class="fc" id="L259">			Double amount = expense.getAmount();</span>
 
-<span class="fc bfc" id="L268" title="All 2 branches covered.">		for (Expense expense : expenses) {</span>
-<span class="fc" id="L269">			LocalDate expenseDate = expense.getDate();</span>
-
-<span class="fc" id="L271">			String year = String.valueOf(expenseDate.getYear());</span>
-<span class="fc" id="L272">			Double amount = expense.getAmount();</span>
-
-<span class="pc bpc" id="L274" title="1 of 2 branches missed.">			if (result.containsKey(year)) {</span>
-<span class="nc" id="L275">				Double previousAmount = result.get(year);</span>
-<span class="nc" id="L276">				result.put(year, previousAmount + amount);</span>
-<span class="nc" id="L277">			} else {</span>
-<span class="fc" id="L278">				result.put(year, amount);</span>
+<span class="pc bpc" id="L261" title="1 of 2 branches missed.">			if (result.containsKey(year)) {</span>
+<span class="nc" id="L262">				Double previousAmount = result.get(year);</span>
+<span class="nc" id="L263">				result.put(year, previousAmount + amount);</span>
+<span class="nc" id="L264">			} else {</span>
+<span class="fc" id="L265">				result.put(year, amount);</span>
 			}
-<span class="fc" id="L280">		}</span>
+<span class="fc" id="L267">		}</span>
 
-<span class="fc" id="L282">		return result;</span>
+<span class="fc" id="L269">		return result;</span>
 	}
-
 
 	@Override
 	public HashMap&lt;String, Double&gt; getTotalAmountByMonthForAllCategories(Long year) {
-<span class="nc" id="L288">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true, false);</span>
-<span class="nc" id="L289">		HashMap&lt;String, Double&gt; result = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L274">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true, false);</span>
+<span class="nc" id="L275">		HashMap&lt;String, Double&gt; result = new HashMap&lt;&gt;();</span>
 
-<span class="nc bnc" id="L291" title="All 2 branches missed.">		for (Expense expense : expenses) {</span>
-<span class="nc" id="L292">			LocalDate expenseDate = expense.getDate();</span>
-<span class="nc bnc" id="L293" title="All 2 branches missed.">			if (expenseDate.getYear() == year) {</span>
-<span class="nc" id="L294">				String monthYear = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);</span>
-<span class="nc" id="L295">				Double amount = expense.getAmount();</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">		for (Expense expense : expenses) {</span>
+<span class="nc" id="L278">			LocalDate expenseDate = expense.getDate();</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">			if (expenseDate.getYear() == year) {</span>
+<span class="nc" id="L280">				String monthYear = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);</span>
+<span class="nc" id="L281">				Double amount = expense.getAmount();</span>
 
-<span class="nc bnc" id="L297" title="All 2 branches missed.">				if (result.containsKey(monthYear)) {</span>
-<span class="nc" id="L298">					Double previousAmount = result.get(monthYear);</span>
-<span class="nc" id="L299">					result.put(monthYear, previousAmount + amount);</span>
-<span class="nc" id="L300">				} else {</span>
-<span class="nc" id="L301">					result.put(monthYear, amount);</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">				if (result.containsKey(monthYear)) {</span>
+<span class="nc" id="L284">					Double previousAmount = result.get(monthYear);</span>
+<span class="nc" id="L285">					result.put(monthYear, previousAmount + amount);</span>
+<span class="nc" id="L286">				} else {</span>
+<span class="nc" id="L287">					result.put(monthYear, amount);</span>
 				}
 			}
-<span class="nc" id="L304">		}</span>
+<span class="nc" id="L290">		}</span>
 
-<span class="nc" id="L306">		return result;</span>
+<span class="nc" id="L292">		return result;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Double&gt; getYearlyReimbursementRatioForAllCategories() {
-<span class="fc" id="L311">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true, false);</span>
-<span class="fc" id="L312">		HashMap&lt;String, Double&gt; yearlyReimbursementRatioMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L297">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true, false);</span>
+<span class="fc" id="L298">		HashMap&lt;String, Double&gt; yearlyReimbursementRatioMap = new HashMap&lt;&gt;();</span>
 
-<span class="pc bpc" id="L314" title="1 of 2 branches missed.">		if (expenses != null) { // Check if expenses is not null</span>
-<span class="fc bfc" id="L315" title="All 2 branches covered.">			for (Expense expense : expenses) {</span>
-<span class="fc" id="L316">				LocalDate expenseDate = expense.getDate();</span>
-<span class="pc bpc" id="L317" title="1 of 2 branches missed.">				if (expenseDate != null) { // Check if expenseDate is not null</span>
-<span class="fc" id="L318">					String year = String.valueOf(expenseDate.getYear());</span>
-<span class="fc" id="L319">					double amountApproved = expense.getAmountApproved();</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">		for (Expense expense : expenses) {</span>
+<span class="fc" id="L301">			String year = String.valueOf(expense.getDate().getYear());</span>
 
-<span class="pc bpc" id="L321" title="1 of 2 branches missed.">					if (yearlyReimbursementRatioMap.containsKey(year)) {</span>
-<span class="nc" id="L322">						double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + amountApproved;</span>
-<span class="nc" id="L323">						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);</span>
-<span class="nc" id="L324">						double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
+<span class="pc bpc" id="L303" title="1 of 2 branches missed.">			if (yearlyReimbursementRatioMap.containsKey(year)) {</span>
+<span class="nc" id="L304">				double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year) + expense.getAmountApproved();</span>
+<span class="nc" id="L305">				int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);</span>
+<span class="nc" id="L306">				double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
-<span class="nc" id="L326">						yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);</span>
-<span class="nc" id="L327">						yearlyReimbursementRatioMap.put(year + CONSTANT2, (double) totalNumberOfExpenses);</span>
-<span class="nc" id="L328">						yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
-<span class="nc" id="L329">					} else {</span>
-<span class="fc" id="L330">						yearlyReimbursementRatioMap.put(year, amountApproved);</span>
-<span class="fc" id="L331">						yearlyReimbursementRatioMap.put(year + CONSTANT2, 1.0);</span>
-<span class="fc" id="L332">						yearlyReimbursementRatioMap.put(year + CONSTANT1, amountApproved);</span>
-					}
-				}
-<span class="fc" id="L335">			}</span>
-<span class="fc bfc" id="L336" title="All 2 branches covered.">			for (String yearKey : yearlyReimbursementRatioMap.keySet()) {</span>
-<span class="fc bfc" id="L337" title="All 2 branches covered.">				if (!yearKey.contains(&quot;_&quot;)) {</span>
-<span class="fc" id="L338">					String year = yearKey;</span>
-<span class="fc" id="L339">					Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year);</span>
-<span class="fc" id="L340">					Double totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + CONSTANT2));</span>
-<span class="fc" id="L341">					double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
-<span class="fc" id="L342">					yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
-				}
-<span class="fc" id="L344">			}</span>
-		}
+<span class="nc" id="L308">				yearlyReimbursementRatioMap.put(year, totalReimbursedAmount);</span>
+<span class="nc" id="L309">				yearlyReimbursementRatioMap.put(year + CONSTANT2, (double) totalNumberOfExpenses);</span>
+<span class="nc" id="L310">				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
+<span class="nc" id="L311">			} else {</span>
+<span class="fc" id="L312">				yearlyReimbursementRatioMap.put(year, expense.getAmountApproved());</span>
+<span class="fc" id="L313">				yearlyReimbursementRatioMap.put(year + CONSTANT2, 1.0);</span>
+<span class="fc" id="L314">				yearlyReimbursementRatioMap.put(year + CONSTANT1, expense.getAmountApproved());</span>
+			}
+<span class="fc" id="L316">		}</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">		for (String yearKey : yearlyReimbursementRatioMap.keySet()) {</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">			if (!yearKey.contains(&quot;_&quot;)) {</span>
+<span class="fc" id="L319">				String year = yearKey;</span>
+<span class="fc" id="L320">				Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year);</span>
+<span class="fc" id="L321">				Double totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + CONSTANT2));</span>
+<span class="fc" id="L322">				double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
+<span class="fc" id="L323">				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);</span>
+			}
+<span class="fc" id="L325">		}</span>
 
-<span class="fc" id="L347">		return yearlyReimbursementRatioMap;</span>
+<span class="fc" id="L327">		return yearlyReimbursementRatioMap;</span>
 	}
-
 
 	@Override
 	public HashMap&lt;String, Double&gt; getMonthlyReimbursementRatioForAllCategories(Long year) {
-<span class="nc" id="L353">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true, false);</span>
-<span class="nc" id="L354">		HashMap&lt;String, Double&gt; monthlyReimbursementRatioMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L332">		List&lt;Expense&gt; expenses = expenseRepository.findByIsReportedAndIsHidden(true, false);</span>
+<span class="nc" id="L333">		HashMap&lt;String, Double&gt; monthlyReimbursementRatioMap = new HashMap&lt;&gt;();</span>
 
-<span class="nc bnc" id="L356" title="All 2 branches missed.">		for (Expense expense : expenses) {</span>
-<span class="nc" id="L357">			int expenseYear = expense.getDate().getYear();</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">		for (Expense expense : expenses) {</span>
+<span class="nc" id="L336">			int expenseYear = expense.getDate().getYear();</span>
 
-<span class="nc bnc" id="L359" title="All 2 branches missed.">			if (expenseYear == year) {</span>
-<span class="nc" id="L360">				String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);</span>
-<span class="nc" id="L361">				String monthKey = year + &quot;_&quot; + month;</span>
-<span class="nc bnc" id="L362" title="All 2 branches missed.">				if (monthlyReimbursementRatioMap.containsKey(monthKey)) {</span>
-<span class="nc" id="L363">					Double totalReimbursedAmount = monthlyReimbursementRatioMap.get(monthKey)</span>
-<span class="nc" id="L364">							+ expense.getAmountApproved();</span>
-<span class="nc" id="L365">					double totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);</span>
-<span class="nc" id="L366">					Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
+<span class="nc bnc" id="L338" title="All 2 branches missed.">			if (expenseYear == year) {</span>
+<span class="nc" id="L339">				String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);</span>
+<span class="nc" id="L340">				String monthKey = year + &quot;_&quot; + month;</span>
+<span class="nc bnc" id="L341" title="All 2 branches missed.">				if (monthlyReimbursementRatioMap.containsKey(monthKey)) {</span>
+<span class="nc" id="L342">					Double totalReimbursedAmount = monthlyReimbursementRatioMap.get(monthKey)</span>
+<span class="nc" id="L343">							+ expense.getAmountApproved();</span>
+<span class="nc" id="L344">					double totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);</span>
+<span class="nc" id="L345">					Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;</span>
 
-<span class="nc" id="L368">					monthlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);</span>
-<span class="nc" id="L369">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2,totalNumberOfExpenses);</span>
-<span class="nc" id="L370">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);</span>
-<span class="nc" id="L371">				} else {</span>
-<span class="nc" id="L372">					monthlyReimbursementRatioMap.put(monthKey, expense.getAmountApproved());</span>
-<span class="nc" id="L373">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1.0);</span>
-<span class="nc" id="L374">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountApproved());</span>
+<span class="nc" id="L347">					monthlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);</span>
+<span class="nc" id="L348">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2,totalNumberOfExpenses);</span>
+<span class="nc" id="L349">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);</span>
+<span class="nc" id="L350">				} else {</span>
+<span class="nc" id="L351">					monthlyReimbursementRatioMap.put(monthKey, expense.getAmountApproved());</span>
+<span class="nc" id="L352">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1.0);</span>
+<span class="nc" id="L353">					monthlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountApproved());</span>
 				}
 			}
-<span class="nc" id="L377">		}</span>
+<span class="nc" id="L356">		}</span>
 
-<span class="nc" id="L379">		return monthlyReimbursementRatioMap;</span>
+<span class="nc" id="L358">		return monthlyReimbursementRatioMap;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Object&gt; getYearlyCategoryAnalyticsForAllCategories() {
-<span class="nc" id="L384">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L363">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
 
-<span class="nc" id="L386">		HashMap&lt;String, Double&gt; totalAmountByYear = getTotalAmountByYearForAllCategories();</span>
-<span class="nc" id="L387">		HashMap&lt;String, Double&gt; yearlyReimbursementRatio = getYearlyReimbursementRatioForAllCategories();</span>
+<span class="nc" id="L365">		HashMap&lt;String, Double&gt; totalAmountByYear = getTotalAmountByYearForAllCategories();</span>
+<span class="nc" id="L366">		HashMap&lt;String, Double&gt; yearlyReimbursementRatio = getYearlyReimbursementRatioForAllCategories();</span>
 
-<span class="nc" id="L389">		analyticsData.put(&quot;categoryTotalAmountByYear&quot;, totalAmountByYear);</span>
-<span class="nc" id="L390">		analyticsData.put(&quot;yearlyReimbursementRatio&quot;, yearlyReimbursementRatio);</span>
+<span class="nc" id="L368">		analyticsData.put(&quot;categoryTotalAmountByYear&quot;, totalAmountByYear);</span>
+<span class="nc" id="L369">		analyticsData.put(&quot;yearlyReimbursementRatio&quot;, yearlyReimbursementRatio);</span>
 
-<span class="nc" id="L392">		return analyticsData;</span>
+<span class="nc" id="L371">		return analyticsData;</span>
 	}
 
 	@Override
 	public HashMap&lt;String, Object&gt; getMonthlyCategoryAnalyticsForAllCategories(Long year) {
-<span class="nc" id="L397">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L398">		HashMap&lt;String, Double&gt; categoryTotalAmountByMonth = getTotalAmountByMonthForAllCategories(year);</span>
-<span class="nc" id="L399">		HashMap&lt;String, Double&gt; monthlyReimbursementRatio = getMonthlyReimbursementRatioForAllCategories(year);</span>
+<span class="nc" id="L376">		HashMap&lt;String, Object&gt; analyticsData = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L377">		HashMap&lt;String, Double&gt; categoryTotalAmountByMonth = getTotalAmountByMonthForAllCategories(year);</span>
+<span class="nc" id="L378">		HashMap&lt;String, Double&gt; monthlyReimbursementRatio = getMonthlyReimbursementRatioForAllCategories(year);</span>
 
-<span class="nc" id="L401">		analyticsData.put(&quot;categoryTotalAmountByMonth&quot;, categoryTotalAmountByMonth);</span>
-<span class="nc" id="L402">		analyticsData.put(&quot;monthlyReimbursementRatio&quot;, monthlyReimbursementRatio);</span>
-<span class="nc" id="L403">		return analyticsData;</span>
+<span class="nc" id="L380">		analyticsData.put(&quot;categoryTotalAmountByMonth&quot;, categoryTotalAmountByMonth);</span>
+<span class="nc" id="L381">		analyticsData.put(&quot;monthlyReimbursementRatio&quot;, monthlyReimbursementRatio);</span>
+<span class="nc" id="L382">		return analyticsData;</span>
 	}
 
 }

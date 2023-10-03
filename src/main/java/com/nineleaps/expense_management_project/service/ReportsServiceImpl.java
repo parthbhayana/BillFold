@@ -55,17 +55,15 @@ public class ReportsServiceImpl implements IReportsService {
     private static final String CONSTANT9 = " is not Submitted!";
     private static final String CONSTANT10="Submitted you an expense report.";
 
-
-
     @Override
     public Set<Reports> getAllReports(Long employeeId) {
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
 
         if (employeeOptional.isPresent()) {
             Employee employee = employeeOptional.get();
-            Set<Reports> reportsList = new HashSet<>();
-            Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated"); // Sort by dateCreated in descending order
+            Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
             List<Expense> expenses = expenseRepository.findByEmployeeAndIsHidden(employee, false, sort);
+            Set<Reports> reportsList = new HashSet<>();
 
             for (Expense expense : expenses) {
                 Reports reports = expense.getReports();
@@ -76,10 +74,10 @@ public class ReportsServiceImpl implements IReportsService {
 
             return reportsList;
         } else {
-            throw new ObjectNotFoundException("Employee not found with ID: " + employeeId, "Employee");
+
+            return Collections.emptySet();
         }
     }
-
 
     @Override
     public Reports getReportById(Long reportId) {

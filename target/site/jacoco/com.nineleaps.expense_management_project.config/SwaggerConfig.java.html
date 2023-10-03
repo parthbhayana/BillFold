@@ -19,50 +19,45 @@ import java.util.List;
 <span class="fc" id="L19">public class SwaggerConfig {</span>
     @Bean
     public Docket api() {
-        // Create a new instance of the Swagger Docket
-<span class="fc" id="L23">        return new Docket(DocumentationType.SWAGGER_2)</span>
-<span class="fc" id="L24">                .select()</span>
-<span class="fc" id="L25">                .paths(PathSelectors.any()) // Define to select all paths</span>
-<span class="fc" id="L26">                .apis(RequestHandlerSelectors.basePackage(&quot;com.nineleaps.expense_management_project&quot;)) // Define the base package for API controllers</span>
-<span class="fc" id="L27">                .build()</span>
-<span class="fc" id="L28">                .securitySchemes(Arrays.asList(apiKey())) // Configure security scheme</span>
-<span class="fc" id="L29">                .securityContexts(Arrays.asList(securityContext())) // Configure security context</span>
-<span class="fc" id="L30">                .apiInfo(apiInfo()) // Configure API information</span>
-<span class="fc" id="L31">                .pathMapping(&quot;/&quot;) // Define path mapping</span>
-<span class="fc" id="L32">                .useDefaultResponseMessages(false) // Disable default response messages</span>
-<span class="fc" id="L33">                .directModelSubstitute(LocalDate.class, String.class) // Substitute LocalDate with String</span>
-<span class="fc" id="L34">                .genericModelSubstitutes(ResponseEntity.class); // Substitute ResponseEntity in models</span>
+<span class="fc" id="L22">        return new Docket(DocumentationType.SWAGGER_2)</span>
+<span class="fc" id="L23">                .select()</span>
+<span class="fc" id="L24">                .paths(PathSelectors.any())</span>
+<span class="fc" id="L25">                .apis(RequestHandlerSelectors.basePackage(&quot;com.nineleaps.expense_management_project&quot;))</span>
+<span class="fc" id="L26">                .build()</span>
+<span class="fc" id="L27">                .securitySchemes(List.of(apiKey()))</span>
+<span class="fc" id="L28">                .securityContexts(Collections.singletonList(securityContext()))</span>
+<span class="fc" id="L29">                .apiInfo(apiInfo())</span>
+<span class="fc" id="L30">                .pathMapping(&quot;/&quot;)</span>
+<span class="fc" id="L31">                .useDefaultResponseMessages(false)</span>
+<span class="fc" id="L32">                .directModelSubstitute(LocalDate.class, String.class)</span>
+<span class="fc" id="L33">                .genericModelSubstitutes(ResponseEntity.class);</span>
     }
 
-    // Define an API key for JWT authorization
     private ApiKey apiKey() {
-<span class="fc" id="L39">        return new ApiKey(&quot;JWT&quot;, &quot;Authorization&quot;, &quot;header&quot;);</span>
+<span class="fc" id="L37">        return new ApiKey(&quot;JWT&quot;, &quot;Authorization&quot;, &quot;header&quot;);</span>
     }
 
-    // Define a security context for JWT
     private SecurityContext securityContext() {
-<span class="fc" id="L44">        return SecurityContext.builder().securityReferences(defaultAuth()).build();</span>
+<span class="fc" id="L41">        return SecurityContext.builder().securityReferences(defaultAuth()).build();</span>
     }
 
-    // Define default authorization with a global scope
     private List&lt;SecurityReference&gt; defaultAuth() {
-<span class="fc" id="L49">        AuthorizationScope authorizationScope = new AuthorizationScope(&quot;global&quot;, &quot;accessEverything&quot;);</span>
-<span class="fc" id="L50">        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];</span>
-<span class="fc" id="L51">        authorizationScopes[0] = authorizationScope;</span>
-<span class="fc" id="L52">        return Arrays.asList(new SecurityReference(&quot;JWT&quot;, authorizationScopes));</span>
+<span class="fc" id="L45">        AuthorizationScope authorizationScope = new AuthorizationScope(&quot;global&quot;, &quot;accessEverything&quot;);</span>
+<span class="fc" id="L46">        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];</span>
+<span class="fc" id="L47">        authorizationScopes[0] = authorizationScope;</span>
+<span class="fc" id="L48">        return List.of(new SecurityReference(&quot;JWT&quot;, authorizationScopes));</span>
     }
 
-    // Define API information
     public ApiInfo apiInfo() {
-<span class="fc" id="L57">        return new ApiInfo(</span>
-                &quot;BillFold&quot;, // Title
-                &quot;&quot;, // Description
-                &quot;&quot;, // Version
-                &quot;&quot;, // Terms of Service URL
-                new Contact(&quot;&quot;, &quot;&quot;, &quot;&quot;), // Contact information
-                &quot;&quot;, // License
-                &quot;&quot;, // License URL
-<span class="fc" id="L65">                Collections.emptyList() // Vendor extensions</span>
+<span class="fc" id="L52">        return new ApiInfo(</span>
+                &quot;BillFold&quot;,
+                &quot;&quot;,
+                &quot;&quot;,
+                &quot;&quot;,
+                new Contact(&quot;&quot;, &quot;&quot;, &quot;&quot;),
+                &quot;&quot;,
+                &quot;&quot;,
+<span class="fc" id="L60">                Collections.emptyList()</span>
         );
     }
 }

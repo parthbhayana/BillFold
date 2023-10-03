@@ -41,25 +41,25 @@ public class UserController {
 
 <span class="fc" id="L42">    }</span>
 
-    // Endpoint to get a list of all user details
     @GetMapping(&quot;/listTheUser&quot;)
     public List&lt;Employee&gt; getAllUserDetails() {
-<span class="nc" id="L47">        return employeeService.getAllUser();</span>
+<span class="nc" id="L46">        return employeeService.getAllUser();</span>
     }
 
-    // Endpoint to send user profile data
     @SuppressWarnings(&quot;unchecked&quot;)
     @GetMapping(&quot;/getProfileData&quot;)
     public ResponseEntity&lt;JSONObject&gt; sendData(HttpServletRequest request) {
-<span class="nc" id="L54">        String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
-<span class="nc" id="L55">        String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
-<span class="nc" id="L56">        DecodedJWT decodedAccessToken = JWT.decode(token);</span>
-<span class="nc" id="L57">        String employeeEmailFromToken = decodedAccessToken.getSubject();</span>
-<span class="nc" id="L58">        Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);</span>
-<span class="nc" id="L59">        Long employeeId = employee1.getEmployeeId();</span>
-<span class="nc" id="L60">        String email = employee1.getEmployeeEmail();</span>
-<span class="nc" id="L61">        String firstName = employee1.getFirstName();</span>
-<span class="nc" id="L62">        String lastName = employee1.getLastName();</span>
+<span class="nc" id="L52">        String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
+<span class="nc" id="L53">        String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
+<span class="nc" id="L54">        DecodedJWT decodedAccessToken = JWT.decode(token);</span>
+<span class="nc" id="L55">        String employeeEmailFromToken = decodedAccessToken.getSubject();</span>
+<span class="nc" id="L56">        Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);</span>
+<span class="nc" id="L57">        Long employeeId = employee1.getEmployeeId();</span>
+<span class="nc" id="L58">        String email = employee1.getEmployeeEmail();</span>
+<span class="nc" id="L59">        String firstName = employee1.getFirstName();</span>
+<span class="nc" id="L60">        String lastName = employee1.getLastName();</span>
+        @SuppressWarnings(&quot;unused&quot;)
+
 <span class="nc" id="L63">        String imageUrl = employee1.getImageUrl();</span>
 <span class="nc" id="L64">        JSONObject responsejson = new JSONObject();</span>
 <span class="nc" id="L65">        responsejson.put(&quot;employeeId&quot;, employeeId);</span>
@@ -70,22 +70,21 @@ public class UserController {
 <span class="nc" id="L70">        return ResponseEntity.ok(responsejson);</span>
     }
 
-    // Endpoint to insert or update user data and generate JWT tokens
     @PostMapping(&quot;/theProfile&quot;)
     public ResponseEntity&lt;JwtUtil.TokenResponse&gt; insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response)
             throws MessagingException {
-<span class="nc" id="L77">        Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (employee == null) {</span>
-<span class="nc" id="L79">            employeeService.insertUser(userDTO);</span>
-<span class="nc" id="L80">            employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());</span>
-<span class="nc" id="L81">            String email = employee.getEmployeeEmail();</span>
-<span class="nc" id="L82">            emailService.welcomeEmail(email);</span>
-<span class="nc" id="L83">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
+<span class="nc" id="L76">        Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (employee == null) {</span>
+<span class="nc" id="L78">            employeeService.insertUser(userDTO);</span>
+<span class="nc" id="L79">            employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());</span>
+<span class="nc" id="L80">            String email = employee.getEmployeeEmail();</span>
+<span class="nc" id="L81">            emailService.welcomeEmail(email);</span>
+<span class="nc" id="L82">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
 
         } else {
-<span class="nc" id="L86">            String email = employee.getEmployeeEmail();</span>
-<span class="nc" id="L87">            employeeService.updateUser(userDTO);</span>
-<span class="nc" id="L88">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
+<span class="nc" id="L85">            String email = employee.getEmployeeEmail();</span>
+<span class="nc" id="L86">            employeeService.updateUser(userDTO);</span>
+<span class="nc" id="L87">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
 
         }
     }

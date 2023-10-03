@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExcelGeneratorReportsServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.service</a> &gt; <span class="el_source">ExcelGeneratorReportsServiceImpl.java</span></div><h1>ExcelGeneratorReportsServiceImpl.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import javax.activation.DataSource;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -25,8 +23,7 @@ import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ReportsRepository;
 
 @Service
-
-<span class="fc" id="L29">public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsService {</span>
+<span class="fc" id="L26">public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsService {</span>
 
     @Autowired
     ReportsRepository reportRepository;
@@ -39,343 +36,152 @@ import com.nineleaps.expense_management_project.repository.ReportsRepository;
 
     @Autowired
     EmployeeRepository employeeRepository;
-    private static final String CONSTANT1 = &quot;Sl.no.&quot;;
-    private static final String CONSTANT3 = &quot;Employee Official Id&quot;;
-    private static final String CONSTANT2 = &quot;Employee Email&quot;;
-    private static final String CONSTANT4 = &quot;Employee Name&quot;;
-    private static final String CONSTANT5 = &quot;Report Id&quot;;
-    private static final String CONSTANT6 = &quot;Report Name&quot;;
-    private static final String CONSTANT7 = &quot;submitted on&quot;;
-    private static final String CONSTANT8 = &quot;Month&quot;;
-    private static final String CONSTANT9 = &quot;Approved on&quot;;
-    private static final String CONSTANT10 = &quot;Approved by&quot;;
-    private static final String CONSTANT11 = &quot;Total Amount(INR)&quot;;
-    private static final String CONSTANT12 = &quot;Status&quot;;
+
+<span class="fc" id="L40">    private static final String[] COLUMN_HEADERS = {</span>
+            &quot;Sl.no.&quot;,
+            &quot;Employee Email&quot;,
+            &quot;Employee Official Id&quot;,
+            &quot;Employee Name&quot;,
+            &quot;Report Id&quot;,
+            &quot;Report Name&quot;,
+            &quot;submitted on&quot;,
+            &quot;Month&quot;,
+            &quot;Approved on&quot;,
+            &quot;Approved by&quot;,
+            &quot;Total Amount(INR)&quot;,
+            &quot;Status&quot;
+    };
 
     @Override
     public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate,
                                             StatusExcel status) throws Exception {
+<span class="nc" id="L58">        List&lt;Reports&gt; reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);</span>
 
-<span class="nc" id="L59">        List&lt;Reports&gt; reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);</span>
-
-<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (reportlist.isEmpty()) {</span>
-<span class="nc" id="L62">            return &quot;No data available for the selected period.So, Email can't be sent!&quot;;</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (reportlist.isEmpty()) {</span>
+<span class="nc" id="L61">            return &quot;No data available for the selected period. So, Email can't be sent!&quot;;</span>
         }
 
-<span class="nc" id="L65">        ByteArrayOutputStream excelStream = new ByteArrayOutputStream();</span>
-<span class="nc" id="L66">        generateExcel(excelStream, startDate, endDate, status);</span>
-<span class="nc" id="L67">        byte[] excelBytes = excelStream.toByteArray();</span>
+<span class="nc" id="L64">        ByteArrayOutputStream excelStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L65">        generateExcel(excelStream, startDate, endDate, status, reportlist);</span>
+<span class="nc" id="L66">        byte[] excelBytes = excelStream.toByteArray();</span>
 
-<span class="nc" id="L69">        Employee financeAdmin = employeeRepository.findByRole(&quot;FINANCE_ADMIN&quot;);</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (financeAdmin == null) {</span>
-<span class="nc" id="L71">            throw new IllegalStateException(&quot;Finance admin cannot found. So, Email can't be send&quot;);</span>
+<span class="nc" id="L68">        Employee financeAdmin = employeeRepository.findByRole(&quot;FINANCE_ADMIN&quot;);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (financeAdmin == null) {</span>
+<span class="nc" id="L70">            throw new IllegalStateException(&quot;Finance admin cannot be found. So, Email can't be sent&quot;);</span>
         }
 
-<span class="nc" id="L74">        boolean emailSent = sendEmailWithAttachment(financeAdmin.getEmployeeEmail(), &quot;BillFold:Excel Report&quot;,</span>
+<span class="nc" id="L73">        boolean emailSent = sendEmailWithAttachment(financeAdmin.getEmployeeEmail(), &quot;BillFold:Excel Report&quot;,</span>
                 &quot;Please find the attached Excel report.&quot;, excelBytes, &quot;report.xls&quot;);
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (emailSent) {</span>
-<span class="nc" id="L77">            return &quot;Email sent successfully!&quot;;</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (emailSent) {</span>
+<span class="nc" id="L76">            return &quot;Email sent successfully!&quot;;</span>
         } else {
-<span class="nc" id="L79">            return &quot;Email not sent&quot;;</span>
+<span class="nc" id="L78">            return &quot;Email not sent&quot;;</span>
         }
     }
 
+
+
     @Override
     public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate,
-                              StatusExcel status) throws Exception {
+                              StatusExcel status, List&lt;Reports&gt; reportlist) throws Exception{
 
-<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (status == StatusExcel.ALL) {</span>
-<span class="nc" id="L88">            List&lt;Reports&gt; reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);</span>
-<span class="nc" id="L89">            HSSFWorkbook workbook = new HSSFWorkbook();</span>
-<span class="nc" id="L90">            HSSFSheet sheet = workbook.createSheet(&quot;Billfold_All_reports_Pending_Reimbursed&quot;);</span>
-<span class="nc" id="L91">            HSSFRow row = sheet.createRow(0);</span>
+<span class="nc" id="L88">        try (HSSFWorkbook workbook = new HSSFWorkbook()) {</span>
+<span class="nc" id="L89">            HSSFSheet sheet = workbook.createSheet(&quot;Billfold_All_reports&quot;);</span>
 
-<span class="nc" id="L93">            row.createCell(0).setCellValue(CONSTANT1);</span>
-<span class="nc" id="L94">            row.createCell(1).setCellValue(CONSTANT2);</span>
-<span class="nc" id="L95">            row.createCell(2).setCellValue(CONSTANT3);</span>
-<span class="nc" id="L96">            row.createCell(3).setCellValue(CONSTANT4);</span>
-<span class="nc" id="L97">            row.createCell(4).setCellValue(CONSTANT5);</span>
-<span class="nc" id="L98">            row.createCell(5).setCellValue(CONSTANT6);</span>
-<span class="nc" id="L99">            row.createCell(6).setCellValue(CONSTANT7);</span>
-<span class="nc" id="L100">            row.createCell(7).setCellValue(CONSTANT8);</span>
-<span class="nc" id="L101">            row.createCell(8).setCellValue(CONSTANT9);</span>
-<span class="nc" id="L102">            row.createCell(9).setCellValue(CONSTANT10);</span>
-<span class="nc" id="L103">            row.createCell(10).setCellValue(CONSTANT11);</span>
-<span class="nc" id="L104">            row.createCell(11).setCellValue(CONSTANT12);</span>
-<span class="nc" id="L105">            int dataRowIndex = 1;</span>
-<span class="nc" id="L106">            int sl = 1;</span>
 
-<span class="nc bnc" id="L108" title="All 2 branches missed.">            for (Reports report : reportlist) {</span>
-
-<span class="nc" id="L110">                HSSFRow dataRow = sheet.createRow(dataRowIndex);</span>
-<span class="nc" id="L111">                dataRow.createCell(0).setCellValue(sl);</span>
-<span class="nc" id="L112">                dataRow.createCell(1).setCellValue(report.getEmployeeMail());</span>
-<span class="nc" id="L113">                Long id = report.getReportId();</span>
-<span class="nc" id="L114">                List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(id);</span>
-
-<span class="nc bnc" id="L116" title="All 2 branches missed.">                if (!expenseList.isEmpty()) {</span>
-<span class="nc" id="L117">                    Expense expense = expenseList.get(0);</span>
-<span class="nc" id="L118">                    Employee employee = expense.getEmployee();</span>
-<span class="nc" id="L119">                    dataRow.createCell(2).setCellValue(employee.getOfficialEmployeeId());</span>
-<span class="nc" id="L120">                    dataRow.createCell(3).setCellValue(employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
-<span class="nc" id="L121">                    dataRow.createCell(4).setCellValue(report.getReportId());</span>
-<span class="nc" id="L122">                    dataRow.createCell(5).setCellValue(report.getReportTitle());</span>
-<span class="nc" id="L123">                    dataRow.createCell(6).setCellValue(report.getDateSubmitted().toString());</span>
-<span class="nc" id="L124">                    LocalDate submittedDate = report.getDateSubmitted();</span>
-<span class="nc" id="L125">                    String monthName = submittedDate.getMonth().toString();</span>
-<span class="nc" id="L126">                    dataRow.createCell(7).setCellValue(monthName);</span>
-
-<span class="nc" id="L128">                    LocalDate managerActionDate = report.getManagerActionDate();</span>
-<span class="nc bnc" id="L129" title="All 2 branches missed.">                    if (managerActionDate != null) {</span>
-<span class="nc" id="L130">                        dataRow.createCell(8).setCellValue(managerActionDate.toString());</span>
-                    }
-<span class="nc" id="L132">                    dataRow.createCell(9).setCellValue(employee.getManagerEmail());</span>
-<span class="nc" id="L133">                    dataRow.createCell(10).setCellValue(report.getTotalAmount());</span>
-<span class="nc" id="L134">                    dataRow.createCell(11).setCellValue(String.valueOf(report.getFinanceApprovalStatus()));</span>
-
-<span class="nc" id="L136">                    dataRowIndex++;</span>
-<span class="nc" id="L137">                    sl++;</span>
-                }
-<span class="nc" id="L139">            }</span>
-<span class="nc" id="L140">            workbook.write(excelStream);</span>
-<span class="nc" id="L141">            workbook.close();</span>
-
-        }
-
-<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (status == StatusExcel.PENDING) {</span>
-<span class="nc" id="L146">            List&lt;Reports&gt; reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);</span>
-<span class="nc" id="L147">           HSSFWorkbook workbook = new HSSFWorkbook();</span>
-<span class="nc" id="L148">                HSSFSheet sheet = workbook.createSheet(&quot;Billfold_All_reports_Pending&quot;);</span>
-<span class="nc" id="L149">                HSSFRow row = sheet.createRow(0);</span>
-
-<span class="nc" id="L151">                row.createCell(0).setCellValue(CONSTANT1);</span>
-<span class="nc" id="L152">                row.createCell(1).setCellValue(CONSTANT2);</span>
-<span class="nc" id="L153">                row.createCell(2).setCellValue(CONSTANT3);</span>
-<span class="nc" id="L154">                row.createCell(3).setCellValue(CONSTANT4);</span>
-<span class="nc" id="L155">                row.createCell(4).setCellValue(CONSTANT5);</span>
-<span class="nc" id="L156">                row.createCell(5).setCellValue(CONSTANT6);</span>
-<span class="nc" id="L157">                row.createCell(6).setCellValue(CONSTANT7);</span>
-<span class="nc" id="L158">                row.createCell(7).setCellValue(CONSTANT8);</span>
-<span class="nc" id="L159">                row.createCell(8).setCellValue(CONSTANT9);</span>
-<span class="nc" id="L160">                row.createCell(9).setCellValue(CONSTANT10);</span>
-<span class="nc" id="L161">                row.createCell(10).setCellValue(CONSTANT11);</span>
-<span class="nc" id="L162">                row.createCell(11).setCellValue(CONSTANT12);</span>
-<span class="nc" id="L163">                int dataRowIndex = 1;</span>
-<span class="nc" id="L164">                int sl = 1;</span>
-
-<span class="nc bnc" id="L166" title="All 2 branches missed.">                for (Reports report : reportlist) {</span>
-<span class="nc bnc" id="L167" title="All 2 branches missed.">                    if (report.getFinanceApprovalStatus() == FinanceApprovalStatus.PENDING) {</span>
-<span class="nc" id="L168">                        HSSFRow dataRow = sheet.createRow(dataRowIndex);</span>
-<span class="nc" id="L169">                        dataRow.createCell(0).setCellValue(sl);</span>
-<span class="nc" id="L170">                        dataRow.createCell(1).setCellValue(report.getEmployeeMail());</span>
-<span class="nc" id="L171">                        Long id = report.getReportId();</span>
-<span class="nc" id="L172">                        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(id);</span>
-
-<span class="nc bnc" id="L174" title="All 2 branches missed.">                        if (!expenseList.isEmpty()) {</span>
-<span class="nc" id="L175">                            Expense expense = expenseList.get(0);</span>
-<span class="nc" id="L176">                            Employee employee = expense.getEmployee();</span>
-<span class="nc" id="L177">                            dataRow.createCell(2).setCellValue(employee.getOfficialEmployeeId());</span>
-<span class="nc" id="L178">                            dataRow.createCell(3).setCellValue(employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
-<span class="nc" id="L179">                            dataRow.createCell(4).setCellValue(report.getReportId());</span>
-<span class="nc" id="L180">                            dataRow.createCell(5).setCellValue(report.getReportTitle());</span>
-<span class="nc" id="L181">                            dataRow.createCell(6).setCellValue(report.getDateSubmitted().toString());</span>
-<span class="nc" id="L182">                            LocalDate submittedDate = report.getDateSubmitted();</span>
-<span class="nc" id="L183">                            String monthName = submittedDate.getMonth().toString();</span>
-<span class="nc" id="L184">                            dataRow.createCell(7).setCellValue(monthName);</span>
-
-<span class="nc" id="L186">                            LocalDate managerActionDate = report.getManagerActionDate();</span>
-<span class="nc bnc" id="L187" title="All 2 branches missed.">                            if (managerActionDate != null) {</span>
-<span class="nc" id="L188">                                dataRow.createCell(8).setCellValue(managerActionDate.toString());</span>
-                            }
-<span class="nc" id="L190">                            dataRow.createCell(9).setCellValue(employee.getManagerEmail());</span>
-<span class="nc" id="L191">                            dataRow.createCell(10).setCellValue(report.getTotalAmount());</span>
-<span class="nc" id="L192">                            dataRow.createCell(11).setCellValue(report.getFinanceApprovalStatus().ordinal());</span>
-
-<span class="nc" id="L194">                            dataRowIndex++;</span>
-<span class="nc" id="L195">                            sl++;</span>
-                        }
-                    }
-<span class="nc" id="L198">                }</span>
-<span class="nc" id="L199">                workbook.write(excelStream);</span>
-
+<span class="nc" id="L92">            HSSFRow headerRow = sheet.createRow(0);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            for (int i = 0; i &lt; COLUMN_HEADERS.length; i++) {</span>
+<span class="nc" id="L94">                headerRow.createCell(i).setCellValue(COLUMN_HEADERS[i]);</span>
             }
 
+<span class="nc" id="L97">            int dataRowIndex = 1;</span>
+<span class="nc" id="L98">            int sl = 1;</span>
 
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (status == StatusExcel.REIMBURSED) {</span>
-<span class="nc" id="L205">            List&lt;Reports&gt; reportlist = reportRepository.findByDateSubmittedBetween(startDate, endDate);</span>
-<span class="nc" id="L206">            try (HSSFWorkbook workbook = new HSSFWorkbook()) {</span>
-<span class="nc" id="L207">                HSSFSheet sheet = workbook.createSheet(&quot;Billfold_All_reports_Reimbursed&quot;);</span>
-<span class="nc" id="L208">                HSSFRow row = sheet.createRow(0);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">            for (Reports report : reportlist) {</span>
+<span class="nc bnc" id="L101" title="All 8 branches missed.">                if (status == StatusExcel.ALL || (status == StatusExcel.PENDING &amp;&amp; report.getFinanceApprovalStatus() == FinanceApprovalStatus.PENDING)</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                        || (status == StatusExcel.REIMBURSED &amp;&amp; report.getFinanceApprovalStatus() == FinanceApprovalStatus.REIMBURSED)) {</span>
 
+<span class="nc" id="L104">                    HSSFRow dataRow = sheet.createRow(dataRowIndex);</span>
+<span class="nc" id="L105">                    dataRow.createCell(0).setCellValue(sl);</span>
+<span class="nc" id="L106">                    dataRow.createCell(1).setCellValue(report.getEmployeeMail());</span>
+<span class="nc" id="L107">                    Long id = report.getReportId();</span>
+<span class="nc" id="L108">                    List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(id);</span>
 
-<span class="nc" id="L211">                row.createCell(0).setCellValue(CONSTANT1);</span>
-<span class="nc" id="L212">                row.createCell(1).setCellValue(CONSTANT2);</span>
-<span class="nc" id="L213">                row.createCell(2).setCellValue(CONSTANT3);</span>
-<span class="nc" id="L214">                row.createCell(3).setCellValue(CONSTANT4);</span>
-<span class="nc" id="L215">                row.createCell(4).setCellValue(CONSTANT5);</span>
-<span class="nc" id="L216">                row.createCell(5).setCellValue(CONSTANT6);</span>
-<span class="nc" id="L217">                row.createCell(6).setCellValue(CONSTANT7);</span>
-<span class="nc" id="L218">                row.createCell(7).setCellValue(CONSTANT8);</span>
-<span class="nc" id="L219">                row.createCell(8).setCellValue(CONSTANT9);</span>
-<span class="nc" id="L220">                row.createCell(9).setCellValue(CONSTANT10);</span>
-<span class="nc" id="L221">                row.createCell(10).setCellValue(CONSTANT11);</span>
-<span class="nc" id="L222">                row.createCell(11).setCellValue(CONSTANT12);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                    if (!expenseList.isEmpty()) {</span>
+<span class="nc" id="L111">                        Expense expense = expenseList.get(0);</span>
+<span class="nc" id="L112">                        Employee employee = expense.getEmployee();</span>
+<span class="nc" id="L113">                        dataRow.createCell(2).setCellValue(employee.getOfficialEmployeeId());</span>
+<span class="nc" id="L114">                        dataRow.createCell(3).setCellValue(employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
+<span class="nc" id="L115">                        dataRow.createCell(4).setCellValue(report.getReportId());</span>
+<span class="nc" id="L116">                        dataRow.createCell(5).setCellValue(report.getReportTitle());</span>
+<span class="nc" id="L117">                        dataRow.createCell(6).setCellValue(report.getDateSubmitted().toString());</span>
+<span class="nc" id="L118">                        LocalDate submittedDate = report.getDateSubmitted();</span>
+<span class="nc" id="L119">                        String monthName = submittedDate.getMonth().toString();</span>
+<span class="nc" id="L120">                        dataRow.createCell(7).setCellValue(monthName);</span>
 
-<span class="nc" id="L224">                int dataRowIndex = 1;</span>
-<span class="nc" id="L225">                int sl = 1;</span>
-<span class="nc bnc" id="L226" title="All 2 branches missed.">                for (Reports report : reportlist) {</span>
-<span class="nc bnc" id="L227" title="All 2 branches missed.">                    if (report.getFinanceApprovalStatus() == FinanceApprovalStatus.REIMBURSED) {</span>
-<span class="nc" id="L228">                        HSSFRow dataRow = sheet.createRow(dataRowIndex);</span>
-<span class="nc" id="L229">                        dataRow.createCell(0).setCellValue(sl);</span>
-<span class="nc" id="L230">                        dataRow.createCell(1).setCellValue(report.getEmployeeMail());</span>
-<span class="nc" id="L231">                        Long id = report.getReportId();</span>
-<span class="nc" id="L232">                        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(id);</span>
-
-<span class="nc bnc" id="L234" title="All 2 branches missed.">                        if (!expenseList.isEmpty()) {</span>
-<span class="nc" id="L235">                            Expense expense = expenseList.get(0);</span>
-<span class="nc" id="L236">                            Employee employee = expense.getEmployee();</span>
-<span class="nc" id="L237">                            dataRow.createCell(2).setCellValue(employee.getOfficialEmployeeId());</span>
-<span class="nc" id="L238">                            dataRow.createCell(3).setCellValue(employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
-<span class="nc" id="L239">                            dataRow.createCell(4).setCellValue(report.getReportId());</span>
-<span class="nc" id="L240">                            dataRow.createCell(5).setCellValue(report.getReportTitle());</span>
-<span class="nc" id="L241">                            dataRow.createCell(6).setCellValue(report.getDateSubmitted().toString());</span>
-<span class="nc" id="L242">                            LocalDate submittedDate = report.getDateSubmitted();</span>
-<span class="nc" id="L243">                            String monthName = submittedDate.getMonth().toString();</span>
-<span class="nc" id="L244">                            dataRow.createCell(7).setCellValue(monthName);</span>
-
-<span class="nc" id="L246">                            LocalDate managerActionDate = report.getManagerActionDate();</span>
-<span class="nc bnc" id="L247" title="All 2 branches missed.">                            if (managerActionDate != null) {</span>
-<span class="nc" id="L248">                                dataRow.createCell(8).setCellValue(managerActionDate.toString());</span>
-                            }
-<span class="nc" id="L250">                            dataRow.createCell(9).setCellValue(employee.getManagerEmail());</span>
-<span class="nc" id="L251">                            dataRow.createCell(10).setCellValue(report.getTotalAmount());</span>
-<span class="nc" id="L252">                            dataRow.createCell(11).setCellValue(&quot;Reimbursed&quot;);</span>
-
-<span class="nc" id="L254">                            dataRowIndex++;</span>
-<span class="nc" id="L255">                            sl++;</span>
+<span class="nc" id="L122">                        LocalDate managerActionDate = report.getManagerActionDate();</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                        if (managerActionDate != null) {</span>
+<span class="nc" id="L124">                            dataRow.createCell(8).setCellValue(managerActionDate.toString());</span>
                         }
+<span class="nc" id="L126">                        dataRow.createCell(9).setCellValue(employee.getManagerEmail());</span>
+<span class="nc" id="L127">                        dataRow.createCell(10).setCellValue(report.getTotalAmount());</span>
+<span class="nc" id="L128">                        dataRow.createCell(11).setCellValue(String.valueOf(report.getFinanceApprovalStatus()));</span>
+
+<span class="nc" id="L130">                        dataRowIndex++;</span>
+<span class="nc" id="L131">                        sl++;</span>
                     }
-<span class="nc" id="L258">                }</span>
-<span class="nc" id="L259">                workbook.write(excelStream);</span>
+                }
+<span class="nc" id="L134">            }</span>
 
-<span class="nc" id="L261">            }  catch (IOException e) {</span>
-
-<span class="nc" id="L263">            e.printStackTrace();</span>
-<span class="nc" id="L264">        }</span>
+<span class="nc" id="L136">            workbook.write(excelStream);</span>
         }
-<span class="nc" id="L266">    }</span>
+<span class="nc" id="L138">    }</span>
 
     @Override
     public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
                                            String attachmentFilename) {
         try {
-<span class="nc" id="L272">            MimeMessage message = mailSender.createMimeMessage();</span>
-<span class="nc" id="L273">            MimeMessageHelper helper = new MimeMessageHelper(message, true);</span>
+<span class="nc" id="L144">            MimeMessage message = mailSender.createMimeMessage();</span>
+<span class="nc" id="L145">            MimeMessageHelper helper = new MimeMessageHelper(message, true);</span>
 
-<span class="nc" id="L275">            helper.setTo(toEmail);</span>
-<span class="nc" id="L276">            helper.setSubject(subject);</span>
-<span class="nc" id="L277">            helper.setText(body);</span>
+<span class="nc" id="L147">            helper.setTo(toEmail);</span>
+<span class="nc" id="L148">            helper.setSubject(subject);</span>
+<span class="nc" id="L149">            helper.setText(body);</span>
 
-<span class="nc" id="L279">            DataSource attachment = new ByteArrayDataSource(attachmentContent, &quot;application/vnd.ms-excel&quot;);</span>
-<span class="nc" id="L280">            helper.addAttachment(attachmentFilename, attachment);</span>
+<span class="nc" id="L151">            DataSource attachment = new ByteArrayDataSource(attachmentContent, &quot;application/vnd.ms-excel&quot;);</span>
+<span class="nc" id="L152">            helper.addAttachment(attachmentFilename, attachment);</span>
 
-<span class="nc" id="L282">            mailSender.send(message);</span>
-<span class="nc" id="L283">            return true;</span>
-<span class="nc" id="L284">        } catch (Exception e) {</span>
-<span class="nc" id="L285">            e.printStackTrace();</span>
-<span class="nc" id="L286">            return false;</span>
-
+<span class="nc" id="L154">            mailSender.send(message);</span>
+<span class="nc" id="L155">            return true;</span>
+<span class="nc" id="L156">        } catch (Exception e) {</span>
+<span class="nc" id="L157">            return false;</span>
         }
     }
 
     @Override
-    public String reimburseAndGenerateExcel(HttpServletResponse response) throws IOException {
-<span class="nc" id="L293">        List&lt;Reports&gt; reportlist = reportRepository.findByfinanceApprovalStatus(FinanceApprovalStatus.APPROVED);</span>
+    public String reimburseAndGenerateExcel(HttpServletResponse response) throws Exception {
+<span class="nc" id="L163">        List&lt;Reports&gt; reportlist = reportRepository.findByfinanceApprovalStatus(FinanceApprovalStatus.APPROVED);</span>
 
-<span class="nc bnc" id="L295" title="All 2 branches missed.">        if (reportlist.isEmpty()) {</span>
-<span class="nc" id="L296">            return &quot;No data available for the selected period.So, Email can't be sent!&quot;;</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (reportlist.isEmpty()) {</span>
+<span class="nc" id="L166">            return &quot;No data available for the selected period. So, Email can't be sent!&quot;;</span>
         }
 
-<span class="nc" id="L299">        ByteArrayOutputStream excelStream = new ByteArrayOutputStream();</span>
-<span class="nc" id="L300">        generateExcelAndReimburse(excelStream);</span>
-<span class="nc" id="L301">        byte[] excelBytes = excelStream.toByteArray();</span>
+<span class="nc" id="L169">        ByteArrayOutputStream excelStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L170">        generateExcel(excelStream, LocalDate.now(), LocalDate.now(), StatusExcel.REIMBURSED, reportlist);</span>
+<span class="nc" id="L171">        byte[] excelBytes = excelStream.toByteArray();</span>
 
-<span class="nc" id="L303">        Employee financeAdmin = employeeRepository.findByRole(&quot;FINANCE_ADMIN&quot;);</span>
-<span class="nc bnc" id="L304" title="All 2 branches missed.">        if (financeAdmin == null) {</span>
-<span class="nc" id="L305">            throw new IllegalStateException(&quot;Finance admin cannot found. So, Email can't be send&quot;);</span>
+<span class="nc" id="L173">        Employee financeAdmin = employeeRepository.findByRole(&quot;FINANCE_ADMIN&quot;);</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (financeAdmin == null) {</span>
+<span class="nc" id="L175">            throw new IllegalStateException(&quot;Finance admin cannot be found. So, Email can't be sent&quot;);</span>
         }
 
-<span class="nc" id="L308">        boolean emailSent = sendEmailWithAttachment(financeAdmin.getEmployeeEmail(), &quot;BillFold:Excel Report&quot;,</span>
+<span class="nc" id="L178">        boolean emailSent = sendEmailWithAttachment(financeAdmin.getEmployeeEmail(), &quot;BillFold:Excel Report&quot;,</span>
                 &quot;Please find the attached Excel report.&quot;, excelBytes, &quot;report.xls&quot;);
-<span class="nc bnc" id="L310" title="All 2 branches missed.">        if (emailSent) {</span>
-<span class="nc" id="L311">            return &quot;Email sent successfully!&quot;;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (emailSent) {</span>
+<span class="nc" id="L181">            return &quot;Email sent successfully!&quot;;</span>
         } else {
-<span class="nc" id="L313">            return &quot;Email not sent&quot;;</span>
+<span class="nc" id="L183">            return &quot;Email not sent&quot;;</span>
         }
     }
-
-    public void generateExcelAndReimburse(ByteArrayOutputStream excelStream) throws IOException {
-
-<span class="nc" id="L319">        List&lt;Reports&gt; reportlist = reportRepository.findByfinanceApprovalStatus(FinanceApprovalStatus.APPROVED);</span>
-<span class="nc" id="L320">        try (HSSFWorkbook workbook = new HSSFWorkbook()) {</span>
-<span class="nc" id="L321">            HSSFSheet sheet = workbook.createSheet(&quot;Billfold_All_reports_Pending_Reimbursed&quot;);</span>
-<span class="nc" id="L322">            HSSFRow row = sheet.createRow(0);</span>
-<span class="nc" id="L323">            row.createCell(0).setCellValue(CONSTANT1);</span>
-<span class="nc" id="L324">        row.createCell(1).setCellValue(CONSTANT2);</span>
-<span class="nc" id="L325">        row.createCell(2).setCellValue(CONSTANT3);</span>
-<span class="nc" id="L326">        row.createCell(3).setCellValue(CONSTANT4);</span>
-<span class="nc" id="L327">        row.createCell(4).setCellValue(CONSTANT5);</span>
-<span class="nc" id="L328">        row.createCell(5).setCellValue(CONSTANT6);</span>
-<span class="nc" id="L329">        row.createCell(6).setCellValue(CONSTANT7);</span>
-<span class="nc" id="L330">        row.createCell(7).setCellValue(CONSTANT8);</span>
-<span class="nc" id="L331">        row.createCell(8).setCellValue(CONSTANT9);</span>
-<span class="nc" id="L332">        row.createCell(9).setCellValue(CONSTANT10);</span>
-<span class="nc" id="L333">        row.createCell(10).setCellValue(CONSTANT11);</span>
-
-<span class="nc" id="L335">        int dataRowIndex = 1;</span>
-<span class="nc" id="L336">        int sl = 1;</span>
-
-<span class="nc bnc" id="L338" title="All 2 branches missed.">        for (Reports report : reportlist) {</span>
-
-<span class="nc" id="L340">            HSSFRow dataRow = sheet.createRow(dataRowIndex);</span>
-<span class="nc" id="L341">            dataRow.createCell(0).setCellValue(sl);</span>
-<span class="nc" id="L342">            dataRow.createCell(1).setCellValue(report.getEmployeeMail());</span>
-<span class="nc" id="L343">            Long id = report.getReportId();</span>
-<span class="nc" id="L344">            List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(id);</span>
-
-<span class="nc bnc" id="L346" title="All 2 branches missed.">            if (!expenseList.isEmpty()) {</span>
-<span class="nc" id="L347">                Expense expense = expenseList.get(0);</span>
-<span class="nc" id="L348">                Employee employee = expense.getEmployee();</span>
-<span class="nc" id="L349">                dataRow.createCell(2).setCellValue(employee.getOfficialEmployeeId());</span>
-<span class="nc" id="L350">                dataRow.createCell(3).setCellValue(employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
-<span class="nc" id="L351">                dataRow.createCell(4).setCellValue(report.getReportId());</span>
-<span class="nc" id="L352">                dataRow.createCell(5).setCellValue(report.getReportTitle());</span>
-<span class="nc" id="L353">                dataRow.createCell(6).setCellValue(report.getDateSubmitted().toString());</span>
-<span class="nc" id="L354">                LocalDate submittedDate = report.getDateSubmitted();</span>
-<span class="nc" id="L355">                String monthName = submittedDate.getMonth().toString();</span>
-<span class="nc" id="L356">                dataRow.createCell(7).setCellValue(monthName);</span>
-
-<span class="nc" id="L358">                LocalDate managerActionDate = report.getManagerActionDate();</span>
-<span class="nc bnc" id="L359" title="All 2 branches missed.">                if (managerActionDate != null) {</span>
-<span class="nc" id="L360">                    dataRow.createCell(8).setCellValue(managerActionDate.toString());</span>
-                }
-<span class="nc" id="L362">                dataRow.createCell(9).setCellValue(employee.getManagerEmail());</span>
-<span class="nc" id="L363">                dataRow.createCell(10).setCellValue(report.getTotalApprovedAmount());</span>
-
-<span class="nc" id="L365">                dataRowIndex++;</span>
-<span class="nc" id="L366">                sl++;</span>
-
-            }
-<span class="nc" id="L369">            report.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);</span>
-<span class="nc" id="L370">            reportRepository.save(report);</span>
-<span class="nc" id="L371">        }</span>
-<span class="nc" id="L372">        workbook.write(excelStream);</span>
-<span class="nc" id="L373">        } catch (IOException e) {</span>
-
-<span class="nc" id="L375">            e.printStackTrace();</span>
-<span class="nc" id="L376">        }</span>
-
-<span class="nc" id="L378">    }</span>
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

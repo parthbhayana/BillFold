@@ -1,23 +1,20 @@
 package com.nineleaps.expense_management_project.config;
 
+import io.jsonwebtoken.Claims;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import io.jsonwebtoken.Claims;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class JwtFilterTest {
@@ -55,10 +52,10 @@ public class JwtFilterTest {
 
         // Verify that the Authentication object is set in the security context
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        assertNotNull(authentication);
-        assertEquals("test@example.com", authentication.getPrincipal());
-        assertNull(authentication.getCredentials());
-        assertTrue(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+        Assertions.assertNotNull(authentication);
+        Assertions.assertEquals("test@example.com", authentication.getPrincipal());
+        Assertions.assertNull(authentication.getCredentials());
+        Assertions.assertTrue(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
 
         // Verify that the filter chain is continued
         verify(filterChain).doFilter(request, response);
@@ -78,7 +75,7 @@ public class JwtFilterTest {
 
         // Verify that no Authentication object is set in the security context
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        assertNull(authentication);
+        Assertions.assertNull(authentication);
 
         // Verify that the filter chain is continued
         verify(filterChain).doFilter(request, response);
@@ -94,7 +91,7 @@ public class JwtFilterTest {
 
         // Verify that no Authentication object is set in the security context
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        assertNull(authentication);
+        Assertions.assertNull(authentication);
 
         // Verify that the filter chain is continued
         verify(filterChain).doFilter(request, response);

@@ -6,20 +6,18 @@ import com.nineleaps.expense_management_project.repository.CategoryRepository;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ExpenseRepository;
 import com.nineleaps.expense_management_project.repository.ReportsRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,13 +34,6 @@ public class ExpenseServiceImplTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    @Mock
-    private ReportsRepository reportsRepository;
-
-
-
-    @Mock
-    private ReportsServiceImpl reportService;
     @Mock
     private EmployeeServiceImpl employeeService;
 
@@ -168,7 +159,7 @@ public class ExpenseServiceImplTest {
         List<Expense> result = expenseService.getExpenseByEmployeeId(employeeId);
 
         // Verify that the method returned an empty list
-        assertTrue(result.isEmpty());
+        Assertions.assertTrue(result.isEmpty());
     }
 
     @Test
@@ -210,7 +201,7 @@ public class ExpenseServiceImplTest {
         List<Expense> result = expenseService.getExpensesByEmployeeId(employeeId);
 
         // Verify that the result is an empty list
-        assertTrue(result.isEmpty());
+        Assertions.assertTrue(result.isEmpty());
     }
 
     @Test

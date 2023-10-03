@@ -114,7 +114,7 @@ public class Reports {
 <span class="fc" id="L114">    }</span>
 
     public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
-                   String managerComments, String financeComments) {
+                   String managerComments, String financeComments ) {
 <span class="fc" id="L118">        super();</span>
 <span class="fc" id="L119">        this.reportId = reportId;</span>
 <span class="fc" id="L120">        this.employeeId = employeeId;</span>
@@ -124,202 +124,203 @@ public class Reports {
 <span class="fc" id="L124">        this.managerComments = managerComments;</span>
 <span class="fc" id="L125">        this.financeComments = financeComments;</span>
 
-<span class="fc" id="L127">    }</span>
 
+
+<span class="fc" id="L129">    }</span>
     public Reports(Boolean isSubmitted, String employeeMail,
                    LocalDate dateSubmitted, LocalDate dateCreated, LocalDate managerActionDate, LocalDate financeActionDate,
-<span class="fc" id="L131">                   float totalAmount){</span>
-<span class="fc" id="L132">        this.isSubmitted = isSubmitted;</span>
-<span class="fc" id="L133">        this.employeeMail = employeeMail;</span>
-<span class="fc" id="L134">        this.dateSubmitted = dateSubmitted;</span>
-<span class="fc" id="L135">        this.dateCreated = dateCreated;</span>
-<span class="fc" id="L136">        this.managerActionDate = managerActionDate;</span>
-<span class="fc" id="L137">        this.financeActionDate = financeActionDate;</span>
-<span class="fc" id="L138">        this.totalAmount = totalAmount;</span>
-
-
+                   float totalAmount){
+<span class="fc" id="L133">        super();</span>
+<span class="fc" id="L134">        this.isSubmitted = isSubmitted;</span>
+<span class="fc" id="L135">        this.employeeMail = employeeMail;</span>
+<span class="fc" id="L136">        this.dateSubmitted = dateSubmitted;</span>
+<span class="fc" id="L137">        this.dateCreated = dateCreated;</span>
+<span class="fc" id="L138">        this.managerActionDate = managerActionDate;</span>
+<span class="fc" id="L139">        this.financeActionDate = financeActionDate;</span>
+<span class="fc" id="L140">        this.totalAmount = totalAmount;</span>
 <span class="fc" id="L141">    }</span>
 
     public Reports(float totalApprovedAmount, Boolean isHidden, String managerEmail,
                    String managerReviewTime, FinanceApprovalStatus financeApprovalStatus,
-<span class="nc" id="L145">                   ManagerApprovalStatus managerApprovalStatus, Long expensesCount){</span>
-<span class="nc" id="L146">        this.totalApprovedAmount = totalApprovedAmount;</span>
-<span class="nc" id="L147">        this.isHidden = isHidden;</span>
-<span class="nc" id="L148">        this.managerEmail = managerEmail;</span>
-<span class="nc" id="L149">        this.managerReviewTime = managerReviewTime;</span>
-<span class="nc" id="L150">        this.financeApprovalStatus = financeApprovalStatus;</span>
-<span class="nc" id="L151">        this.managerApprovalStatus = managerApprovalStatus;</span>
-<span class="nc" id="L152">        this.expensesCount = expensesCount;</span>
-
-<span class="nc" id="L154">    }</span>
+                   ManagerApprovalStatus managerApprovalStatus, Long expensesCount)
+    {
+<span class="nc" id="L147">        super();</span>
+<span class="nc" id="L148">        this.totalApprovedAmount = totalApprovedAmount;</span>
+<span class="nc" id="L149">        this.isHidden = isHidden;</span>
+<span class="nc" id="L150">        this.managerEmail = managerEmail;</span>
+<span class="nc" id="L151">        this.managerReviewTime = managerReviewTime;</span>
+<span class="nc" id="L152">        this.financeApprovalStatus = financeApprovalStatus;</span>
+<span class="nc" id="L153">        this.managerApprovalStatus = managerApprovalStatus;</span>
+<span class="nc" id="L154">        this.expensesCount = expensesCount;</span>
+<span class="nc" id="L155">    }</span>
 
     public Long getReportId() {
-<span class="fc" id="L157">        return reportId;</span>
+<span class="fc" id="L158">        return reportId;</span>
     }
 
     public void setReportId(Long reportId) {
-<span class="fc" id="L161">        this.reportId = reportId;</span>
-<span class="fc" id="L162">    }</span>
+<span class="fc" id="L162">        this.reportId = reportId;</span>
+<span class="fc" id="L163">    }</span>
 
     public Long getEmployeeId() {
-<span class="fc" id="L165">        return employeeId;</span>
+<span class="fc" id="L166">        return employeeId;</span>
     }
 
     public void setEmployeeId(Long employeeId) {
-<span class="fc" id="L169">        this.employeeId = employeeId;</span>
-<span class="fc" id="L170">    }</span>
+<span class="fc" id="L170">        this.employeeId = employeeId;</span>
+<span class="fc" id="L171">    }</span>
 
     public String getEmployeeName() {
-<span class="fc" id="L173">        return employeeName;</span>
+<span class="fc" id="L174">        return employeeName;</span>
     }
 
     public void setEmployeeName(String employeeName) {
-<span class="fc" id="L177">        this.employeeName = employeeName;</span>
-<span class="fc" id="L178">    }</span>
+<span class="fc" id="L178">        this.employeeName = employeeName;</span>
+<span class="fc" id="L179">    }</span>
 
     public String getOfficialEmployeeId() {
-<span class="fc" id="L181">        return officialEmployeeId;</span>
+<span class="fc" id="L182">        return officialEmployeeId;</span>
     }
 
     public void setOfficialEmployeeId(String officialEmployeeId) {
-<span class="fc" id="L185">        this.officialEmployeeId = officialEmployeeId;</span>
-<span class="fc" id="L186">    }</span>
+<span class="fc" id="L186">        this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L187">    }</span>
 
     public String getReportTitle() {
-<span class="fc" id="L189">        return reportTitle;</span>
+<span class="fc" id="L190">        return reportTitle;</span>
     }
 
     public void setReportTitle(String reportTitle) {
-<span class="fc" id="L193">        this.reportTitle = reportTitle;</span>
-<span class="fc" id="L194">    }</span>
+<span class="fc" id="L194">        this.reportTitle = reportTitle;</span>
+<span class="fc" id="L195">    }</span>
 
     public String getManagerComments() {
-<span class="fc" id="L197">        return managerComments;</span>
+<span class="fc" id="L198">        return managerComments;</span>
     }
 
     public void setManagerComments(String managerComments) {
-<span class="fc" id="L201">        this.managerComments = managerComments;</span>
-<span class="fc" id="L202">    }</span>
+<span class="fc" id="L202">        this.managerComments = managerComments;</span>
+<span class="fc" id="L203">    }</span>
 
     public String getFinanceComments() {
-<span class="fc" id="L205">        return financeComments;</span>
+<span class="fc" id="L206">        return financeComments;</span>
     }
 
     public void setFinanceComments(String financeComments) {
-<span class="fc" id="L209">        this.financeComments = financeComments;</span>
-<span class="fc" id="L210">    }</span>
+<span class="fc" id="L210">        this.financeComments = financeComments;</span>
+<span class="fc" id="L211">    }</span>
 
     public Boolean getIsSubmitted() {
-<span class="fc" id="L213">        return isSubmitted;</span>
+<span class="fc" id="L214">        return isSubmitted;</span>
     }
 
     public void setIsSubmitted(Boolean isSubmitted) {
-<span class="fc" id="L217">        this.isSubmitted = isSubmitted;</span>
-<span class="fc" id="L218">    }</span>
+<span class="fc" id="L218">        this.isSubmitted = isSubmitted;</span>
+<span class="fc" id="L219">    }</span>
 
     public String getEmployeeMail() {
-<span class="fc" id="L221">        return employeeMail;</span>
+<span class="fc" id="L222">        return employeeMail;</span>
     }
 
     public void setEmployeeMail(String employeeMail) {
-<span class="fc" id="L225">        this.employeeMail = employeeMail;</span>
-<span class="fc" id="L226">    }</span>
+<span class="fc" id="L226">        this.employeeMail = employeeMail;</span>
+<span class="fc" id="L227">    }</span>
 
     public LocalDate getDateSubmitted() {
-<span class="fc" id="L229">        return dateSubmitted;</span>
+<span class="fc" id="L230">        return dateSubmitted;</span>
     }
 
     public void setDateSubmitted(LocalDate dateSubmitted) {
-<span class="fc" id="L233">        this.dateSubmitted = dateSubmitted;</span>
-<span class="fc" id="L234">    }</span>
+<span class="fc" id="L234">        this.dateSubmitted = dateSubmitted;</span>
+<span class="fc" id="L235">    }</span>
 
     public LocalDate getDateCreated() {
-<span class="fc" id="L237">        return dateCreated;</span>
+<span class="fc" id="L238">        return dateCreated;</span>
     }
 
     public void setDateCreated(LocalDate dateCreated) {
-<span class="fc" id="L241">        this.dateCreated = dateCreated;</span>
-<span class="fc" id="L242">    }</span>
+<span class="fc" id="L242">        this.dateCreated = dateCreated;</span>
+<span class="fc" id="L243">    }</span>
 
     public LocalDate getManagerActionDate() {
-<span class="fc" id="L245">        return managerActionDate;</span>
+<span class="fc" id="L246">        return managerActionDate;</span>
     }
 
     public void setManagerActionDate(LocalDate managerActionDate) {
-<span class="fc" id="L249">        this.managerActionDate = managerActionDate;</span>
-<span class="fc" id="L250">    }</span>
+<span class="fc" id="L250">        this.managerActionDate = managerActionDate;</span>
+<span class="fc" id="L251">    }</span>
 
     public LocalDate getFinanceActionDate() {
-<span class="fc" id="L253">        return financeActionDate;</span>
+<span class="fc" id="L254">        return financeActionDate;</span>
     }
 
     public void setFinanceActionDate(LocalDate financeActionDate) {
-<span class="fc" id="L257">        this.financeActionDate = financeActionDate;</span>
-<span class="fc" id="L258">    }</span>
+<span class="fc" id="L258">        this.financeActionDate = financeActionDate;</span>
+<span class="fc" id="L259">    }</span>
 
     public float getTotalAmount() {
-<span class="fc" id="L261">        return totalAmount;</span>
+<span class="fc" id="L262">        return totalAmount;</span>
     }
 
     public void setTotalAmount(float totalAmount) {
-<span class="fc" id="L265">        this.totalAmount = totalAmount;</span>
-<span class="fc" id="L266">    }</span>
+<span class="fc" id="L266">        this.totalAmount = totalAmount;</span>
+<span class="fc" id="L267">    }</span>
 
     public float getTotalApprovedAmount() {
-<span class="fc" id="L269">        return totalApprovedAmount;</span>
+<span class="fc" id="L270">        return totalApprovedAmount;</span>
     }
 
     public void setTotalApprovedAmount(float totalApprovedAmount) {
-<span class="fc" id="L273">        this.totalApprovedAmount = totalApprovedAmount;</span>
-<span class="fc" id="L274">    }</span>
+<span class="fc" id="L274">        this.totalApprovedAmount = totalApprovedAmount;</span>
+<span class="fc" id="L275">    }</span>
 
     public Boolean getIsHidden() {
-<span class="fc" id="L277">        return isHidden;</span>
+<span class="fc" id="L278">        return isHidden;</span>
     }
 
     public void setIsHidden(Boolean isHidden) {
-<span class="fc" id="L281">        this.isHidden = isHidden;</span>
-<span class="fc" id="L282">    }</span>
+<span class="fc" id="L282">        this.isHidden = isHidden;</span>
+<span class="fc" id="L283">    }</span>
 
     public String getManagerEmail() {
-<span class="fc" id="L285">        return managerEmail;</span>
+<span class="fc" id="L286">        return managerEmail;</span>
     }
 
     public void setManagerEmail(String managerEmail) {
-<span class="fc" id="L289">        this.managerEmail = managerEmail;</span>
-<span class="fc" id="L290">    }</span>
+<span class="fc" id="L290">        this.managerEmail = managerEmail;</span>
+<span class="fc" id="L291">    }</span>
 
     public String getManagerReviewTime() {
-<span class="fc" id="L293">        return managerReviewTime;</span>
+<span class="fc" id="L294">        return managerReviewTime;</span>
     }
 
     public void setManagerReviewTime(String managerReviewTime) {
-<span class="fc" id="L297">        this.managerReviewTime = managerReviewTime;</span>
-<span class="fc" id="L298">    }</span>
+<span class="fc" id="L298">        this.managerReviewTime = managerReviewTime;</span>
+<span class="fc" id="L299">    }</span>
 
     public FinanceApprovalStatus getFinanceApprovalStatus() {
-<span class="fc" id="L301">        return financeApprovalStatus;</span>
+<span class="fc" id="L302">        return financeApprovalStatus;</span>
     }
 
     public void setFinanceApprovalStatus(FinanceApprovalStatus financeApprovalStatus) {
-<span class="fc" id="L305">        this.financeApprovalStatus = financeApprovalStatus;</span>
-<span class="fc" id="L306">    }</span>
+<span class="fc" id="L306">        this.financeApprovalStatus = financeApprovalStatus;</span>
+<span class="fc" id="L307">    }</span>
 
     public ManagerApprovalStatus getManagerApprovalStatus() {
-<span class="fc" id="L309">        return managerApprovalStatus;</span>
+<span class="fc" id="L310">        return managerApprovalStatus;</span>
     }
 
     public void setManagerApprovalStatus(ManagerApprovalStatus managerApprovalStatus) {
-<span class="fc" id="L313">        this.managerApprovalStatus = managerApprovalStatus;</span>
-<span class="fc" id="L314">    }</span>
+<span class="fc" id="L314">        this.managerApprovalStatus = managerApprovalStatus;</span>
+<span class="fc" id="L315">    }</span>
 
     public Long getExpensesCount() {
-<span class="fc" id="L317">        return expensesCount;</span>
+<span class="fc" id="L318">        return expensesCount;</span>
     }
 
     public void setExpensesCount(Long expensesCount) {
-<span class="fc" id="L321">        this.expensesCount = expensesCount;</span>
-<span class="fc" id="L322">    }</span>
+<span class="fc" id="L322">        this.expensesCount = expensesCount;</span>
+<span class="fc" id="L323">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
