@@ -23,7 +23,7 @@ import com.nineleaps.expense_management_project.service.IExpenseService;
     @PostMapping(&quot;/insertExpenses/{employeeId}&quot;)
     public String saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
                               @RequestParam Long categoryId) throws IllegalAccessException {
-<span class="nc" id="L26">        return expenseService.addExpense(expenseDTO, employeeId, categoryId);</span>
+<span class="fc" id="L26">        return expenseService.addExpense(expenseDTO, employeeId, categoryId);</span>
     }
 
     @PostMapping(&quot;/addPotentialDuplicateExpense/{employeeId}&quot;)
@@ -34,43 +34,43 @@ import com.nineleaps.expense_management_project.service.IExpenseService;
 
     @GetMapping(&quot;/showAllExpenses&quot;)
     public List&lt;Expense&gt; getAllExpenses() {
-<span class="nc" id="L37">        return expenseService.getAllExpenses();</span>
+<span class="fc" id="L37">        return expenseService.getAllExpenses();</span>
     }
 
     @GetMapping(&quot;/findExpense/{expenseId}&quot;)
     public Expense getExpenseById(@PathVariable Long expenseId) {
-<span class="nc" id="L42">        return expenseService.getExpenseById(expenseId);</span>
+<span class="fc" id="L42">        return expenseService.getExpenseById(expenseId);</span>
     }
 
     @PutMapping(&quot;/updateExpenses/{expenseId}&quot;)
     public Expense updateExpenses(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long expenseId) {
-<span class="nc" id="L47">        return expenseService.updateExpenses(expenseDTO, expenseId);</span>
+<span class="fc" id="L47">        return expenseService.updateExpenses(expenseDTO, expenseId);</span>
     }
 
     @GetMapping(&quot;/getExpenseByEmployeeId/{employeeId}&quot;)
     public List&lt;Expense&gt; getExpenseByEmpId(@PathVariable Long employeeId) {
-<span class="nc" id="L52">        return expenseService.getExpenseByEmployeeId(employeeId);</span>
+<span class="fc" id="L52">        return expenseService.getExpenseByEmployeeId(employeeId);</span>
     }
 
     @GetMapping(&quot;/getExpenseByReportId/{reportId}&quot;)
     public List&lt;Expense&gt; getExpenseByReportId(@PathVariable Long reportId) {
-<span class="nc" id="L57">        return expenseService.getExpenseByReportId(reportId);</span>
+<span class="fc" id="L57">        return expenseService.getExpenseByReportId(reportId);</span>
     }
 
     @PostMapping(&quot;/removeTaggedExpense/{expenseId}&quot;)
     public Expense removeTaggedExpense(@PathVariable Long expenseId) {
-<span class="nc" id="L62">        return expenseService.removeTaggedExpense(expenseId);</span>
+<span class="fc" id="L62">        return expenseService.removeTaggedExpense(expenseId);</span>
     }
 
     @GetMapping(&quot;/getUnreportedExpensesByEmployeeId/{employeeId}&quot;)
     public List&lt;Expense&gt; getExpensesById(@PathVariable Long employeeId) {
-<span class="nc" id="L67">        return expenseService.getExpensesByEmployeeId(employeeId);</span>
+<span class="fc" id="L67">        return expenseService.getExpensesByEmployeeId(employeeId);</span>
     }
 
     @PostMapping(&quot;/hideExpense/{expenseId}&quot;)
     public void hideExpense(@PathVariable Long expenseId) {
-<span class="nc" id="L72">        expenseService.hideExpense(expenseId);</span>
-<span class="nc" id="L73">    }</span>
+<span class="fc" id="L72">        expenseService.hideExpense(expenseId);</span>
+<span class="fc" id="L73">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

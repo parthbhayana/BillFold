@@ -127,8 +127,6 @@ Nsrc/test/java/com/nineleaps/expense_management_project/dto/ExpenseDTOTest.java
 Nsrc/test/java/com/nineleaps/expense_management_project/dto/ReportsDTOTest.java,f/f/ff4c746d78ac6480ff55f5b01b6cc58432451eee
 {
 Ksrc/test/java/com/nineleaps/expense_management_project/dto/UserDTOTest.java,0/e/0efbd30b2f12cc674e1e95be667144816c25e045
-ˆ
-Xsrc/test/java/com/nineleaps/expense_management_project/service/EmployeeServiceTests.java,2/0/20e34667baeb78238c6d313d910a3474700d54f3
 ‹
 [src/test/java/com/nineleaps/expense_management_project/service/CategoryServiceImplTest.java,3/3/333ea2b86700f52e98ff0d3922ab8e4f969dad8c
 Š

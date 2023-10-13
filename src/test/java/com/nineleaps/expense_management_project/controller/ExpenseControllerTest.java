@@ -1,228 +1,487 @@
 package com.nineleaps.expense_management_project.controller;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
-import com.nineleaps.expense_management_project.entity.Expense;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.*;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nineleaps.expense_management_project.dto.ExpenseDTO;
+import com.nineleaps.expense_management_project.entity.Category;
+import com.nineleaps.expense_management_project.entity.Employee;
+import com.nineleaps.expense_management_project.entity.Expense;
+import com.nineleaps.expense_management_project.entity.FinanceApprovalStatus;
+import com.nineleaps.expense_management_project.entity.ManagerApprovalStatus;
+import com.nineleaps.expense_management_project.entity.ManagerApprovalStatusExpense;
+import com.nineleaps.expense_management_project.entity.Reports;
 import com.nineleaps.expense_management_project.service.IExpenseService;
-import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ExpenseControllerTest {
-
-    @InjectMocks
+@ContextConfiguration(classes = {ExpenseController.class})
+@ExtendWith(SpringExtension.class)
+class ExpenseControllerTest {
+    @Autowired
     private ExpenseController expenseController;
 
-    private MockMvc mockMvc;
+    @MockBean
+    private IExpenseService iExpenseService;
 
-    @Mock
-    private IExpenseService expenseService;
-
-
-
+    /**
+     * Method under test: {@link ExpenseController#addPotentialDuplicateExpense(ExpenseDTO, Long, Long)}
+     */
     @Test
-    public void testAddPotentialDuplicateExpense() {
-        // Create a sample ExpenseDTO
+    @Disabled("TODO: Complete this test")
+    void testAddPotentialDuplicateExpense() throws Exception {
+        // TODO: Complete this test.
+        //   Reason: R013 No inputs found that don't throw a trivial exception.
+        //   Diffblue Cover tried to run the arrange/act section, but the method under
+        //   test threw
+        //   com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 date/time type `java.time.LocalDate` not supported by default: add Module "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" to enable handling (through reference chain: com.nineleaps.expense_management_project.dto.ExpenseDTO["date"])
+        //       at com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:77)
+        //       at com.fasterxml.jackson.databind.SerializerProvider.reportBadDefinition(SerializerProvider.java:1276)
+        //       at com.fasterxml.jackson.databind.ser.impl.UnsupportedTypeSerializer.serialize(UnsupportedTypeSerializer.java:35)
+        //       at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:728)
+        //       at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:770)
+        //       at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:178)
+        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:480)
+        //       at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:319)
+        //       at com.fasterxml.jackson.databind.ObjectMapper._writeValueAndClose(ObjectMapper.java:4487)
+        //       at com.fasterxml.jackson.databind.ObjectMapper.writeValueAsString(ObjectMapper.java:3742)
+        //   See https://diff.blue/R013 to resolve this issue.
+
+        MockHttpServletRequestBuilder postResult = MockMvcRequestBuilders.post("/addPotentialDuplicateExpense/{employeeId}",
+                1L);
+        MockHttpServletRequestBuilder contentTypeResult = postResult.param("categoryId", String.valueOf(1L))
+                .contentType(MediaType.APPLICATION_JSON);
+
         ExpenseDTO expenseDTO = new ExpenseDTO();
-        expenseDTO.setAmount(100.0);
-        expenseDTO.setDescription("Test Expense");
-        expenseDTO.setMerchantName("Test Merchant");
-        // Set other fields as needed
-
-        // Mock the service method to return a sample Expense object
-        Expense expectedExpense = new Expense();
-        expectedExpense.setExpenseId(1L); // Set any desired fields
-
-        when(expenseService.addPotentialDuplicateExpense(expenseDTO, 1L, 2L)).thenReturn(expectedExpense);
-
-        // Call the controller method
-        Expense resultExpense = expenseController.addPotentialDuplicateExpense(expenseDTO, 1L, 2L);
-
-        // Assert that the returned Expense matches the expected Expense
-        assertEquals(expectedExpense.getExpenseId(), resultExpense.getExpenseId());
-        // Add additional assertions for other fields if needed
+        expenseDTO.setAmount(10.0d);
+        expenseDTO.setDate(LocalDate.of(1970, 1, 1));
+        expenseDTO.setDescription("The characteristics of someone or something");
+        expenseDTO.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expenseDTO.setFileName("foo.txt");
+        expenseDTO.setMerchantName("Merchant Name");
+        MockHttpServletRequestBuilder requestBuilder = contentTypeResult
+                .content((new ObjectMapper()).writeValueAsString(expenseDTO));
+        MockMvcBuilders.standaloneSetup(expenseController).build().perform(requestBuilder);
     }
 
+    /**
+     * Method under test: {@link ExpenseController#getAllExpenses()}
+     */
     @Test
-    public void testSaveExpense() throws IllegalAccessException {
-        // Create a sample ExpenseDTO
+    void testGetAllExpenses() throws Exception {
+        when(iExpenseService.getAllExpenses()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/showAllExpenses");
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
+
+    /**
+     * Method under test: {@link ExpenseController#getExpenseById(Long)}
+     */
+    @Test
+    void testGetExpenseById() throws Exception {
+        Category category = new Category();
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
+
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
+
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+
+        Expense expense = new Expense();
+        expense.setAmount(10.0d);
+        expense.setAmountApproved(10.0d);
+        expense.setCategory(category);
+        expense.setCategoryDescription("Category Description");
+        expense.setDate(LocalDate.of(1970, 1, 1));
+        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense.setDescription("The characteristics of someone or something");
+        expense.setEmployee(employee);
+        expense.setExpenseId(1L);
+        expense.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense.setFileName("foo.txt");
+        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        expense.setIsHidden(true);
+        expense.setIsReported(true);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        expense.setMerchantName("Merchant Name");
+        expense.setPotentialDuplicate(true);
+        expense.setReportTitle("Dr");
+        expense.setReports(reports);
+        when(iExpenseService.getExpenseById(Mockito.<Long>any())).thenReturn(expense);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/findExpense/{expenseId}", 1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"expenseId\":1,\"merchantName\":\"Merchant Name\",\"date\":[1970,1,1],\"dateCreated\":[1970,1,1,0,0],\"amount"
+                                        + "\":10.0,\"description\":\"The characteristics of someone or something\",\"categoryDescription\":\"Category"
+                                        + " Description\",\"isReported\":true,\"isHidden\":true,\"reportTitle\":\"Dr\",\"amountApproved\":10.0,\"financeApp"
+                                        + "rovalStatus\":\"REIMBURSED\",\"managerApprovalStatusExpense\":\"APPROVED\",\"potentialDuplicate\":true,\"file\""
+                                        + ":\"QVhBWEFYQVg=\",\"fileName\":\"foo.txt\"}"));
+    }
+
+    /**
+     * Method under test: {@link ExpenseController#updateExpenses(ExpenseDTO, Long)}
+     */
+    @Test
+    void testUpdateExpenses() throws Exception {
+        Category category = new Category();
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
+
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
+
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+
+        Expense expense = new Expense();
+        expense.setAmount(10.0d);
+        expense.setAmountApproved(10.0d);
+        expense.setCategory(category);
+        expense.setCategoryDescription("Category Description");
+        expense.setDate(LocalDate.of(1970, 1, 1));
+        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense.setDescription("The characteristics of someone or something");
+        expense.setEmployee(employee);
+        expense.setExpenseId(1L);
+        expense.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense.setFileName("foo.txt");
+        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        expense.setIsHidden(true);
+        expense.setIsReported(true);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        expense.setMerchantName("Merchant Name");
+        expense.setPotentialDuplicate(true);
+        expense.setReportTitle("Dr");
+        expense.setReports(reports);
+        when(iExpenseService.updateExpenses(Mockito.<ExpenseDTO>any(), Mockito.<Long>any())).thenReturn(expense);
+
         ExpenseDTO expenseDTO = new ExpenseDTO();
-        expenseDTO.setAmount(100.0);
-        expenseDTO.setDescription("Test Expense");
-        expenseDTO.setMerchantName("Test Merchant");
-        // Set other fields as needed
-
-        // Mock the service method to return a sample result string
-        String expectedResult = "Expense saved successfully";
-
-        when(expenseService.addExpense(expenseDTO, 1L, 2L)).thenReturn(expectedResult);
-
-        // Call the controller method
-        String result = expenseController.saveExpense(expenseDTO, 1L, 2L);
-
-        // Assert that the returned result matches the expected result
-        assertEquals(expectedResult, result);
+        expenseDTO.setAmount(10.0d);
+        expenseDTO.setDate(null);
+        expenseDTO.setDescription("The characteristics of someone or something");
+        expenseDTO.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expenseDTO.setFileName("foo.txt");
+        expenseDTO.setMerchantName("Merchant Name");
+        String content = (new ObjectMapper()).writeValueAsString(expenseDTO);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/updateExpenses/{expenseId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"expenseId\":1,\"merchantName\":\"Merchant Name\",\"date\":[1970,1,1],\"dateCreated\":[1970,1,1,0,0],\"amount"
+                                        + "\":10.0,\"description\":\"The characteristics of someone or something\",\"categoryDescription\":\"Category"
+                                        + " Description\",\"isReported\":true,\"isHidden\":true,\"reportTitle\":\"Dr\",\"amountApproved\":10.0,\"financeApp"
+                                        + "rovalStatus\":\"REIMBURSED\",\"managerApprovalStatusExpense\":\"APPROVED\",\"potentialDuplicate\":true,\"file\""
+                                        + ":\"QVhBWEFYQVg=\",\"fileName\":\"foo.txt\"}"));
     }
 
-
+    /**
+     * Method under test: {@link ExpenseController#getExpenseByReportId(Long)}
+     */
     @Test
-    public void testGetExpenseById() {
-        // Create a sample expense
-        Expense expectedExpense = new Expense();
-        expectedExpense.setExpenseId(1L);
-        // Set other fields as needed for the expense
-
-        // Mock the service method to return the sample expense when called with ID 1
-        when(expenseService.getExpenseById(1L)).thenReturn(expectedExpense);
-
-        // Call the controller method to get the expense with ID 1
-        Expense actualExpense = expenseController.getExpenseById(1L);
-
-        // Assert that the returned expense matches the expected expense
-        assertEquals(expectedExpense, actualExpense);
-
-        // Test case for a non-existent expense (ID 2)
-        when(expenseService.getExpenseById(2L)).thenReturn(null);
-
-        // Call the controller method to get an expense with a non-existent ID (ID 2)
-        Expense nonExistentExpense = expenseController.getExpenseById(2L);
-
-        // Assert that the returned expense is null
-        assertNull(nonExistentExpense);
+    void testGetExpenseByReportId() throws Exception {
+        when(iExpenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getExpenseByReportId/{reportId}", 1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ExpenseController#removeTaggedExpense(Long)}
+     */
     @Test
-    public void testUpdateExpenses() {
-        // Create a sample expense DTO with updated values
-        ExpenseDTO updatedExpenseDTO = new ExpenseDTO();
-        updatedExpenseDTO.setAmount(100.0);
-        // Set other fields as needed for the updated DTO
+    void testRemoveTaggedExpense() throws Exception {
+        Category category = new Category();
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
 
-        // Create a sample expense with the updated values
-        Expense updatedExpense = new Expense();
-        updatedExpense.setExpenseId(1L);
-        // Set other fields as needed for the updated expense
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
 
-        // Mock the service method to return the updated expense when called with the updated DTO and ID 1
-        when(expenseService.updateExpenses(updatedExpenseDTO, 1L)).thenReturn(updatedExpense);
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
 
-        // Call the controller method to update the expense with ID 1
-        Expense actualUpdatedExpense = expenseController.updateExpenses(updatedExpenseDTO, 1L);
-
-        // Assert that the returned updated expense matches the expected updated expense
-        assertEquals(updatedExpense, actualUpdatedExpense);
-
-        // Test case for updating a non-existent expense (ID 2)
-        when(expenseService.updateExpenses(updatedExpenseDTO, 2L)).thenReturn(null);
-
-        // Call the controller method to update a non-existent expense with ID 2
-        Expense nonExistentUpdatedExpense = expenseController.updateExpenses(updatedExpenseDTO, 2L);
-
-        // Assert that the returned updated expense is null
-        assertNull(nonExistentUpdatedExpense);
+        Expense expense = new Expense();
+        expense.setAmount(10.0d);
+        expense.setAmountApproved(10.0d);
+        expense.setCategory(category);
+        expense.setCategoryDescription("Category Description");
+        expense.setDate(LocalDate.of(1970, 1, 1));
+        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense.setDescription("The characteristics of someone or something");
+        expense.setEmployee(employee);
+        expense.setExpenseId(1L);
+        expense.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense.setFileName("foo.txt");
+        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        expense.setIsHidden(true);
+        expense.setIsReported(true);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        expense.setMerchantName("Merchant Name");
+        expense.setPotentialDuplicate(true);
+        expense.setReportTitle("Dr");
+        expense.setReports(reports);
+        when(iExpenseService.removeTaggedExpense(Mockito.<Long>any())).thenReturn(expense);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/removeTaggedExpense/{expenseId}",
+                1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"expenseId\":1,\"merchantName\":\"Merchant Name\",\"date\":[1970,1,1],\"dateCreated\":[1970,1,1,0,0],\"amount"
+                                        + "\":10.0,\"description\":\"The characteristics of someone or something\",\"categoryDescription\":\"Category"
+                                        + " Description\",\"isReported\":true,\"isHidden\":true,\"reportTitle\":\"Dr\",\"amountApproved\":10.0,\"financeApp"
+                                        + "rovalStatus\":\"REIMBURSED\",\"managerApprovalStatusExpense\":\"APPROVED\",\"potentialDuplicate\":true,\"file\""
+                                        + ":\"QVhBWEFYQVg=\",\"fileName\":\"foo.txt\"}"));
     }
 
+    /**
+     * Method under test: {@link ExpenseController#hideExpense(Long)}
+     */
     @Test
-    public void testGetExpenseByEmpId() {
-        // Create a sample employee ID (e.g., 1)
-        Long employeeId = 1L;
-
-        // Create a list of sample expenses for the employee with ID 1
-        List<Expense> expensesForEmployee1 = new ArrayList<>();
-        // Add sample expenses to the list
-        // You can create and add Expense objects as needed for testing
-
-        // Mock the service method to return the list of expenses for the employee with ID 1
-        when(expenseService.getExpenseByEmployeeId(employeeId)).thenReturn(expensesForEmployee1);
-
-        // Call the controller method to get expenses for the employee with ID 1
-        List<Expense> actualExpenses = expenseController.getExpenseByEmpId(employeeId);
-
-        // Assert that the returned list of expenses matches the expected list
-        assertEquals(expensesForEmployee1, actualExpenses);
+    void testHideExpense() throws Exception {
+        doNothing().when(iExpenseService).hideExpense(Mockito.<Long>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/hideExpense/{expenseId}", 1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    /**
+     * Method under test: {@link ExpenseController#hideExpense(Long)}
+     */
     @Test
-    public void testGetExpenseByReportId() {
-        // Create a sample report ID (e.g., 1)
-        Long reportId = 1L;
-
-        // Create a list of sample expenses for the report with ID 1
-        List<Expense> expensesForReport1 = new ArrayList<>();
-        // Add sample expenses to the list
-        // You can create and add Expense objects as needed for testing
-
-        // Mock the service method to return the list of expenses for the report with ID 1
-        when(expenseService.getExpenseByReportId(reportId)).thenReturn(expensesForReport1);
-
-        // Call the controller method to get expenses for the report with ID 1
-        List<Expense> actualExpenses = expenseController.getExpenseByReportId(reportId);
-
-        // Assert that the returned list of expenses matches the expected list
-        assertEquals(expensesForReport1, actualExpenses);
+    void testHideExpense2() throws Exception {
+        doNothing().when(iExpenseService).hideExpense(Mockito.<Long>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/hideExpense/{expenseId}", 1L);
+        requestBuilder.characterEncoding("Encoding");
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    /**
+     * Method under test: {@link ExpenseController#getExpenseByEmpId(Long)}
+     */
     @Test
-    public void testRemoveTaggedExpense() {
-        // Create a sample expense ID (e.g., 1)
-        Long expenseId = 1L;
-
-        // Create a sample Expense object that represents the removed expense
-        // You can customize this Expense object based on your test case
-        Expense removedExpense = new Expense();
-        removedExpense.setExpenseId(expenseId);
-
-        // Mock the service method to return the removed expense
-        when(expenseService.removeTaggedExpense(expenseId)).thenReturn(removedExpense);
-
-        // Call the controller method to remove the expense with the given ID
-        Expense actualRemovedExpense = expenseController.removeTaggedExpense(expenseId);
-
-        // Assert that the returned Expense object matches the expected removedExpense
-        assertEquals(removedExpense, actualRemovedExpense);
+    void testGetExpenseByEmpId() throws Exception {
+        when(iExpenseService.getExpenseByEmployeeId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getExpenseByEmployeeId/{employeeId}",
+                1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ExpenseController#getExpensesById(Long)}
+     */
     @Test
-    public void testGetExpensesById() {
-        // Create a sample employee ID (e.g., 1)
-        Long employeeId = 1L;
-
-        // Create a list of sample Expense objects that represent expenses for the employee
-        // You can customize this list of expenses based on your test case
-        List<Expense> expensesForEmployee = new ArrayList<>();
-
-        // Mock the service method to return the list of expenses for the employee
-        when(expenseService.getExpensesByEmployeeId(employeeId)).thenReturn(expensesForEmployee);
-
-        // Call the controller method to get expenses by employee ID
-        List<Expense> actualExpenses = expenseController.getExpensesById(employeeId);
-
-        // Assert that the returned list of Expense objects matches the expected expensesForEmployee
-        assertEquals(expensesForEmployee, actualExpenses);
+    void testGetExpensesById() throws Exception {
+        when(iExpenseService.getExpensesByEmployeeId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/getUnreportedExpensesByEmployeeId/{employeeId}", 1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ExpenseController#saveExpense(ExpenseDTO, Long, Long)}
+     */
     @Test
-    public void testHideExpense() {
-        // Create a sample expense ID (e.g., 1)
-        Long expenseId = 1L;
+    void testSaveExpense() throws Exception {
+        when(iExpenseService.addExpense(Mockito.<ExpenseDTO>any(), Mockito.<Long>any(), Mockito.<Long>any()))
+                .thenReturn("Add Expense");
 
-        // Call the controller method to hide the expense
-        expenseController.hideExpense(expenseId);
-
-        // Verify that the expenseService.hideExpense method was called with the correct expense ID
-        verify(expenseService).hideExpense(expenseId);
+        ExpenseDTO expenseDTO = new ExpenseDTO();
+        expenseDTO.setAmount(10.0d);
+        expenseDTO.setDate(null);
+        expenseDTO.setDescription("The characteristics of someone or something");
+        expenseDTO.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expenseDTO.setFileName("foo.txt");
+        expenseDTO.setMerchantName("Merchant Name");
+        String content = (new ObjectMapper()).writeValueAsString(expenseDTO);
+        MockHttpServletRequestBuilder postResult = MockMvcRequestBuilders.post("/insertExpenses/{employeeId}", 1L);
+        MockHttpServletRequestBuilder requestBuilder = postResult.param("categoryId", String.valueOf(1L))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
+                .andExpect(MockMvcResultMatchers.content().string("Add Expense"));
     }
-
-
 }

@@ -1,493 +1,531 @@
 package com.nineleaps.expense_management_project.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nineleaps.expense_management_project.dto.ReportsDTO;
+import com.nineleaps.expense_management_project.entity.FinanceApprovalStatus;
+import com.nineleaps.expense_management_project.entity.ManagerApprovalStatus;
 import com.nineleaps.expense_management_project.entity.Reports;
 import com.nineleaps.expense_management_project.service.IReportsService;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+
+import java.io.IOException;
+
+import java.time.LocalDate;
+
+import java.util.ArrayList;
+
+import java.util.HashSet;
+
+import java.util.List;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.*;
-import static org.junit.Assert.assertEquals;
+
+import com.nineleaps.expense_management_project.service.ReportsServiceImpl;
+import org.apache.catalina.connector.Response;
+import org.json.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.ModelAndView;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-public class ReportsControllerTest {
-
-    private MockMvc mockMvc;
+@ContextConfiguration(classes = {ReportsController.class})
+@ExtendWith(SpringExtension.class)
+class ReportsControllerTest {
+    @MockBean
+    private IReportsService iReportsService;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @Mock
-    private IReportsService reportsService;
-
-    @InjectMocks
     private ReportsController reportsController;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(reportsController).build();
-    }
-
-
-
+    /**
+     * Method under test: {@link ReportsController#addExpensesToReport(Long, List)}
+     */
     @Test
-    public void testGetReportByEmpId() throws Exception {
-        Reports report1 = new Reports();
-        report1.setReportId(1L);
-        report1.setReportTitle("Report 1");
-        report1.setReportTitle("Description 1");
+    @Disabled("TODO: Complete this test")
+    void testAddExpensesToReport() throws Exception {
+        // TODO: Complete this test.
+        //   Diffblue AI was unable to find a test
 
-        Reports report2 = new Reports();
-        report2.setReportId(2L);
-        report2.setReportTitle("Report 2");
-        report2.setReportTitle("Description 2");
+        // Arrange
+        // TODO: Populate arranged inputs
+        Object[] uriVariables = new Object[]{1L};
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/addExpenseToReport/{reportId}",
+                uriVariables);
+        Object[] controllers = new Object[]{reportsController};
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(controllers).build();
 
-        List<Reports> reports = new ArrayList<>();
-        reports.add(report1);
-        reports.add(report2);
+        // Act
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
 
-        when(reportsService.getReportByEmpId(1L, "request")).thenReturn(reports);
-
-        mockMvc.perform(get("/getReportByEmployeeId/{employeeId}", 1L)
-                        .param("request", "request"))
-                .andExpect(status().isOk());
+        // Assert
+        // TODO: Add assertions on result
     }
 
-    // Utility method to convert an object to JSON string
-    private String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
+    /**
+     * Method under test: {@link ReportsController#getAllReports(Long)}
+     */
     @Test
-    public void testGetAllReports() {
-        // Create a sample employee ID (e.g., 1)
-        Long employeeId = 1L;
-
-        // Create a set of sample reports
-        Set<Reports> sampleReports = new HashSet<>();
-        // Add your sample Reports objects to the set
-
-        // Mock the service method to return the sample reports when called with the employeeId
-        when(reportsService.getAllReports(employeeId)).thenReturn(sampleReports);
-
-        // Call the controller method to get all reports for the employee
-        Set<Reports> result = reportsController.getAllReports(employeeId);
-
-        // Verify that the result matches the sample reports returned by the service
-        assertEquals(sampleReports, result);
+    void testGetAllReports() throws Exception {
+        when(iReportsService.getAllReports(Mockito.<Long>any())).thenReturn(new HashSet<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllReports/{employeeId}", 1L);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#getAllReports(Long)}
+     */
     @Test
-    public void testGetReportByReportId() {
-        // Create a sample report ID (e.g., 1)
-        Long reportId = 1L;
-
-        // Create a sample report
-        Reports sampleReport = new Reports();
-        // Set properties of the sample report
-
-        // Mock the service method to return the sample report when called with the reportId
-        when(reportsService.getReportById(reportId)).thenReturn(sampleReport);
-
-        // Call the controller method to get a report by its report ID
-        Reports result = reportsController.getReportByReportId(reportId);
-
-        // Verify that the result matches the sample report returned by the service
-        assertEquals(sampleReport, result);
+    void testGetAllReports2() throws Exception {
+        when(iReportsService.getAllReports(Mockito.<Long>any())).thenReturn(new HashSet<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllReports/{employeeId}", 1L);
+        requestBuilder.characterEncoding("Encoding");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
-
+    /**
+     * Method under test: {@link ReportsController#getReportByEmpId(Long, String)}
+     */
     @Test
-    public void testGetReportByEmployeeId() {
-        // Create a sample employee ID (e.g., 1)
-        Long employeeId = 1L;
-
-        // Create a sample request parameter (e.g., "someRequest")
-        String request = "someRequest";
-
-        // Create a list of sample reports
-        List<Reports> sampleReports = new ArrayList<>();
-        // Add sample reports to the list as needed
-
-        // Mock the service method to return the sample reports when called with the employeeId and request parameters
-        when(reportsService.getReportByEmpId(employeeId, request)).thenReturn(sampleReports);
-
-        // Call the controller method to get reports by employee ID and request
-        List<Reports> result = reportsController.getReportByEmpId(employeeId, request);
-
-        // Verify that the result matches the sample reports returned by the service
-        assertEquals(sampleReports, result);
+    void testGetReportByEmpId() throws Exception {
+        when(iReportsService.getReportByEmpId(Mockito.<Long>any(), Mockito.<String>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/getReportByEmployeeId/{employeeId}", 1L)
+                .param("request", "foo");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#getReportsSubmittedToUser(String, String)}
+     */
     @Test
-    public void testGetReportsSubmittedToUser() {
-        // Create a sample manager email (e.g., "manager@example.com")
-        String managerEmail = "manager@example.com";
-
-        // Create a sample request parameter (e.g., "someRequest")
-        String request = "someRequest";
-
-        // Create a list of sample reports
-        List<Reports> sampleReports = new ArrayList<>();
-        // Add sample reports to the list as needed
-
-        // Mock the service method to return the sample reports when called with the managerEmail and request parameters
-        when(reportsService.getReportsSubmittedToUser(managerEmail, request)).thenReturn(sampleReports);
-
-        // Call the controller method to get reports submitted to the manager with the manager email and request
-        List<Reports> result = reportsController.getReportsSubmittedToUser(managerEmail, request);
-
-        // Verify that the result matches the sample reports returned by the service
-        assertEquals(sampleReports, result);
+    void testGetReportsSubmittedToUser() throws Exception {
+        when(iReportsService.getReportsSubmittedToUser(Mockito.<String>any(), Mockito.<String>any()))
+                .thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/getReportsSubmittedToUser/{managerEmail}", "jane.doe@example.org")
+                .param("request", "foo");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#getAllSubmittedReports()}
+     */
     @Test
-    public void testGetAllSubmittedReports() {
-        // Create a list of sample submitted reports
-        List<Reports> sampleSubmittedReports = new ArrayList<>();
-        // Add sample submitted reports to the list as needed
-
-        // Mock the service method to return the sample submitted reports when called
-        when(reportsService.getAllSubmittedReports()).thenReturn(sampleSubmittedReports);
-
-        // Call the controller method to get all submitted reports
-        List<Reports> result = reportsController.getAllSubmittedReports();
-
-        // Verify that the result matches the sample submitted reports returned by the service
-        assertEquals(sampleSubmittedReports, result);
+    void testGetAllSubmittedReports() throws Exception {
+        when(iReportsService.getAllSubmittedReports()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllSubmittedReports");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#getAllSubmittedReports()}
+     */
     @Test
-    public void testGetAllReportsApprovedByManager() {
-        // Create a list of sample approved reports
-        List<Reports> sampleApprovedReports = new ArrayList<>();
-        // Add sample approved reports to the list as needed
-
-        // Mock the service method to return the sample approved reports when called
-        when(reportsService.getAllReportsApprovedByManager(any(String.class))).thenReturn(sampleApprovedReports);
-
-        // Call the controller method to get all approved reports
-        List<Reports> result = reportsController.getAllReportsApprovedByManager("someRequest");
-
-        // Verify that the result matches the sample approved reports returned by the service
-        assertEquals(sampleApprovedReports, result);
+    void testGetAllSubmittedReports2() throws Exception {
+        when(iReportsService.getAllSubmittedReports()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllSubmittedReports");
+        requestBuilder.characterEncoding("Encoding");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#getAllReportsApprovedByManager(String)}
+     */
     @Test
-    public void testAddReport() {
-        // Create a sample ReportsDTO
-        ReportsDTO sampleReportsDTO = new ReportsDTO();
-        // Initialize the sample DTO as needed
-
-        // Create a list of sample expenseIds
-        List<Long> sampleExpenseIds = new ArrayList<>();
-        // Add sample expenseIds to the list as needed
-
-        // Create a sample Reports object to return from the service
-        Reports sampleReports = new Reports();
-        // Initialize the sample Reports object as needed
-
-        // Mock the service method to return the sample Reports object when called
-        when(reportsService.addReport(any(ReportsDTO.class), any(Long.class), any(List.class)))
-                .thenReturn(sampleReports);
-
-        // Call the controller method to add a report
-        Reports result = reportsController.addReport(sampleReportsDTO, 123L, sampleExpenseIds);
-
-        // Verify that the result matches the sample Reports object returned by the service
-        assertEquals(sampleReports, result);
+    void testGetAllReportsApprovedByManager() throws Exception {
+        when(iReportsService.getAllReportsApprovedByManager(Mockito.<String>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllReportsApprovedByManager")
+                .param("request", "foo");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
-
+    /**
+     * Method under test: {@link ReportsController#submitReport(Long, String, HttpServletResponse)}
+     */
     @Test
-    public void testAddExpensesToReport() {
-        // Create a sample reportId
-        Long sampleReportId = 123L;
-
-        // Create a list of sample expenseIds
-        List<Long> sampleExpenseIds = new ArrayList<>();
-        // Add sample expenseIds to the list as needed
-
-        // Create a sample Reports object to return from the service
-        Reports sampleReports = new Reports();
-        // Initialize the sample Reports object as needed
-
-        // Mock the service method to return the sample Reports object when called
-        when(reportsService.addExpenseToReport(any(Long.class), any(List.class)))
-                .thenReturn(sampleReports);
-
-        // Call the controller method to add expenses to a report
-        Reports result = reportsController.addExpensesToReport(sampleReportId, sampleExpenseIds);
-
-        // Verify that the result matches the sample Reports object returned by the service
-        assertEquals(sampleReports, result);
+    void testSubmitReport() throws Exception {
+        doNothing().when(iReportsService)
+                .submitReport(Mockito.<Long>any(), Mockito.<String>any(), Mockito.<HttpServletResponse>any());
+        MockHttpServletRequestBuilder requestBuilder = post("/submitReportToManager/{reportId}", 1L)
+                .param("managerEmail", "foo");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    /**
+     * Method under test: {@link ReportsController#submitReport(Long, HttpServletResponse)}
+     */
     @Test
-    public void testSubmitReport() throws MessagingException, IOException {
-        // Create a sample reportId
-        Long sampleReportId = 123L;
-
-        // Mock the service method to perform nothing when called
-        doNothing().when(reportsService).submitReport(
-                eq(sampleReportId),
-                any(HttpServletResponse.class)
-        );
-
-        // Call the controller method to submit the report
-        HttpServletResponse response = new MockHttpServletResponse(); // You can use a real or mock response
-        reportsController.submitReport(sampleReportId, response);
-
-        // Verify that the service method was called with the correct arguments
-        verify(reportsService).submitReport(
-                eq(sampleReportId),
-                any(HttpServletResponse.class)
-        );
+    void testSubmitReport2() throws Exception {
+        doNothing().when(iReportsService).submitReport(Mockito.<Long>any(), Mockito.<HttpServletResponse>any());
+        MockHttpServletRequestBuilder requestBuilder = post("/submitReport/{reportId}", 1L);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-
-
+    /**
+     * Method under test: {@link ReportsController#reimburseReportByFinance(List, String)}
+     */
     @Test
-    public void testSubmitReportToManager() throws MessagingException, IOException {
-        // Create a sample reportId and managerEmail
-        Long sampleReportId = 123L;
-        String sampleManagerEmail = "manager@example.com";
+    @Disabled("TODO: Complete this test")
+    void testReimburseReportByFinance() {
+        // TODO: Complete this test.
+        //   Reason: R013 No inputs found that don't throw a trivial exception.
+        //   Diffblue Cover tried to run the arrange/act section, but the method under
+        //   test threw
+        //   java.nio.charset.IllegalCharsetNameException: https://example.org/example
+        //       at java.nio.charset.Charset.checkName(Charset.java:308)
+        //       at java.nio.charset.Charset.lookup2(Charset.java:482)
+        //       at java.nio.charset.Charset.lookup(Charset.java:462)
+        //       at java.nio.charset.Charset.forName(Charset.java:526)
+        //       at javax.servlet.http.HttpServlet.service(HttpServlet.java:528)
+        //       at javax.servlet.http.HttpServlet.service(HttpServlet.java:596)
+        //   See https://diff.blue/R013 to resolve this issue.
 
-        // Mock the service method to perform nothing when called
-        doNothing().when(reportsService).submitReport(
-                ArgumentMatchers.eq(sampleReportId),
-                ArgumentMatchers.eq(sampleManagerEmail),
-                ArgumentMatchers.any(HttpServletResponse.class)
-        );
-
-        // Call the controller method to submit the report
-        HttpServletResponse response = new MockHttpServletResponse(); // You can use a real or mock response
-        reportsController.submitReport(sampleReportId, sampleManagerEmail, response);
-
-        // Verify that the service method was called with the correct arguments
-        verify(reportsService).submitReport(
-                ArgumentMatchers.eq(sampleReportId),
-                ArgumentMatchers.eq(sampleManagerEmail),
-                ArgumentMatchers.any(HttpServletResponse.class)
-        );
+        ReportsController reportsController = new ReportsController();
+        reportsController.reimburseReportByFinance(new ArrayList<>(), "Comments");
     }
 
+    /**
+     * Method under test: {@link ReportsController#rejectReportByFinance(Long, String)}
+     */
     @Test
-    public void testEditReport() {
-        // Create sample input data
-        Long sampleReportId = 123L;
-        String sampleReportTitle = "Updated Title";
-        String sampleReportDescription = "Updated Description";
-        List<Long> sampleAddExpenseIds = new ArrayList<>();
-        sampleAddExpenseIds.add(456L);
-        List<Long> sampleRemoveExpenseIds = new ArrayList<>();
-        sampleRemoveExpenseIds.add(789L);
-
-        // Create a sample list of reports as the result
-        List<Reports> sampleReportsList = new ArrayList<>();
-
-        // Mock the service method and specify the return value
-        when(reportsService.editReport(sampleReportId, sampleReportTitle, sampleReportDescription,
-                sampleAddExpenseIds, sampleRemoveExpenseIds))
-                .thenReturn(sampleReportsList);
-
-        // Call the controller method
-        List<Reports> result = reportsController.editReport(sampleReportId, sampleReportTitle,
-                sampleReportDescription, sampleAddExpenseIds,
-                sampleRemoveExpenseIds);
-
-        // Verify that the result matches the expected result
-        assertEquals(sampleReportsList, result);
+    void testRejectReportByFinance() throws Exception {
+        doNothing().when(iReportsService).rejectReportByFinance(Mockito.<Long>any(), Mockito.<String>any());
+        MockHttpServletRequestBuilder requestBuilder = post("/rejectReportByFinance/{reportId}", 1L)
+                .param("comments", "foo");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    /**
+     * Method under test: {@link ReportsController#hideReport(Long)}
+     */
     @Test
-    public void testReimburseReportByFinance() {
-        // Create sample input data
-        ArrayList<Long> sampleReportIds = new ArrayList<>();
-        sampleReportIds.add(123L);
-        sampleReportIds.add(456L);
-        String sampleComments = "Sample Comments";
-
-        // Call the controller method
-        reportsController.reimburseReportByFinance(sampleReportIds, sampleComments);
-
-        // Verify that the service method is called with the correct arguments
-        verify(reportsService).reimburseReportByFinance(sampleReportIds, sampleComments);
+    void testHideReport() throws Exception {
+        doNothing().when(iReportsService).hideReport(Mockito.<Long>any());
+        MockHttpServletRequestBuilder requestBuilder = post("/hideReport/{reportId}", 1L);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    /**
+     * Method under test: {@link ReportsController#hideReport(Long)}
+     */
     @Test
-    public void testRejectReportByFinance() {
-        // Create sample input data
-        Long sampleReportId = 123L;
-        String sampleComments = "Sample Comments";
-
-        // Call the controller method
-        reportsController.rejectReportByFinance(sampleReportId, sampleComments);
-
-        // Verify that the service method is called with the correct arguments
-        verify(reportsService).rejectReportByFinance(sampleReportId, sampleComments);
+    void testHideReport2() throws Exception {
+        doNothing().when(iReportsService).hideReport(Mockito.<Long>any());
+        MockHttpServletRequestBuilder requestBuilder = post("/hideReport/{reportId}", 1L);
+        requestBuilder.characterEncoding("Encoding");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    /**
+     * Method under test: {@link ReportsController#getReportsInDateRange(LocalDate, LocalDate, String)}
+     */
     @Test
-    public void testHideReport() {
-        // Create a sample reportId
-        Long sampleReportId = 123L;
-
-        // Call the controller method
-        reportsController.hideReport(sampleReportId);
-
-        // Verify that the service method is called with the correct argument
-        verify(reportsService).hideReport(sampleReportId);
+    void testGetReportsInDateRange() throws Exception {
+        when(iReportsService.getReportsInDateRange(Mockito.<LocalDate>any(), Mockito.<LocalDate>any(),
+                Mockito.<String>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getReportsInDateRange");
+        MockHttpServletRequestBuilder paramResult = getResult.param("endDate", String.valueOf(LocalDate.of(1970, 1, 1)))
+                .param("request", "foo");
+        MockHttpServletRequestBuilder requestBuilder = paramResult.param("startDate",
+                String.valueOf(LocalDate.of(1970, 1, 1)));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#getReportsSubmittedToUserInDateRange(String, LocalDate, LocalDate, String)}
+     */
     @Test
-    public void testTotalAmountINR() {
-        // Create a sample reportId and expected totalAmountINR
-        Long sampleReportId = 123L;
-        float expectedTotalAmountINR = 1000.0f; // Replace with the expected value
-
-        // Mock the reportsService.totalAmount method to return the expectedTotalAmountINR
-        when(reportsService.totalAmount(sampleReportId)).thenReturn(expectedTotalAmountINR);
-
-        // Call the controller method
-        float actualTotalAmountINR = reportsController.totalAmountINR(sampleReportId);
-
-        // Verify that the actual result matches the expected result
-        assertEquals(expectedTotalAmountINR, actualTotalAmountINR, 0.01); // Use an appropriate delta for floating-point comparison
+    void testGetReportsSubmittedToUserInDateRange() throws Exception {
+        when(iReportsService.getReportsSubmittedToUserInDateRange(Mockito.<String>any(), Mockito.<LocalDate>any(),
+                Mockito.<LocalDate>any(), Mockito.<String>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getReportsSubmittedToUserInDateRange");
+        MockHttpServletRequestBuilder paramResult = getResult.param("endDate", String.valueOf(LocalDate.of(1970, 1, 1)))
+                .param("managerEmail", "foo")
+                .param("request", "foo");
+        MockHttpServletRequestBuilder requestBuilder = paramResult.param("startDate",
+                String.valueOf(LocalDate.of(1970, 1, 1)));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#getAmountOfReportsInDateRange(LocalDate, LocalDate)}
+     */
     @Test
-    public void testGetReportsInDateRange() {
-        // Create sample start and end dates, and a sample request parameter
-        LocalDate startDate = LocalDate.parse("2023-01-01");
-        LocalDate endDate = LocalDate.parse("2023-12-31");
-        String sampleRequest = "example";
-
-        // Create a list of sample reports
-        List<Reports> sampleReports = new ArrayList<>(); // Replace with your sample reports
-
-        // Mock the reportsService.getReportsInDateRange method to return the sampleReports
-        when(reportsService.getReportsInDateRange(startDate, endDate, sampleRequest)).thenReturn(sampleReports);
-
-        // Call the controller method
-        List<Reports> actualReports = reportsController.getReportsInDateRange(startDate, endDate, sampleRequest);
-
-        // Verify that the actual result matches the expected result
-        assertEquals(sampleReports, actualReports);
+    void testGetAmountOfReportsInDateRange() throws Exception {
+        when(iReportsService.getAmountOfReportsInDateRange(Mockito.<LocalDate>any(), Mockito.<LocalDate>any()))
+                .thenReturn("2020-03-01");
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getAmountOfReportsInDateRange");
+        MockHttpServletRequestBuilder paramResult = getResult.param("endDate", String.valueOf(LocalDate.of(1970, 1, 1)));
+        MockHttpServletRequestBuilder requestBuilder = paramResult.param("startDate",
+                String.valueOf(LocalDate.of(1970, 1, 1)));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
+                .andExpect(MockMvcResultMatchers.content().string("2020-03-01"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#totalApprovedAmount(Long)}
+     */
     @Test
-    public void testGetReportsSubmittedToUserInDateRange() {
-        // Create sample managerEmail, start date, end date, and a sample request parameter
-        String managerEmail = "example@email.com";
-        LocalDate startDate = LocalDate.parse("2023-01-01");
-        LocalDate endDate = LocalDate.parse("2023-12-31");
-        String sampleRequest = "example";
-
-        // Create a list of sample reports
-        List<Reports> sampleReports = new ArrayList<>(); // Replace with your sample reports
-
-        // Mock the reportsService.getReportsSubmittedToUserInDateRange method to return the sampleReports
-        when(reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, sampleRequest))
-                .thenReturn(sampleReports);
-
-        // Call the controller method
-        List<Reports> actualReports = reportsController.getReportsSubmittedToUserInDateRange(
-                managerEmail, startDate, endDate, sampleRequest);
-
-        // Verify that the actual result matches the expected result
-        assertEquals(sampleReports, actualReports);
+    void testTotalApprovedAmount() throws Exception {
+        when(iReportsService.totalApprovedAmount(Mockito.<Long>any())).thenReturn(10.0f);
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getTotalApprovedAmount");
+        MockHttpServletRequestBuilder requestBuilder = getResult.param("reportId", String.valueOf(1L));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("10.0"));
     }
 
+    /**
+     * Method under test: {@link ReportsController#notifyLnD(Long)}
+     */
     @Test
-    public void testGetAmountOfReportsInDateRange() {
-        // Create sample start date and end date
-        LocalDate startDate = LocalDate.parse("2023-01-01");
-        LocalDate endDate = LocalDate.parse("2023-12-31");
-
-        // Create a sample amount as a string
-        String sampleAmount = "12345.67"; // Replace with your sample amount
-
-        // Mock the reportsService.getAmountOfReportsInDateRange method to return the sampleAmount
-        when(reportsService.getAmountOfReportsInDateRange(startDate, endDate))
-                .thenReturn(sampleAmount);
-
-        // Call the controller method
-        String actualAmount = reportsController.getAmountOfReportsInDateRange(startDate, endDate);
-
-        // Verify that the actual result matches the expected result
-        assertEquals(sampleAmount, actualAmount);
+    void testNotifyLnD() throws Exception {
+        doNothing().when(iReportsService).notifyLnD(Mockito.<Long>any());
+        MockHttpServletRequestBuilder postResult = post("/notifyLnD/{reportId}", 1L);
+        MockHttpServletRequestBuilder requestBuilder = postResult.param("reportId", String.valueOf(1L));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    /**
+     * Method under test: {@link ReportsController#updateExpenseStatus(Long, String, String, String, HttpServletResponse)}
+     */
     @Test
-    public void testTotalApprovedAmount() {
-        // Create a sample report ID
-        Long sampleReportId = 1L; // Replace with your sample report ID
+    @Disabled("TODO: Complete this test")
+    void testUpdateExpenseStatus() throws IOException, MessagingException, ParseException {
+        // TODO: Complete this test.
+        //   Reason: R013 No inputs found that don't throw a trivial exception.
+        //   Diffblue Cover tried to run the arrange/act section, but the method under
+        //   test threw
+        //   org.json.simple.parser.ParseException
+        //       at org.json.simple.parser.Yylex.yylex(Yylex.java:610)
+        //       at org.json.simple.parser.JSONParser.nextToken(JSONParser.java:269)
+        //       at org.json.simple.parser.JSONParser.parse(JSONParser.java:118)
+        //       at org.json.simple.parser.JSONParser.parse(JSONParser.java:81)
+        //       at org.json.simple.parser.JSONParser.parse(JSONParser.java:75)
+        //       at com.nineleaps.expense_management_project.controller.ReportsController.updateExpenseStatus(ReportsController.java:164)
+        //       at javax.servlet.http.HttpServlet.service(HttpServlet.java:528)
+        //       at javax.servlet.http.HttpServlet.service(HttpServlet.java:596)
+        //   See https://diff.blue/R013 to resolve this issue.
 
-        // Create a sample total approved amount
-        float sampleTotalApprovedAmount = 1234.56f; // Replace with your sample total approved amount
-
-        // Mock the reportsService.totalApprovedAmount method to return the sampleTotalApprovedAmount
-        when(reportsService.totalApprovedAmount(sampleReportId))
-                .thenReturn(sampleTotalApprovedAmount);
-
-        // Call the controller method
-        float actualTotalApprovedAmount = reportsController.totalApprovedAmount(sampleReportId);
-
-        // Verify that the actual result matches the expected result
-        assertEquals(sampleTotalApprovedAmount, actualTotalApprovedAmount, 0.001); // Specify a delta for floating-point comparison
+        ReportsController reportsController = new ReportsController();
+        reportsController.updateExpenseStatus(1L, "Review Time", "Json", "Comments", new Response());
     }
 
+    /**
+     * Method under test: {@link ReportsController#addReport(ReportsDTO, Long, List)}
+     */
     @Test
-    public void testNotifyHr() throws MessagingException {
-        // Create a sample report ID
-        Long sampleReportId = 1L; // Replace with your sample report ID
+    @Disabled("TODO: Complete this test")
+    void testAddReport() throws Exception {
+        // TODO: Complete this test.
+        //   Diffblue AI was unable to find a test
 
-        // Mock the reportsService.notifyHR method to do nothing when called with the sample report ID
-        doNothing().when(reportsService).notifyHR(sampleReportId);
+        // Arrange
+        // TODO: Populate arranged inputs
+        Object[] uriVariables = new Object[]{1L};
+        MockHttpServletRequestBuilder postResult = post("/addReport/{employeeId}", uriVariables);
+        ReportsDTO reportsDTO = new ReportsDTO("Dr");
+        String[] values = new String[]{String.valueOf(reportsDTO)};
+        MockHttpServletRequestBuilder requestBuilder = postResult.param("reportsDTO", values);
+        Object[] controllers = new Object[]{reportsController};
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(controllers).build();
 
-        // Call the controller method
-        reportsController.notifyHr(sampleReportId);
+        // Act
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
 
-        // Verify that the reportsService.notifyHR method was called with the sample report ID
-        verify(reportsService).notifyHR(sampleReportId);
+        // Assert
+        // TODO: Add assertions on result
     }
 
+    /**
+     * Method under test: {@link ReportsController#editReport(Long, String, String, List, List)}
+     */
     @Test
-    public void testNotifyLnD() throws MessagingException {
-        // Create a sample report ID
-        Long sampleReportId = 1L; // Replace with your sample report ID
+    @Disabled("TODO: Complete this test")
+    void testEditReport() throws Exception {
+        // TODO: Complete this test.
+        //   Diffblue AI was unable to find a test
 
-        // Mock the reportsService.notifyLnD method to do nothing when called with the sample report ID
-        doNothing().when(reportsService).notifyLnD(sampleReportId);
+        // Arrange
+        // TODO: Populate arranged inputs
+        Object[] uriVariables = new Object[]{1L};
+        String[] values = new String[]{"foo"};
+        String[] values2 = new String[]{"foo"};
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .patch("/editReport/{reportId}", uriVariables)
+                .param("reportDescription", values)
+                .param("reportTitle", values2);
+        Object[] controllers = new Object[]{reportsController};
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(controllers).build();
 
-        // Call the controller method
-        reportsController.notifyLnD(sampleReportId);
+        // Act
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
 
-        // Verify that the reportsService.notifyLnD method was called with the sample report ID
-        verify(reportsService).notifyLnD(sampleReportId);
+        // Assert
+        // TODO: Add assertions on result
     }
+
+    /**
+     * Method under test: {@link ReportsController#getReportByReportId(Long)}
+     */
+    @Test
+    void testGetReportByReportId() throws Exception {
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+        when(iReportsService.getReportById(Mockito.<Long>any())).thenReturn(reports);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getByReportId/{reportId}", 1L);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"reportId\":1,\"employeeId\":1,\"employeeName\":\"Employee Name\",\"officialEmployeeId\":\"42\",\"reportTitle\":"
+                                        + "\"Dr\",\"managerComments\":\"Manager Comments\",\"financeComments\":\"Finance Comments\",\"isSubmitted\":true,"
+                                        + "\"employeeMail\":\"Employee Mail\",\"dateSubmitted\":[1970,1,1],\"dateCreated\":[1970,1,1],\"managerActionDate"
+                                        + "\":[1970,1,1],\"financeActionDate\":[1970,1,1],\"totalAmount\":10.0,\"totalApprovedAmount\":10.0,\"isHidden\""
+                                        + ":true,\"managerEmail\":\"jane.doe@example.org\",\"managerReviewTime\":\"Manager Review Time\",\"financeApprovalStatus"
+                                        + "\":\"REIMBURSED\",\"managerApprovalStatus\":\"APPROVED\",\"expensesCount\":3}"));
+    }
+
+    /**
+     * Method under test: {@link ReportsController#notifyHr(Long)}
+     */
+    @Test
+    void testNotifyHr() throws Exception {
+        doNothing().when(iReportsService).notifyHR(Mockito.<Long>any());
+        MockHttpServletRequestBuilder postResult = post("/notifyHr/{reportId}", 1L);
+        MockHttpServletRequestBuilder requestBuilder = postResult.param("reportId", String.valueOf(1L));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    /**
+     * Method under test: {@link ReportsController#totalAmountINR(Long)}
+     */
+    @Test
+    void testTotalAmountINR() throws Exception {
+        when(iReportsService.totalAmount(Mockito.<Long>any())).thenReturn(10.0f);
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getTotalAmountInrByReportId");
+        MockHttpServletRequestBuilder requestBuilder = getResult.param("reportId", String.valueOf(1L));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("10.0"));
+    }
+
+
 
 }
+

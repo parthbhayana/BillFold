@@ -10,13 +10,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletResponse;
+
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ExcelControllerTest {
 
+
+    private static final String CONSTANT1 = "hello";
+    private static final String CONSTANT3 = "hello1";
     @InjectMocks
     private ExcelController excelController;
 
@@ -106,6 +112,42 @@ class ExcelControllerTest {
         assertEquals(SUCCESS_RESPONSE, responseEntity.getBody());
     }
 
+    @Test
+    void testReimburseAndGenerateExcelEmailSent() throws Exception {
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(excelServiceReports.reimburseAndGenerateExcel(response)).thenReturn(CONSTANT1);
+
+        ResponseEntity<String> result = excelController.reimburseAndGenerateExcel(response);
+
+        verify(excelServiceReports, times(1)).reimburseAndGenerateExcel(response);
+        assertEquals(result.getStatusCodeValue(), 400);
+        assertEquals(result.getBody(), CONSTANT1);
+    }
+
+    @Test
+    void testReimburseAndGenerateExcelNoData() throws Exception {
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(excelServiceReports.reimburseAndGenerateExcel(response)).thenReturn(CONSTANT3);
+
+        ResponseEntity<String> result = excelController.reimburseAndGenerateExcel(response);
+
+        verify(excelServiceReports, times(1)).reimburseAndGenerateExcel(response);
+        assertEquals(result.getStatusCodeValue(), 400);
+        assertEquals(result.getBody(), CONSTANT3);
+    }
+
+    @Test
+    void testReimburseAndGenerateExcelError() throws Exception {
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        String errorMessage = "Error occurred";
+        when(excelServiceReports.reimburseAndGenerateExcel(response)).thenReturn(errorMessage);
+
+        ResponseEntity<String> result = excelController.reimburseAndGenerateExcel(response);
+
+        verify(excelServiceReports, times(1)).reimburseAndGenerateExcel(response);
+        assertEquals(result.getStatusCodeValue(), 400);
+        assertEquals(result.getBody(), errorMessage);
+    }
 
 
 

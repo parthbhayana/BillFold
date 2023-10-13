@@ -89,13 +89,13 @@ import com.nineleaps.expense_management_project.service.IExcelGeneratorReportsSe
 
 <span class="fc" id="L90">		String result = excelServiceReports.reimburseAndGenerateExcel(response);</span>
 
-<span class="pc bpc" id="L92" title="1 of 2 branches missed.">		if (result.equals(CONSTANT1)) {</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">		if (result.equals(CONSTANT1)) {</span>
 <span class="fc" id="L93">			response.flushBuffer();</span>
 <span class="fc" id="L94">			return ResponseEntity.ok(result);</span>
-<span class="nc bnc" id="L95" title="All 2 branches missed.">		} else if (result.equals(CONSTANT3)) {</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">		} else if (result.equals(CONSTANT3)) {</span>
 <span class="nc" id="L96">			return ResponseEntity.ok(result);</span>
 		} else {
-<span class="nc" id="L98">			return ResponseEntity.badRequest().body(result);</span>
+<span class="fc" id="L98">			return ResponseEntity.badRequest().body(result);</span>
 		}
 	}
 

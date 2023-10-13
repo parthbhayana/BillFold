@@ -4,26 +4,99 @@ import lombok.Getter;
 
 @Getter
 <span class="fc" id="L6">public class EmployeeDTO {</span>
-<span class="fc" id="L7">	private String employeeEmail;</span>
-<span class="nc" id="L8">	private String firstName;</span>
-<span class="nc" id="L9">	private String officialEmployeeId;</span>
-<span class="nc" id="L10">	private Long mobileNumber;</span>
-<span class="nc" id="L11">	private String middleName;</span>
-<span class="nc" id="L12">	private String lastName;</span>
-<span class="nc" id="L13">	private String managerEmail;</span>
-<span class="nc" id="L14">	private String managerName;</span>
-<span class="nc" id="L15">	private String hrEmail;</span>
-<span class="nc" id="L16">	private String hrName;</span>
+	private String employeeEmail;
+	private String firstName;
+
+	public String getEmployeeEmail() {
+<span class="fc" id="L11">		return employeeEmail;</span>
+	}
+
+	public void setEmployeeEmail(String employeeEmail) {
+<span class="fc" id="L15">		this.employeeEmail = employeeEmail;</span>
+<span class="fc" id="L16">	}</span>
+
+	public String getFirstName() {
+<span class="fc" id="L19">		return firstName;</span>
+	}
+
+	public void setFirstName(String firstName) {
+<span class="fc" id="L23">		this.firstName = firstName;</span>
+<span class="fc" id="L24">	}</span>
+
+	public String getOfficialEmployeeId() {
+<span class="fc" id="L27">		return officialEmployeeId;</span>
+	}
+
+	public void setOfficialEmployeeId(String officialEmployeeId) {
+<span class="fc" id="L31">		this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L32">	}</span>
+
+	public Long getMobileNumber() {
+<span class="fc" id="L35">		return mobileNumber;</span>
+	}
+
+	public void setMobileNumber(Long mobileNumber) {
+<span class="fc" id="L39">		this.mobileNumber = mobileNumber;</span>
+<span class="fc" id="L40">	}</span>
+
+	public String getMiddleName() {
+<span class="fc" id="L43">		return middleName;</span>
+	}
+
+	public String getLastName() {
+<span class="fc" id="L47">		return lastName;</span>
+	}
+
+	public void setLastName(String lastName) {
+<span class="fc" id="L51">		this.lastName = lastName;</span>
+<span class="fc" id="L52">	}</span>
+
+	public String getManagerEmail() {
+<span class="fc" id="L55">		return managerEmail;</span>
+	}
+
+	public String getManagerName() {
+<span class="fc" id="L59">		return managerName;</span>
+	}
+
+	public void setManagerName(String managerName) {
+<span class="fc" id="L63">		this.managerName = managerName;</span>
+<span class="fc" id="L64">	}</span>
+
+	public String getHrEmail() {
+<span class="fc" id="L67">		return hrEmail;</span>
+	}
+
+	public void setHrEmail(String hrEmail) {
+<span class="fc" id="L71">		this.hrEmail = hrEmail;</span>
+<span class="fc" id="L72">	}</span>
+
+	public String getHrName() {
+<span class="fc" id="L75">		return hrName;</span>
+	}
+
+	public void setHrName(String hrName) {
+<span class="fc" id="L79">		this.hrName = hrName;</span>
+<span class="fc" id="L80">	}</span>
+
+	private String officialEmployeeId;
+	private Long mobileNumber;
+	private String middleName;
+	private String lastName;
+	private String managerEmail;
+	private String managerName;
+	private String hrEmail;
+	private String hrName;
 
 
 	public void setMiddleName(String middleName) {
-<span class="fc" id="L20">		this.middleName = middleName;</span>
-<span class="fc" id="L21">	}</span>
+<span class="fc" id="L93">		this.middleName = middleName;</span>
+<span class="fc" id="L94">	}</span>
 
 
 	public void setManagerEmail(String managerEmail) {
-<span class="nc" id="L25">		this.managerEmail = managerEmail;</span>
-<span class="nc" id="L26">	}</span>
+<span class="fc" id="L98">		this.managerEmail = managerEmail;</span>
+<span class="fc" id="L99">	}</span>
 
 
 }

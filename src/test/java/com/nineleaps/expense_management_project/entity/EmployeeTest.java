@@ -1,5 +1,7 @@
 package com.nineleaps.expense_management_project.entity;
 
+import com.nineleaps.expense_management_project.controller.EmployeeController;
+import com.nineleaps.expense_management_project.service.EmployeeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -8,7 +10,11 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
-
+import com.nineleaps.expense_management_project.dto.EmployeeDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 class EmployeeTest {
 
@@ -17,6 +23,12 @@ class EmployeeTest {
 
     @Mock
     private Expense expense;
+
+    @InjectMocks
+    private EmployeeController employeeController;
+
+    @Mock
+    private EmployeeServiceImpl employeeService;
 
     @BeforeEach
     void setUp() {
@@ -158,7 +170,7 @@ class EmployeeTest {
     }
 
     @Test
-    public void testEmployeeConstructor() {
+    void testEmployeeConstructor() {
         // Arrange
         Long employeeId = 1L;
         String officialEmployeeId = "EMP001";
@@ -184,7 +196,7 @@ class EmployeeTest {
     }
 
     @Test
-    public void testEmployeeConstructorWithAdditionalParameters() {
+    void testEmployeeConstructorWithAdditionalParameters() {
         // Arrange
         String imageUrl = "http://example.com/image.jpg";
         Boolean isHidden = true;
@@ -203,4 +215,57 @@ class EmployeeTest {
         assertEquals(role, employee.getRole());
         assertEquals(token, employee.getToken());
     }
+
+    @Test
+    void testUpdateEmployee() {
+        // Create a sample EmployeeDTO
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setFirstName("John");
+        employeeDTO.setEmployeeEmail("john@example.com");
+
+        // Create a sample Employee entity
+        Employee employee = new Employee();
+        employee.setEmployeeId(1L);
+        employee.setFirstName("John");
+        employee.setEmployeeEmail("john@example.com");
+
+        // Mock the service method to return the updated Employee
+        when(employeeService.updateEmployeeDetails(employeeDTO, 1L)).thenReturn(employee);
+
+        // Call the method
+        Employee updatedEmployee = employeeController.updateEmployee(employeeDTO, 1L);
+
+        // Verify the response
+        assertEquals(employee, updatedEmployee);
+
+        // Verify that the service method was called with the correct arguments
+        verify(employeeService).updateEmployeeDetails(employeeDTO, 1L);
+    }
+
+    @Test
+    void testSave() {
+        // Create a sample EmployeeDTO
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setFirstName("John");
+        employeeDTO.setEmployeeEmail("john@example.com");
+
+        // Create a sample Employee entity
+        Employee employee = new Employee();
+        employee.setEmployeeId(1L);
+        employee.setFirstName("John");
+        employee.setEmployeeEmail("john@example.com");
+
+        // Mock the service method to return the saved Employee
+        when(employeeService.saveEmployeeDetails(employeeDTO)).thenReturn(employee);
+
+        // Call the method
+        Employee savedEmployee = employeeController.save(employeeDTO);
+
+        // Verify the response
+        assertEquals(employee, savedEmployee);
+
+        // Verify that the service method was called with the correct arguments
+        verify(employeeService).saveEmployeeDetails(employeeDTO);
+    }
+
 }

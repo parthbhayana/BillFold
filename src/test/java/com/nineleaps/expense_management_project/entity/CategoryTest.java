@@ -51,21 +51,6 @@ public class CategoryTest {
         assertTrue(category.getIsHidden());
     }
 
-    @Test
-    public void testParameterizedConstructor() {
-        // Create a Category object using the parameterized constructor
-        Category category = new Category(1L, "Test Category", 1000L, true, null);
-
-        // Get the categoryId from the Category object
-        Long categoryId = category.getCategoryId();
-
-        // Convert the expected value to an Optional
-        Optional<Long> expectedOptional = Optional.of(1L);
-
-        // Compare the expected Optional with the actual Optional
-        assertEquals(expectedOptional, Optional.ofNullable(categoryId));
-    }
-
 
     @Test
     public void testSetIsHidden() {
@@ -204,5 +189,90 @@ public class CategoryTest {
         assertEquals(initialExpenseList, retrievedExpenseList);
     }
 
+    @Test
+    public void testCategoryConstructor_NullExpenseList() {
+        // Arrange
+        Long categoryId = 1L;
+        String categoryDescription = "Office Supplies";
+        long categoryTotal = 5000L;
+        Boolean isHidden = false;
 
-}
+        // Act
+        Category category = new Category(categoryId, categoryDescription, categoryTotal, isHidden, null);
+
+        // Assert
+        assertNotNull(category);
+        assertEquals(categoryId, category.getCategoryId());
+        assertEquals(categoryDescription, category.getCategoryDescription());
+        assertEquals(categoryTotal, category.getCategoryTotal());
+        assertEquals(isHidden, category.getIsHidden());
+        assertNull(category.getExpenseList());
+    }
+    @Test
+    public void testGettersAndSetters() {
+            Category category = new Category();
+
+            // Test setter and getter for categoryId
+            category.setCategoryId(1L);
+            assertEquals(1L, category.getCategoryId().longValue());
+
+            // Test setter and getter for categoryDescription
+            category.setCategoryDescription("Test Category");
+            assertEquals("Test Category", category.getCategoryDescription());
+
+            // Test setter and getter for categoryTotal
+            category.setCategoryTotal(1000L);
+            assertEquals(1000L, category.getCategoryTotal());
+
+            // Test setter and getter for isHidden
+            category.setIsHidden(true);
+            assertTrue(category.getIsHidden());
+
+            // Test setter and getter for expenseList
+            List<Expense> expenseList = new ArrayList<>();
+            Expense expense1 = new Expense();
+            Expense expense2 = new Expense();
+            expenseList.add(expense1);
+            expenseList.add(expense2);
+            category.setExpenseList(expenseList);
+            assertEquals(expenseList, category.getExpenseList());
+        }
+
+        @Test
+        public void testParameterizedConstructor() {
+            Long categoryId = 1L;
+            String categoryDescription = "Test Category";
+            long categoryTotal = 1000L;
+            Boolean isHidden = true;
+            List<Expense> expenseList = new ArrayList<>(); // Create an empty list or add sample expenses
+
+            Category category = new Category(categoryId, categoryDescription, categoryTotal, isHidden, expenseList);
+
+            assertEquals(categoryId, category.getCategoryId());
+            assertEquals(categoryDescription, category.getCategoryDescription());
+            assertEquals(categoryTotal, category.getCategoryTotal());
+            assertEquals(isHidden, category.getIsHidden());
+            assertEquals(expenseList, category.getExpenseList());
+        }
+
+    @Test
+    public void testCategoryConstructorWithParameters() {
+        Long categoryId = 1L;
+        String categoryDescription = "Test Category";
+        long categoryTotal = 1000L;
+        Boolean isHidden = true;
+        List<Expense> expenseList = new ArrayList<>();
+
+        Category category = new Category(categoryId, categoryDescription, categoryTotal, isHidden, expenseList);
+
+        assertEquals(categoryId, category.getCategoryId());
+        assertEquals(categoryDescription, category.getCategoryDescription());
+        assertEquals(categoryTotal, category.getCategoryTotal());
+        assertEquals(isHidden, category.getIsHidden());
+        assertEquals(expenseList, category.getExpenseList());
+    }
+
+    }
+
+
+

@@ -159,7 +159,47 @@ class ExpenseTest {
         assertEquals(category, expense.getCategory());
     }
 
+    @Test
+    void testParameterizedConstructor() {
+        // Create an Expense object using the parameterized constructor
+        Long expenseId = 1L;
+        String merchantName = "Test Merchant";
+        LocalDate date = LocalDate.now();
+        LocalDateTime dateCreated = LocalDateTime.now();
+        Double amount = 100.0;
+        String description = "Test Expense";
+        String categoryDescription = "Test Category";
 
+        Expense expense = new Expense(expenseId, merchantName, date, dateCreated, amount, description, categoryDescription);
+
+        // Check if the values are correctly set
+        assertEquals(expenseId, expense.getExpenseId());
+        assertEquals(merchantName, expense.getMerchantName());
+        assertEquals(date, expense.getDate());
+        assertEquals(dateCreated, expense.getDateCreated());
+        assertEquals(amount, expense.getAmount());
+        assertEquals(description, expense.getDescription());
+        assertEquals(categoryDescription, expense.getCategoryDescription());
+    }
+
+    @Test
+    void testFileConstructor() {
+        // Create an Expense object using the file constructor
+        byte[] file = "TestFileData".getBytes();
+        String fileName = "TestFileName";
+        Employee employee = new Employee();
+        Reports reports = new Reports();
+        Category category = new Category();
+
+        Expense expense = new Expense(file, fileName, employee, reports, category);
+
+        // Check if the values are correctly set
+        assertArrayEquals(file, expense.getFile());
+        assertEquals(fileName, expense.getFileName());
+        assertEquals(employee, expense.getEmployee());
+        assertEquals(reports, expense.getReports());
+        assertEquals(category, expense.getCategory());
+    }
 
 
 }

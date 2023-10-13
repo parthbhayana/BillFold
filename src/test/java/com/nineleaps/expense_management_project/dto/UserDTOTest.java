@@ -4,13 +4,14 @@ package com.nineleaps.expense_management_project.dto;
 import org.junit.jupiter.api.Test;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 
-public class UserDTOTest {
+class UserDTOTest {
 
     @Test
-    public void testDefaultConstructor() {
+    void testDefaultConstructor() {
         UserDTO userDTO = new UserDTO();
 
         // Verify that the default constructor initializes fields to their default values
@@ -22,6 +23,16 @@ public class UserDTOTest {
         assertNull(userDTO.getFcmToken());
     }
 
+    @Test
+    void testSetFcmToken() {
+        // Arrange
+        UserDTO userDTO = new UserDTO();
+        String fcmToken = "fcmToken123";
 
+        // Act
+        userDTO.setFcmToken(fcmToken);
 
+        // Assert
+        assertEquals(fcmToken, userDTO.getFcmToken());
+   }
 }

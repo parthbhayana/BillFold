@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CategoryDTOTest {
+class CategoryDTOTest {
 
     @Test
-    public void testCategoryDTOConstructor() {
+    void testCategoryDTOConstructor() {
         String categoryDescription = "Test Category";
         CategoryDTO categoryDTO = new CategoryDTO(categoryDescription);
 
@@ -17,7 +17,7 @@ public class CategoryDTOTest {
     }
 
     @Test
-    public void testCategoryDTOGetterAndSetter() {
+    void testCategoryDTOGetterAndSetter() {
         CategoryDTO categoryDTO = new CategoryDTO();
 
         // Set a category description using the setter method

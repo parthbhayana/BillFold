@@ -4,10 +4,10 @@ package com.nineleaps.expense_management_project.firebase;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PushNotificationRequestTest {
+class PushNotificationRequestTest {
 
     @Test
-    public void testConstructorAndGetters() {
+    void testConstructorAndGetters() {
         // Arrange
         String title = "Test Title";
         String topic = "Test Topic";
@@ -25,7 +25,7 @@ public class PushNotificationRequestTest {
     }
 
     @Test
-    public void testSetters() {
+    void testSetters() {
         // Arrange
         PushNotificationRequest request = new PushNotificationRequest();
 

@@ -7,14 +7,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.springframework.http.MediaType;
+
 
 public class PushNotificationControllerTest {
 
@@ -23,6 +33,8 @@ public class PushNotificationControllerTest {
 
     @InjectMocks
     private PushNotificationController pushNotificationController;
+
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() {
@@ -51,4 +63,10 @@ public class PushNotificationControllerTest {
         assertEquals("Notification sent.", Objects.requireNonNull(responseEntity.getBody()).getMessage());
         assertEquals(HttpStatus.OK.value(), responseEntity.getBody().getStatus());
     }
+
+
+
+
+
+
 }

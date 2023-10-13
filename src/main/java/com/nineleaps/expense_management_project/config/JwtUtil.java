@@ -3,8 +3,11 @@ package com.nineleaps.expense_management_project.config;
 import javax.servlet.http.*;
 import java.security.SecureRandom;
 import java.util.Date;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -14,10 +17,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtUtil {
+
+
     private static final String SECRET_KEY = generateRandomSecretKey();
     public static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 10;
-
-
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 30;
 
     private static String generateRandomSecretKey() {
@@ -71,7 +74,6 @@ public class JwtUtil {
     public Claims getClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
-
 
 
 

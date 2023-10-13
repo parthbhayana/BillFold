@@ -46,9 +46,9 @@ public class Reports {
     @ApiModelProperty(hidden = true)
     private String financeComments;
 
-<span class="pc" id="L49">    @Column(name = &quot;is_submitted&quot;, nullable = true)</span>
+<span class="fc" id="L49">    @Column(name = &quot;is_submitted&quot;, nullable = true)</span>
     @ApiModelProperty(hidden = true)
-<span class="pc" id="L51">    private Boolean isSubmitted = false;</span>
+<span class="fc" id="L51">    private Boolean isSubmitted = false;</span>
 
     @Column(name = &quot;employee_mail&quot;, nullable = true)
     @ApiModelProperty(hidden = true)
@@ -78,9 +78,9 @@ public class Reports {
     @ApiModelProperty(hidden = true)
     private float totalApprovedAmount;
 
-<span class="pc" id="L81">    @Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+<span class="fc" id="L81">    @Column(name = &quot;is_hidden&quot;, nullable = true)</span>
     @ApiModelProperty(hidden = true)
-<span class="pc" id="L83">    private Boolean isHidden = false;</span>
+<span class="fc" id="L83">    private Boolean isHidden = false;</span>
 
     @Column(name = &quot;manager_email&quot;)
     @ApiModelProperty(hidden = true)
@@ -104,7 +104,7 @@ public class Reports {
     @ApiModelProperty(hidden = true)
     private Long expensesCount;
 
-<span class="pc" id="L107">    @JsonIgnore</span>
+<span class="fc" id="L107">    @JsonIgnore</span>
     @OneToMany(mappedBy = &quot;reports&quot;, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private final List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();
@@ -144,15 +144,15 @@ public class Reports {
                    String managerReviewTime, FinanceApprovalStatus financeApprovalStatus,
                    ManagerApprovalStatus managerApprovalStatus, Long expensesCount)
     {
-<span class="nc" id="L147">        super();</span>
-<span class="nc" id="L148">        this.totalApprovedAmount = totalApprovedAmount;</span>
-<span class="nc" id="L149">        this.isHidden = isHidden;</span>
-<span class="nc" id="L150">        this.managerEmail = managerEmail;</span>
-<span class="nc" id="L151">        this.managerReviewTime = managerReviewTime;</span>
-<span class="nc" id="L152">        this.financeApprovalStatus = financeApprovalStatus;</span>
-<span class="nc" id="L153">        this.managerApprovalStatus = managerApprovalStatus;</span>
-<span class="nc" id="L154">        this.expensesCount = expensesCount;</span>
-<span class="nc" id="L155">    }</span>
+<span class="fc" id="L147">        super();</span>
+<span class="fc" id="L148">        this.totalApprovedAmount = totalApprovedAmount;</span>
+<span class="fc" id="L149">        this.isHidden = isHidden;</span>
+<span class="fc" id="L150">        this.managerEmail = managerEmail;</span>
+<span class="fc" id="L151">        this.managerReviewTime = managerReviewTime;</span>
+<span class="fc" id="L152">        this.financeApprovalStatus = financeApprovalStatus;</span>
+<span class="fc" id="L153">        this.managerApprovalStatus = managerApprovalStatus;</span>
+<span class="fc" id="L154">        this.expensesCount = expensesCount;</span>
+<span class="fc" id="L155">    }</span>
 
     public Long getReportId() {
 <span class="fc" id="L158">        return reportId;</span>

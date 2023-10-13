@@ -7,6 +7,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Entity
@@ -121,6 +122,8 @@ public class Employee {
         this.token = token;
     }
 
+
+
     public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
     }
@@ -196,6 +199,7 @@ public class Employee {
     public void setToken(String token) {
         this.token = token;
     }
+
 
 
 }

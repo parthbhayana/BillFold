@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ReportsDTOTest {
+class ReportsDTOTest {
 
     @Test
-    public void testDefaultConstructor() {
+    void testDefaultConstructor() {
         ReportsDTO reportsDTO = new ReportsDTO();
 
         // Verify that the default constructor initializes fields to their default values
@@ -17,7 +17,7 @@ public class ReportsDTOTest {
     }
 
     @Test
-    public void testParameterizedConstructor() {
+    void testParameterizedConstructor() {
         String reportTitle = "Expense Report";
 
         ReportsDTO reportsDTO = new ReportsDTO(reportTitle);
@@ -27,7 +27,7 @@ public class ReportsDTOTest {
     }
 
     @Test
-    public void testGetterAndSetterMethods() {
+    void testGetterAndSetterMethods() {
         ReportsDTO reportsDTO = new ReportsDTO();
 
         // Set the report title using the setter method

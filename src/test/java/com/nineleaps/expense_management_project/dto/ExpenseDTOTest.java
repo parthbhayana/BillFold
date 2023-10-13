@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ExpenseDTOTest {
+class ExpenseDTOTest {
 
     @Test
-    public void testDefaultConstructor() {
+    void testDefaultConstructor() {
         ExpenseDTO expenseDTO = new ExpenseDTO();
 
         // Verify that the default constructor initializes fields to their default values
@@ -24,7 +24,7 @@ public class ExpenseDTOTest {
     }
 
     @Test
-    public void testParameterizedConstructor() {
+    void testParameterizedConstructor() {
         Double amount = 100.0;
         String description = "Expense description";
         String merchantName = "Merchant Inc.";
@@ -44,7 +44,7 @@ public class ExpenseDTOTest {
     }
 
     @Test
-    public void testGetterAndSetterMethods() {
+    void testGetterAndSetterMethods() {
         ExpenseDTO expenseDTO = new ExpenseDTO();
 
         // Set values using setter methods

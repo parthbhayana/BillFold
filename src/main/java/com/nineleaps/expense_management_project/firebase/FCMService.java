@@ -16,7 +16,7 @@ import com.google.gson.GsonBuilder;
 
 @Service
 public class FCMService {
-	private Logger logger = LoggerFactory.getLogger(FCMService.class);
+	Logger logger = LoggerFactory.getLogger(FCMService.class);
 
 	public void sendMessageToToken(PushNotificationRequest request) throws InterruptedException, ExecutionException {
 		Message message = getPreconfiguredMessageToToken(request);
@@ -26,21 +26,21 @@ public class FCMService {
 		logger.info("Sent message to token. Device token: {}, {} msg {}", request.getToken(), response, jsonOutput);
 	}
 
-	private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
+	String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
 		return FirebaseMessaging.getInstance().sendAsync(message).get();
 	}
 
-	private AndroidConfig getAndroidConfig(String topic) {
+	AndroidConfig getAndroidConfig(String topic) {
 		return AndroidConfig.builder().setTtl(Duration.ofMinutes(2).toMillis()).setCollapseKey(topic)
 				.setPriority(AndroidConfig.Priority.HIGH)
 				.build();
 	}
 
-	private ApnsConfig getApnsConfig(String topic) {
+	ApnsConfig getApnsConfig(String topic) {
 		return ApnsConfig.builder().setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();
 	}
 
-	private Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
+	Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
 		return getPreconfiguredMessageBuilder(request).setToken(request.getToken()).build();
 	}
 

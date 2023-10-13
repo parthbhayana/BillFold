@@ -137,5 +137,83 @@ class CategoryControllerTest {
         assertEquals(categoryTotalAmount, response);
     }
 
-    // Add tests for other endpoints as needed...
+    @Test
+    void testGetCategoryAnalyticsYearly() {
+        Long categoryId = 1L;
+        Map<String, Object> analyticsData = createSampleAnalyticsData(); // Create sample analytics data
+
+        when(categoryService.getCategoryAnalyticsYearly(categoryId)).thenReturn((HashMap<String, Object>) analyticsData);
+
+        Map<String, Object> response = categoryController.getCategoryAnalytics(categoryId);
+
+        assertEquals(analyticsData, response);
+    }
+
+    // Create a sample analytics data map for testing
+    private Map<String, Object> createSampleAnalyticsData() {
+        Map<String, Object> analyticsData = new HashMap<>();
+        analyticsData.put("year", 2023);
+        analyticsData.put("categoryName", "Food");
+        analyticsData.put("totalExpenses", 1500.0);
+        analyticsData.put("averageExpense", 500.0);
+        // Add more data as needed for your specific test case
+
+        return analyticsData;
+    }
+
+    @Test
+    void testGetCategoryAnalyticsMonthly() {
+        Long categoryId = 1L;
+        Long year = 2023L;
+        Map<String, Object> analyticsData = createSampleAnalyticsData(); // Create sample analytics data
+
+        when(categoryService.getCategoryAnalyticsMonthly(categoryId, year)).thenReturn((HashMap<String, Object>) analyticsData);
+
+        Map<String, Object> response = categoryController.getCategoryAnalytics(categoryId, year);
+
+        assertEquals(analyticsData, response);
+    }
+
+    @Test
+    void testGetYearlyCategoryAnalyticsForAllCategories() {
+        Map<String, Object> yearlyAnalyticsData = createSampleYearlyAnalyticsData(); // Create sample yearly analytics data
+
+        when(categoryService.getYearlyCategoryAnalyticsForAllCategories()).thenReturn((HashMap<String, Object>) yearlyAnalyticsData);
+
+        Map<String, Object> response = categoryController.getYearlyCategoryAnalyticsForAllCategories();
+
+        assertEquals(yearlyAnalyticsData, response);
+    }
+
+    @Test
+    void testGetMonthlyCategoryAnalyticsForAllCategories() {
+        Long year = 2023L;
+        Map<String, Object> monthlyAnalyticsData = createSampleMonthlyAnalyticsData(); // Create sample monthly analytics data
+
+        when(categoryService.getMonthlyCategoryAnalyticsForAllCategories(year)).thenReturn((HashMap<String, Object>) monthlyAnalyticsData);
+
+        Map<String, Object> response = categoryController.getMonthlyCategoryAnalyticsForAllCategories(year);
+
+        assertEquals(monthlyAnalyticsData, response);
+    }
+
+    private Map<String, Object> createSampleYearlyAnalyticsData() {
+        Map<String, Object> yearlyAnalyticsData = new HashMap<>();
+        yearlyAnalyticsData.put("year", 2023);
+        yearlyAnalyticsData.put("totalExpenses", 1500.0);
+        // Add more data as needed for your specific test case
+
+        return yearlyAnalyticsData;
+    }
+
+    // Create a sample monthly analytics data map for testing
+    private Map<String, Object> createSampleMonthlyAnalyticsData() {
+        Map<String, Object> monthlyAnalyticsData = new HashMap<>();
+        monthlyAnalyticsData.put("year", 2023);
+        monthlyAnalyticsData.put("month", "January");
+        monthlyAnalyticsData.put("totalExpenses", 500.0);
+        // Add more data as needed for your specific test case
+
+        return monthlyAnalyticsData;
+    }
 }

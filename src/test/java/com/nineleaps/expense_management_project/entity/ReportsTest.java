@@ -166,7 +166,7 @@ class ReportsTest {
     }
 
     @Test
-    public void testReportsConstructor() {
+    void testReportsConstructor() {
         // Arrange
         Long reportId = 1L;
         Long employeeId = 123L;
@@ -192,7 +192,7 @@ class ReportsTest {
     }
 
     @Test
-    public void testReportsAdditional1Constructor() {
+    void testReportsAdditional1Constructor() {
         // Arrange
         Boolean isSubmitted = true;
         String employeeMail = "john.doe@example.com";
@@ -220,7 +220,7 @@ class ReportsTest {
 
 
     @Test
-    public void testReportsAdiitional2Constructor() {
+    void testReportsAdiitional2Constructor() {
         // Arrange
         Boolean isSubmitted = true;
         String employeeMail = "john.doe@example.com";
@@ -244,6 +244,42 @@ class ReportsTest {
         assertEquals(managerActionDate, reports.getManagerActionDate());
         assertEquals(financeActionDate, reports.getFinanceActionDate());
         assertEquals(totalAmount, reports.getTotalAmount());
+    }
+
+    @Test
+    void testTotalApprovedAmountConstructor() {
+        float totalApprovedAmount = 1000.0F;
+        Boolean isHidden = true;
+        String managerEmail = "manager@example.com";
+        String managerReviewTime = "2023-10-11 10:00 AM";
+        FinanceApprovalStatus financeApprovalStatus = FinanceApprovalStatus.APPROVED;
+        ManagerApprovalStatus managerApprovalStatus = ManagerApprovalStatus.APPROVED;
+        Long expensesCount = 5L;
+
+        Reports reports = new Reports(totalApprovedAmount, isHidden, managerEmail, managerReviewTime, financeApprovalStatus, managerApprovalStatus, expensesCount);
+
+        assertEquals(totalApprovedAmount, reports.getTotalApprovedAmount());
+        assertEquals(true, reports.getIsHidden()); // Since it's a Boolean, check if it's true
+        assertEquals(managerEmail, reports.getManagerEmail());
+        assertEquals(managerReviewTime, reports.getManagerReviewTime());
+        assertEquals(financeApprovalStatus, reports.getFinanceApprovalStatus());
+        assertEquals(managerApprovalStatus, reports.getManagerApprovalStatus());
+        assertEquals(expensesCount, reports.getExpensesCount());
+
+        // Ensure that other attributes are not set
+        assertNull(reports.getReportId());
+        assertNull(reports.getEmployeeId());
+        assertNull(reports.getEmployeeName());
+        assertNull(reports.getOfficialEmployeeId());
+        assertNull(reports.getReportTitle());
+        assertNull(reports.getManagerComments());
+        assertNull(reports.getFinanceComments());
+        assertNull(reports.getEmployeeMail());
+        assertNull(reports.getDateSubmitted());
+        assertNull(reports.getDateCreated());
+        assertNull(reports.getManagerActionDate());
+        assertNull(reports.getFinanceActionDate());
+        assertEquals(0.0F, reports.getTotalAmount());
     }
 
 }

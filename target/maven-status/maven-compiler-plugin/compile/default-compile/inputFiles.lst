@@ -12,7 +12,6 @@
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/dto/ExpenseDTO.java
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/service/IPdfGeneratorService.java
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/config/JwtFilter.java
-/home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/exception/EmployeeNotFoundException.java
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/controller/EmployeeController.java
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/repository/EmployeeRepository.java
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/controller/ExcelController.java
@@ -49,5 +48,4 @@
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/service/IExcelGeneratorReportsService.java
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/entity/Employee.java
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/service/EmailServiceImpl.java
-/home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/exception/ExcelGenerationException.java
 /home/nineleaps/Desktop/project/BillFold/src/main/java/com/nineleaps/expense_management_project/service/IExpenseService.java

@@ -129,17 +129,19 @@ public class CategoryServiceImpl implements ICategoryService {
 		if (category != null) {
 			List<Expense> expenseList = expenseRepository.findByCategoryAndIsReported(category, true);
 
-			for (Expense expense : expenseList) {
-				LocalDate expenseDate = expense.getDate();
-				if (expenseDate.getYear() == year) {
-					String month = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
-					Double amount = expense.getAmount();
+			if (expenseList != null) { // Check for null
+				for (Expense expense : expenseList) {
+					LocalDate expenseDate = expense.getDate();
+					if (expenseDate.getYear() == year) {
+						String month = expenseDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
+						Double amount = expense.getAmount();
 
-					if (categoryAmountMap.containsKey(month)) {
-						Double previousAmount = categoryAmountMap.get(month);
-						categoryAmountMap.put(month, (previousAmount + amount));
-					} else {
-						categoryAmountMap.put(month, amount);
+						if (categoryAmountMap.containsKey(month)) {
+							Double previousAmount = categoryAmountMap.get(month);
+							categoryAmountMap.put(month, (previousAmount + amount));
+						} else {
+							categoryAmountMap.put(month, amount);
+						}
 					}
 				}
 			}
@@ -147,6 +149,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 		return categoryAmountMap;
 	}
+
 
 	@Override
 	public HashMap<String, Double> getYearlyReimbursementRatio(Long categoryId) {
@@ -189,24 +192,25 @@ public class CategoryServiceImpl implements ICategoryService {
 		if (category != null) {
 			List<Expense> expenseList = expenseRepository.findByCategory(category);
 
-			for (Expense expense : expenseList) {
-				if (Boolean.TRUE.equals(expense.getIsReported()) && expense.getDate().getYear() == year) {
-					String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-					String monthKey = year + "_" + month;
+			if (expenseList != null) {
+				for (Expense expense : expenseList) {
+					if (Boolean.TRUE.equals(expense.getIsReported()) && expense.getDate().getYear() == year) {
+						String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+						String monthKey = year + "_" + month;
 
-					if (yearlyReimbursementRatioMap.containsKey(monthKey)) {
-						Double totalReimbursedAmount =  yearlyReimbursementRatioMap.get(monthKey)
-								+ expense.getAmountApproved();
-						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
-						Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
+						if (yearlyReimbursementRatioMap.containsKey(monthKey)) {
+							Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountApproved();
+							int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
+							Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
-						yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);
-						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (double) totalNumberOfExpenses);
-						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);
-					} else {
-						yearlyReimbursementRatioMap.put(monthKey, expense.getAmountApproved());
-						yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1.0);
-						yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountApproved());
+							yearlyReimbursementRatioMap.put(monthKey, totalReimbursedAmount);
+							yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, (double) totalNumberOfExpenses);
+							yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, reimbursementRatio);
+						} else {
+							yearlyReimbursementRatioMap.put(monthKey, expense.getAmountApproved());
+							yearlyReimbursementRatioMap.put(monthKey + CONSTANT2, 1.0);
+							yearlyReimbursementRatioMap.put(monthKey + CONSTANT1, expense.getAmountApproved());
+						}
 					}
 				}
 			}
@@ -214,6 +218,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 		return yearlyReimbursementRatioMap;
 	}
+
 
 	@Override
 	public HashMap<String, Object> getCategoryAnalyticsYearly(Long categoryId) {
@@ -237,12 +242,15 @@ public class CategoryServiceImpl implements ICategoryService {
 
 		Category category = getCategoryById(categoryId);
 		if (category != null) {
-			HashMap<String, Double> categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId,
-					year);
+			HashMap<String, Double> categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId, year);
 			HashMap<String, Double> monthlyReimbursementRatio = getMonthlyReimbursementRatio(categoryId, year);
 
-			analyticsData.put("categoryTotalAmountByMonth", categoryTotalAmountByMonth);
-			analyticsData.put("monthlyReimbursementRatio", monthlyReimbursementRatio);
+			if (categoryTotalAmountByMonth != null) {
+				analyticsData.put("categoryTotalAmountByMonth", categoryTotalAmountByMonth);
+			}
+			if (monthlyReimbursementRatio != null) {
+				analyticsData.put("monthlyReimbursementRatio", monthlyReimbursementRatio);
+			}
 		}
 
 		return analyticsData;

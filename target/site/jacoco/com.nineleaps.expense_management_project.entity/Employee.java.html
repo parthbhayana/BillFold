@@ -7,6 +7,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Entity
@@ -17,185 +18,188 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(hidden = true)
     @Column(name = &quot;employee_id&quot;)
-<span class="fc" id="L20">    private Long employeeId;</span>
+<span class="fc" id="L21">    private Long employeeId;</span>
 
     @Column(name = &quot;official_id&quot;)
-<span class="fc" id="L23">    private String officialEmployeeId;</span>
+<span class="fc" id="L24">    private String officialEmployeeId;</span>
 
     @Column(name = &quot;first_name&quot;)
-<span class="fc" id="L26">    private String firstName;</span>
+<span class="fc" id="L27">    private String firstName;</span>
 
     @Column(name = &quot;middle_name&quot;)
-<span class="fc" id="L29">    private String middleName;</span>
+<span class="fc" id="L30">    private String middleName;</span>
 
     @Column(name = &quot;last_name&quot;)
-<span class="fc" id="L32">    private String lastName;</span>
+<span class="fc" id="L33">    private String lastName;</span>
 
     @Column(name = &quot;employee_email&quot;)
-<span class="fc" id="L35">    private String employeeEmail;</span>
+<span class="fc" id="L36">    private String employeeEmail;</span>
 
     @Column(name = &quot;manager_email&quot;)
-<span class="fc" id="L38">    private String managerEmail;</span>
+<span class="fc" id="L39">    private String managerEmail;</span>
 
     @Column(name = &quot;manager_name&quot;)
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L42">    private String managerName;</span>
+<span class="fc" id="L43">    private String managerName;</span>
 
     @Column(name = &quot;hr_name&quot;)
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L46">    private String hrName;</span>
+<span class="fc" id="L47">    private String hrName;</span>
 
     @Column(name = &quot;hr_email&quot;)
-<span class="fc" id="L49">    private String hrEmail;</span>
+<span class="fc" id="L50">    private String hrEmail;</span>
 
-<span class="fc" id="L51">    @Column(name = &quot;lnd_name&quot;)</span>
+<span class="fc" id="L52">    @Column(name = &quot;lnd_name&quot;)</span>
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L53">    private String lndName = &quot;Vrusha&quot;;</span>
+<span class="fc" id="L54">    private String lndName = &quot;Vrusha&quot;;</span>
 
-<span class="fc" id="L55">    @Column(name = &quot;lnd_email&quot;)</span>
+<span class="fc" id="L56">    @Column(name = &quot;lnd_email&quot;)</span>
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L57">    private String lndEmail = &quot;billfoldfinancejsr@gmail.com&quot;;</span>
+<span class="fc" id="L58">    private String lndEmail = &quot;billfoldfinancejsr@gmail.com&quot;;</span>
 
     @Column(name = &quot;mobile_number&quot;)
-<span class="fc" id="L60">    private Long mobileNumber;</span>
+<span class="fc" id="L61">    private Long mobileNumber;</span>
 
-<span class="fc" id="L62">    @Column(name = &quot;is_admin&quot;, nullable = true)</span>
+<span class="fc" id="L63">    @Column(name = &quot;is_admin&quot;, nullable = true)</span>
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L64">    private Boolean isFinanceAdmin = false;</span>
+<span class="fc" id="L65">    private Boolean isFinanceAdmin = false;</span>
 
     @Column(name = &quot;image_url&quot;)
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L68">    private String imageUrl;</span>
+<span class="fc" id="L69">    private String imageUrl;</span>
 
-<span class="fc" id="L70">    @Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+<span class="fc" id="L71">    @Column(name = &quot;is_hidden&quot;, nullable = true)</span>
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L72">    private Boolean isHidden = false;</span>
+<span class="fc" id="L73">    private Boolean isHidden = false;</span>
 
-<span class="fc" id="L74">    @JsonIgnore</span>
+<span class="fc" id="L75">    @JsonIgnore</span>
     @OneToMany(mappedBy = &quot;employee&quot;, cascade = CascadeType.ALL)
-<span class="fc" id="L76">    private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L77">    private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L78">    @Column(name = &quot;role&quot;)</span>
+<span class="fc" id="L79">    @Column(name = &quot;role&quot;)</span>
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L80">    private String role = &quot;EMPLOYEE&quot;;</span>
+<span class="fc" id="L81">    private String role = &quot;EMPLOYEE&quot;;</span>
 
     @Column(name = &quot;fcm_token&quot;)
     @ApiModelProperty(hidden = true)
-<span class="fc" id="L84">    private String token;</span>
+<span class="fc" id="L85">    private String token;</span>
 
-<span class="fc" id="L86">    public Employee() {</span>
+<span class="fc" id="L87">    public Employee() {</span>
 
-<span class="fc" id="L88">    }</span>
+<span class="fc" id="L89">    }</span>
 
     public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
                     String employeeEmail, String managerEmail) {
-<span class="fc" id="L92">        super();</span>
-<span class="fc" id="L93">        this.employeeId = employeeId;</span>
-<span class="fc" id="L94">        this.officialEmployeeId = officialEmployeeId;</span>
-<span class="fc" id="L95">        this.firstName = firstName;</span>
-<span class="fc" id="L96">        this.middleName = middleName;</span>
-<span class="fc" id="L97">        this.lastName = lastName;</span>
-<span class="fc" id="L98">        this.employeeEmail = employeeEmail;</span>
-<span class="fc" id="L99">        this.managerEmail = managerEmail;</span>
+<span class="fc" id="L93">        super();</span>
+<span class="fc" id="L94">        this.employeeId = employeeId;</span>
+<span class="fc" id="L95">        this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L96">        this.firstName = firstName;</span>
+<span class="fc" id="L97">        this.middleName = middleName;</span>
+<span class="fc" id="L98">        this.lastName = lastName;</span>
+<span class="fc" id="L99">        this.employeeEmail = employeeEmail;</span>
+<span class="fc" id="L100">        this.managerEmail = managerEmail;</span>
 
 
-<span class="fc" id="L102">    }</span>
+<span class="fc" id="L103">    }</span>
     public Employee(String managerName, String hrName, String hrEmail,
                     String lndName, String lndEmail, Long mobileNumber, Boolean isFinanceAdmin)
-<span class="fc" id="L105">    {</span>
-<span class="fc" id="L106">        this.managerName = managerName;</span>
-<span class="fc" id="L107">        this.hrName = hrName;</span>
-<span class="fc" id="L108">        this.hrEmail = hrEmail;</span>
-<span class="fc" id="L109">        this.lndName = lndName;</span>
-<span class="fc" id="L110">        this.lndEmail = lndEmail;</span>
-<span class="fc" id="L111">        this.mobileNumber = mobileNumber;</span>
-<span class="fc" id="L112">        this.isFinanceAdmin = isFinanceAdmin;</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L106">    {</span>
+<span class="fc" id="L107">        this.managerName = managerName;</span>
+<span class="fc" id="L108">        this.hrName = hrName;</span>
+<span class="fc" id="L109">        this.hrEmail = hrEmail;</span>
+<span class="fc" id="L110">        this.lndName = lndName;</span>
+<span class="fc" id="L111">        this.lndEmail = lndEmail;</span>
+<span class="fc" id="L112">        this.mobileNumber = mobileNumber;</span>
+<span class="fc" id="L113">        this.isFinanceAdmin = isFinanceAdmin;</span>
+<span class="fc" id="L114">    }</span>
     public Employee(String imageUrl,
                     Boolean isHidden, List&lt;Expense&gt; expenseList, String role, String token)
-<span class="fc" id="L116">    {</span>
-<span class="fc" id="L117">        this.imageUrl = imageUrl;</span>
-<span class="fc" id="L118">        this.isHidden = isHidden;</span>
-<span class="fc" id="L119">        this.expenseList = expenseList;</span>
-<span class="fc" id="L120">        this.role = role;</span>
-<span class="fc" id="L121">        this.token = token;</span>
-<span class="fc" id="L122">    }</span>
+<span class="fc" id="L117">    {</span>
+<span class="fc" id="L118">        this.imageUrl = imageUrl;</span>
+<span class="fc" id="L119">        this.isHidden = isHidden;</span>
+<span class="fc" id="L120">        this.expenseList = expenseList;</span>
+<span class="fc" id="L121">        this.role = role;</span>
+<span class="fc" id="L122">        this.token = token;</span>
+<span class="fc" id="L123">    }</span>
+
+
 
     public void setEmployeeId(Long employeeId) {
-<span class="fc" id="L125">        this.employeeId = employeeId;</span>
-<span class="fc" id="L126">    }</span>
+<span class="fc" id="L128">        this.employeeId = employeeId;</span>
+<span class="fc" id="L129">    }</span>
 
     public void setOfficialEmployeeId(String officialEmployeeId) {
-<span class="fc" id="L129">        this.officialEmployeeId = officialEmployeeId;</span>
-<span class="fc" id="L130">    }</span>
+<span class="fc" id="L132">        this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L133">    }</span>
 
     public void setFirstName(String firstName) {
-<span class="fc" id="L133">        this.firstName = firstName;</span>
-<span class="fc" id="L134">    }</span>
+<span class="fc" id="L136">        this.firstName = firstName;</span>
+<span class="fc" id="L137">    }</span>
 
     public void setMiddleName(String middleName) {
-<span class="fc" id="L137">        this.middleName = middleName;</span>
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L140">        this.middleName = middleName;</span>
+<span class="fc" id="L141">    }</span>
 
     public void setLastName(String lastName) {
-<span class="fc" id="L141">        this.lastName = lastName;</span>
-<span class="fc" id="L142">    }</span>
+<span class="fc" id="L144">        this.lastName = lastName;</span>
+<span class="fc" id="L145">    }</span>
 
     public void setEmployeeEmail(String employeeEmail) {
-<span class="fc" id="L145">        this.employeeEmail = employeeEmail;</span>
-<span class="fc" id="L146">    }</span>
+<span class="fc" id="L148">        this.employeeEmail = employeeEmail;</span>
+<span class="fc" id="L149">    }</span>
 
     public void setManagerEmail(String managerEmail) {
-<span class="fc" id="L149">        this.managerEmail = managerEmail;</span>
-<span class="fc" id="L150">    }</span>
+<span class="fc" id="L152">        this.managerEmail = managerEmail;</span>
+<span class="fc" id="L153">    }</span>
 
     public void setManagerName(String managerName) {
-<span class="fc" id="L153">        this.managerName = managerName;</span>
-<span class="fc" id="L154">    }</span>
+<span class="fc" id="L156">        this.managerName = managerName;</span>
+<span class="fc" id="L157">    }</span>
 
     public void setHrName(String hrName) {
-<span class="fc" id="L157">        this.hrName = hrName;</span>
-<span class="fc" id="L158">    }</span>
+<span class="fc" id="L160">        this.hrName = hrName;</span>
+<span class="fc" id="L161">    }</span>
 
     public void setHrEmail(String hrEmail) {
-<span class="fc" id="L161">        this.hrEmail = hrEmail;</span>
-<span class="fc" id="L162">    }</span>
+<span class="fc" id="L164">        this.hrEmail = hrEmail;</span>
+<span class="fc" id="L165">    }</span>
 
     public void setLndName(String lndName) {
-<span class="fc" id="L165">        this.lndName = lndName;</span>
-<span class="fc" id="L166">    }</span>
+<span class="fc" id="L168">        this.lndName = lndName;</span>
+<span class="fc" id="L169">    }</span>
 
     public void setLndEmail(String lndEmail) {
-<span class="fc" id="L169">        this.lndEmail = lndEmail;</span>
-<span class="fc" id="L170">    }</span>
+<span class="fc" id="L172">        this.lndEmail = lndEmail;</span>
+<span class="fc" id="L173">    }</span>
 
     public void setMobileNumber(Long mobileNumber) {
-<span class="fc" id="L173">        this.mobileNumber = mobileNumber;</span>
-<span class="fc" id="L174">    }</span>
+<span class="fc" id="L176">        this.mobileNumber = mobileNumber;</span>
+<span class="fc" id="L177">    }</span>
 
     public void setIsFinanceAdmin(Boolean isFinanceAdmin) {
-<span class="fc" id="L177">        this.isFinanceAdmin = isFinanceAdmin;</span>
-<span class="fc" id="L178">    }</span>
+<span class="fc" id="L180">        this.isFinanceAdmin = isFinanceAdmin;</span>
+<span class="fc" id="L181">    }</span>
 
     public void setImageUrl(String imageUrl) {
-<span class="fc" id="L181">        this.imageUrl = imageUrl;</span>
-<span class="fc" id="L182">    }</span>
+<span class="fc" id="L184">        this.imageUrl = imageUrl;</span>
+<span class="fc" id="L185">    }</span>
 
     public void setIsHidden(Boolean isHidden) {
-<span class="fc" id="L185">        this.isHidden = isHidden;</span>
-<span class="fc" id="L186">    }</span>
+<span class="fc" id="L188">        this.isHidden = isHidden;</span>
+<span class="fc" id="L189">    }</span>
 
     public void setExpenseList(List&lt;Expense&gt; expenseList) {
-<span class="fc" id="L189">        this.expenseList = expenseList;</span>
-<span class="fc" id="L190">    }</span>
+<span class="fc" id="L192">        this.expenseList = expenseList;</span>
+<span class="fc" id="L193">    }</span>
 
     public void setRole(String role) {
-<span class="fc" id="L193">        this.role = role;</span>
-<span class="fc" id="L194">    }</span>
+<span class="fc" id="L196">        this.role = role;</span>
+<span class="fc" id="L197">    }</span>
 
     public void setToken(String token) {
-<span class="fc" id="L197">        this.token = token;</span>
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L200">        this.token = token;</span>
+<span class="fc" id="L201">    }</span>
+
 
 
 }

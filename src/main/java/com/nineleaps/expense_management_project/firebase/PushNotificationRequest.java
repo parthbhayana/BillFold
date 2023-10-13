@@ -19,6 +19,9 @@ public class PushNotificationRequest {
 		this.token = token;
 	}
 
+
+
+
 	public void setTitle(String title) {
 		this.title = title;
 	}

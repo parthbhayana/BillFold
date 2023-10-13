@@ -39,4 +39,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 																					  LocalDate date, Category category,
 																					  String merchantName, boolean a);
 
+
+
 }

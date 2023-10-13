@@ -66,23 +66,23 @@ import com.nineleaps.expense_management_project.service.ICategoryService;
 
     @GetMapping(&quot;/getCategoryAnalyticsYearly/{categoryId}&quot;)
     public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId) {
-<span class="nc" id="L69">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
+<span class="fc" id="L69">        return categoryService.getCategoryAnalyticsYearly(categoryId);</span>
     }
 
     @GetMapping(&quot;/getCategoryAnalyticsMonthly/{categoryId}&quot;)
     public Map&lt;String, Object&gt; getCategoryAnalytics(@PathVariable Long categoryId, @RequestParam Long year) {
-<span class="nc" id="L74">        return categoryService.getCategoryAnalyticsMonthly(categoryId, year);</span>
+<span class="fc" id="L74">        return categoryService.getCategoryAnalyticsMonthly(categoryId, year);</span>
     }
 
 
     @GetMapping(&quot;/getAllCategoryAnalyticsYearly&quot;)
     public Map&lt;String, Object&gt; getYearlyCategoryAnalyticsForAllCategories() {
-<span class="nc" id="L80">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
+<span class="fc" id="L80">        return categoryService.getYearlyCategoryAnalyticsForAllCategories();</span>
     }
 
     @GetMapping(&quot;/getAllCategoryAnalyticsMonthly&quot;)
     public Map&lt;String, Object&gt; getMonthlyCategoryAnalyticsForAllCategories(@RequestParam Long year) {
-<span class="nc" id="L85">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
+<span class="fc" id="L85">        return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);</span>
     }
 
 }

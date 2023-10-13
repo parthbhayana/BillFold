@@ -16,7 +16,7 @@ import com.google.gson.GsonBuilder;
 
 @Service
 <span class="fc" id="L18">public class FCMService {</span>
-<span class="fc" id="L19">	private Logger logger = LoggerFactory.getLogger(FCMService.class);</span>
+<span class="fc" id="L19">	Logger logger = LoggerFactory.getLogger(FCMService.class);</span>
 
 	public void sendMessageToToken(PushNotificationRequest request) throws InterruptedException, ExecutionException {
 <span class="nc" id="L22">		Message message = getPreconfiguredMessageToToken(request);</span>
@@ -26,21 +26,21 @@ import com.google.gson.GsonBuilder;
 <span class="nc" id="L26">		logger.info(&quot;Sent message to token. Device token: {}, {} msg {}&quot;, request.getToken(), response, jsonOutput);</span>
 <span class="nc" id="L27">	}</span>
 
-	private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
+	String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
 <span class="nc" id="L30">		return FirebaseMessaging.getInstance().sendAsync(message).get();</span>
 	}
 
-	private AndroidConfig getAndroidConfig(String topic) {
+	AndroidConfig getAndroidConfig(String topic) {
 <span class="nc" id="L34">		return AndroidConfig.builder().setTtl(Duration.ofMinutes(2).toMillis()).setCollapseKey(topic)</span>
 <span class="nc" id="L35">				.setPriority(AndroidConfig.Priority.HIGH)</span>
 <span class="nc" id="L36">				.build();</span>
 	}
 
-	private ApnsConfig getApnsConfig(String topic) {
+	ApnsConfig getApnsConfig(String topic) {
 <span class="nc" id="L40">		return ApnsConfig.builder().setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();</span>
 	}
 
-	private Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
+	Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
 <span class="nc" id="L44">		return getPreconfiguredMessageBuilder(request).setToken(request.getToken()).build();</span>
 	}
 

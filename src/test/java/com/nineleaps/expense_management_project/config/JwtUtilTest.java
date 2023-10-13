@@ -1,13 +1,23 @@
 package com.nineleaps.expense_management_project.config;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.impl.DefaultClaims;
 
-public class JwtUtilTest {
+import java.util.Date;
+
+import static org.mockito.Mockito.mock;
+
+class JwtUtilTest {
+
 
     private JwtUtil jwtUtil;
 
