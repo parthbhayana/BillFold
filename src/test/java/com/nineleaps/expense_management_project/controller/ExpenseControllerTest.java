@@ -13,6 +13,18 @@ import com.nineleaps.expense_management_project.entity.ManagerApprovalStatus;
 import com.nineleaps.expense_management_project.entity.ManagerApprovalStatusExpense;
 import com.nineleaps.expense_management_project.entity.Reports;
 import com.nineleaps.expense_management_project.service.IExpenseService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,6 +49,8 @@ class ExpenseControllerTest {
     @Autowired
     private ExpenseController expenseController;
 
+    private MockMvc mockMvc;
+
     @MockBean
     private IExpenseService iExpenseService;
 
@@ -45,7 +59,7 @@ class ExpenseControllerTest {
      */
     @Test
     @Disabled("TODO: Complete this test")
-    void testAddPotentialDuplicateExpense() throws Exception {
+    void testAddPotentialDuplicateExpense1() throws Exception {
         // TODO: Complete this test.
         //   Reason: R013 No inputs found that don't throw a trivial exception.
         //   Diffblue Cover tried to run the arrange/act section, but the method under
@@ -484,4 +498,6 @@ class ExpenseControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
                 .andExpect(MockMvcResultMatchers.content().string("Add Expense"));
     }
+
+
 }

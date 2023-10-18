@@ -1,0 +1,6 @@
+
+h
+java:S37763"RRefactor this method to reduce its Cognitive Complexity from 45 to the 15 allowed.(—ßð§
+W	java:S125Þ"<This block of commented-out lines of code should be removed.(·ìÄ‹ýÿÿÿÿ
+Ý
+java:S65413"ÆA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 210 to 64, Complexity from 17 to 14, Nesting Level from 5 to 2, Number of Variables from 70 to 6.(—ßð§

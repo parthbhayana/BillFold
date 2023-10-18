@@ -200,4 +200,16 @@ class EmployeeControllerTest {
         assertEquals(mockEmployee, resultEmployee.get());
     }
 
+    @Test
+    void testEditEmployeeDetails() {
+        // Call the controller method
+        employeeController.editEmployeeDetails(1L, "manager@example.com", 1234567890L, "EMP001", "Manager", "karthik", "karthik.r@nineleaps.com");
+
+        // Verify the method call
+        verify(employeeService, times(1)).editEmployeeDetails(1L, "manager@example.com", 1234567890L, "EMP001", "Manager", "karthik.r@nineleaps.com", "karthik");
+    }
+
+
+
+
 }

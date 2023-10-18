@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nineleaps.expense_management_project.service.ExpenseServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 34, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.604 s - in com.nineleaps.expense_management_project.service.ExpenseServiceImplTest
+Tests run: 34, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.194 s - in com.nineleaps.expense_management_project.service.ExpenseServiceImplTest

@@ -10,6 +10,7 @@ import com.nineleaps.expense_management_project.dto.UserDTO;
 import com.nineleaps.expense_management_project.service.IEmailService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequestMapping()
 public class UserController {
+
     @Autowired
     private IEmployeeService employeeService;
 
@@ -51,6 +53,12 @@ public class UserController {
     @GetMapping("/getProfileData")
     public ResponseEntity<JSONObject> sendData(HttpServletRequest request) {
         String authorisationHeader = request.getHeader(AUTHORIZATION);
+
+        if (authorisationHeader == null) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         String token = authorisationHeader.substring("Bearer ".length());
         DecodedJWT decodedAccessToken = JWT.decode(token);
         String employeeEmailFromToken = decodedAccessToken.getSubject();
@@ -59,8 +67,6 @@ public class UserController {
         String email = employee1.getEmployeeEmail();
         String firstName = employee1.getFirstName();
         String lastName = employee1.getLastName();
-        @SuppressWarnings("unused")
-
         String imageUrl = employee1.getImageUrl();
         JSONObject responsejson = new JSONObject();
         responsejson.put("employeeId", employeeId);
@@ -74,21 +80,26 @@ public class UserController {
     @PostMapping("/theProfile")
     public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response)
             throws MessagingException {
-        Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
+        String email = userDTO.getEmployeeEmail(); // Get the email from the UserDTO
+
+        Employee employee = employeeService.findByEmailId(email);
+
         if (employee == null) {
             employeeService.insertUser(userDTO);
-            employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());
-            String email = employee.getEmployeeEmail();
-            emailService.welcomeEmail(email);
-            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
+            employee = employeeService.findByEmailId(email);
+            if(employee == null){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }else{
+                emailService.welcomeEmail(email);
+                return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
+            }
 
         } else {
-            String email = employee.getEmployeeEmail();
             employeeService.updateUser(userDTO);
             return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
-
         }
     }
+
 
     @PostMapping("/regenerateToken")
     public void regenerateToken(HttpServletRequest request,HttpServletResponse response) {

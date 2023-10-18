@@ -3580,4 +3580,3 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
 }
-

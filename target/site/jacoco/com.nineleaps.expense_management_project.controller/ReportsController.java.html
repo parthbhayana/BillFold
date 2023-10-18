@@ -62,7 +62,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
     @PostMapping(&quot;/addReport/{employeeId}&quot;)
     public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
                              @RequestParam List&lt;Long&gt; expenseIds) {
-<span class="nc" id="L65">        return reportsService.addReport(reportsDTO, employeeId, expenseIds);</span>
+<span class="fc" id="L65">        return reportsService.addReport(reportsDTO, employeeId, expenseIds);</span>
     }
 
     @PatchMapping(&quot;/addExpenseToReport/{reportId}&quot;)
@@ -88,7 +88,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
     public List&lt;Reports&gt; editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
                                     @RequestParam String reportDescription, @RequestParam List&lt;Long&gt; addExpenseIds,
                                     @RequestParam List&lt;Long&gt; removeExpenseIds) {
-<span class="nc" id="L91">        return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);</span>
+<span class="fc" id="L91">        return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);</span>
     }
 
     @PostMapping(&quot;/approveReportByFinance&quot;)
@@ -155,33 +155,33 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
                                     @RequestParam String json, @RequestParam String comments,
                                     HttpServletResponse response) throws ParseException, MessagingException,
             IOException {
-<span class="nc" id="L158">        JSONParser parser = new JSONParser();</span>
+<span class="fc" id="L158">        JSONParser parser = new JSONParser();</span>
 
-<span class="nc" id="L160">        Map&lt;Long, Float&gt; partialApprovedMap = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L161">        List&lt;Long&gt; approvedIds = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L162">        List&lt;Long&gt; rejectedIds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L160">        Map&lt;Long, Float&gt; partialApprovedMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L161">        List&lt;Long&gt; approvedIds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L162">        List&lt;Long&gt; rejectedIds = new ArrayList&lt;&gt;();</span>
 
-<span class="nc" id="L164">        JSONArray jsonArray = (JSONArray) parser.parse(json);</span>
-<span class="nc bnc" id="L165" title="All 2 branches missed.">        for (Object object : jsonArray) {</span>
-<span class="nc" id="L166">            JSONObject jsonObject = (JSONObject) object;</span>
+<span class="fc" id="L164">        JSONArray jsonArray = (JSONArray) parser.parse(json);</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        for (Object object : jsonArray) {</span>
+<span class="fc" id="L166">            JSONObject jsonObject = (JSONObject) object;</span>
 
-<span class="nc" id="L168">            long expenseId = (Long) jsonObject.get(&quot;expenseId&quot;);</span>
-<span class="nc" id="L169">            float amountApproved = (Long) jsonObject.get(&quot;amountApproved&quot;);</span>
-<span class="nc" id="L170">            String status = (String) jsonObject.get(&quot;status&quot;);</span>
+<span class="fc" id="L168">            long expenseId = (Long) jsonObject.get(&quot;expenseId&quot;);</span>
+<span class="fc" id="L169">            double amountApproved = (double) jsonObject.get(&quot;amountApproved&quot;);</span>
+<span class="fc" id="L170">            String status = (String) jsonObject.get(&quot;status&quot;);</span>
 
-<span class="nc bnc" id="L172" title="All 2 branches missed.">            if (Objects.equals(status, &quot;approved&quot;)) {</span>
-<span class="nc" id="L173">                approvedIds.add(expenseId);</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;approved&quot;)) {</span>
+<span class="fc" id="L173">                approvedIds.add(expenseId);</span>
             }
-<span class="nc bnc" id="L175" title="All 2 branches missed.">            if (Objects.equals(status, &quot;rejected&quot;)) {</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;rejected&quot;)) {</span>
 <span class="nc" id="L176">                rejectedIds.add(expenseId);</span>
             }
-<span class="nc bnc" id="L178" title="All 2 branches missed.">            if (Objects.equals(status, &quot;partiallyApproved&quot;)) {</span>
-<span class="nc" id="L179">                partialApprovedMap.put(expenseId, amountApproved);</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;partiallyApproved&quot;)) {</span>
+<span class="nc" id="L179">                partialApprovedMap.put(expenseId, (float) amountApproved);</span>
             }
-<span class="nc" id="L181">        }</span>
-<span class="nc" id="L182">        reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,</span>
+<span class="fc" id="L181">        }</span>
+<span class="fc" id="L182">        reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,</span>
                 comments, response);
-<span class="nc" id="L184">    }</span>
+<span class="fc" id="L184">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

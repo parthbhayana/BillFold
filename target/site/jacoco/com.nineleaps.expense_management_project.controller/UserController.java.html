@@ -10,6 +10,7 @@ import com.nineleaps.expense_management_project.dto.UserDTO;
 import com.nineleaps.expense_management_project.service.IEmailService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequestMapping()
 public class UserController {
+
     @Autowired
     private IEmployeeService employeeService;
 
@@ -38,75 +40,84 @@ public class UserController {
     private JwtUtil jwtUtil;
     JSONObject responseJson;
 
-<span class="fc" id="L41">    public UserController(IEmployeeService employeeService) {</span>
+<span class="fc" id="L43">    public UserController(IEmployeeService employeeService) {</span>
 
-<span class="fc" id="L43">    }</span>
+<span class="fc" id="L45">    }</span>
 
     @GetMapping(&quot;/listTheUser&quot;)
     public List&lt;Employee&gt; getAllUserDetails() {
-<span class="nc" id="L47">        return employeeService.getAllUser();</span>
+<span class="fc" id="L49">        return employeeService.getAllUser();</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     @GetMapping(&quot;/getProfileData&quot;)
     public ResponseEntity&lt;JSONObject&gt; sendData(HttpServletRequest request) {
-<span class="nc" id="L53">        String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
-<span class="nc" id="L54">        String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
-<span class="nc" id="L55">        DecodedJWT decodedAccessToken = JWT.decode(token);</span>
-<span class="nc" id="L56">        String employeeEmailFromToken = decodedAccessToken.getSubject();</span>
-<span class="nc" id="L57">        Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);</span>
-<span class="nc" id="L58">        Long employeeId = employee1.getEmployeeId();</span>
-<span class="nc" id="L59">        String email = employee1.getEmployeeEmail();</span>
-<span class="nc" id="L60">        String firstName = employee1.getFirstName();</span>
-<span class="nc" id="L61">        String lastName = employee1.getLastName();</span>
-        @SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L55">        String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
 
-<span class="nc" id="L64">        String imageUrl = employee1.getImageUrl();</span>
-<span class="nc" id="L65">        JSONObject responsejson = new JSONObject();</span>
-<span class="nc" id="L66">        responsejson.put(&quot;employeeId&quot;, employeeId);</span>
-<span class="nc" id="L67">        responsejson.put(&quot;firstName&quot;, firstName);</span>
-<span class="nc" id="L68">        responsejson.put(&quot;lastName&quot;, lastName);</span>
-<span class="nc" id="L69">        responsejson.put(&quot;imageUrl&quot;, imageUrl);</span>
-<span class="nc" id="L70">        responsejson.put(&quot;email&quot;, email);</span>
-<span class="nc" id="L71">        return ResponseEntity.ok(responsejson);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (authorisationHeader == null) {</span>
+
+<span class="fc" id="L59">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</span>
+        }
+
+<span class="fc" id="L62">        String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
+<span class="fc" id="L63">        DecodedJWT decodedAccessToken = JWT.decode(token);</span>
+<span class="fc" id="L64">        String employeeEmailFromToken = decodedAccessToken.getSubject();</span>
+<span class="fc" id="L65">        Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);</span>
+<span class="fc" id="L66">        Long employeeId = employee1.getEmployeeId();</span>
+<span class="fc" id="L67">        String email = employee1.getEmployeeEmail();</span>
+<span class="fc" id="L68">        String firstName = employee1.getFirstName();</span>
+<span class="fc" id="L69">        String lastName = employee1.getLastName();</span>
+<span class="fc" id="L70">        String imageUrl = employee1.getImageUrl();</span>
+<span class="fc" id="L71">        JSONObject responsejson = new JSONObject();</span>
+<span class="fc" id="L72">        responsejson.put(&quot;employeeId&quot;, employeeId);</span>
+<span class="fc" id="L73">        responsejson.put(&quot;firstName&quot;, firstName);</span>
+<span class="fc" id="L74">        responsejson.put(&quot;lastName&quot;, lastName);</span>
+<span class="fc" id="L75">        responsejson.put(&quot;imageUrl&quot;, imageUrl);</span>
+<span class="fc" id="L76">        responsejson.put(&quot;email&quot;, email);</span>
+<span class="fc" id="L77">        return ResponseEntity.ok(responsejson);</span>
     }
 
     @PostMapping(&quot;/theProfile&quot;)
     public ResponseEntity&lt;JwtUtil.TokenResponse&gt; insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response)
             throws MessagingException {
-<span class="nc" id="L77">        Employee employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (employee == null) {</span>
-<span class="nc" id="L79">            employeeService.insertUser(userDTO);</span>
-<span class="nc" id="L80">            employee = employeeService.findByEmailId(userDTO.getEmployeeEmail());</span>
-<span class="nc" id="L81">            String email = employee.getEmployeeEmail();</span>
-<span class="nc" id="L82">            emailService.welcomeEmail(email);</span>
-<span class="nc" id="L83">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
+<span class="fc" id="L83">        String email = userDTO.getEmployeeEmail(); // Get the email from the UserDTO</span>
+
+<span class="fc" id="L85">        Employee employee = employeeService.findByEmailId(email);</span>
+
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (employee == null) {</span>
+<span class="fc" id="L88">            employeeService.insertUser(userDTO);</span>
+<span class="fc" id="L89">            employee = employeeService.findByEmailId(email);</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">            if(employee == null){</span>
+<span class="fc" id="L91">                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();</span>
+            }else{
+<span class="nc" id="L93">                emailService.welcomeEmail(email);</span>
+<span class="nc" id="L94">                return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
+            }
 
         } else {
-<span class="nc" id="L86">            String email = employee.getEmployeeEmail();</span>
-<span class="nc" id="L87">            employeeService.updateUser(userDTO);</span>
-<span class="nc" id="L88">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
-
+<span class="fc" id="L98">            employeeService.updateUser(userDTO);</span>
+<span class="fc" id="L99">            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);</span>
         }
     }
 
+
     @PostMapping(&quot;/regenerateToken&quot;)
     public void regenerateToken(HttpServletRequest request,HttpServletResponse response) {
-<span class="nc" id="L95">        String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
-<span class="nc" id="L96">        String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
-<span class="nc" id="L97">        System.out.println(&quot;refresh token from header&quot;+ token);</span>
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if(!jwtUtil.isRefreshTokenExpired(token)){</span>
-<span class="nc" id="L99">            DecodedJWT decodedrefreshToken = JWT.decode(token);</span>
-<span class="nc" id="L100">            String employeeEmailFromToken = decodedrefreshToken.getSubject();</span>
-<span class="nc" id="L101">            Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);</span>
-<span class="nc" id="L102">            String AccessToken = jwtUtil.generateToken(employee1.getEmployeeEmail(),employee1.getEmployeeId(),employee1.getRole(),</span>
+<span class="fc" id="L106">        String authorisationHeader = request.getHeader(AUTHORIZATION);</span>
+<span class="fc" id="L107">        String token = authorisationHeader.substring(&quot;Bearer &quot;.length());</span>
+<span class="fc" id="L108">        System.out.println(&quot;refresh token from header&quot;+ token);</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if(!jwtUtil.isRefreshTokenExpired(token)){</span>
+<span class="fc" id="L110">            DecodedJWT decodedrefreshToken = JWT.decode(token);</span>
+<span class="fc" id="L111">            String employeeEmailFromToken = decodedrefreshToken.getSubject();</span>
+<span class="fc" id="L112">            Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);</span>
+<span class="fc" id="L113">            String AccessToken = jwtUtil.generateToken(employee1.getEmployeeEmail(),employee1.getEmployeeId(),employee1.getRole(),</span>
                     ACCESS_TOKEN_EXPIRATION_TIME );
-<span class="nc" id="L104">            response.setHeader(&quot;Access_Token&quot;,AccessToken);</span>
-<span class="nc" id="L105">        }else{</span>
-<span class="nc" id="L106">            System.out.println(&quot;refresh Token Expired. Login again&quot;);</span>
+<span class="fc" id="L115">            response.setHeader(&quot;Access_Token&quot;,AccessToken);</span>
+<span class="fc" id="L116">        }else{</span>
+<span class="fc" id="L117">            System.out.println(&quot;refresh Token Expired. Login again&quot;);</span>
         }
 
 
-<span class="nc" id="L110">    }</span>
+<span class="fc" id="L121">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

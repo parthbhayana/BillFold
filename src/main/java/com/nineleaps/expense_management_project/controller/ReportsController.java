@@ -166,7 +166,7 @@ public class ReportsController {
             JSONObject jsonObject = (JSONObject) object;
 
             long expenseId = (Long) jsonObject.get("expenseId");
-            float amountApproved = (Long) jsonObject.get("amountApproved");
+            double amountApproved = (double) jsonObject.get("amountApproved");
             String status = (String) jsonObject.get("status");
 
             if (Objects.equals(status, "approved")) {
@@ -176,7 +176,7 @@ public class ReportsController {
                 rejectedIds.add(expenseId);
             }
             if (Objects.equals(status, "partiallyApproved")) {
-                partialApprovedMap.put(expenseId, amountApproved);
+                partialApprovedMap.put(expenseId, (float) amountApproved);
             }
         }
         reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,

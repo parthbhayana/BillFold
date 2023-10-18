@@ -1,278 +1,319 @@
 package com.nineleaps.expense_management_project.entity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
-public class CategoryTest {
+class CategoryTest {
+    /**
+     * Methods under test:
+     *
+     * <ul>
+     *   <li>{@link Category#Category()}
+     *   <li>{@link Category#setCategoryDescription(String)}
+     *   <li>{@link Category#setCategoryId(Long)}
+     *   <li>{@link Category#setCategoryTotal(long)}
+     *   <li>{@link Category#setExpenseList(List)}
+     *   <li>{@link Category#setIsHidden(Boolean)}
+     * </ul>
+     */
+    @Test
+    void testConstructor() {
+        // Arrange and Act
+        Category actualCategory = new Category();
+        actualCategory.setCategoryDescription("Category Description");
+        actualCategory.setCategoryId(1L);
+        actualCategory.setCategoryTotal(1L);
+        ArrayList<Expense> expenseList = new ArrayList<>();
+        actualCategory.setExpenseList(expenseList);
+        actualCategory.setIsHidden(true);
 
-    private Category category;
-
-    @Before
-    public void setUp() {
-        category = new Category();
+        // Assert
+        assertEquals("Category Description", actualCategory.getCategoryDescription());
+        assertEquals(1L, actualCategory.getCategoryId().longValue());
+        assertEquals(1L, actualCategory.getCategoryTotal());
+        assertSame(expenseList, actualCategory.getExpenseList());
+        assertTrue(actualCategory.getIsHidden());
     }
 
+    /**
+     * Method under test: {@link Category#Category(Long, String, long, Boolean, List)}
+     */
     @Test
-    public void testGetCategoryId() {
+    void testConstructor2() {
+        // Arrange and Act
+        Category actualCategory = new Category(1L, "Category Description", 1L, true, new ArrayList<>());
+
+        // Assert
+        assertEquals("Category Description", actualCategory.getCategoryDescription());
+        assertTrue(actualCategory.getIsHidden());
+        assertTrue(actualCategory.getExpenseList().isEmpty());
+        assertEquals(1L, actualCategory.getCategoryTotal());
+        assertEquals(1L, actualCategory.getCategoryId().longValue());
+    }
+
+    /**
+     * Method under test: {@link Category#Category(Long, String, long, Boolean, List)}
+     */
+    @Test
+    void testConstructor3() throws UnsupportedEncodingException {
+        // Arrange
+        Category category = new Category();
+        category.setCategoryDescription("Category Description");
         category.setCategoryId(1L);
-        assertEquals(1L, category.getCategoryId().longValue());
-    }
-
-    @Test
-    public void testSetCategoryId() {
-        category.setCategoryId(2L);
-        assertEquals(2L, category.getCategoryId().longValue());
-    }
-
-    @Test
-    public void testGetCategoryDescription() {
-        category.setCategoryDescription("Food");
-        assertEquals("Food", category.getCategoryDescription());
-    }
-
-    @Test
-    public void testSetCategoryDescription() {
-        category.setCategoryDescription("Travel");
-        assertEquals("Travel", category.getCategoryDescription());
-    }
-
-
-
-
-    @Test
-    public void testGetIsHidden() {
-        category.setIsHidden(true);
-        assertTrue(category.getIsHidden());
-    }
-
-
-    @Test
-    public void testSetIsHidden() {
-        // Create a Category object
-        Category category = new Category(1L, "Test Category", 1000L, false, null);
-
-        // Set the isHidden property to true using setIsHidden() method
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
         category.setIsHidden(true);
 
-        // Get the updated isHidden property
-        Boolean updatedIsHidden = category.getIsHidden();
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
 
-        // Assert that the updated isHidden matches the expected value
-        assertTrue(updatedIsHidden);
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+
+        Expense expense = new Expense();
+        expense.setAmount(10.0d);
+        expense.setAmountApproved(10.0d);
+        expense.setCategory(category);
+        expense.setCategoryDescription("Category Description");
+        expense.setDate(LocalDate.of(1970, 1, 1));
+        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense.setDescription("The characteristics of someone or something");
+        expense.setEmployee(employee);
+        expense.setExpenseId(1L);
+        expense.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense.setFileName("foo.txt");
+        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        expense.setIsHidden(true);
+        expense.setIsReported(true);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        expense.setMerchantName("Merchant Name");
+        expense.setPotentialDuplicate(true);
+        expense.setReportTitle("Dr");
+        expense.setReports(reports);
+
+        ArrayList<Expense> expenseList = new ArrayList<>();
+        expenseList.add(expense);
+
+        // Act
+        Category actualCategory = new Category(1L, "Category Description", 1L, true, expenseList);
+
+        // Assert
+        assertEquals("Category Description", actualCategory.getCategoryDescription());
+        assertTrue(actualCategory.getIsHidden());
+        assertEquals(1, actualCategory.getExpenseList().size());
+        assertEquals(1L, actualCategory.getCategoryTotal());
+        assertEquals(1L, actualCategory.getCategoryId().longValue());
     }
-    @Test
-    public void testGetExpenseList() {
-        // Create a Category object
-        Category category = new Category(1L, "Test Category", 1000L, false, null);
 
-        // Create a list of expenses
-        List<Expense> expenses = new ArrayList<>();
-        Expense expense1 = new Expense();
+    /**
+     * Method under test: {@link Category#Category(Long, String, long, Boolean, List)}
+     */
+    @Test
+    void testConstructor4() throws UnsupportedEncodingException {
+        // Arrange
+        Category category = new Category();
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
+
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
+
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+
+        Expense expense = new Expense();
+        expense.setAmount(10.0d);
+        expense.setAmountApproved(10.0d);
+        expense.setCategory(category);
+        expense.setCategoryDescription("Category Description");
+        expense.setDate(LocalDate.of(1970, 1, 1));
+        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense.setDescription("The characteristics of someone or something");
+        expense.setEmployee(employee);
+        expense.setExpenseId(1L);
+        expense.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense.setFileName("foo.txt");
+        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        expense.setIsHidden(true);
+        expense.setIsReported(true);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        expense.setMerchantName("Merchant Name");
+        expense.setPotentialDuplicate(true);
+        expense.setReportTitle("Dr");
+        expense.setReports(reports);
+
+        Category category2 = new Category();
+        category2.setCategoryDescription("42");
+        category2.setCategoryId(2L);
+        category2.setCategoryTotal(0L);
+        category2.setExpenseList(new ArrayList<>());
+        category2.setIsHidden(false);
+
+        Employee employee2 = new Employee();
+        employee2.setEmployeeEmail("john.smith@example.org");
+        employee2.setEmployeeId(2L);
+        employee2.setExpenseList(new ArrayList<>());
+        employee2.setFirstName("John");
+        employee2.setHrEmail("john.smith@example.org");
+        employee2.setHrName("EMPLOYEE");
+        employee2.setImageUrl("Image Url");
+        employee2.setIsFinanceAdmin(false);
+        employee2.setIsHidden(false);
+        employee2.setLastName("Smith");
+        employee2.setLndEmail("john.smith@example.org");
+        employee2.setLndName("EMPLOYEE");
+        employee2.setManagerEmail("john.smith@example.org");
+        employee2.setManagerName("EMPLOYEE");
+        employee2.setMiddleName("EMPLOYEE");
+        employee2.setMobileNumber(0L);
+        employee2.setOfficialEmployeeId("Official Employee Id");
+        employee2.setRole("EMPLOYEE");
+        employee2.setToken("Token");
+
+        Reports reports2 = new Reports();
+        reports2.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports2.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports2.setEmployeeId(2L);
+        reports2.setEmployeeMail("42");
+        reports2.setEmployeeName("42");
+        reports2.setExpensesCount(1L);
+        reports2.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports2.setFinanceApprovalStatus(FinanceApprovalStatus.REJECTED);
+        reports2.setFinanceComments("42");
+        reports2.setIsHidden(false);
+        reports2.setIsSubmitted(false);
+        reports2.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports2.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
+        reports2.setManagerComments("42");
+        reports2.setManagerEmail("john.smith@example.org");
+        reports2.setManagerReviewTime("42");
+        reports2.setOfficialEmployeeId("Official Employee Id");
+        reports2.setReportId(2L);
+        reports2.setReportTitle("Mr");
+        reports2.setTotalAmount(0.5f);
+        reports2.setTotalApprovedAmount(0.5f);
+
         Expense expense2 = new Expense();
-        expenses.add(expense1);
-        expenses.add(expense2);
+        expense2.setAmount(0.5d);
+        expense2.setAmountApproved(0.5d);
+        expense2.setCategory(category2);
+        expense2.setCategoryDescription("42");
+        expense2.setDate(LocalDate.of(1970, 1, 1));
+        expense2.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense2.setDescription("Description");
+        expense2.setEmployee(employee2);
+        expense2.setExpenseId(2L);
+        expense2.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense2.setFileName("File Name");
+        expense2.setFinanceApprovalStatus(FinanceApprovalStatus.REJECTED);
+        expense2.setIsHidden(false);
+        expense2.setIsReported(false);
+        expense2.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
+        expense2.setMerchantName("42");
+        expense2.setPotentialDuplicate(false);
+        expense2.setReportTitle("Mr");
+        expense2.setReports(reports2);
 
-        // Set the expenseList property using setExpenseList() method
-        category.setExpenseList(expenses);
-
-        // Get the list of expenses using the getExpenseList() method
-        List<Expense> retrievedExpenses = category.getExpenseList();
-
-        // Assert that the retrieved list of expenses matches the expected list of expenses
-        assertEquals(expenses, retrievedExpenses);
-    }
-
-    @Test
-    public void testSetExpenseList() {
-        // Create a Category object
-        Category category = new Category(1L, "Test Category", 1000L, false, null);
-
-        // Create a list of expenses
-        List<Expense> expenses = new ArrayList<>();
-        Expense expense1 = new Expense();
-        Expense expense2 = new Expense();
-        expenses.add(expense1);
-        expenses.add(expense2);
-
-        // Set the expenseList property using setExpenseList() method
-        category.setExpenseList(expenses);
-
-        // Get the updated list of expenses
-        List<Expense> retrievedExpenses = category.getExpenseList();
-
-        // Assert that the retrieved list of expenses matches the expected list
-        assertEquals(expenses, retrievedExpenses);
-    }
-
-    @Test
-    public void testCategoryConstructor() {
-        // Arrange
-        Long categoryId = 1L;
-        String categoryDescription = "Office Supplies";
-        long categoryTotal = 5000L;
-        Boolean isHidden = false;
-        List<Expense> expenseList = new ArrayList<>(); // Create an empty list or add sample expenses
+        ArrayList<Expense> expenseList = new ArrayList<>();
+        expenseList.add(expense2);
+        expenseList.add(expense);
 
         // Act
-        Category category = new Category(
-                categoryId, categoryDescription, categoryTotal, isHidden, expenseList);
+        Category actualCategory = new Category(1L, "Category Description", 1L, true, expenseList);
 
         // Assert
-        assertNotNull(category);
-        assertEquals(categoryId, category.getCategoryId());
-        assertEquals(categoryDescription, category.getCategoryDescription());
-        assertEquals(categoryTotal, category.getCategoryTotal());
-        assertEquals(isHidden, category.getIsHidden());
-        assertEquals(expenseList, category.getExpenseList());
+        assertEquals("Category Description", actualCategory.getCategoryDescription());
+        assertTrue(actualCategory.getIsHidden());
+        assertEquals(2, actualCategory.getExpenseList().size());
+        assertEquals(1L, actualCategory.getCategoryTotal());
+        assertEquals(1L, actualCategory.getCategoryId().longValue());
     }
-
-    @Test
-    public void testGetCategoryTotal() {
-        // Arrange
-        Long categoryId = 1L;
-        String categoryDescription = "Office Supplies";
-        long categoryTotal = 5000L;
-        Boolean isHidden = false;
-        Category category = new Category(categoryId, categoryDescription, categoryTotal, isHidden, null);
-
-        // Act
-        long retrievedCategoryTotal = category.getCategoryTotal();
-
-        // Assert
-        assertEquals(categoryTotal, retrievedCategoryTotal);
-    }
-
-    @Test
-    public void testSetCategoryTotal() {
-        // Arrange
-        Long categoryId = 1L;
-        String categoryDescription = "Office Supplies";
-        long initialCategoryTotal = 5000L;
-        Boolean isHidden = false;
-        Category category = new Category(categoryId, categoryDescription, initialCategoryTotal, isHidden, null);
-
-        // Act
-        long newCategoryTotal = 7500L;
-        category.setCategoryTotal(newCategoryTotal);
-
-        // Assert
-        assertEquals(newCategoryTotal, category.getCategoryTotal());
-    }
-
-    @Test
-    public void testGetAndSetExpenseList() {
-        // Arrange
-        Long categoryId = 1L;
-        String categoryDescription = "Office Supplies";
-        long categoryTotal = 5000L;
-        Boolean isHidden = false;
-        Category category = new Category(categoryId, categoryDescription, categoryTotal, isHidden, null);
-
-        // Create a list of expenses
-        List<Expense> initialExpenseList = new ArrayList<>();
-        Expense expense1 = new Expense();
-        Expense expense2 = new Expense();
-        initialExpenseList.add(expense1);
-        initialExpenseList.add(expense2);
-
-        // Act
-        category.setExpenseList(initialExpenseList);
-        List<Expense> retrievedExpenseList = category.getExpenseList();
-
-        // Assert
-        assertEquals(initialExpenseList, retrievedExpenseList);
-    }
-
-    @Test
-    public void testCategoryConstructor_NullExpenseList() {
-        // Arrange
-        Long categoryId = 1L;
-        String categoryDescription = "Office Supplies";
-        long categoryTotal = 5000L;
-        Boolean isHidden = false;
-
-        // Act
-        Category category = new Category(categoryId, categoryDescription, categoryTotal, isHidden, null);
-
-        // Assert
-        assertNotNull(category);
-        assertEquals(categoryId, category.getCategoryId());
-        assertEquals(categoryDescription, category.getCategoryDescription());
-        assertEquals(categoryTotal, category.getCategoryTotal());
-        assertEquals(isHidden, category.getIsHidden());
-        assertNull(category.getExpenseList());
-    }
-    @Test
-    public void testGettersAndSetters() {
-            Category category = new Category();
-
-            // Test setter and getter for categoryId
-            category.setCategoryId(1L);
-            assertEquals(1L, category.getCategoryId().longValue());
-
-            // Test setter and getter for categoryDescription
-            category.setCategoryDescription("Test Category");
-            assertEquals("Test Category", category.getCategoryDescription());
-
-            // Test setter and getter for categoryTotal
-            category.setCategoryTotal(1000L);
-            assertEquals(1000L, category.getCategoryTotal());
-
-            // Test setter and getter for isHidden
-            category.setIsHidden(true);
-            assertTrue(category.getIsHidden());
-
-            // Test setter and getter for expenseList
-            List<Expense> expenseList = new ArrayList<>();
-            Expense expense1 = new Expense();
-            Expense expense2 = new Expense();
-            expenseList.add(expense1);
-            expenseList.add(expense2);
-            category.setExpenseList(expenseList);
-            assertEquals(expenseList, category.getExpenseList());
-        }
-
-        @Test
-        public void testParameterizedConstructor() {
-            Long categoryId = 1L;
-            String categoryDescription = "Test Category";
-            long categoryTotal = 1000L;
-            Boolean isHidden = true;
-            List<Expense> expenseList = new ArrayList<>(); // Create an empty list or add sample expenses
-
-            Category category = new Category(categoryId, categoryDescription, categoryTotal, isHidden, expenseList);
-
-            assertEquals(categoryId, category.getCategoryId());
-            assertEquals(categoryDescription, category.getCategoryDescription());
-            assertEquals(categoryTotal, category.getCategoryTotal());
-            assertEquals(isHidden, category.getIsHidden());
-            assertEquals(expenseList, category.getExpenseList());
-        }
-
-    @Test
-    public void testCategoryConstructorWithParameters() {
-        Long categoryId = 1L;
-        String categoryDescription = "Test Category";
-        long categoryTotal = 1000L;
-        Boolean isHidden = true;
-        List<Expense> expenseList = new ArrayList<>();
-
-        Category category = new Category(categoryId, categoryDescription, categoryTotal, isHidden, expenseList);
-
-        assertEquals(categoryId, category.getCategoryId());
-        assertEquals(categoryDescription, category.getCategoryDescription());
-        assertEquals(categoryTotal, category.getCategoryTotal());
-        assertEquals(isHidden, category.getIsHidden());
-        assertEquals(expenseList, category.getExpenseList());
-    }
-
-    }
-
-
+}
 

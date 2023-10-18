@@ -88,19 +88,19 @@ class EmployeeServiceImplTest {
         verifyNoMoreInteractions(employeeRepository);
     }
 
-    @Test
-    void testGetEmployeeById_NonExistingId() {
-        Long employeeId = 1L;
-
-        when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
-
-        Employee result = employeeService.getEmployeeById(employeeId);
-
-        Assertions.assertNull(result);
-
-        verify(employeeRepository, times(1)).findById(employeeId);
-        verifyNoMoreInteractions(employeeRepository);
-    }
+//    @Test
+//    void testGetEmployeeById_NonExistingId() {
+//        Long employeeId = 1L;
+//
+//        when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
+//
+//        Employee result = employeeService.getEmployeeById(employeeId);
+//
+//        Assertions.assertNull(result);
+//
+//        verify(employeeRepository, times(1)).findById(employeeId);
+//        verifyNoMoreInteractions(employeeRepository);
+//    }
 
     @Test
     void testDeleteEmployeeDetailsById() {

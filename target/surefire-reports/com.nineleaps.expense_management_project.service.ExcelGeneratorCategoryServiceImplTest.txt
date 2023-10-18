@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nineleaps.expense_management_project.service.ExcelGeneratorCategoryServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 20, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 1.469 s - in com.nineleaps.expense_management_project.service.ExcelGeneratorCategoryServiceImplTest
+Tests run: 20, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 3.496 s - in com.nineleaps.expense_management_project.service.ExcelGeneratorCategoryServiceImplTest

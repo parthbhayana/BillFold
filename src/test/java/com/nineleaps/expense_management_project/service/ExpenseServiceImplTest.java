@@ -2318,5 +2318,80 @@ class ExpenseServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
+//    @Test
+//    void testUpdateExpenses_NotHiddenNotReportedOrRejected() {
+//        Long expenseId = 1L;
+//        ExpenseDTO expenseDTO = createExpenseDTO();
+//        Expense existingExpense = createExpense(false, false, ManagerApprovalStatusExpense.PENDING);
+//
+//        when(expenseRepository.save(existingExpense)).thenReturn(existingExpense);
+//        when(expenseRepository.getExpenseByexpenseId(expenseId)).thenReturn(existingExpense);
+//
+//        Expense updatedExpense = expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
+//
+//        assertEquals(expenseDTO.getMerchantName(), updatedExpense.getMerchantName());
+//        assertEquals(expenseDTO.getDate(), updatedExpense.getDate());
+//        assertEquals(expenseDTO.getAmount(), updatedExpense.getAmount());
+//        assertEquals(expenseDTO.getDescription(), updatedExpense.getDescription());
+//        assertEquals(expenseDTO.getFile(), updatedExpense.getFile());
+//    }
+//
+//    @Test
+//    void testUpdateExpenses_NotHiddenReportedRejected() {
+//        Long expenseId = 1L;
+//        ExpenseDTO expenseDTO = createExpenseDTO();
+//        Expense existingExpense = createExpense(false, true, ManagerApprovalStatusExpense.REJECTED);
+//
+//        when(expenseRepository.getExpenseByexpenseId(expenseId)).thenReturn(existingExpense);
+//
+//        assertThrows(IllegalStateException.class, () -> {
+//            expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
+//        });
+//    }
+//
+//    @Test
+//    void testUpdateExpenses_Hidden() {
+//        Long expenseId = 1L;
+//        ExpenseDTO expenseDTO = createExpenseDTO();
+//        Expense existingExpense = createExpense(true, false, ManagerApprovalStatusExpense.PENDING);
+//
+//        when(expenseRepository.getExpenseByexpenseId(expenseId)).thenReturn(existingExpense);
+//
+//        assertThrows(IllegalStateException.class, () -> {
+//            expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
+//        });
+//    }
+//
+//    @Test
+//    void testUpdateExpenses_ReportedApproved() {
+//        Long expenseId = 1L;
+//        ExpenseDTO expenseDTO = createExpenseDTO();
+//        Expense existingExpense = createExpense(false, true, ManagerApprovalStatusExpense.APPROVED);
+//
+//        when(expenseRepository.getExpenseByexpenseId(expenseId)).thenReturn(existingExpense);
+//
+//        assertThrows(IllegalStateException.class, () -> {
+//            expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
+//        });
+//    }
+//
+//    private ExpenseDTO createExpenseDTO() {
+//        ExpenseDTO expenseDTO = new ExpenseDTO();
+//        expenseDTO.setMerchantName("New Merchant");
+//        expenseDTO.setDate(LocalDate.from(LocalDateTime.now()));
+//        expenseDTO.setAmount(100.0);
+//        expenseDTO.setDescription("New Description");
+//        expenseDTO.setFile(new byte[]{});
+//        return expenseDTO;
+//    }
+//
+//    private Expense createExpense(boolean isHidden, boolean isReported, ManagerApprovalStatusExpense managerApprovalStatus) {
+//        Expense expense = new Expense();
+//        expense.setIsHidden(isHidden);
+//        expense.setIsReported(isReported);
+//        expense.setManagerApprovalStatusExpense(managerApprovalStatus);
+//        return expense;
+//    }
+
 
 }

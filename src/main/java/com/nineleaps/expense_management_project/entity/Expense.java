@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Table(name = "expense")
 public class Expense {
 
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "expense_id", nullable = false)
@@ -137,6 +138,7 @@ public class Expense {
 		this.reports = reports;
 		this.category = category;
 	}
+
 
 
 

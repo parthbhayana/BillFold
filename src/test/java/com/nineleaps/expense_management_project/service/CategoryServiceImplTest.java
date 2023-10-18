@@ -742,7 +742,7 @@ class CategoryServiceImplTest {
         HashMap<String, Object> result = categoryService1.getYearlyCategoryAnalyticsForAllCategories();
         result.put("categoryTotalAmountByYear",totalAmountByYear);
         result.put("yearlyReimbursementRatio",yearlyReimbursementRatio);
-         System.out.println(result);
+        System.out.println(result);
         // Assert the result
         assertNotNull(result);
 

@@ -40,9 +40,15 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public Employee getEmployeeById(Long employeeId) {
-		Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
-		return optionalEmployee.orElse(null);
+		Employee employee = employeeRepository.findById(employeeId).orElse(null);
+
+		if (employee == null) {
+			throw new NullPointerException("Employee with ID " + employeeId + " not found");
+		}
+
+		return employee;
 	}
+
 
 
 	@Override

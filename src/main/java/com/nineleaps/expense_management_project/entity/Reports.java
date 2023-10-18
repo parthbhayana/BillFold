@@ -154,6 +154,8 @@ public class Reports {
         this.expensesCount = expensesCount;
     }
 
+
+
     public Long getReportId() {
         return reportId;
     }
