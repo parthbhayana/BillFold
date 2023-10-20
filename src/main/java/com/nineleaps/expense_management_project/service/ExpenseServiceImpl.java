@@ -238,17 +238,22 @@ public class ExpenseServiceImpl implements IExpenseService {
 
     @Override
     public Expense removeTaggedExpense(Long expenseId) {
-        Expense expense = expenseRepository.findById(expenseId).orElse(null);
-
-        if (expense != null && !expense.getIsHidden()) {
-            boolean removeExpense = false;
-            expense.setIsReported(removeExpense);
-            expense.setReports(null);
-            return expenseRepository.save(expense);
+        Optional<Expense> expenseOptional = expenseRepository.findById(expenseId);
+        if (expenseOptional.isPresent()) {
+            Expense expense = expenseOptional.get();
+            if (!expense.getIsHidden()) {
+                boolean removeExpense = false;
+                expense.setIsReported(removeExpense);
+                expense.setReports(null);
+                return expenseRepository.save(expense);
+            } else {
+                throw new IllegalStateException("Expense " + expenseId + " is hidden and cannot be removed.");
+            }
+        } else {
+            throw new IllegalStateException("Expense " + expenseId + " does not exist.");
         }
-
-        throw new IllegalStateException("Expense " + expenseId + " does not exist!");
     }
+
 
     @Override
     public List<Expense> getExpenseByReportId(Long reportId) {
@@ -277,32 +282,32 @@ public class ExpenseServiceImpl implements IExpenseService {
         expenseRepository.save(expense);
     }
 
-    @Scheduled(cron = "0 0 15 * * *")
-    public void sendExpenseReminder() {
-        LocalDate currentDate = LocalDate.now();
-
-        List<Expense> expenseList = expenseRepository.findByIsReportedAndIsHidden(false, false);
-        List<Long> expenseIds = new ArrayList<>();
-        for (Expense expense : expenseList) {
-            LocalDate submissionDate = expense.getDate();
-            LocalDate expirationDate = submissionDate.plusDays(60);
-            if (currentDate.isAfter(expirationDate.minusDays(5)) && currentDate.isBefore(expirationDate)) {
-                expenseIds.add(expense.getExpenseId());
-            }
-        }
-        emailService.reminderMailToEmployee(expenseIds);
-        // Push Notification Functionality
-        for (Long expense : expenseIds) {
-            Expense exp = getExpenseById(expense);
-            Long employeeId = exp.getExpenseId();
-            Employee employee = employeeService.getEmployeeById(employeeId);
-            PushNotificationRequest notificationRequest = new PushNotificationRequest();
-            notificationRequest.setTitle("[REMINDER]: Report your pending expenses.");
-            notificationRequest.setMessage("Unreported expenses will be deleted.");
-            notificationRequest.setToken(employee.getToken());
-            pushNotificationService.sendPushNotificationToToken(notificationRequest);
-        }
-    }
+//    @Scheduled(cron = "0 0 15 * * *")
+//    public void sendExpenseReminder() {
+//        LocalDate currentDate = LocalDate.now();
+//
+//        List<Expense> expenseList = expenseRepository.findByIsReportedAndIsHidden(false, false);
+//        List<Long> expenseIds = new ArrayList<>();
+//        for (Expense expense : expenseList) {
+//            LocalDate submissionDate = expense.getDate();
+//            LocalDate expirationDate = submissionDate.plusDays(60);
+//            if (currentDate.isAfter(expirationDate.minusDays(5)) && currentDate.isBefore(expirationDate)) {
+//                expenseIds.add(expense.getExpenseId());
+//            }
+//        }
+//        emailService.reminderMailToEmployee(expenseIds);
+//        // Push Notification Functionality
+//        for (Long expense : expenseIds) {
+//            Expense exp = getExpenseById(expense);
+//            Long employeeId = exp.getExpenseId();
+//            Employee employee = employeeService.getEmployeeById(employeeId);
+//            PushNotificationRequest notificationRequest = new PushNotificationRequest();
+//            notificationRequest.setTitle("[REMINDER]: Report your pending expenses.");
+//            notificationRequest.setMessage("Unreported expenses will be deleted.");
+//            notificationRequest.setToken(employee.getToken());
+//            pushNotificationService.sendPushNotificationToToken(notificationRequest);
+//        }
+//    }
 
     @Override
     public List<Expense> getRejectedExpensesByReportId(Long reportId) {

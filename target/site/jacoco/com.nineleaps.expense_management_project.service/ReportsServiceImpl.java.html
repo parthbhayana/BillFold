@@ -799,32 +799,32 @@ import com.nineleaps.expense_management_project.repository.ReportsRepository;
 <span class="fc" id="L799">        emailService.notifyLnD(reportId, lndEmail, lndName);</span>
 <span class="fc" id="L800">    }</span>
 
-    @Scheduled(cron = &quot;0 0 12 22,24 * ?&quot;)
-    public void sendReportNotApprovedByManagerReminder() {
-<span class="fc" id="L804">        LocalDate currentDate = LocalDate.now();</span>
-
-<span class="fc" id="L806">        List&lt;Reports&gt; reportsList = reportsRepository.findBymanagerApprovalStatus(ManagerApprovalStatus.PENDING);</span>
-<span class="fc" id="L807">        List&lt;Long&gt; reportIds = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L808" title="All 2 branches covered.">        for (Reports report : reportsList) {</span>
-
-<span class="pc bpc" id="L810" title="2 of 4 branches missed.">            if (currentDate.getDayOfMonth() == 22 || currentDate.getDayOfMonth() == 24) {</span>
-<span class="nc" id="L811">                reportIds.add(report.getReportId());</span>
-            }
-<span class="fc" id="L813">        }</span>
-
-<span class="fc" id="L815">        emailService.reminderMailToManager(reportIds);</span>
-
-        // Push Notification Functionality
-<span class="pc bpc" id="L818" title="1 of 2 branches missed.">        for (Long report : reportIds) {</span>
-<span class="nc" id="L819">            Reports re = getReportById(report);</span>
-<span class="nc" id="L820">            String managerEmail = re.getManagerEmail();</span>
-<span class="nc" id="L821">            Employee manager = employeeServices.getEmployeeByEmail(managerEmail);</span>
-<span class="nc" id="L822">            PushNotificationRequest notificationRequest = new PushNotificationRequest();</span>
-<span class="nc" id="L823">            notificationRequest.setTitle(&quot;[REMINDER]: Take Action on pending reports.&quot;);</span>
-<span class="nc" id="L824">            notificationRequest.setToken(manager.getToken());</span>
-<span class="nc" id="L825">            pushNotificationService.sendPushNotificationToToken(notificationRequest);</span>
-<span class="nc" id="L826">        }</span>
-<span class="fc" id="L827">    }</span>
+//    @Scheduled(cron = &quot;0 0 12 22,24 * ?&quot;)
+//    public void sendReportNotApprovedByManagerReminder() {
+//        LocalDate currentDate = LocalDate.now();
+//
+//        List&lt;Reports&gt; reportsList = reportsRepository.findBymanagerApprovalStatus(ManagerApprovalStatus.PENDING);
+//        List&lt;Long&gt; reportIds = new ArrayList&lt;&gt;();
+//        for (Reports report : reportsList) {
+//
+//            if (currentDate.getDayOfMonth() == 22 || currentDate.getDayOfMonth() == 24) {
+//                reportIds.add(report.getReportId());
+//            }
+//        }
+//
+//        emailService.reminderMailToManager(reportIds);
+//
+//        // Push Notification Functionality
+//        for (Long report : reportIds) {
+//            Reports re = getReportById(report);
+//            String managerEmail = re.getManagerEmail();
+//            Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
+//            PushNotificationRequest notificationRequest = new PushNotificationRequest();
+//            notificationRequest.setTitle(&quot;[REMINDER]: Take Action on pending reports.&quot;);
+//            notificationRequest.setToken(manager.getToken());
+//            pushNotificationService.sendPushNotificationToToken(notificationRequest);
+//        }
+//    }
 
 
 

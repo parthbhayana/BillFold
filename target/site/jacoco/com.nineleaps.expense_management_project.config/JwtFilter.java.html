@@ -3,13 +3,10 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.lang.NonNullApi;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,52 +15,50 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import io.jsonwebtoken.Claims;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
-<span class="fc" id="L27">    public JwtFilter(JwtUtil jwtUtil) {</span>
-<span class="fc" id="L28">        this.jwtUtil = jwtUtil;</span>
-<span class="fc" id="L29">    }</span>
+<span class="fc" id="L22">    public JwtFilter(JwtUtil jwtUtil) {</span>
+<span class="fc" id="L23">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L24">    }</span>
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-<span class="fc" id="L34">        String servletPath = request.getServletPath();</span>
-<span class="pc bpc" id="L35" title="1 of 4 branches missed.">        if(servletPath.equals(&quot;/theProfile&quot;) || servletPath.equals(&quot;/regenerateToken&quot;)){</span>
-<span class="fc" id="L36">            chain.doFilter(request,response);</span>
+<span class="fc" id="L29">        String servletPath = request.getServletPath();</span>
+<span class="fc bfc" id="L30" title="All 4 branches covered.">        if(servletPath.equals(&quot;/theProfile&quot;) || servletPath.equals(&quot;/regenerateToken&quot;)){</span>
+<span class="fc" id="L31">            chain.doFilter(request,response);</span>
         }else{
-<span class="fc" id="L38">            String header = request.getHeader(&quot;Authorization&quot;);</span>
-<span class="pc bpc" id="L39" title="3 of 4 branches missed.">            if (header != null &amp;&amp; header.startsWith(&quot;Bearer &quot;)) {</span>
-<span class="nc" id="L40">                String token = header.substring(7);</span>
-<span class="nc bnc" id="L41" title="All 4 branches missed.">                if (jwtUtil.validateToken(token) &amp;&amp; !jwtUtil.isAccessTokenExpired(token))</span>
+<span class="fc" id="L33">            String header = request.getHeader(&quot;Authorization&quot;);</span>
+<span class="pc bpc" id="L34" title="1 of 4 branches missed.">            if (header != null &amp;&amp; header.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="fc" id="L35">                String token = header.substring(7);</span>
+<span class="pc bpc" id="L36" title="1 of 4 branches missed.">                if (jwtUtil.validateToken(token) &amp;&amp; !jwtUtil.isAccessTokenExpired(token))</span>
                 {
-<span class="nc" id="L43">                    Claims claims = jwtUtil.getClaimsFromToken(token);</span>
-<span class="nc" id="L44">                    String emailId = claims.getSubject();</span>
-<span class="nc" id="L45">                    String role = (String) claims.get(&quot;Role&quot;);</span>
-<span class="nc bnc" id="L46" title="All 4 branches missed.">                    if (role != null &amp;&amp; !role.isEmpty())</span>
+<span class="fc" id="L38">                    Claims claims = jwtUtil.getClaimsFromToken(token);</span>
+<span class="fc" id="L39">                    String emailId = claims.getSubject();</span>
+<span class="fc" id="L40">                    String role = (String) claims.get(&quot;Role&quot;);</span>
+<span class="pc bpc" id="L41" title="2 of 4 branches missed.">                    if (role != null &amp;&amp; !role.isEmpty())</span>
                     {
-<span class="nc" id="L48">                        List&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L49">                        authorities.add(new SimpleGrantedAuthority(role));</span>
-<span class="nc" id="L50">                        Authentication authentication = new UsernamePasswordAuthenticationToken(emailId, null, authorities);</span>
-<span class="nc" id="L51">                        SecurityContextHolder.getContext().setAuthentication(authentication);</span>
+<span class="fc" id="L43">                        List&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L44">                        authorities.add(new SimpleGrantedAuthority(role));</span>
+<span class="fc" id="L45">                        Authentication authentication = new UsernamePasswordAuthenticationToken(emailId, null, authorities);</span>
+<span class="fc" id="L46">                        SecurityContextHolder.getContext().setAuthentication(authentication);</span>
                     }
-<span class="nc" id="L53">                    chain.doFilter(request, response);</span>
-<span class="nc" id="L54">                }</span>
+<span class="fc" id="L48">                    chain.doFilter(request, response);</span>
+<span class="fc" id="L49">                }</span>
                 else
                 {
-<span class="nc" id="L57">                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED,&quot;Access token Expired&quot;);</span>
+<span class="fc" id="L52">                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED,&quot;Access token Expired&quot;);</span>
                 }
 
 
-<span class="nc" id="L61">            }else{</span>
-<span class="fc" id="L62">               response.sendError(HttpServletResponse.SC_FORBIDDEN,&quot;header was null&quot;);</span>
+<span class="fc" id="L56">            }else{</span>
+<span class="fc" id="L57">               response.sendError(HttpServletResponse.SC_FORBIDDEN,&quot;header was null&quot;);</span>
             }
 
         }
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L61">    }</span>
 
 
 }

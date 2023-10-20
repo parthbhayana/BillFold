@@ -1,18 +1,20 @@
 package com.nineleaps.expense_management_project.config;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletResponse;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.DefaultClaims;
 
+
+import java.security.SecureRandom;
 import java.util.Date;
+
 
 import static org.mockito.Mockito.mock;
 
@@ -77,6 +79,83 @@ class JwtUtilTest {
 
         assertFalse(isValid);
     }
+
+
+    @Test
+    void testIsRefreshTokenExpiredWithFutureExpiration() {
+        JwtUtil jwtUtil = new JwtUtil();
+        String refreshToken = generateTokenWithFutureExpiration();
+
+        boolean isExpired = jwtUtil.isRefreshTokenExpired(refreshToken);
+
+        assertFalse(isExpired);
+    }
+
+    @Test
+    void testIsRefreshTokenExpiredWithPastExpiration() {
+        JwtUtil jwtUtil = new JwtUtil();
+        String refreshToken = generateTokenWithPastExpiration();
+
+        boolean isExpired = jwtUtil.isRefreshTokenExpired(refreshToken);
+
+        assertFalse(isExpired);
+    }
+
+    @Test
+    void testIsAccessTokenExpiredWithFutureExpiration() {
+        JwtUtil jwtUtil = new JwtUtil();
+        String accessToken = generateTokenWithFutureExpiration();
+
+        boolean isExpired = jwtUtil.isAccessTokenExpired(accessToken);
+
+        assertFalse(isExpired);
+    }
+
+    @Test
+    void testIsAccessTokenExpiredWithPastExpiration() {
+        JwtUtil jwtUtil = new JwtUtil();
+        String accessToken = generateTokenWithPastExpiration();
+
+        boolean isExpired = jwtUtil.isAccessTokenExpired(accessToken);
+
+        assertFalse(isExpired);
+    }
+
+    // Helper methods to generate tokens with future and past expiration dates
+    private String generateTokenWithFutureExpiration() {
+        return generateToken("yokes.e2nineleaps.com",1L,"EMPLOYEE",System.currentTimeMillis() + 100000);
+    }
+
+    private String generateTokenWithPastExpiration() {
+        return generateToken("yokes.e2nineleaps.com",1L,"EMPLOYEE",System.currentTimeMillis() - 100000);
+    }
+
+    public String generateToken(String emailId, Long employeeId, String role, long expirationTime) {
+        String secretkey = generateRandomSecretKey();
+        return Jwts.builder()
+                .setSubject(emailId)
+                .claim("EmployeeID", employeeId)
+                .claim("Role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(SignatureAlgorithm.HS256, secretkey)
+                .compact();
+    }
+
+    private static String generateRandomSecretKey() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] keyBytes = new byte[32]; // 256 bits
+        secureRandom.nextBytes(keyBytes);
+
+        // Convert the random bytes to a hexadecimal string
+        StringBuilder keyBuilder = new StringBuilder();
+        for (byte b : keyBytes) {
+            keyBuilder.append(String.format("%02x", b));
+        }
+
+        return keyBuilder.toString();
+    }
+
 
 
 }

@@ -4,13 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.*;
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.Font;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfPCell;
@@ -35,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -56,6 +53,12 @@ class PdfGeneratorServiceImplTest {
 
     @MockBean
     private ReportsRepository reportsRepository;
+
+
+    @Mock
+    private Document document;
+    @Mock
+    private PdfWriter writer;
 
     /**
      * Method under test: {@link PdfGeneratorServiceImpl#generatePdf(Long, List, String)}
@@ -727,30 +730,7 @@ class PdfGeneratorServiceImplTest {
         verify(response).setHeader(Mockito.<String>any(), Mockito.<String>any());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#export(Long, List, HttpServletResponse, String)}
-     */
-//    @Test
-//    void testExport2() throws IOException {
-//        Optional<Reports> emptyResult = Optional.empty();
-//        when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(emptyResult);
-//        ArrayList<Long> expenseIds = new ArrayList<>();
-//        Response response = mock(Response.class);
-//        when(response.getOutputStream()).thenThrow(new IOException("application/pdf"));
-//        doNothing().when(response).setContentLength(anyInt());
-//        doNothing().when(response).setContentType(Mockito.<String>any());
-//        doNothing().when(response).setHeader(Mockito.<String>any(), Mockito.<String>any());
-//        pdfGeneratorServiceImpl.export(1L, expenseIds, response, "Role");
-//        verify(reportsRepository).findById(Mockito.<Long>any());
-//        verify(response).getOutputStream();
-//        verify(response).setContentLength(anyInt());
-//        verify(response).setContentType(Mockito.<String>any());
-//        verify(response).setHeader(Mockito.<String>any(), Mockito.<String>any());
-//    }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#convertToCustomCase(String)}
-     */
     @Test
     void testConvertToCustomCase() {
         assertEquals("Input", PdfGeneratorServiceImpl.convertToCustomCase("Input"));
@@ -766,4 +746,8 @@ class PdfGeneratorServiceImplTest {
         String actualConvertToCustomCaseResult = PdfGeneratorServiceImpl.convertToCustomCase(String.join("", "com.", System.getProperty("user.name"), ".expense_management_project.entity.Reports"));
         assertEquals(String.join("", "Com.", System.getProperty("user.name"), ".expense Management Project.entity.reports"), actualConvertToCustomCaseResult);
     }
+
+
+
+
 }

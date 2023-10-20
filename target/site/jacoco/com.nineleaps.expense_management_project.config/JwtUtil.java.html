@@ -106,14 +106,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
     }
 
     public boolean isRefreshTokenExpired(String refreshToken){
-<span class="nc" id="L109">        DecodedJWT decodedJWT = JWT.decode(refreshToken);</span>
-<span class="nc" id="L110">        Date expirationDate = decodedJWT.getExpiresAt();</span>
-<span class="nc" id="L111">        return expirationDate.before(new Date());</span>
+<span class="fc" id="L109">        DecodedJWT decodedJWT = JWT.decode(refreshToken);</span>
+<span class="fc" id="L110">        Date expirationDate = decodedJWT.getExpiresAt();</span>
+<span class="fc" id="L111">        return expirationDate.before(new Date());</span>
     }
     public boolean isAccessTokenExpired(String AccessToken){
-<span class="nc" id="L114">        DecodedJWT decodedJWT = JWT.decode(AccessToken);</span>
-<span class="nc" id="L115">        Date expirationDate = decodedJWT.getExpiresAt();</span>
-<span class="nc" id="L116">        return expirationDate.before(new Date());</span>
+<span class="fc" id="L114">        DecodedJWT decodedJWT = JWT.decode(AccessToken);</span>
+<span class="fc" id="L115">        Date expirationDate = decodedJWT.getExpiresAt();</span>
+<span class="fc" id="L116">        return expirationDate.before(new Date());</span>
     }
 
 }

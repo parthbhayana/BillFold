@@ -39,7 +39,11 @@ public class CategoryServiceImpl implements ICategoryService {
 	@Override
 	public Category getCategoryById(Long categoryId) {
 		Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-		return optionalCategory.orElse(null);
+		if (optionalCategory.isPresent()) {
+			return optionalCategory.get();
+		} else {
+			throw new NullPointerException("Category with ID " + categoryId + " not found");
+		}
 	}
 
 	@Override
@@ -98,11 +102,13 @@ public class CategoryServiceImpl implements ICategoryService {
 	@Override
 	public Map<String, Double> getCategoryTotalAmountByYearAndCategory(Long categoryId) {
 
-		Category category = getCategoryById(categoryId);
+		Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+
 		Map<String, Double> categoryAmountMap = new HashMap<>();
 
-		if (category != null) {
-			List<Expense> expenseList = expenseRepository.findByCategoryAndIsReported(category, true);
+		if (optionalCategory.isPresent()) {
+
+			List<Expense> expenseList = expenseRepository.findByCategoryAndIsReported(optionalCategory.get(), true);
 
 			for (Expense expense : expenseList) {
 				LocalDate expenseDate = expense.getDate();
@@ -111,7 +117,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 				if (categoryAmountMap.containsKey(year)) {
 					Double previousAmount = categoryAmountMap.get(year);
-					categoryAmountMap.put(year,  (previousAmount + amount));
+					categoryAmountMap.put(year, (previousAmount + amount));
 				} else {
 					categoryAmountMap.put(year, amount);
 				}
@@ -153,18 +159,18 @@ public class CategoryServiceImpl implements ICategoryService {
 
 	@Override
 	public HashMap<String, Double> getYearlyReimbursementRatio(Long categoryId) {
-		Category category = getCategoryById(categoryId);
+		Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
 		HashMap<String, Double> yearlyReimbursementRatioMap = new HashMap<>();
 
-		if (category != null) {
-			List<Expense> expenseList = expenseRepository.findByCategory(category);
+		if (optionalCategory.isPresent()) {
+			List<Expense> expenseList = expenseRepository.findByCategory(optionalCategory.get());
 
 			for (Expense expense : expenseList) {
 				if (Boolean.TRUE.equals(expense.getIsReported())) {
 					String year = String.valueOf(expense.getDate().getYear());
 
 					if (yearlyReimbursementRatioMap.containsKey(year)) {
-						Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year)
+						double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year)
 								+ expense.getAmountApproved();
 						int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(year + CONSTANT2) + 1);
 						Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
@@ -224,24 +230,26 @@ public class CategoryServiceImpl implements ICategoryService {
 	public HashMap<String, Object> getCategoryAnalyticsYearly(Long categoryId) {
 		HashMap<String, Object> analyticsData = new HashMap<>();
 
-		Category category = getCategoryById(categoryId);
-		if (category != null) {
-			Map<String, Double> categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);
-			HashMap<String, Double> yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);
-
-			analyticsData.put("categoryTotalAmountByYear", categoryTotalAmountByYear);
-			analyticsData.put("yearlyReimbursementRatio", yearlyReimbursementRatio);
+		Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+		if (optionalCategory.isPresent()) {
+			optionalCategory.get();
 		}
 
-		return analyticsData;
+        Map<String, Double> categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);
+        HashMap<String, Double> yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);
+
+        analyticsData.put("categoryTotalAmountByYear", categoryTotalAmountByYear);
+        analyticsData.put("yearlyReimbursementRatio", yearlyReimbursementRatio);
+
+        return analyticsData;
 	}
 
 	@Override
 	public HashMap<String, Object> getCategoryAnalyticsMonthly(Long categoryId, Long year) {
 		HashMap<String, Object> analyticsData = new HashMap<>();
 
-		Category category = getCategoryById(categoryId);
-		if (category != null) {
+		Optional<Category> category = categoryRepository.findById(categoryId);
+		if (category.isPresent()) {
 			HashMap<String, Double> categoryTotalAmountByMonth = getCategoryTotalAmountByMonthAndCategory(categoryId, year);
 			HashMap<String, Double> monthlyReimbursementRatio = getMonthlyReimbursementRatio(categoryId, year);
 
@@ -389,5 +397,7 @@ public class CategoryServiceImpl implements ICategoryService {
 		analyticsData.put("monthlyReimbursementRatio", monthlyReimbursementRatio);
 		return analyticsData;
 	}
+
+
 
 }

@@ -1,6 +1,6 @@
 package com.nineleaps.expense_management_project.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -34,14 +34,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.mockito.Mockito.*;
+
+
 
 @ContextConfiguration(classes = {EmailServiceImpl.class})
 @ExtendWith(SpringExtension.class)
@@ -72,6 +79,10 @@ class EmailServiceImplTest {
 
     @MockBean
     private ReportsRepository reportsRepository;
+
+    @Captor
+    private ArgumentCaptor<MimeMessagePreparator> preparatorCaptor;
+
 
     /**
      * Method under test: {@link EmailServiceImpl#notifyHr(Long, String, String)}
@@ -3579,4 +3590,77 @@ class EmailServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
+
+//    @Test
+//    public void testWelcomeEmail() throws Exception {
+//        // Arrange
+//        String employeeEmail = "test@example.com";
+//        Employee employee = new Employee();
+//        employee.setFirstName("John");
+//
+//        when(iEmployeeService.getEmployeeByEmail(employeeEmail)).thenReturn(employee);
+//
+//        // Act
+//        emailServiceImpl.welcomeEmail(employeeEmail);
+//
+//        // Assert
+//        verify(javaMailSender).send(preparatorCaptor.capture());
+//
+//        // Retrieve the captured MimeMessagePreparator
+//        MimeMessagePreparator preparator = preparatorCaptor.getValue();
+//
+//        // Create a mock MimeMessage
+//        MimeMessage mockMimeMessage = mock(MimeMessage.class);
+//
+//        // Create a mock MimeMessageHelper
+//        MimeMessageHelper mockMessageHelper = mock(MimeMessageHelper.class);
+//
+//        // Prepare the mock MimeMessage
+//        when(javaMailSender.createMimeMessage()).thenReturn(mockMimeMessage);
+//        when(javaMailSender.createMimeMessageHelper(mockMimeMessage, true)).thenReturn(mockMessageHelper);
+//
+//        // Call the prepare method to set email content
+//        preparator.prepare(mockMimeMessage);
+//
+//        // Use the mock MimeMessageHelper to get email content
+//        String emailContent = mockMessageHelper.toString(); // Converts the email to a string
+//
+//        // Add assertions for the email content
+//        assertEquals("Welcome to BillFold!", mockMimeMessage.getSubject());
+//        assertTrue(emailContent.contains("Hello John")); // Assuming you want to check the user's name
+//        // Add more assertions as needed
+//    }
+
+//    @Test
+//    void testWelcomeEmail() throws Exception {
+//        // Arrange
+//        String employeeEmail = "test@example.com";
+//        Employee employee = new Employee();
+//        employee.setFirstName("John");
+//
+//        when(iEmployeeService.getEmployeeByEmail(employeeEmail)).thenReturn(employee);
+//
+//        // Act
+//        emailServiceImpl.welcomeEmail(employeeEmail);
+//
+//        // Assert
+//        verify(javaMailSender).send(preparatorCaptor.capture());
+//
+//        // Retrieve the captured MimeMessagePreparator
+//        MimeMessagePreparator preparator = preparatorCaptor.getValue();
+//
+//        // Create a mock MimeMessage
+//        MimeMessage mockMimeMessage = mock(MimeMessage.class);
+//
+//        // Prepare the mock MimeMessage
+//        preparator.prepare(mockMimeMessage);
+//
+//        // Extract email content from the mock MimeMessage
+//        String emailContent = ((javax.mail.internet.MimeMessage) mockMimeMessage).getContent().toString();
+//
+//        // Add assertions for the email content
+//        assertEquals("Welcome to BillFold!", mockMimeMessage.getSubject());
+//        assertTrue(emailContent.contains("Hello John")); // Assuming you want to check the user's name
+//        // Add more assertions as needed
+//    }
 }

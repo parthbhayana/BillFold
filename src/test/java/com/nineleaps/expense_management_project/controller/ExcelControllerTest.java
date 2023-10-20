@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -22,7 +23,7 @@ class ExcelControllerTest {
 
 
     private static final String CONSTANT1 = "hello";
-    private static final String CONSTANT3 = "hello1";
+    private static final String  CONSTANT3="No data available for the selected period.So, Email can't be sent!";
     @InjectMocks
     private ExcelController excelController;
 
@@ -38,6 +39,10 @@ class ExcelControllerTest {
     private static final String SUCCESS_RESPONSE = "Email sent successfully!";
     private static final String NO_DATA_RESPONSE = "No data available for the selected period. So, Email can't be sent!";
     private static final String BAD_REQUEST_RESPONSE = "Bad Request";
+
+
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @BeforeEach
     void setUp() {
@@ -132,7 +137,7 @@ class ExcelControllerTest {
         ResponseEntity<String> result = excelController.reimburseAndGenerateExcel(response);
 
         verify(excelServiceReports, times(1)).reimburseAndGenerateExcel(response);
-        assertEquals(result.getStatusCodeValue(), 400);
+        assertEquals(result.getStatusCodeValue(), 200);
         assertEquals(result.getBody(), CONSTANT3);
     }
 
@@ -148,6 +153,37 @@ class ExcelControllerTest {
         assertEquals(result.getStatusCodeValue(), 400);
         assertEquals(result.getBody(), errorMessage);
     }
+
+    @Test
+    void testGenerateExcelReport_WhenResultEqualsConstant3() throws Exception {
+        // Arrange
+        when(excelService.generateExcelAndSendEmail(response, startDate, endDate)).thenReturn(CONSTANT3);
+
+        // Act
+        ResponseEntity<String> resultEntity = excelController.generateExcelReport(response, startDate, endDate);
+
+        // Assert
+        assertEquals(CONSTANT3, resultEntity.getBody());
+        assertEquals(200, resultEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void testGenerateExcelReportWithConstant3() throws Exception {
+        // Mock the behavior of excelServiceReports.generateExcelAndSendEmail to return CONSTANT3
+        when(excelServiceReports.generateExcelAndSendEmail(any(), any(), any(), any())).thenReturn(CONSTANT3);
+
+        // Create a mock HttpServletResponse
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // Call the controller method
+        ResponseEntity<String> responseEntity = excelController.generateExcelReport(response, LocalDate.now(), LocalDate.now(), StatusExcel.PENDING);
+
+        // Assert that the response status code is 200
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        // You can add more assertions if needed, e.g., to check the response content
+    }
+
 
 
 

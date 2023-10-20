@@ -300,7 +300,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         return new byte[0];
     }
 
-    private boolean isImageFormat(byte[] data) {
+    boolean isImageFormat(byte[] data) {
         try {
             BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(data));
             return bufferedImage != null;
@@ -309,7 +309,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         }
     }
 
-    private boolean isPdfFormat(byte[] data) {
+    boolean isPdfFormat(byte[] data) {
         try {
             PdfReader pdfReader = new PdfReader(data);
             pdfReader.close();
@@ -384,4 +384,6 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         }
         return result.toString();
     }
+
+
 }

@@ -300,7 +300,7 @@ import static com.lowagie.text.Element.ALIGN_CENTER;
 <span class="fc" id="L300">        return new byte[0];</span>
     }
 
-    private boolean isImageFormat(byte[] data) {
+    boolean isImageFormat(byte[] data) {
         try {
 <span class="fc" id="L305">            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(data));</span>
 <span class="pc bpc" id="L306" title="1 of 2 branches missed.">            return bufferedImage != null;</span>
@@ -309,7 +309,7 @@ import static com.lowagie.text.Element.ALIGN_CENTER;
         }
     }
 
-    private boolean isPdfFormat(byte[] data) {
+    boolean isPdfFormat(byte[] data) {
         try {
 <span class="nc" id="L314">            PdfReader pdfReader = new PdfReader(data);</span>
 <span class="nc" id="L315">            pdfReader.close();</span>
@@ -384,5 +384,7 @@ import static com.lowagie.text.Element.ALIGN_CENTER;
         }
 <span class="fc" id="L385">        return result.toString();</span>
     }
+
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

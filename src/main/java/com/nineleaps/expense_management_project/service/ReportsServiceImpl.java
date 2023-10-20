@@ -799,32 +799,32 @@ public class ReportsServiceImpl implements IReportsService {
         emailService.notifyLnD(reportId, lndEmail, lndName);
     }
 
-    @Scheduled(cron = "0 0 12 22,24 * ?")
-    public void sendReportNotApprovedByManagerReminder() {
-        LocalDate currentDate = LocalDate.now();
-
-        List<Reports> reportsList = reportsRepository.findBymanagerApprovalStatus(ManagerApprovalStatus.PENDING);
-        List<Long> reportIds = new ArrayList<>();
-        for (Reports report : reportsList) {
-
-            if (currentDate.getDayOfMonth() == 22 || currentDate.getDayOfMonth() == 24) {
-                reportIds.add(report.getReportId());
-            }
-        }
-
-        emailService.reminderMailToManager(reportIds);
-
-        // Push Notification Functionality
-        for (Long report : reportIds) {
-            Reports re = getReportById(report);
-            String managerEmail = re.getManagerEmail();
-            Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
-            PushNotificationRequest notificationRequest = new PushNotificationRequest();
-            notificationRequest.setTitle("[REMINDER]: Take Action on pending reports.");
-            notificationRequest.setToken(manager.getToken());
-            pushNotificationService.sendPushNotificationToToken(notificationRequest);
-        }
-    }
+//    @Scheduled(cron = "0 0 12 22,24 * ?")
+//    public void sendReportNotApprovedByManagerReminder() {
+//        LocalDate currentDate = LocalDate.now();
+//
+//        List<Reports> reportsList = reportsRepository.findBymanagerApprovalStatus(ManagerApprovalStatus.PENDING);
+//        List<Long> reportIds = new ArrayList<>();
+//        for (Reports report : reportsList) {
+//
+//            if (currentDate.getDayOfMonth() == 22 || currentDate.getDayOfMonth() == 24) {
+//                reportIds.add(report.getReportId());
+//            }
+//        }
+//
+//        emailService.reminderMailToManager(reportIds);
+//
+//        // Push Notification Functionality
+//        for (Long report : reportIds) {
+//            Reports re = getReportById(report);
+//            String managerEmail = re.getManagerEmail();
+//            Employee manager = employeeServices.getEmployeeByEmail(managerEmail);
+//            PushNotificationRequest notificationRequest = new PushNotificationRequest();
+//            notificationRequest.setTitle("[REMINDER]: Take Action on pending reports.");
+//            notificationRequest.setToken(manager.getToken());
+//            pushNotificationService.sendPushNotificationToToken(notificationRequest);
+//        }
+//    }
 
 
 

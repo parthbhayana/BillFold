@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
@@ -809,6 +810,138 @@ class CategoryServiceImplTest {
 //        verify(categoryService, times(1)).getTotalAmountByMonthForAllCategories(year);
 //        verify(categoryService, times(1)).getMonthlyReimbursementRatioForAllCategories(year);
 //    }
+
+    @Test
+    void testGetCategoryAnalyticsYearlyWithValidCategory() {
+        // Create a mock Category object and specify its behavior
+        Category category = new Category();
+       category.setCategoryId(1L);
+
+        // Mock the behavior of getCategoryTotalAmountByYearAndCategory
+        Map<String, Double> totalAmountByYear = new HashMap<>();
+        totalAmountByYear.put("2022", 1000.0);
+
+
+        // Mock the behavior of getYearlyReimbursementRatio
+        HashMap<String, Double> yearlyReimbursementRatio = new HashMap<>();
+        yearlyReimbursementRatio.put("2022", 0.5);
+        HashMap<String, Object> analyticsData = new HashMap<>();
+
+        analyticsData.put("categoryTotalAmountByYear", totalAmountByYear);
+        analyticsData.put("yearlyReimbursementRatio", yearlyReimbursementRatio);
+        // Call the method and assert the result
+       categoryService.getCategoryAnalyticsYearly(1L);
+
+        assertEquals(totalAmountByYear, analyticsData.get("categoryTotalAmountByYear"));
+        assertEquals(yearlyReimbursementRatio, analyticsData.get("yearlyReimbursementRatio"));
+    }
+
+    @Test
+    void testGetCategoryAnalyticsYearlyWithNullCategory() {
+        // Create a mock service with the necessary dependencies
+
+        Category category1 = new Category();
+        category1.setCategoryId(1L);
+        // Mock the behavior of getCategoryById to return null
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category1));
+
+        // Call the method with a null category
+        HashMap<String, Object> result = categoryService.getCategoryAnalyticsYearly(1L);
+
+        // Assert that the result is an empty HashMap
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void testGetYearlyCategoryAnalyticsForAllCategories1() {
+
+
+        // Mock the behavior of getTotalAmountByYearForAllCategories
+        HashMap<String, Double> totalAmountByYear = new HashMap<>();
+        totalAmountByYear.put("2022", 1000.0);
+        categoryService.getTotalAmountByYearForAllCategories();
+
+        // Mock the behavior of getYearlyReimbursementRatioForAllCategories
+        HashMap<String, Double> yearlyReimbursementRatio = new HashMap<>();
+        yearlyReimbursementRatio.put("2022", 0.5);
+        categoryService.getYearlyReimbursementRatioForAllCategories();
+
+        // Call the method and assert the result
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("categoryTotalAmountByYear",totalAmountByYear);
+        result.put("yearlyReimbursementRatio",yearlyReimbursementRatio);
+                categoryService.getYearlyCategoryAnalyticsForAllCategories();
+        assertEquals(totalAmountByYear, result.get("categoryTotalAmountByYear"));
+        assertEquals(yearlyReimbursementRatio, result.get("yearlyReimbursementRatio"));
+    }
+
+    @Test
+    void testGetMonthlyCategoryAnalyticsForAllCategories() {
+
+        Long year = 2022L;
+
+        // Mock the behavior of getTotalAmountByMonthForAllCategories for the specified year
+        HashMap<String, Double> categoryTotalAmountByMonth = new HashMap<>();
+        categoryTotalAmountByMonth.put("January", 100.0);
+        categoryTotalAmountByMonth.put("February", 200.0);
+       categoryService.getTotalAmountByMonthForAllCategories(year);
+
+        // Mock the behavior of getMonthlyReimbursementRatioForAllCategories for the specified year
+        HashMap<String, Double> monthlyReimbursementRatio = new HashMap<>();
+        monthlyReimbursementRatio.put("January", 0.2);
+        monthlyReimbursementRatio.put("February", 0.4);
+        categoryService.getMonthlyReimbursementRatioForAllCategories(year);
+
+        // Call the method and assert the result
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("categoryTotalAmountByMonth",categoryTotalAmountByMonth);
+        result.put("monthlyReimbursementRatio",monthlyReimbursementRatio);
+        categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);
+        assertEquals(categoryTotalAmountByMonth, result.get("categoryTotalAmountByMonth"));
+        assertEquals(monthlyReimbursementRatio, result.get("monthlyReimbursementRatio"));
+    }
+
+
+
+    @Test
+    void testGetCategoryAnalyticsMonthlyWithValidCategory() {
+        // Create a mock Category object and specify its behavior
+        Category category = new Category();
+        category.setCategoryId(1L);
+
+        // Mock the behavior of getCategoryTotalAmountByMonthAndCategory
+        Map<String, Double> totalAmountByMonth = new HashMap<>();
+        totalAmountByMonth.put("January", 1000.0);
+        HashMap<String, Double> monthlyReimbursementRatio = new HashMap<>();
+        monthlyReimbursementRatio.put("January", 0.5);
+        HashMap<String, Object> analyticsData = new HashMap<>();
+        analyticsData.put("categoryTotalAmountByMonth", totalAmountByMonth);
+        analyticsData.put("monthlyReimbursementRatio", monthlyReimbursementRatio);
+
+
+        // Call the method and assert the result
+        categoryService.getCategoryAnalyticsMonthly(1L, 2022L);
+
+        assertEquals(totalAmountByMonth, analyticsData.get("categoryTotalAmountByMonth"));
+        assertEquals(monthlyReimbursementRatio, analyticsData.get("monthlyReimbursementRatio"));
+    }
+
+    @Test
+    void testGetCategoryAnalyticsMonthlyWithNullCategory() {
+        // Create a mock service with the necessary dependencies
+
+        Category category1 = new Category();
+        category1.setCategoryId(1L);
+
+        // Mock the behavior of getCategoryById to return null
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category1));
+
+        // Call the method with a null category
+        HashMap<String, Object> result = categoryService.getCategoryAnalyticsMonthly(1L, 2022L);
+
+        // Assert that the result is an empty HashMap
+        assertEquals(2, result.size());
+    }
 
 
 

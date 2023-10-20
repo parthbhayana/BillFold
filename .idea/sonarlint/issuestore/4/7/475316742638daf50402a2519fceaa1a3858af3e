@@ -5,10 +5,10 @@ K
 java:S5411¬"(Use a primitive boolean expression here.(†ˆ¤Ûþÿÿÿÿ8§Žè–´1
 K
 java:S5411±"(Use a primitive boolean expression here.(ã·Ç£úÿÿÿÿ8¨Žè–´1
-Y
-java:S2589p"7Remove this expression which always evaluates to "true"(èæÞ¶üÿÿÿÿ8Ò’è–´1
 V
 java:S2589§"8Remove this expression which always evaluates to "false"(¨¡µš8Ò’è–´1
+Y
+java:S2589p"7Remove this expression which always evaluates to "true"(èæÞ¶üÿÿÿÿ8Ò’è–´1
 ^	java:S107ñ"<Method has 9 parameters, which is greater than 7 authorized.(ìÎÎ‡øÿÿÿÿ8×’è–´1
 u
 java:S3776¡"RRefactor this method to reduce its Cognitive Complexity from 33 to the 15 allowed.(ùšäÞøÿÿÿÿ8ý’è–´1
