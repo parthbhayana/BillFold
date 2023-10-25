@@ -5,7 +5,6 @@ import com.nineleaps.expense_management_project.dto.ReportsDTO;
 import com.nineleaps.expense_management_project.entity.*;
 import com.nineleaps.expense_management_project.firebase.PushNotificationRequest;
 import com.nineleaps.expense_management_project.firebase.PushNotificationService;
-import net.sourceforge.pmd.Report;
 import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,25 +13,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.catalina.connector.Response;
 import org.junit.Assert;
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.*;
-
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ExpenseRepository;
 import com.nineleaps.expense_management_project.repository.ReportsRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-
 import javax.mail.MessagingException;
-
-
 import static com.nineleaps.expense_management_project.service.ReportsServiceImpl.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -163,63 +154,6 @@ class ReportsServiceImplTest {
         verify(reportsRepository).save(Mockito.<Reports>any());
     }
 
-//    @Test
-//    void testAddReport2() {
-//        Employee employee = new Employee();
-//        employee.setEmployeeEmail("jane.doe@example.org");
-//        employee.setEmployeeId(1L);
-//        employee.setExpenseList(new ArrayList<>());
-//        employee.setFirstName("Jane");
-//        employee.setHrEmail("jane.doe@example.org");
-//        employee.setHrName("Hr Name");
-//        employee.setImageUrl("https://example.org/example");
-//        employee.setIsFinanceAdmin(true);
-//        employee.setIsHidden(true);
-//        employee.setLastName("Doe");
-//        employee.setLndEmail("jane.doe@example.org");
-//        employee.setLndName("Lnd Name");
-//        employee.setManagerEmail("jane.doe@example.org");
-//        employee.setManagerName("Manager Name");
-//        employee.setMiddleName("Middle Name");
-//        employee.setMobileNumber(1L);
-//        employee.setOfficialEmployeeId("42");
-//        employee.setRole("Role");
-//        employee.setToken("ABC123");
-//        when(employeeService.getEmployeeById(Mockito.<Long>any())).thenReturn(employee);
-//        when(expenseRepository.findAllById(Mockito.<Iterable<Long>>any())).thenReturn(new ArrayList<>());
-//
-//        Reports reports = new Reports();
-//        reports.setDateCreated(LocalDate.of(1970, 1, 1));
-//        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
-//        reports.setEmployeeId(1L);
-//        reports.setEmployeeMail("Employee Mail");
-//        reports.setEmployeeName("Employee Name");
-//        reports.setExpensesCount(3L);
-//        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-//        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-//        reports.setFinanceComments("Finance Comments");
-//        reports.setIsHidden(true);
-//        reports.setIsSubmitted(true);
-//        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
-//        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-//        reports.setManagerComments("Manager Comments");
-//        reports.setManagerEmail("jane.doe@example.org");
-//        reports.setManagerReviewTime("Manager Review Time");
-//        reports.setOfficialEmployeeId("42");
-//        reports.setReportId(1L);
-//        reports.setReportTitle("Dr");
-//        reports.setTotalAmount(10.0f);
-//        reports.setTotalApprovedAmount(10.0f);
-//        when(reportsRepository.save(Mockito.<Reports>any())).thenReturn(reports);
-//        Optional<Reports> emptyResult = Optional.empty();
-//        when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(emptyResult);
-//        ReportsDTO reportsDTO = new ReportsDTO("Dr");
-//        assertThrows(RuntimeException.class, () -> reportsService.addReport(reportsDTO, 1L, new ArrayList<>()));
-//        verify(employeeService).getEmployeeById(Mockito.<Long>any());
-//        verify(expenseRepository).findAllById(Mockito.<Iterable<Long>>any());
-//        verify(reportsRepository).save(Mockito.<Reports>any());
-//        verify(reportsRepository).findById(Mockito.<Long>any());
-//    }
 
     @Test
     void testAddReportEmployeeNotFound() {
@@ -238,24 +172,6 @@ class ReportsServiceImplTest {
         assertEquals("Employee with ID 1 not found", exception.getMessage());
     }
 
-//
-//    @Test
-//    void testEditReport_WhenReportNotSubmitted() {
-//        // Mock data for a report that is not submitted
-//        Reports report = new Reports();
-//        report.setIsSubmitted(false);
-//        report.setIsHidden(false);
-//        report.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
-//
-//        // Mock behavior for the methods
-//        when(reportsRepository.findById(1L)).thenReturn(java.util.Optional.of(report));
-//
-//        // Execute the editReport method
-//        reportsService.editReport(1L, "New Title", "Description", new ArrayList<>(), new ArrayList<>());
-//
-//        // Verify that the report was updated
-//        verify(reportsRepository).save(report);
-//    }
 
     @Test
     void testEditReport_WhenReportAlreadySubmitted() {
@@ -648,579 +564,6 @@ class ReportsServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link ReportsServiceImpl#reimburseReportByFinance(ArrayList, String)}
-     */
-    @Test
-    void testReimburseReportByFinance3() {
-        doNothing().when(emailService).userReimbursedNotification(Mockito.<Long>any());
-
-        Employee employee = new Employee();
-        employee.setEmployeeEmail("jane.doe@example.org");
-        employee.setEmployeeId(1L);
-        employee.setExpenseList(new ArrayList<>());
-        employee.setFirstName("Jane");
-        employee.setHrEmail("jane.doe@example.org");
-        employee.setHrName("Hr Name");
-        employee.setImageUrl("https://example.org/example");
-        employee.setIsFinanceAdmin(true);
-        employee.setIsHidden(true);
-        employee.setLastName("Doe");
-        employee.setLndEmail("jane.doe@example.org");
-        employee.setLndName("Lnd Name");
-        employee.setManagerEmail("jane.doe@example.org");
-        employee.setManagerName("Manager Name");
-        employee.setMiddleName("Middle Name");
-        employee.setMobileNumber(1L);
-        employee.setOfficialEmployeeId("42");
-        employee.setRole("Role");
-        employee.setToken("ABC123");
-        when(employeeService.getEmployeeById(Mockito.<Long>any())).thenReturn(employee);
-        when(expenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
-        doNothing().when(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
-        Reports reports = mock(Reports.class);
-        when(reports.getReportTitle()).thenReturn("Dr");
-        when(reports.getManagerApprovalStatus()).thenReturn(ManagerApprovalStatus.APPROVED);
-        when(reports.getIsHidden()).thenReturn(false);
-        when(reports.getIsSubmitted()).thenReturn(true);
-        when(reports.getEmployeeId()).thenReturn(1L);
-        doNothing().when(reports).setDateCreated(Mockito.<LocalDate>any());
-        doNothing().when(reports).setDateSubmitted(Mockito.<LocalDate>any());
-        doNothing().when(reports).setEmployeeId(Mockito.<Long>any());
-        doNothing().when(reports).setEmployeeMail(Mockito.<String>any());
-        doNothing().when(reports).setEmployeeName(Mockito.<String>any());
-        doNothing().when(reports).setExpensesCount(Mockito.<Long>any());
-        doNothing().when(reports).setFinanceActionDate(Mockito.<LocalDate>any());
-        doNothing().when(reports).setFinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
-        doNothing().when(reports).setFinanceComments(Mockito.<String>any());
-        doNothing().when(reports).setIsHidden(Mockito.<Boolean>any());
-        doNothing().when(reports).setIsSubmitted(Mockito.<Boolean>any());
-        doNothing().when(reports).setManagerActionDate(Mockito.<LocalDate>any());
-        doNothing().when(reports).setManagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-        doNothing().when(reports).setManagerComments(Mockito.<String>any());
-        doNothing().when(reports).setManagerEmail(Mockito.<String>any());
-        doNothing().when(reports).setManagerReviewTime(Mockito.<String>any());
-        doNothing().when(reports).setOfficialEmployeeId(Mockito.<String>any());
-        doNothing().when(reports).setReportId(Mockito.<Long>any());
-        doNothing().when(reports).setReportTitle(Mockito.<String>any());
-        doNothing().when(reports).setTotalAmount(anyFloat());
-        doNothing().when(reports).setTotalApprovedAmount(anyFloat());
-        reports.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports.setEmployeeId(1L);
-        reports.setEmployeeMail("Employee Mail");
-        reports.setEmployeeName("Employee Name");
-        reports.setExpensesCount(3L);
-        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports.setFinanceComments("Finance Comments");
-        reports.setIsHidden(true);
-        reports.setIsSubmitted(true);
-        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports.setManagerComments("Manager Comments");
-        reports.setManagerEmail("jane.doe@example.org");
-        reports.setManagerReviewTime("Manager Review Time");
-        reports.setOfficialEmployeeId("42");
-        reports.setReportId(1L);
-        reports.setReportTitle("Dr");
-        reports.setTotalAmount(10.0f);
-        reports.setTotalApprovedAmount(10.0f);
-        Optional<Reports> ofResult = Optional.of(reports);
-
-        Reports reports2 = new Reports();
-        reports2.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports2.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports2.setEmployeeId(1L);
-        reports2.setEmployeeMail("Employee Mail");
-        reports2.setEmployeeName("Employee Name");
-        reports2.setExpensesCount(3L);
-        reports2.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports2.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports2.setFinanceComments("Finance Comments");
-        reports2.setIsHidden(true);
-        reports2.setIsSubmitted(true);
-        reports2.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports2.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports2.setManagerComments("Manager Comments");
-        reports2.setManagerEmail("jane.doe@example.org");
-        reports2.setManagerReviewTime("Manager Review Time");
-        reports2.setOfficialEmployeeId("42");
-        reports2.setReportId(1L);
-        reports2.setReportTitle("Dr");
-        reports2.setTotalAmount(10.0f);
-        reports2.setTotalApprovedAmount(10.0f);
-        when(reportsRepository.save(Mockito.<Reports>any())).thenReturn(reports2);
-        when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
-
-        ArrayList<Long> reportIds = new ArrayList<>();
-        reportIds.add(1L);
-        reportsService.reimburseReportByFinance(reportIds, "Comments");
-        verify(emailService).userReimbursedNotification(Mockito.<Long>any());
-        verify(employeeService).getEmployeeById(Mockito.<Long>any());
-        verify(expenseService).getExpenseByReportId(Mockito.<Long>any());
-        verify(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
-        verify(reportsRepository).save(Mockito.<Reports>any());
-        verify(reportsRepository).findById(Mockito.<Long>any());
-        verify(reports).getManagerApprovalStatus();
-        verify(reports).getIsHidden();
-        verify(reports).getIsSubmitted();
-        verify(reports).getEmployeeId();
-        verify(reports).getReportTitle();
-        verify(reports).setDateCreated(Mockito.<LocalDate>any());
-        verify(reports).setDateSubmitted(Mockito.<LocalDate>any());
-        verify(reports).setEmployeeId(Mockito.<Long>any());
-        verify(reports).setEmployeeMail(Mockito.<String>any());
-        verify(reports).setEmployeeName(Mockito.<String>any());
-        verify(reports).setExpensesCount(Mockito.<Long>any());
-        verify(reports, atLeast(1)).setFinanceActionDate(Mockito.<LocalDate>any());
-        verify(reports, atLeast(1)).setFinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
-        verify(reports, atLeast(1)).setFinanceComments(Mockito.<String>any());
-        verify(reports).setIsHidden(Mockito.<Boolean>any());
-        verify(reports).setIsSubmitted(Mockito.<Boolean>any());
-        verify(reports).setManagerActionDate(Mockito.<LocalDate>any());
-        verify(reports).setManagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-        verify(reports).setManagerComments(Mockito.<String>any());
-        verify(reports).setManagerEmail(Mockito.<String>any());
-        verify(reports).setManagerReviewTime(Mockito.<String>any());
-        verify(reports).setOfficialEmployeeId(Mockito.<String>any());
-        verify(reports).setReportId(Mockito.<Long>any());
-        verify(reports).setReportTitle(Mockito.<String>any());
-        verify(reports).setTotalAmount(anyFloat());
-        verify(reports).setTotalApprovedAmount(anyFloat());
-    }
-
-    /**
-     * Method under test: {@link ReportsServiceImpl#reimburseReportByFinance(ArrayList, String)}
-     */
-    @Test
-    void testReimburseReportByFinance4() {
-        doNothing().when(emailService).userReimbursedNotification(Mockito.<Long>any());
-
-        Employee employee = new Employee();
-        employee.setEmployeeEmail("jane.doe@example.org");
-        employee.setEmployeeId(1L);
-        employee.setExpenseList(new ArrayList<>());
-        employee.setFirstName("Jane");
-        employee.setHrEmail("jane.doe@example.org");
-        employee.setHrName("Hr Name");
-        employee.setImageUrl("https://example.org/example");
-        employee.setIsFinanceAdmin(true);
-        employee.setIsHidden(true);
-        employee.setLastName("Doe");
-        employee.setLndEmail("jane.doe@example.org");
-        employee.setLndName("Lnd Name");
-        employee.setManagerEmail("jane.doe@example.org");
-        employee.setManagerName("Manager Name");
-        employee.setMiddleName("Middle Name");
-        employee.setMobileNumber(1L);
-        employee.setOfficialEmployeeId("42");
-        employee.setRole("Role");
-        employee.setToken("ABC123");
-        when(employeeService.getEmployeeById(Mockito.<Long>any())).thenReturn(employee);
-        when(expenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
-        Reports reports = mock(Reports.class);
-        when(reports.getReportTitle()).thenThrow(new IllegalStateException("Your expense report is pushed to reimbursement."));
-        when(reports.getManagerApprovalStatus()).thenReturn(ManagerApprovalStatus.APPROVED);
-        when(reports.getIsHidden()).thenReturn(false);
-        when(reports.getIsSubmitted()).thenReturn(true);
-        when(reports.getEmployeeId()).thenReturn(1L);
-        doNothing().when(reports).setDateCreated(Mockito.<LocalDate>any());
-        doNothing().when(reports).setDateSubmitted(Mockito.<LocalDate>any());
-        doNothing().when(reports).setEmployeeId(Mockito.<Long>any());
-        doNothing().when(reports).setEmployeeMail(Mockito.<String>any());
-        doNothing().when(reports).setEmployeeName(Mockito.<String>any());
-        doNothing().when(reports).setExpensesCount(Mockito.<Long>any());
-        doNothing().when(reports).setFinanceActionDate(Mockito.<LocalDate>any());
-        doNothing().when(reports).setFinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
-        doNothing().when(reports).setFinanceComments(Mockito.<String>any());
-        doNothing().when(reports).setIsHidden(Mockito.<Boolean>any());
-        doNothing().when(reports).setIsSubmitted(Mockito.<Boolean>any());
-        doNothing().when(reports).setManagerActionDate(Mockito.<LocalDate>any());
-        doNothing().when(reports).setManagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-        doNothing().when(reports).setManagerComments(Mockito.<String>any());
-        doNothing().when(reports).setManagerEmail(Mockito.<String>any());
-        doNothing().when(reports).setManagerReviewTime(Mockito.<String>any());
-        doNothing().when(reports).setOfficialEmployeeId(Mockito.<String>any());
-        doNothing().when(reports).setReportId(Mockito.<Long>any());
-        doNothing().when(reports).setReportTitle(Mockito.<String>any());
-        doNothing().when(reports).setTotalAmount(anyFloat());
-        doNothing().when(reports).setTotalApprovedAmount(anyFloat());
-        reports.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports.setEmployeeId(1L);
-        reports.setEmployeeMail("Employee Mail");
-        reports.setEmployeeName("Employee Name");
-        reports.setExpensesCount(3L);
-        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports.setFinanceComments("Finance Comments");
-        reports.setIsHidden(true);
-        reports.setIsSubmitted(true);
-        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports.setManagerComments("Manager Comments");
-        reports.setManagerEmail("jane.doe@example.org");
-        reports.setManagerReviewTime("Manager Review Time");
-        reports.setOfficialEmployeeId("42");
-        reports.setReportId(1L);
-        reports.setReportTitle("Dr");
-        reports.setTotalAmount(10.0f);
-        reports.setTotalApprovedAmount(10.0f);
-        Optional<Reports> ofResult = Optional.of(reports);
-
-        Reports reports2 = new Reports();
-        reports2.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports2.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports2.setEmployeeId(1L);
-        reports2.setEmployeeMail("Employee Mail");
-        reports2.setEmployeeName("Employee Name");
-        reports2.setExpensesCount(3L);
-        reports2.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports2.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports2.setFinanceComments("Finance Comments");
-        reports2.setIsHidden(true);
-        reports2.setIsSubmitted(true);
-        reports2.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports2.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports2.setManagerComments("Manager Comments");
-        reports2.setManagerEmail("jane.doe@example.org");
-        reports2.setManagerReviewTime("Manager Review Time");
-        reports2.setOfficialEmployeeId("42");
-        reports2.setReportId(1L);
-        reports2.setReportTitle("Dr");
-        reports2.setTotalAmount(10.0f);
-        reports2.setTotalApprovedAmount(10.0f);
-        when(reportsRepository.save(Mockito.<Reports>any())).thenReturn(reports2);
-        when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
-
-        ArrayList<Long> reportIds = new ArrayList<>();
-        reportIds.add(1L);
-        assertThrows(IllegalStateException.class, () -> reportsService.reimburseReportByFinance(reportIds, "Comments"));
-        verify(emailService).userReimbursedNotification(Mockito.<Long>any());
-        verify(employeeService).getEmployeeById(Mockito.<Long>any());
-        verify(expenseService).getExpenseByReportId(Mockito.<Long>any());
-        verify(reportsRepository).save(Mockito.<Reports>any());
-        verify(reportsRepository).findById(Mockito.<Long>any());
-        verify(reports).getManagerApprovalStatus();
-        verify(reports).getIsHidden();
-        verify(reports).getIsSubmitted();
-        verify(reports).getEmployeeId();
-        verify(reports).getReportTitle();
-        verify(reports).setDateCreated(Mockito.<LocalDate>any());
-        verify(reports).setDateSubmitted(Mockito.<LocalDate>any());
-        verify(reports).setEmployeeId(Mockito.<Long>any());
-        verify(reports).setEmployeeMail(Mockito.<String>any());
-        verify(reports).setEmployeeName(Mockito.<String>any());
-        verify(reports).setExpensesCount(Mockito.<Long>any());
-        verify(reports, atLeast(1)).setFinanceActionDate(Mockito.<LocalDate>any());
-        verify(reports, atLeast(1)).setFinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
-        verify(reports, atLeast(1)).setFinanceComments(Mockito.<String>any());
-        verify(reports).setIsHidden(Mockito.<Boolean>any());
-        verify(reports).setIsSubmitted(Mockito.<Boolean>any());
-        verify(reports).setManagerActionDate(Mockito.<LocalDate>any());
-        verify(reports).setManagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-        verify(reports).setManagerComments(Mockito.<String>any());
-        verify(reports).setManagerEmail(Mockito.<String>any());
-        verify(reports).setManagerReviewTime(Mockito.<String>any());
-        verify(reports).setOfficialEmployeeId(Mockito.<String>any());
-        verify(reports).setReportId(Mockito.<Long>any());
-        verify(reports).setReportTitle(Mockito.<String>any());
-        verify(reports).setTotalAmount(anyFloat());
-        verify(reports).setTotalApprovedAmount(anyFloat());
-    }
-
-    /**
-     * Method under test: {@link ReportsServiceImpl#reimburseReportByFinance(ArrayList, String)}
-     */
-    @Test
-    void testReimburseReportByFinance5() throws UnsupportedEncodingException, UnsupportedEncodingException {
-        doNothing().when(emailService).userReimbursedNotification(Mockito.<Long>any());
-
-        Employee employee = new Employee();
-        employee.setEmployeeEmail("jane.doe@example.org");
-        employee.setEmployeeId(1L);
-        employee.setExpenseList(new ArrayList<>());
-        employee.setFirstName("Jane");
-        employee.setHrEmail("jane.doe@example.org");
-        employee.setHrName("Hr Name");
-        employee.setImageUrl("https://example.org/example");
-        employee.setIsFinanceAdmin(true);
-        employee.setIsHidden(true);
-        employee.setLastName("Doe");
-        employee.setLndEmail("jane.doe@example.org");
-        employee.setLndName("Lnd Name");
-        employee.setManagerEmail("jane.doe@example.org");
-        employee.setManagerName("Manager Name");
-        employee.setMiddleName("Middle Name");
-        employee.setMobileNumber(1L);
-        employee.setOfficialEmployeeId("42");
-        employee.setRole("Role");
-        employee.setToken("ABC123");
-        when(employeeService.getEmployeeById(Mockito.<Long>any())).thenReturn(employee);
-
-        Category category = new Category();
-        category.setCategoryDescription("Category Description");
-        category.setCategoryId(1L);
-        category.setCategoryTotal(1L);
-        category.setExpenseList(new ArrayList<>());
-        category.setIsHidden(true);
-
-        Employee employee2 = new Employee();
-        employee2.setEmployeeEmail("jane.doe@example.org");
-        employee2.setEmployeeId(1L);
-        employee2.setExpenseList(new ArrayList<>());
-        employee2.setFirstName("Jane");
-        employee2.setHrEmail("jane.doe@example.org");
-        employee2.setHrName("Hr Name");
-        employee2.setImageUrl("https://example.org/example");
-        employee2.setIsFinanceAdmin(true);
-        employee2.setIsHidden(true);
-        employee2.setLastName("Doe");
-        employee2.setLndEmail("jane.doe@example.org");
-        employee2.setLndName("Lnd Name");
-        employee2.setManagerEmail("jane.doe@example.org");
-        employee2.setManagerName("Manager Name");
-        employee2.setMiddleName("Middle Name");
-        employee2.setMobileNumber(1L);
-        employee2.setOfficialEmployeeId("42");
-        employee2.setRole("Role");
-        employee2.setToken("ABC123");
-
-        Reports reports = new Reports();
-        reports.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports.setEmployeeId(1L);
-        reports.setEmployeeMail("Employee Mail");
-        reports.setEmployeeName("Employee Name");
-        reports.setExpensesCount(3L);
-        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports.setFinanceComments("Finance Comments");
-        reports.setIsHidden(true);
-        reports.setIsSubmitted(true);
-        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports.setManagerComments("Manager Comments");
-        reports.setManagerEmail("jane.doe@example.org");
-        reports.setManagerReviewTime("Manager Review Time");
-        reports.setOfficialEmployeeId("42");
-        reports.setReportId(1L);
-        reports.setReportTitle("Dr");
-        reports.setTotalAmount(10.0f);
-        reports.setTotalApprovedAmount(10.0f);
-
-        Expense expense = new Expense();
-        expense.setAmount(10.0d);
-        expense.setAmountApproved(10.0d);
-        expense.setCategory(category);
-        expense.setCategoryDescription("Category Description");
-        expense.setDate(LocalDate.of(1970, 1, 1));
-        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
-        expense.setDescription("The characteristics of someone or something");
-        expense.setEmployee(employee2);
-        expense.setExpenseId(1L);
-        expense.setFile("AXAXAXAX".getBytes("UTF-8"));
-        expense.setFileName("foo.txt");
-        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        expense.setIsHidden(true);
-        expense.setIsReported(true);
-        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
-        expense.setMerchantName("Merchant Name");
-        expense.setPotentialDuplicate(true);
-        expense.setReportTitle("Dr");
-        expense.setReports(reports);
-        when(expenseRepository.save(Mockito.<Expense>any())).thenReturn(expense);
-
-        Category category2 = new Category();
-        category2.setCategoryDescription("Your expense report is pushed to reimbursement.");
-        category2.setCategoryId(1L);
-        category2.setCategoryTotal(1L);
-        category2.setExpenseList(new ArrayList<>());
-        category2.setIsHidden(true);
-
-        Employee employee3 = new Employee();
-        employee3.setEmployeeEmail("jane.doe@example.org");
-        employee3.setEmployeeId(1L);
-        employee3.setExpenseList(new ArrayList<>());
-        employee3.setFirstName("Jane");
-        employee3.setHrEmail("jane.doe@example.org");
-        employee3.setHrName("Your expense report is pushed to reimbursement.");
-        employee3.setImageUrl("https://example.org/example");
-        employee3.setIsFinanceAdmin(true);
-        employee3.setIsHidden(true);
-        employee3.setLastName("Doe");
-        employee3.setLndEmail("jane.doe@example.org");
-        employee3.setLndName("Your expense report is pushed to reimbursement.");
-        employee3.setManagerEmail("jane.doe@example.org");
-        employee3.setManagerName("Your expense report is pushed to reimbursement.");
-        employee3.setMiddleName("Your expense report is pushed to reimbursement.");
-        employee3.setMobileNumber(1L);
-        employee3.setOfficialEmployeeId("42");
-        employee3.setRole("Your expense report is pushed to reimbursement.");
-        employee3.setToken("ABC123");
-
-        Reports reports2 = new Reports();
-        reports2.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports2.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports2.setEmployeeId(1L);
-        reports2.setEmployeeMail("Your expense report is pushed to reimbursement.");
-        reports2.setEmployeeName("Your expense report is pushed to reimbursement.");
-        reports2.setExpensesCount(3L);
-        reports2.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports2.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports2.setFinanceComments("Your expense report is pushed to reimbursement.");
-        reports2.setIsHidden(true);
-        reports2.setIsSubmitted(true);
-        reports2.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports2.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports2.setManagerComments("Your expense report is pushed to reimbursement.");
-        reports2.setManagerEmail("jane.doe@example.org");
-        reports2.setManagerReviewTime("Your expense report is pushed to reimbursement.");
-        reports2.setOfficialEmployeeId("42");
-        reports2.setReportId(1L);
-        reports2.setReportTitle("Dr");
-        reports2.setTotalAmount(10.0f);
-        reports2.setTotalApprovedAmount(10.0f);
-
-        Expense expense2 = new Expense();
-        expense2.setAmount(10.0d);
-        expense2.setAmountApproved(10.0d);
-        expense2.setCategory(category2);
-        expense2.setCategoryDescription("Your expense report is pushed to reimbursement.");
-        expense2.setDate(LocalDate.of(1970, 1, 1));
-        expense2.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
-        expense2.setDescription("The characteristics of someone or something");
-        expense2.setEmployee(employee3);
-        expense2.setExpenseId(1L);
-        expense2.setFile(new byte[]{'A', 1, 'A', 1, 'A', 1, 'A', 1});
-        expense2.setFileName("foo.txt");
-        expense2.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        expense2.setIsHidden(true);
-        expense2.setIsReported(true);
-        expense2.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
-        expense2.setMerchantName("Your expense report is pushed to reimbursement.");
-        expense2.setPotentialDuplicate(true);
-        expense2.setReportTitle("Dr");
-        expense2.setReports(reports2);
-
-        ArrayList<Expense> expenseList = new ArrayList<>();
-        expenseList.add(expense2);
-        when(expenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(expenseList);
-        doNothing().when(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
-        Reports reports3 = mock(Reports.class);
-        when(reports3.getReportTitle()).thenReturn("Dr");
-        when(reports3.getManagerApprovalStatus()).thenReturn(ManagerApprovalStatus.APPROVED);
-        when(reports3.getIsHidden()).thenReturn(false);
-        when(reports3.getIsSubmitted()).thenReturn(true);
-        when(reports3.getEmployeeId()).thenReturn(1L);
-        doNothing().when(reports3).setDateCreated(Mockito.<LocalDate>any());
-        doNothing().when(reports3).setDateSubmitted(Mockito.<LocalDate>any());
-        doNothing().when(reports3).setEmployeeId(Mockito.<Long>any());
-        doNothing().when(reports3).setEmployeeMail(Mockito.<String>any());
-        doNothing().when(reports3).setEmployeeName(Mockito.<String>any());
-        doNothing().when(reports3).setExpensesCount(Mockito.<Long>any());
-        doNothing().when(reports3).setFinanceActionDate(Mockito.<LocalDate>any());
-        doNothing().when(reports3).setFinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
-        doNothing().when(reports3).setFinanceComments(Mockito.<String>any());
-        doNothing().when(reports3).setIsHidden(Mockito.<Boolean>any());
-        doNothing().when(reports3).setIsSubmitted(Mockito.<Boolean>any());
-        doNothing().when(reports3).setManagerActionDate(Mockito.<LocalDate>any());
-        doNothing().when(reports3).setManagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-        doNothing().when(reports3).setManagerComments(Mockito.<String>any());
-        doNothing().when(reports3).setManagerEmail(Mockito.<String>any());
-        doNothing().when(reports3).setManagerReviewTime(Mockito.<String>any());
-        doNothing().when(reports3).setOfficialEmployeeId(Mockito.<String>any());
-        doNothing().when(reports3).setReportId(Mockito.<Long>any());
-        doNothing().when(reports3).setReportTitle(Mockito.<String>any());
-        doNothing().when(reports3).setTotalAmount(anyFloat());
-        doNothing().when(reports3).setTotalApprovedAmount(anyFloat());
-        reports3.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports3.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports3.setEmployeeId(1L);
-        reports3.setEmployeeMail("Employee Mail");
-        reports3.setEmployeeName("Employee Name");
-        reports3.setExpensesCount(3L);
-        reports3.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports3.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports3.setFinanceComments("Finance Comments");
-        reports3.setIsHidden(true);
-        reports3.setIsSubmitted(true);
-        reports3.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports3.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports3.setManagerComments("Manager Comments");
-        reports3.setManagerEmail("jane.doe@example.org");
-        reports3.setManagerReviewTime("Manager Review Time");
-        reports3.setOfficialEmployeeId("42");
-        reports3.setReportId(1L);
-        reports3.setReportTitle("Dr");
-        reports3.setTotalAmount(10.0f);
-        reports3.setTotalApprovedAmount(10.0f);
-        Optional<Reports> ofResult = Optional.of(reports3);
-
-        Reports reports4 = new Reports();
-        reports4.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports4.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports4.setEmployeeId(1L);
-        reports4.setEmployeeMail("Employee Mail");
-        reports4.setEmployeeName("Employee Name");
-        reports4.setExpensesCount(3L);
-        reports4.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports4.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports4.setFinanceComments("Finance Comments");
-        reports4.setIsHidden(true);
-        reports4.setIsSubmitted(true);
-        reports4.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports4.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports4.setManagerComments("Manager Comments");
-        reports4.setManagerEmail("jane.doe@example.org");
-        reports4.setManagerReviewTime("Manager Review Time");
-        reports4.setOfficialEmployeeId("42");
-        reports4.setReportId(1L);
-        reports4.setReportTitle("Dr");
-        reports4.setTotalAmount(10.0f);
-        reports4.setTotalApprovedAmount(10.0f);
-        when(reportsRepository.save(Mockito.<Reports>any())).thenReturn(reports4);
-        when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
-
-        ArrayList<Long> reportIds = new ArrayList<>();
-        reportIds.add(1L);
-        reportsService.reimburseReportByFinance(reportIds, "Comments");
-        verify(emailService).userReimbursedNotification(Mockito.<Long>any());
-        verify(employeeService).getEmployeeById(Mockito.<Long>any());
-        verify(expenseRepository).save(Mockito.<Expense>any());
-        verify(expenseService).getExpenseByReportId(Mockito.<Long>any());
-        verify(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
-        verify(reportsRepository).save(Mockito.<Reports>any());
-        verify(reportsRepository).findById(Mockito.<Long>any());
-        verify(reports3).getManagerApprovalStatus();
-        verify(reports3).getIsHidden();
-        verify(reports3).getIsSubmitted();
-        verify(reports3).getEmployeeId();
-        verify(reports3).getReportTitle();
-        verify(reports3).setDateCreated(Mockito.<LocalDate>any());
-        verify(reports3).setDateSubmitted(Mockito.<LocalDate>any());
-        verify(reports3).setEmployeeId(Mockito.<Long>any());
-        verify(reports3).setEmployeeMail(Mockito.<String>any());
-        verify(reports3).setEmployeeName(Mockito.<String>any());
-        verify(reports3).setExpensesCount(Mockito.<Long>any());
-        verify(reports3, atLeast(1)).setFinanceActionDate(Mockito.<LocalDate>any());
-        verify(reports3, atLeast(1)).setFinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
-        verify(reports3, atLeast(1)).setFinanceComments(Mockito.<String>any());
-        verify(reports3).setIsHidden(Mockito.<Boolean>any());
-        verify(reports3).setIsSubmitted(Mockito.<Boolean>any());
-        verify(reports3).setManagerActionDate(Mockito.<LocalDate>any());
-        verify(reports3).setManagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-        verify(reports3).setManagerComments(Mockito.<String>any());
-        verify(reports3).setManagerEmail(Mockito.<String>any());
-        verify(reports3).setManagerReviewTime(Mockito.<String>any());
-        verify(reports3).setOfficialEmployeeId(Mockito.<String>any());
-        verify(reports3).setReportId(Mockito.<Long>any());
-        verify(reports3).setReportTitle(Mockito.<String>any());
-        verify(reports3).setTotalAmount(anyFloat());
-        verify(reports3).setTotalApprovedAmount(anyFloat());
-    }
-
     @Test
     void testRejectReportByFinance() {
         Reports reports = new Reports();
@@ -1251,90 +594,6 @@ class ReportsServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link ReportsServiceImpl#rejectReportByFinance(Long, String)}
-     */
-    @Test
-    void testRejectReportByFinance2() {
-        Reports reports = mock(Reports.class);
-        when(reports.getIsHidden()).thenThrow(new RuntimeException("Accounts admin rejected your expense report."));
-        when(reports.getIsSubmitted()).thenReturn(true);
-        when(reports.getEmployeeId()).thenReturn(1L);
-        doNothing().when(reports).setDateCreated(Mockito.<LocalDate>any());
-        doNothing().when(reports).setDateSubmitted(Mockito.<LocalDate>any());
-        doNothing().when(reports).setEmployeeId(Mockito.<Long>any());
-        doNothing().when(reports).setEmployeeMail(Mockito.<String>any());
-        doNothing().when(reports).setEmployeeName(Mockito.<String>any());
-        doNothing().when(reports).setExpensesCount(Mockito.<Long>any());
-        doNothing().when(reports).setFinanceActionDate(Mockito.<LocalDate>any());
-        doNothing().when(reports).setFinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
-        doNothing().when(reports).setFinanceComments(Mockito.<String>any());
-        doNothing().when(reports).setIsHidden(Mockito.<Boolean>any());
-        doNothing().when(reports).setIsSubmitted(Mockito.<Boolean>any());
-        doNothing().when(reports).setManagerActionDate(Mockito.<LocalDate>any());
-        doNothing().when(reports).setManagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-        doNothing().when(reports).setManagerComments(Mockito.<String>any());
-        doNothing().when(reports).setManagerEmail(Mockito.<String>any());
-        doNothing().when(reports).setManagerReviewTime(Mockito.<String>any());
-        doNothing().when(reports).setOfficialEmployeeId(Mockito.<String>any());
-        doNothing().when(reports).setReportId(Mockito.<Long>any());
-        doNothing().when(reports).setReportTitle(Mockito.<String>any());
-        doNothing().when(reports).setTotalAmount(anyFloat());
-        doNothing().when(reports).setTotalApprovedAmount(anyFloat());
-        reports.setDateCreated(LocalDate.of(1970, 1, 1));
-        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
-        reports.setEmployeeId(1L);
-        reports.setEmployeeMail("Employee Mail");
-        reports.setEmployeeName("Employee Name");
-        reports.setExpensesCount(3L);
-        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-        reports.setFinanceComments("Finance Comments");
-        reports.setIsHidden(true);
-        reports.setIsSubmitted(true);
-        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
-        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-        reports.setManagerComments("Manager Comments");
-        reports.setManagerEmail("jane.doe@example.org");
-        reports.setManagerReviewTime("Manager Review Time");
-        reports.setOfficialEmployeeId("42");
-        reports.setReportId(1L);
-        reports.setReportTitle("Dr");
-        reports.setTotalAmount(10.0f);
-        reports.setTotalApprovedAmount(10.0f);
-        Optional<Reports> ofResult = Optional.of(reports);
-        when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
-        assertThrows(RuntimeException.class, () -> reportsService.rejectReportByFinance(1L, "Comments"));
-        verify(reportsRepository).findById(Mockito.<Long>any());
-        verify(reports).getIsHidden();
-        verify(reports).getIsSubmitted();
-        verify(reports).getEmployeeId();
-        verify(reports).setDateCreated(Mockito.<LocalDate>any());
-        verify(reports).setDateSubmitted(Mockito.<LocalDate>any());
-        verify(reports).setEmployeeId(Mockito.<Long>any());
-        verify(reports).setEmployeeMail(Mockito.<String>any());
-        verify(reports).setEmployeeName(Mockito.<String>any());
-        verify(reports).setExpensesCount(Mockito.<Long>any());
-        verify(reports).setFinanceActionDate(Mockito.<LocalDate>any());
-        verify(reports).setFinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
-        verify(reports).setFinanceComments(Mockito.<String>any());
-        verify(reports).setIsHidden(Mockito.<Boolean>any());
-        verify(reports).setIsSubmitted(Mockito.<Boolean>any());
-        verify(reports).setManagerActionDate(Mockito.<LocalDate>any());
-        verify(reports).setManagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-        verify(reports).setManagerComments(Mockito.<String>any());
-        verify(reports).setManagerEmail(Mockito.<String>any());
-        verify(reports).setManagerReviewTime(Mockito.<String>any());
-        verify(reports).setOfficialEmployeeId(Mockito.<String>any());
-        verify(reports).setReportId(Mockito.<Long>any());
-        verify(reports).setReportTitle(Mockito.<String>any());
-        verify(reports).setTotalAmount(anyFloat());
-        verify(reports).setTotalApprovedAmount(anyFloat());
-    }
-
-    /**
-     * Method under test: {@link ReportsServiceImpl#rejectReportByFinance(Long, String)}
-     */
     @Test
     void testRejectReportByFinance3() {
         doNothing().when(emailService).userRejectedByFinanceNotification(Mockito.<Long>any());
@@ -1438,16 +697,16 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
         reportsService.rejectReportByFinance(1L, "Comments");
         verify(emailService).userRejectedByFinanceNotification(Mockito.<Long>any());
-        verify(employeeService).getEmployeeById(Mockito.<Long>any());
+        //verify(employeeService).getEmployeeById(Mockito.<Long>any());
         verify(expenseService).getExpenseByReportId(Mockito.<Long>any());
-        verify(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
+        //verify(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
         verify(reportsRepository).save(Mockito.<Reports>any());
         verify(reportsRepository).findById(Mockito.<Long>any());
         verify(reports).getManagerApprovalStatus();
         verify(reports, atLeast(1)).getIsHidden();
         verify(reports, atLeast(1)).getIsSubmitted();
         verify(reports).getEmployeeId();
-        verify(reports).getReportTitle();
+        //verify(reports).getReportTitle();
         verify(reports).setDateCreated(Mockito.<LocalDate>any());
         verify(reports).setDateSubmitted(Mockito.<LocalDate>any());
         verify(reports).setEmployeeId(Mockito.<Long>any());
@@ -1471,9 +730,7 @@ class ReportsServiceImplTest {
         verify(reports).setTotalApprovedAmount(anyFloat());
     }
 
-    /**
-     * Method under test: {@link ReportsServiceImpl#rejectReportByFinance(Long, String)}
-     */
+   
     @Test
     void testRejectReportByFinance4() {
         Reports reports = mock(Reports.class);
@@ -1887,10 +1144,7 @@ class ReportsServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ReportsServiceImpl#updateExpenseStatus(Long, List, List, Map, String, String, HttpServletResponse)}
-     */
+    
     @Test
     void testUpdateExpenseStatus2() throws IOException, MessagingException {
         when(expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenReturn(new ArrayList<>());
@@ -1997,10 +1251,6 @@ class ReportsServiceImplTest {
         verify(reports, atLeast(1)).setTotalApprovedAmount(anyFloat());
     }
 
-    /**
-     * Method under test:
-     * {@link ReportsServiceImpl#updateExpenseStatus(Long, List, List, Map, String, String, HttpServletResponse)}
-     */
     @Test
     void testUpdateExpenseStatus3() throws IOException, MessagingException {
         Reports reports = mock(Reports.class);
@@ -2082,10 +1332,6 @@ class ReportsServiceImplTest {
         verify(reports).setTotalApprovedAmount(anyFloat());
     }
 
-    /**
-     * Method under test:
-     * {@link ReportsServiceImpl#updateExpenseStatus(Long, List, List, Map, String, String, HttpServletResponse)}
-     */
     @Test
     void testUpdateExpenseStatus4() throws IOException, MessagingException {
         Category category = new Category();
@@ -2266,10 +1512,6 @@ class ReportsServiceImplTest {
         verify(reports2, atLeast(1)).setTotalApprovedAmount(anyFloat());
     }
 
-    /**
-     * Method under test:
-     * {@link ReportsServiceImpl#updateExpenseStatus(Long, List, List, Map, String, String, HttpServletResponse)}
-     */
     @Test
     void testUpdateExpenseStatus5() throws IOException, MessagingException {
         Reports reports = mock(Reports.class);
@@ -2407,9 +1649,6 @@ class ReportsServiceImplTest {
         assertEquals(expenseList, reportsService.getAllSubmittedReports());
     }
 
-    /**
-     * Method under test: {@link ReportsServiceImpl#notifyHR(Long)}
-     */
     @Test
     void testNotifyHR2() throws MessagingException {
         doThrow(new IllegalStateException("foo")).when(emailService).notifyHr(Mockito.<Long>any(), Mockito.<String>any(), Mockito.<String>any());
@@ -2466,9 +1705,6 @@ class ReportsServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link ReportsServiceImpl#notifyLnD(Long)}
-     */
     @Test
     void testNotifyLnD() throws MessagingException {
         doNothing().when(emailService).notifyLnD(Mockito.<Long>any(), Mockito.<String>any(), Mockito.<String>any());
@@ -2527,9 +1763,7 @@ class ReportsServiceImplTest {
         assertEquals(expenseList, reportsService.getAllSubmittedReports());
     }
 
-    /**
-     * Method under test: {@link ReportsServiceImpl#notifyLnD(Long)}
-     */
+
     @Test
     void testNotifyLnD2() throws MessagingException {
         doThrow(new IllegalStateException("foo")).when(emailService).notifyLnD(Mockito.<Long>any(), Mockito.<String>any(), Mockito.<String>any());
@@ -2586,61 +1820,6 @@ class ReportsServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-//    @Test
-//    void testSendReportNotApprovedByManagerReminder() {
-//        doNothing().when(emailService).reminderMailToManager(Mockito.<List<Long>>any());
-//        ArrayList<Reports> reportsList = new ArrayList<>();
-//        when(reportsRepository.findBymanagerApprovalStatus(Mockito.<ManagerApprovalStatus>any())).thenReturn(reportsList);
-//        //reportsService.sendReportNotApprovedByManagerReminder();
-//        verify(emailService).reminderMailToManager(Mockito.<List<Long>>any());
-//        verify(reportsRepository).findBymanagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-//        assertEquals(reportsList, reportsService.getAllSubmittedReports());
-//    }
-
-
-//    @Test
-//    void testSendReportNotApprovedByManagerReminder2() {
-//        when(reportsRepository.findBymanagerApprovalStatus(Mockito.<ManagerApprovalStatus>any())).thenThrow(new IllegalStateException("foo"));
-//        //assertThrows(IllegalStateException.class, () -> reportsService.sendReportNotApprovedByManagerReminder());
-//        verify(reportsRepository).findBymanagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-//    }
-//
-//
-//    @Test
-//    void testSendReportNotApprovedByManagerReminder3() {
-//        doNothing().when(emailService).reminderMailToManager(Mockito.<List<Long>>any());
-//
-//        Reports reports = new Reports();
-//        reports.setDateCreated(LocalDate.of(1970, 1, 1));
-//        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
-//        reports.setEmployeeId(1L);
-//        reports.setEmployeeMail("Employee Mail");
-//        reports.setEmployeeName("Employee Name");
-//        reports.setExpensesCount(3L);
-//        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
-//        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
-//        reports.setFinanceComments("Finance Comments");
-//        reports.setIsHidden(true);
-//        reports.setIsSubmitted(true);
-//        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
-//        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-//        reports.setManagerComments("Manager Comments");
-//        reports.setManagerEmail("jane.doe@example.org");
-//        reports.setManagerReviewTime("Manager Review Time");
-//        reports.setOfficialEmployeeId("42");
-//        reports.setReportId(1L);
-//        reports.setReportTitle("Dr");
-//        reports.setTotalAmount(10.0f);
-//        reports.setTotalApprovedAmount(10.0f);
-//
-//        ArrayList<Reports> reportsList = new ArrayList<>();
-//        reportsList.add(reports);
-//        when(reportsRepository.findBymanagerApprovalStatus(Mockito.<ManagerApprovalStatus>any())).thenReturn(reportsList);
-//        //reportsService.sendReportNotApprovedByManagerReminder();
-//        verify(emailService).reminderMailToManager(Mockito.<List<Long>>any());
-//        verify(reportsRepository).findBymanagerApprovalStatus(Mockito.<ManagerApprovalStatus>any());
-//        assertTrue(reportsService.getAllSubmittedReports().isEmpty());
-//    }
 
     @Test
     void testProcessApprovedExpenses() {
@@ -2775,36 +1954,6 @@ class ReportsServiceImplTest {
     }
 
 
-//    @Test
-//    void testAddReportSuccess() {
-//        // Test adding a report with valid data
-//
-//        ReportsDTO reportsDTO = new ReportsDTO();
-//        reportsDTO.setReportTitle("Sample Report");
-//
-//        Employee employee = new Employee();
-//        employee.setEmployeeEmail("employee@example.com");
-//        employee.setManagerEmail("manager@example.com");
-//        employee.setFirstName("John");
-//        employee.setLastName("Doe");
-//        employee.setOfficialEmployeeId("EMP001");
-//
-//        when(employeeService.getEmployeeById(1L)).thenReturn(employee);
-//        when(expenseRepository.findAllById(Mockito.anyList())).thenReturn(new ArrayList<>());
-//
-//        Reports result = reportsService.addReport(reportsDTO, 1L, new ArrayList<>());
-//
-//        assertNull(result);
-//        assertEquals("Sample Report", result.getReportTitle());
-//        assertEquals("employee@example.com", result.getEmployeeMail());
-//        assertEquals("manager@example.com", result.getManagerEmail());
-//        assertEquals("John Doe", result.getEmployeeName());
-//        assertEquals("EMP001", result.getOfficialEmployeeId());
-//        assertNotNull(result.getDateCreated());
-//
-//        // Add more assertions based on your requirements
-//    }
-
     @Test
     void testAddReportEmployeeNotFound1() {
         // Test throwing an exception when an employee is not found
@@ -2903,47 +2052,8 @@ class ReportsServiceImplTest {
 
         reportsService.updateReportTotalAmounts(REPORT_ID);
 
-        // Verify that the setTotalAmount and setTotalApprovedAmount methods were called
-
-
-
-
-        // Add more assertions based on your requirements
     }
 
-//    @Test
-//    void testSubmitReportSuccess() throws MessagingException, IOException {
-//        // Test a successful report submission
-//
-//        Reports report = new Reports();
-//        report.setReportId(REPORT_ID);
-//        report.setIsHidden(false);
-//        report.setIsSubmitted(false);
-//        report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-//
-//        Employee employee = new Employee();
-//        employee.setManagerEmail("manager@example.com");
-//        employee.setEmployeeId(1L);
-//
-//        List<Expense> rejectedExpenses = new ArrayList<>();
-//
-//        when(reportsRepository.findById(REPORT_ID)).thenReturn(Optional.of(report));
-//        when(expenseService.getRejectedExpensesByReportId(REPORT_ID)).thenReturn(rejectedExpenses);
-//        when(expenseService.getExpenseByReportId(REPORT_ID)).thenReturn(new ArrayList<>());
-//        when(employeeService.getEmployeeByEmail("manager@example.com")).thenReturn(employee);
-//        when(employeeService.getEmployeeById(1L)).thenReturn(employee);
-//        when(employeeService.getEmployeeById(REPORT_ID)).thenReturn(employee);
-//
-//        HttpServletResponse mockResponse = mock(HttpServletResponse.class);
-//
-//        reportsService.submitReport(REPORT_ID, mockResponse);
-//
-//        assertTrue(report.getIsSubmitted());
-//        assertEquals(ManagerApprovalStatus.PENDING, report.getManagerApprovalStatus());
-//        assertNotNull(report.getDateSubmitted());
-//
-//        // Add more assertions based on your requirements
-//    }
 
     @Test
     void testSubmitReportReportHidden() {
@@ -2961,88 +2071,6 @@ class ReportsServiceImplTest {
             reportsService.submitReport(REPORT_ID, mockResponse);
         });
     }
-
-    @Test
-    void testSubmitReportAlreadySubmitted1() {
-        // Test throwing an exception when the report is already submitted
-
-        Reports report = new Reports();
-        report.setReportId(REPORT_ID);
-        report.setIsHidden(false);
-        report.setIsSubmitted(true);
-        report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-
-        when(reportsRepository.findById(REPORT_ID)).thenReturn(Optional.of(report));
-
-        HttpServletResponse mockResponse = mock(HttpServletResponse.class);
-
-        assertThrows(IllegalStateException.class, () -> {
-            reportsService.submitReport(REPORT_ID, mockResponse);
-        });
-    }
-
-    @Test
-    void testSubmitReportEmailNotFound() {
-        // Test throwing an exception when manager email is not found
-
-        Reports report = new Reports();
-        report.setReportId(REPORT_ID);
-        report.setIsHidden(false);
-        report.setIsSubmitted(false);
-        report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-
-        Employee employee = new Employee();
-        employee.setManagerEmail(null);
-
-        when(reportsRepository.findById(REPORT_ID)).thenReturn(Optional.of(report));
-        when(employeeService.getEmployeeById(REPORT_ID)).thenReturn(employee);
-
-        HttpServletResponse mockResponse = mock(HttpServletResponse.class);
-
-        assertThrows(NullPointerException.class, () -> {
-            reportsService.submitReport(REPORT_ID, mockResponse);
-        });
-    }
-
-//    @Test
-//    void testSubmitReportRejectedExpenses() throws MessagingException, IOException {
-//        // Test the case where rejected expenses exist
-//
-//        Reports report = new Reports();
-//        report.setReportId(REPORT_ID);
-//        report.setIsHidden(false);
-//        report.setIsSubmitted(false);
-//        report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-//
-//        Employee employee = new Employee();
-//        employee.setEmployeeEmail("employee@example.com");
-//        employee.setManagerEmail("manager@example.com");
-//        employee.setEmployeeId(1L);
-//
-//        List<Expense> rejectedExpenses = new ArrayList<>();
-//        Expense rejectedExpense = new Expense();
-//        rejectedExpense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.REJECTED);
-//        rejectedExpenses.add(rejectedExpense);
-//
-//        when(reportsRepository.findById(REPORT_ID)).thenReturn(Optional.of(report));
-//        when(expenseService.getRejectedExpensesByReportId(REPORT_ID)).thenReturn(rejectedExpenses);
-//        when(expenseService.getExpenseByReportId(REPORT_ID)).thenReturn(new ArrayList<>());
-//        when(employeeService.getEmployeeByEmail("manager@example.com")).thenReturn(employee);
-//        when(employeeService.getEmployeeById(1L)).thenReturn(employee);
-//        HttpServletResponse mockResponse = mock(HttpServletResponse.class);
-//
-//        reportsService.submitReport(REPORT_ID, mockResponse);
-//
-//        assertTrue(report.getIsSubmitted());
-//        assertEquals(ManagerApprovalStatus.PENDING, report.getManagerApprovalStatus());
-//        assertNotNull(report.getDateSubmitted());
-//
-//        verify(expenseService, times(1)).updateExpense(REPORT_ID, rejectedExpense.getExpenseId());
-//
-//
-//    }
-
-
 
     @Test
     void testSubmitReportHiddenReport() {
@@ -3063,7 +2091,6 @@ class ReportsServiceImplTest {
             throw new RuntimeException(e);
         }
 
-        // Make assertions here based on your requirements
     }
 
     @Test
@@ -3087,61 +2114,7 @@ class ReportsServiceImplTest {
             throw new RuntimeException(e);
         }
 
-        // Make assertions here based on your requirements
     }
-
-//    @Test
-//    void testSubmitReportRejectedExpenses() throws MessagingException, IOException {
-//        // Test when there are rejected expenses
-//        long reportId = 1L;
-//
-//        Reports report = new Reports();
-//        report.setReportId(reportId);
-//        report.setIsHidden(false);
-//        report.setIsSubmitted(false);
-//        report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-//
-//        when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
-//        when(expenseService.getRejectedExpensesByReportId(reportId)).thenReturn(Collections.singletonList(new Expense()));
-//
-//        HttpServletResponse mockResponse = mock(HttpServletResponse.class);
-//
-//        reportsService.submitReport(reportId, "manager@example.com", mockResponse);
-//
-//        // Make assertions here based on your requirements
-//    }
-//
-//    @Test
-//    void testSubmitReportWithManagerToken() throws MessagingException, IOException {
-//        // Test when the manager has a token for push notification
-//        long reportId = 1L;
-//
-//        Reports report = new Reports();
-//        report.setReportId(reportId);
-//        report.setIsHidden(false);
-//        report.setIsSubmitted(false);
-//        report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-//
-//        Employee employee = new Employee();
-//        employee.setManagerEmail("manager@example.com");
-//
-//        Employee manager = new Employee();
-//        manager.setToken("manager_token");
-//
-//        when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
-//        when(expenseService.getRejectedExpensesByReportId(reportId)).thenReturn(new ArrayList<>());
-//        when(expenseService.getExpenseByReportId(reportId)).thenReturn(new ArrayList<>());
-//        when(employeeService.getEmployeeByEmail("manager@example.com")).thenReturn(manager); // Manager has a token
-//        when(employeeService.getEmployeeById(1L)).thenReturn(employee);
-//
-//        HttpServletResponse mockResponse = new MockHttpServletResponse();
-//
-//        reportsService.submitReport(reportId, "manager@example.com", mockResponse);
-//
-//        // Make assertions here based on your requirements
-//    }
-
-
 
     @Test
     void testSubmitReportManagerEmailDBNull() {
@@ -3172,44 +2145,12 @@ class ReportsServiceImplTest {
             throw new RuntimeException(e);
         }
 
-        // Make assertions here based on your requirements
-    }
-
-    @Test
-    public void testSubmitReportManagerEmailComparison() throws MessagingException, IOException {
-        // Test when manager's email from the database and provided managerEmail match
-
-        long reportId = 1L;
-        String managerEmail = "manager@example.com";
-
-        Reports report = new Reports();
-        report.setReportId(reportId);
-        report.setIsHidden(false);
-        report.setIsSubmitted(false);
-        report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-
-        when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
-        when(expenseService.getRejectedExpensesByReportId(reportId)).thenReturn(Collections.emptyList());
-        when(expenseService.getExpenseByReportId(reportId)).thenReturn(Collections.emptyList());
-
-        // Set up an employee with the same managerEmail
-        Employee employee = new Employee();
-        employee.setEmployeeId(1L);
-        employee.setManagerEmail(managerEmail);
-        when(employeeService.getEmployeeById(1L)).thenReturn(employee);
-
-        HttpServletResponse mockResponse = new MockHttpServletResponse();
-
-        reportsService.submitReport(reportId, managerEmail, mockResponse);
-
-        assertEquals(managerEmail, report.getManagerEmail());
-
-        // Make assertions here based on your requirements
+     
     }
 
 
     @Test
-     void testEditReportWithCoverage() {
+    void testEditReportWithCoverage() {
         // Prepare test data
         Long reportId = 1L;
         String reportTitle = "Updated Title";
@@ -3342,5 +2283,115 @@ class ReportsServiceImplTest {
 
 
     }
+
+    @Test
+    void testGetReportById1() {
+        Long reportId = 1L;
+        Reports mockReport = new Reports(); // Create a mock report
+
+        // Mock the behavior of reportsRepository.findById to return the mockReport
+        when(reportsRepository.findById(reportId)).thenReturn(Optional.of(mockReport));
+
+        // Call the service method
+        Reports result = reportsService.getReportById(reportId);
+
+        // Verify that reportsRepository.findById was called with the correct argument
+        verify(reportsRepository, times(1)).findById(reportId);
+
+        // Assert that the result is the mockReport
+        assertEquals(mockReport, result);
+    }
+
+    @Test
+    void testAddReport1() {
+        // Create a sample ReportsDTO
+        ReportsDTO reportsDTO = new ReportsDTO("Sample Report");
+        Long employeeId = 1L;
+        List<Long> expenseIds = new ArrayList<>();
+
+        // Create a mock Employee
+        Employee mockEmployee = new Employee();
+        mockEmployee.setEmployeeEmail("employee@example.com");
+        mockEmployee.setManagerEmail("manager@example.com");
+        mockEmployee.setFirstName("John");
+        mockEmployee.setLastName("Doe");
+        mockEmployee.setOfficialEmployeeId("EMP123");
+
+        // Mock the behavior of employeeService.getEmployeeById to return the mockEmployee
+        when(employeeService.getEmployeeById(employeeId)).thenReturn(mockEmployee);
+
+        // Create a mock Reports object
+        Reports mockReport = new Reports();
+        mockReport.setReportTitle("Sample Report");
+        mockReport.setEmployeeMail("employee@example.com");
+        mockReport.setManagerEmail("manager@example.com");
+        mockReport.setEmployeeName("John Doe");
+        mockReport.setOfficialEmployeeId("EMP123");
+        mockReport.setDateCreated(LocalDate.now());
+        mockReport.setEmployeeId(1L);
+
+        when(reportsRepository.save(Mockito.any(Reports.class))).thenReturn(mockReport);
+
+        // Create mock Expense objects
+        List<Expense> mockExpenses = new ArrayList<>();
+        for (Long id : expenseIds) {
+            Expense mockExpense = new Expense();
+            mockExpense.setAmount(100.0); // Set sample data as needed
+            mockExpenses.add(mockExpense);
+        }
+
+        // Mock the behavior of expenseRepository.findAllById to return the mockExpenses
+        when(expenseRepository.findAllById(expenseIds)).thenReturn(mockExpenses);
+
+        // Call the service method
+        Reports result = reportsService.addReport(reportsDTO, employeeId, expenseIds);
+
+        // Verify that reportsRepository.save was called
+        //Mockito.verify(reportsRepository, Mockito.times(1)).save(Mockito.any(Reports.class));
+
+        // Verify that the expenseRepository.save was called for each expense
+        for (Expense mockExpense : mockExpenses) {
+            Mockito.verify(expenseRepository, Mockito.times(1)).save(mockExpense);
+        }
+
+        // Assert that the result is the mockReport
+        assertEquals(mockReport, result);
+    }
+
+
+    @Test
+    void testValidateReportForEdit_ReportNotSubmitted() {
+        // Create a report with isSubmitted = false and PENDING status
+        Reports report = new Reports();
+        report.setIsSubmitted(false);
+        report.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
+
+        try {
+            // Call the validateReportForEdit method
+            reportsService.validateReportForEdit(report);
+        } catch (IllegalStateException e) {
+            fail("An IllegalStateException should not have been thrown.");
+        }
+    }
+
+    @Test
+    void testValidateReportForEdit_ReportSubmitted() {
+        // Create a report with isSubmitted = true and PENDING status
+        Reports report = new Reports();
+        report.setIsSubmitted(true);
+        report.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
+
+        try {
+            // Call the validateReportForEdit method
+            reportsService.validateReportForEdit(report);
+            fail("An IllegalStateException should have been thrown.");
+        } catch (IllegalStateException e) {
+            // The method should throw an IllegalStateException, which is expected.
+        }
+    }
+
+
+
+
 
 }

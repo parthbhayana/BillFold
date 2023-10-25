@@ -2,15 +2,11 @@
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.*;
-
 import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.annotations.ApiModelProperty;
 
 @Getter
@@ -22,57 +18,57 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = &quot;category_id&quot;)
 	@ApiModelProperty(hidden = true)
-<span class="fc" id="L25">	private Long categoryId;</span>
+<span class="fc" id="L21">	private Long categoryId;</span>
 
 	@Column(name = &quot;category_name&quot;)
-<span class="fc" id="L28">	private String categoryDescription;</span>
+<span class="fc" id="L24">	private String categoryDescription;</span>
 
 	@Column(name = &quot;category_total&quot;)
 	@ApiModelProperty(hidden = true)
-<span class="fc" id="L32">	private long categoryTotal;</span>
+<span class="fc" id="L28">	private long categoryTotal;</span>
 
-<span class="fc" id="L34">	@Column(name = &quot;is_hidden&quot;, nullable = true)</span>
+<span class="fc" id="L30">	@Column(name = &quot;is_hidden&quot;)</span>
 	@ApiModelProperty(hidden = true)
-<span class="fc" id="L36">	private Boolean isHidden = false;</span>
+<span class="fc" id="L32">	private Boolean isHidden = false;</span>
 
-<span class="fc" id="L38">	@JsonIgnore</span>
+<span class="fc" id="L34">	@JsonIgnore</span>
 	@OneToMany(mappedBy = &quot;category&quot;, cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
-<span class="fc" id="L41">	private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L37">	private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L43">	public Category() {</span>
+<span class="fc" id="L39">	public Category() {</span>
 
-<span class="fc" id="L45">	}</span>
+<span class="fc" id="L41">	}</span>
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
 					List&lt;Expense&gt; expenseList) {
-<span class="fc" id="L49">		super();</span>
-<span class="fc" id="L50">		this.categoryId = categoryId;</span>
-<span class="fc" id="L51">		this.categoryDescription = categoryDescription;</span>
-<span class="fc" id="L52">		this.categoryTotal = categoryTotal;</span>
-<span class="fc" id="L53">		this.isHidden = isHidden;</span>
-<span class="fc" id="L54">		this.expenseList = expenseList;</span>
-<span class="fc" id="L55">	}</span>
+<span class="fc" id="L45">		super();</span>
+<span class="fc" id="L46">		this.categoryId = categoryId;</span>
+<span class="fc" id="L47">		this.categoryDescription = categoryDescription;</span>
+<span class="fc" id="L48">		this.categoryTotal = categoryTotal;</span>
+<span class="fc" id="L49">		this.isHidden = isHidden;</span>
+<span class="fc" id="L50">		this.expenseList = expenseList;</span>
+<span class="fc" id="L51">	}</span>
 
 	public void setCategoryId(Long categoryId) {
-<span class="fc" id="L58">		this.categoryId = categoryId;</span>
-<span class="fc" id="L59">	}</span>
+<span class="fc" id="L54">		this.categoryId = categoryId;</span>
+<span class="fc" id="L55">	}</span>
 
 	public void setCategoryDescription(String categoryDescription) {
-<span class="fc" id="L62">		this.categoryDescription = categoryDescription;</span>
-<span class="fc" id="L63">	}</span>
+<span class="fc" id="L58">		this.categoryDescription = categoryDescription;</span>
+<span class="fc" id="L59">	}</span>
 
 	public void setCategoryTotal(long categoryTotal) {
-<span class="fc" id="L66">		this.categoryTotal = categoryTotal;</span>
-<span class="fc" id="L67">	}</span>
+<span class="fc" id="L62">		this.categoryTotal = categoryTotal;</span>
+<span class="fc" id="L63">	}</span>
 
 	public void setIsHidden(Boolean isHidden) {
-<span class="fc" id="L70">		this.isHidden = isHidden;</span>
-<span class="fc" id="L71">	}</span>
+<span class="fc" id="L66">		this.isHidden = isHidden;</span>
+<span class="fc" id="L67">	}</span>
 
 	public void setExpenseList(List&lt;Expense&gt; expenseList) {
-<span class="fc" id="L74">		this.expenseList = expenseList;</span>
-<span class="fc" id="L75">	}</span>
+<span class="fc" id="L70">		this.expenseList = expenseList;</span>
+<span class="fc" id="L71">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

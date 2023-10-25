@@ -1,0 +1,12 @@
+
+l
+java:S1192Â"IDefine a constant instead of duplicating this literal "Expense " 3 times.(Ù«¢êıÿÿÿÿ8£àÜŞ´1
+K
+java:S5411ô"(Use a primitive boolean expression here.(ª”Áìşÿÿÿÿ8¥àÜŞ´1
+Y	java:S125"<This block of commented-out lines of code should be removed.(‡ş„‡8Û€ºŞ´1
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8İ€ºŞ´1
+ˆ
+java:S1128"fRemove this unused import 'com.nineleaps.expense_management_project.firebase.PushNotificationRequest'.(®ÿíúÿÿÿÿ8İ€ºŞ´1
+r
+java:S1128"PRemove this unused import 'org.springframework.scheduling.annotation.Scheduled'.(‚¡®Üûÿÿÿÿ8Ş€ºŞ´1

@@ -3,7 +3,6 @@
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
-
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,38 +10,38 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-<span class="fc" id="L14">public class CustomIdGenerator implements IdentifierGenerator {</span>
+<span class="fc" id="L13">public class CustomIdGenerator implements IdentifierGenerator {</span>
 
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
-<span class="fc" id="L19">        Calendar calendar = Calendar.getInstance();</span>
-<span class="fc" id="L20">        int year = calendar.get(Calendar.YEAR);</span>
-<span class="fc" id="L21">        int month = calendar.get(Calendar.MONTH) + 1;</span>
+<span class="fc" id="L18">        Calendar calendar = Calendar.getInstance();</span>
+<span class="fc" id="L19">        int year = calendar.get(Calendar.YEAR);</span>
+<span class="fc" id="L20">        int month = calendar.get(Calendar.MONTH) + 1;</span>
 
-<span class="fc" id="L23">        String formattedYear = String.format(&quot;%04d&quot;, year);</span>
-<span class="fc" id="L24">        String formattedMonth = String.format(&quot;%02d&quot;, month);</span>
+<span class="fc" id="L22">        String formattedYear = String.format(&quot;%04d&quot;, year);</span>
+<span class="fc" id="L23">        String formattedMonth = String.format(&quot;%02d&quot;, month);</span>
 
-<span class="fc" id="L26">        int serialNumber = getSerialNumberForYearAndMonth(session.connection(), formattedYear + formattedMonth);</span>
+<span class="fc" id="L25">        int serialNumber = getSerialNumberForYearAndMonth(session.connection(), formattedYear + formattedMonth);</span>
 
-<span class="fc" id="L28">        String formattedSerialNumber = String.format(&quot;%04d&quot;, serialNumber);</span>
+<span class="fc" id="L27">        String formattedSerialNumber = String.format(&quot;%04d&quot;, serialNumber);</span>
 
-<span class="fc" id="L30">        return Long.parseLong(formattedYear + formattedMonth + formattedSerialNumber);</span>
+<span class="fc" id="L29">        return Long.parseLong(formattedYear + formattedMonth + formattedSerialNumber);</span>
     }
 
     int getSerialNumberForYearAndMonth(Connection connection, String yearAndMonth) throws HibernateException {
-<span class="fc" id="L34">        String query = &quot;SELECT COUNT(*) FROM reports WHERE report_id LIKE ?&quot;;</span>
-<span class="fc" id="L35">        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {</span>
-<span class="fc" id="L36">            preparedStatement.setString(1, yearAndMonth + &quot;%&quot;);</span>
-<span class="fc" id="L37">            try (ResultSet resultSet = preparedStatement.executeQuery()) {</span>
-<span class="fc bfc" id="L38" title="All 2 branches covered.">                if (resultSet.next()) {</span>
-<span class="fc" id="L39">                    return resultSet.getInt(1) + 1;</span>
+<span class="fc" id="L33">        String query = &quot;SELECT COUNT(*) FROM reports WHERE report_id LIKE ?&quot;;</span>
+<span class="fc" id="L34">        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {</span>
+<span class="fc" id="L35">            preparedStatement.setString(1, yearAndMonth + &quot;%&quot;);</span>
+<span class="fc" id="L36">            try (ResultSet resultSet = preparedStatement.executeQuery()) {</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">                if (resultSet.next()) {</span>
+<span class="fc" id="L38">                    return resultSet.getInt(1) + 1;</span>
                 }
-<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            }</span>
-<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="fc" id="L43">            throw new HibernateException(&quot;Could not generate serial number&quot;, e);</span>
-<span class="fc" id="L44">        }</span>
-<span class="fc" id="L45">        return 1;</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">            }</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L42">            throw new HibernateException(&quot;Could not generate serial number&quot;, e);</span>
+<span class="fc" id="L43">        }</span>
+<span class="fc" id="L44">        return 1;</span>
     }
 
 }

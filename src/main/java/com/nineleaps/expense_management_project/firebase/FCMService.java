@@ -2,7 +2,6 @@ package com.nineleaps.expense_management_project.firebase;
 
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -22,6 +22,7 @@
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/config/JwtFilterTest.java
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/service/EmployeeServiceImplTest.java
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/controller/EmployeeControllerTest.java
+/home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/firebase/PushNotificationServiceTest.java
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/firebase/PushNotificationRequestTest.java
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/dto/CategoryDTOTest.java
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/controller/UserControllerTest.java
@@ -29,3 +30,4 @@
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/service/ExcelGeneratorCategoryServiceImplTest.java
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/dto/ReportsDTOTest.java
 /home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/dto/EmployeeDTOTest.java
+/home/nineleaps/Desktop/project/BillFold/src/test/java/com/nineleaps/expense_management_project/firebase/FCMInitializerTest.java

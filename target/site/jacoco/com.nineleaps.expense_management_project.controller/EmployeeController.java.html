@@ -2,10 +2,8 @@
 
 import java.util.List;
 import java.util.Optional;
-
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,24 +18,24 @@ import com.nineleaps.expense_management_project.service.IEmployeeService;
 
 @RestController
 @RequestMapping(&quot;/employee&quot;)
-<span class="fc" id="L23">public class EmployeeController {</span>
+<span class="fc" id="L21">public class EmployeeController {</span>
 
     @Autowired
     private IEmployeeService employeeService;
 
     @GetMapping(&quot;/listEmployee&quot;)
     public List&lt;Employee&gt; getAllEmployeeDetails() {
-<span class="fc" id="L30">        return employeeService.getAllEmployeeDetails();</span>
+<span class="fc" id="L28">        return employeeService.getAllEmployeeDetails();</span>
     }
 
     @PostMapping(&quot;/insertEmployee&quot;)
     public Employee save(@RequestBody EmployeeDTO employeeDTO) {
-<span class="fc" id="L35">        return employeeService.saveEmployeeDetails(employeeDTO);</span>
+<span class="fc" id="L33">        return employeeService.saveEmployeeDetails(employeeDTO);</span>
     }
 
     @PutMapping(&quot;/updateEmployee/{employeeId}&quot;)
     public Employee updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId) {
-<span class="fc" id="L40">        return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
+<span class="fc" id="L38">        return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
     }
 
     @PostMapping(&quot;/additionalEmployeeDetails&quot;)
@@ -47,42 +45,42 @@ import com.nineleaps.expense_management_project.service.IEmployeeService;
                                                         @RequestParam Long mobileNumber,
                                                         @RequestParam String managerName, @RequestParam String hrName,
                                                         @RequestParam String hrEmail) {
-<span class="fc" id="L50">        return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,</span>
+<span class="fc" id="L48">        return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,</span>
                 managerName, hrEmail, hrName);
     }
 
     @GetMapping(&quot;/findEmployee/{employeeId}&quot;)
     public Employee getEmployeeById(@PathVariable Long employeeId) {
-<span class="fc" id="L56">        return employeeService.getEmployeeById(employeeId);</span>
+<span class="fc" id="L54">        return employeeService.getEmployeeById(employeeId);</span>
 
     }
 
     @DeleteMapping(&quot;/deleteEmployee/{employeeId}&quot;)
     public void deleteEmployeeById(@PathVariable Long employeeId) {
-<span class="fc" id="L62">        employeeService.deleteEmployeeDetailsById(employeeId);</span>
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L60">        employeeService.deleteEmployeeDetailsById(employeeId);</span>
+<span class="fc" id="L61">    }</span>
 
     @PostMapping(&quot;/hideEmployee/{employeeId}&quot;)
     public void hideEmployee(@PathVariable Long employeeId) {
-<span class="fc" id="L67">        employeeService.hideEmployee(employeeId);</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L65">        employeeService.hideEmployee(employeeId);</span>
+<span class="fc" id="L66">    }</span>
 
     @PostMapping(&quot;/setFinanceAdmin&quot;)
     public void setFinanceAdmin(@RequestParam Long employeeId) {
-<span class="fc" id="L72">        employeeService.setFinanceAdmin(employeeId);</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L70">        employeeService.setFinanceAdmin(employeeId);</span>
+<span class="fc" id="L71">    }</span>
 
     @GetMapping(&quot;/getEmployeeDetails&quot;)
     public Optional&lt;Employee&gt; getEmployeeDetails(@RequestParam Long employeeId) {
-<span class="fc" id="L77">        return employeeService.getEmployeeDetails(employeeId);</span>
+<span class="fc" id="L75">        return employeeService.getEmployeeDetails(employeeId);</span>
     }
 
     @PostMapping(&quot;/editEmployeeDetails&quot;)
     public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId,
                                     String managerName,@RequestParam String hrName,
                                     @RequestParam String hrEmail) {
-<span class="fc" id="L84">        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);</span>
-<span class="fc" id="L85">    }</span>
+<span class="fc" id="L82">        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);</span>
+<span class="fc" id="L83">    }</span>
 
 
 

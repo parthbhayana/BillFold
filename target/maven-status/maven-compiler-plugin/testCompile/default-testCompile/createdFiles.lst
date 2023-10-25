@@ -26,6 +26,8 @@ com/nineleaps/expense_management_project/entity/ExpenseTest.class
 com/nineleaps/expense_management_project/service/EmailServiceImplTest.class
 com/nineleaps/expense_management_project/entity/EmployeeTest.class
 com/nineleaps/expense_management_project/controller/UserControllerTest.class
+com/nineleaps/expense_management_project/firebase/PushNotificationServiceTest.class
 com/nineleaps/expense_management_project/controller/ReportsControllerTest.class
+com/nineleaps/expense_management_project/firebase/FCMInitializerTest.class
 com/nineleaps/expense_management_project/entity/CategoryTest.class
 com/nineleaps/expense_management_project/firebase/PushNotificationResponseTest.class

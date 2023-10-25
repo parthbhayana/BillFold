@@ -80,7 +80,6 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
     }
 
 
-
     @Override
     public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate,
                               StatusExcel status, List<Reports> reportlist) throws Exception{

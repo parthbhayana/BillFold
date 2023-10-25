@@ -3,7 +3,6 @@ package com.nineleaps.expense_management_project.service;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.*;
-
 import com.nineleaps.expense_management_project.dto.CategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -205,7 +204,7 @@ public class CategoryServiceImpl implements ICategoryService {
 						String monthKey = year + "_" + month;
 
 						if (yearlyReimbursementRatioMap.containsKey(monthKey)) {
-							Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountApproved();
+							double totalReimbursedAmount = yearlyReimbursementRatioMap.get(monthKey) + expense.getAmountApproved();
 							int totalNumberOfExpenses = (int) (yearlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
 							Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
 
@@ -332,11 +331,10 @@ public class CategoryServiceImpl implements ICategoryService {
 		}
 		for (String yearKey : yearlyReimbursementRatioMap.keySet()) {
 			if (!yearKey.contains("_")) {
-				String year = yearKey;
-				Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(year);
-				Double totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(year + CONSTANT2));
+                Double totalReimbursedAmount = yearlyReimbursementRatioMap.get(yearKey);
+				Double totalNumberOfExpenses = (yearlyReimbursementRatioMap.get(yearKey + CONSTANT2));
 				double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;
-				yearlyReimbursementRatioMap.put(year + CONSTANT1, reimbursementRatio);
+				yearlyReimbursementRatioMap.put(yearKey + CONSTANT1, reimbursementRatio);
 			}
 		}
 
@@ -355,7 +353,7 @@ public class CategoryServiceImpl implements ICategoryService {
 				String month = expense.getDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
 				String monthKey = year + "_" + month;
 				if (monthlyReimbursementRatioMap.containsKey(monthKey)) {
-					Double totalReimbursedAmount = monthlyReimbursementRatioMap.get(monthKey)
+					double totalReimbursedAmount = monthlyReimbursementRatioMap.get(monthKey)
 							+ expense.getAmountApproved();
 					double totalNumberOfExpenses = (monthlyReimbursementRatioMap.get(monthKey + CONSTANT2) + 1);
 					Double reimbursementRatio = totalReimbursedAmount / totalNumberOfExpenses;

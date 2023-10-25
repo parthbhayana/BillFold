@@ -1,6 +1,6 @@
 package com.nineleaps.expense_management_project.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.nineleaps.expense_management_project.dto.CategoryDTO;
 import com.nineleaps.expense_management_project.entity.Category;
 import com.nineleaps.expense_management_project.service.ICategoryService;
@@ -11,13 +11,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -29,7 +27,7 @@ class CategoryControllerTest {
     @Mock
     private ICategoryService categoryService;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     @BeforeEach
     void setUp() {

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-
 import com.nineleaps.expense_management_project.dto.ReportsDTO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -91,11 +90,7 @@ public class ReportsController {
         return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
 
-    @PostMapping("/approveReportByFinance")
-    public void reimburseReportByFinance(@RequestParam List<Long> reportIds,
-                                         @RequestParam(value = "comments", defaultValue = "null") String comments) {
-        reportsService.reimburseReportByFinance((ArrayList<Long>) reportIds, comments);
-    }
+
 
     @PostMapping("/rejectReportByFinance/{reportId}")
     public void rejectReportByFinance(@PathVariable Long reportId,

@@ -7,7 +7,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import com.nineleaps.expense_management_project.entity.Category;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.entity.Expense;
@@ -18,7 +17,6 @@ import com.nineleaps.expense_management_project.entity.Reports;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ExpenseRepository;
 import com.nineleaps.expense_management_project.repository.ReportsRepository;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
@@ -30,23 +28,17 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import static org.mockito.Mockito.*;
 
 
 
@@ -80,13 +72,8 @@ class EmailServiceImplTest {
     @MockBean
     private ReportsRepository reportsRepository;
 
-    @Captor
-    private ArgumentCaptor<MimeMessagePreparator> preparatorCaptor;
 
 
-    /**
-     * Method under test: {@link EmailServiceImpl#notifyHr(Long, String, String)}
-     */
     @Test
     void testNotifyHr() throws MessagingException, MailException {
         // Arrange
@@ -125,11 +112,8 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#notifyHr(Long, String, String)}
-     */
     @Test
-    void testNotifyHr2() throws MessagingException, MailException {
+    void testNotifyHr2() throws MailException {
         // Arrange
         Reports reports = new Reports();
         reports.setDateCreated(LocalDate.of(1970, 1, 1));
@@ -165,9 +149,6 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#notifyLnD(Long, String, String)}
-     */
     @Test
     void testNotifyLnD() throws MessagingException, MailException {
         // Arrange
@@ -206,11 +187,8 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#notifyLnD(Long, String, String)}
-     */
     @Test
-    void testNotifyLnD2() throws MessagingException, MailException {
+    void testNotifyLnD2() throws MailException {
         // Arrange
         Reports reports = new Reports();
         reports.setDateCreated(LocalDate.of(1970, 1, 1));
@@ -247,11 +225,8 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, String, HttpServletResponse)}
-     */
     @Test
-    void testManagerNotification() throws IOException, MessagingException {
+    void testManagerNotification()  {
         // Arrange
         when(iExpenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
 
@@ -287,11 +262,9 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, String, HttpServletResponse)}
-     */
+
     @Test
-    void testManagerNotification2() throws IOException, MessagingException {
+    void testManagerNotification2()  {
         // Arrange
         when(iReportsService.getReportById(Mockito.<Long>any())).thenThrow(new IllegalStateException("foo"));
         ArrayList<Long> expenseIds = new ArrayList<>();
@@ -302,9 +275,6 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, String, HttpServletResponse)}
-     */
     @Test
     void testManagerNotification3() throws IOException, MessagingException, MailException {
         // Arrange
@@ -425,11 +395,9 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, String, HttpServletResponse)}
-     */
+
     @Test
-    void testManagerNotification4() throws IOException, MessagingException, MailException {
+    void testManagerNotification4() throws IOException, MailException {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -548,11 +516,9 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, String, HttpServletResponse)}
-     */
+
     @Test
-    void testManagerNotification5() throws IOException, MessagingException {
+    void testManagerNotification5()  {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -765,11 +731,8 @@ class EmailServiceImplTest {
         verify(javaMailSender).createMimeMessage();
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, String, HttpServletResponse)}
-     */
     @Test
-    void testManagerNotification6() throws IOException, MessagingException {
+    void testManagerNotification6() {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -978,11 +941,9 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testManagerNotification7() throws IOException, MessagingException {
+    void testManagerNotification7()  {
         // Arrange
         when(iExpenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
 
@@ -1018,11 +979,9 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testManagerNotification8() throws IOException, MessagingException {
+    void testManagerNotification8() {
         // Arrange
         when(iReportsService.getReportById(Mockito.<Long>any())).thenThrow(new IllegalStateException("foo"));
         ArrayList<Long> expenseIds = new ArrayList<>();
@@ -1033,9 +992,7 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
     void testManagerNotification9() throws IOException, MessagingException, MailException {
         // Arrange
@@ -1156,11 +1113,9 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testManagerNotification10() throws IOException, MessagingException, MailException {
+    void testManagerNotification10() throws IOException, MailException {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -1279,11 +1234,9 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testManagerNotification11() throws IOException, MessagingException {
+    void testManagerNotification11()  {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -1496,11 +1449,9 @@ class EmailServiceImplTest {
         verify(javaMailSender).createMimeMessage();
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#managerNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testManagerNotification12() throws IOException, MessagingException {
+    void testManagerNotification12() {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -1709,11 +1660,9 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userApprovedNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testUserApprovedNotification() throws IOException, MessagingException {
+    void testUserApprovedNotification()  {
         // Arrange
         when(iExpenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
 
@@ -1749,11 +1698,9 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userApprovedNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testUserApprovedNotification2() throws IOException, MessagingException {
+    void testUserApprovedNotification2() {
         // Arrange
         when(iReportsService.getReportById(Mockito.<Long>any())).thenThrow(new IllegalStateException("foo"));
         ArrayList<Long> expenseIds = new ArrayList<>();
@@ -1764,9 +1711,7 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userApprovedNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
     void testUserApprovedNotification3() throws IOException, MessagingException, MailException {
         // Arrange
@@ -1887,11 +1832,9 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userApprovedNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testUserApprovedNotification4() throws IOException, MessagingException, MailException {
+    void testUserApprovedNotification4() throws IOException, MailException {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -2010,11 +1953,9 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userApprovedNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testUserApprovedNotification5() throws IOException, MessagingException {
+    void testUserApprovedNotification5() {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -2227,9 +2168,6 @@ class EmailServiceImplTest {
         verify(javaMailSender).createMimeMessage();
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userReimbursedNotification(Long)}
-     */
     @Test
     void testUserReimbursedNotification() {
         // Arrange
@@ -2265,9 +2203,6 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userReimbursedNotification(Long)}
-     */
     @Test
     void testUserReimbursedNotification2() {
         // Arrange
@@ -2278,9 +2213,6 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userReimbursedNotification(Long)}
-     */
     @Test
     void testUserReimbursedNotification3() throws MailException {
         // Arrange
@@ -2394,9 +2326,6 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userRejectedByFinanceNotification(Long)}
-     */
     @Test
     void testUserRejectedByFinanceNotification() {
         // Arrange
@@ -2432,9 +2361,6 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userRejectedByFinanceNotification(Long)}
-     */
     @Test
     void testUserRejectedByFinanceNotification2() {
         // Arrange
@@ -2445,9 +2371,7 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userRejectedByFinanceNotification(Long)}
-     */
+
     @Test
     void testUserRejectedByFinanceNotification3() throws MailException {
         // Arrange
@@ -2561,11 +2485,8 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#financeNotification(Long, List, HttpServletResponse)}
-     */
     @Test
-    void testFinanceNotification() throws IOException, MessagingException {
+    void testFinanceNotification() {
         // Arrange
         Employee employee = new Employee();
         employee.setEmployeeEmail("jane.doe@example.org");
@@ -2623,11 +2544,8 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#financeNotification(Long, List, HttpServletResponse)}
-     */
     @Test
-    void testFinanceNotification2() throws IOException, MessagingException {
+    void testFinanceNotification2() {
         // Arrange
         when(iReportsService.getReportById(Mockito.<Long>any())).thenThrow(new IllegalStateException("FINANCE_ADMIN"));
         ArrayList<Long> expenseIds = new ArrayList<>();
@@ -2638,9 +2556,6 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#financeNotification(Long, List, HttpServletResponse)}
-     */
     @Test
     void testFinanceNotification3() throws IOException, MessagingException, MailException {
         // Arrange
@@ -2784,11 +2699,9 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#financeNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testFinanceNotification4() throws IOException, MessagingException, MailException {
+    void testFinanceNotification4() throws IOException, MailException {
         // Arrange
         Employee employee = new Employee();
         employee.setEmployeeEmail("jane.doe@example.org");
@@ -2920,27 +2833,25 @@ class EmailServiceImplTest {
         // Act and Assert
         assertThrows(IllegalStateException.class,
                 () -> emailServiceImpl.financeNotification(1L, expenseIds, new Response()));
-        verify(employeeRepository).findByRole(Mockito.<String>any());
+        verify(employeeRepository).findByRole(Mockito.any());
         verify(iExpenseService).getExpenseByReportId(Mockito.<Long>any());
-        verify(iPdfGeneratorService).export(Mockito.<Long>any(), Mockito.<List<Long>>any(),
-                Mockito.<HttpServletResponse>any(), Mockito.<String>any());
+        verify(iPdfGeneratorService).export(Mockito.<Long>any(), Mockito.any(),
+                Mockito.any(), Mockito.any());
         verify(iReportsService).getReportById(Mockito.<Long>any());
         verify(javaMailSender).createMimeMessage();
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#financeNotification(Long, List, HttpServletResponse)}
-     */
+
     @Test
-    void testFinanceNotification5() throws IOException, MessagingException {
+    void testFinanceNotification5() {
         // Arrange
         Employee employee = mock(Employee.class);
         when(employee.getFirstName()).thenThrow(new IllegalStateException("foo"));
         when(employee.getEmployeeEmail()).thenReturn("jane.doe@example.org");
-        doNothing().when(employee).setEmployeeEmail(Mockito.<String>any());
+        doNothing().when(employee).setEmployeeEmail(Mockito.any());
         doNothing().when(employee).setEmployeeId(Mockito.<Long>any());
-        doNothing().when(employee).setExpenseList(Mockito.<List<Expense>>any());
+        doNothing().when(employee).setExpenseList(Mockito.any());
         doNothing().when(employee).setFirstName(Mockito.<String>any());
         doNothing().when(employee).setHrEmail(Mockito.<String>any());
         doNothing().when(employee).setHrName(Mockito.<String>any());
@@ -3095,14 +3006,14 @@ class EmailServiceImplTest {
         verify(employee).setImageUrl(Mockito.<String>any());
         verify(employee).setIsFinanceAdmin(Mockito.<Boolean>any());
         verify(employee).setIsHidden(Mockito.<Boolean>any());
-        verify(employee).setLastName(Mockito.<String>any());
+        verify(employee).setLastName(Mockito.any());
         verify(employee).setLndEmail(Mockito.<String>any());
-        verify(employee).setLndName(Mockito.<String>any());
+        verify(employee).setLndName(Mockito.any());
         verify(employee).setManagerEmail(Mockito.<String>any());
         verify(employee).setManagerName(Mockito.<String>any());
         verify(employee).setMiddleName(Mockito.<String>any());
         verify(employee).setMobileNumber(Mockito.<Long>any());
-        verify(employee).setOfficialEmployeeId(Mockito.<String>any());
+        verify(employee).setOfficialEmployeeId(Mockito.any());
         verify(employee).setRole(Mockito.<String>any());
         verify(employee).setToken(Mockito.<String>any());
         verify(iExpenseService).getExpenseByReportId(Mockito.<Long>any());
@@ -3110,9 +3021,7 @@ class EmailServiceImplTest {
         verify(javaMailSender).createMimeMessage();
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userPartialApprovedExpensesNotification(Long)}
-     */
+
     @Test
     void testUserPartialApprovedExpensesNotification() {
         // Arrange
@@ -3148,9 +3057,7 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userPartialApprovedExpensesNotification(Long)}
-     */
+
     @Test
     void testUserPartialApprovedExpensesNotification2() {
         // Arrange
@@ -3161,9 +3068,7 @@ class EmailServiceImplTest {
         verify(iReportsService).getReportById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#userPartialApprovedExpensesNotification(Long)}
-     */
+
     @Test
     void testUserPartialApprovedExpensesNotification3() throws MailException {
         // Arrange
@@ -3277,9 +3182,7 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#reminderMailToEmployee(List)}
-     */
+
     @Test
     void testReminderMailToEmployee() throws UnsupportedEncodingException, MailException {
         // Arrange
@@ -3369,9 +3272,7 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#reminderMailToEmployee(List)}
-     */
+
     @Test
     void testReminderMailToEmployee2() throws UnsupportedEncodingException, MailException {
         // Arrange
@@ -3460,9 +3361,7 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#reminderMailToManager(List)}
-     */
+
     @Test
     void testReminderMailToManager() throws MailException {
         // Arrange
@@ -3526,9 +3425,7 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
 
-    /**
-     * Method under test: {@link EmailServiceImpl#reminderMailToManager(List)}
-     */
+
     @Test
     void testReminderMailToManager2() throws MailException {
         // Arrange
@@ -3591,76 +3488,4 @@ class EmailServiceImplTest {
         verify(javaMailSender).send(Mockito.<SimpleMailMessage>any());
     }
 
-//    @Test
-//    public void testWelcomeEmail() throws Exception {
-//        // Arrange
-//        String employeeEmail = "test@example.com";
-//        Employee employee = new Employee();
-//        employee.setFirstName("John");
-//
-//        when(iEmployeeService.getEmployeeByEmail(employeeEmail)).thenReturn(employee);
-//
-//        // Act
-//        emailServiceImpl.welcomeEmail(employeeEmail);
-//
-//        // Assert
-//        verify(javaMailSender).send(preparatorCaptor.capture());
-//
-//        // Retrieve the captured MimeMessagePreparator
-//        MimeMessagePreparator preparator = preparatorCaptor.getValue();
-//
-//        // Create a mock MimeMessage
-//        MimeMessage mockMimeMessage = mock(MimeMessage.class);
-//
-//        // Create a mock MimeMessageHelper
-//        MimeMessageHelper mockMessageHelper = mock(MimeMessageHelper.class);
-//
-//        // Prepare the mock MimeMessage
-//        when(javaMailSender.createMimeMessage()).thenReturn(mockMimeMessage);
-//        when(javaMailSender.createMimeMessageHelper(mockMimeMessage, true)).thenReturn(mockMessageHelper);
-//
-//        // Call the prepare method to set email content
-//        preparator.prepare(mockMimeMessage);
-//
-//        // Use the mock MimeMessageHelper to get email content
-//        String emailContent = mockMessageHelper.toString(); // Converts the email to a string
-//
-//        // Add assertions for the email content
-//        assertEquals("Welcome to BillFold!", mockMimeMessage.getSubject());
-//        assertTrue(emailContent.contains("Hello John")); // Assuming you want to check the user's name
-//        // Add more assertions as needed
-//    }
-
-//    @Test
-//    void testWelcomeEmail() throws Exception {
-//        // Arrange
-//        String employeeEmail = "test@example.com";
-//        Employee employee = new Employee();
-//        employee.setFirstName("John");
-//
-//        when(iEmployeeService.getEmployeeByEmail(employeeEmail)).thenReturn(employee);
-//
-//        // Act
-//        emailServiceImpl.welcomeEmail(employeeEmail);
-//
-//        // Assert
-//        verify(javaMailSender).send(preparatorCaptor.capture());
-//
-//        // Retrieve the captured MimeMessagePreparator
-//        MimeMessagePreparator preparator = preparatorCaptor.getValue();
-//
-//        // Create a mock MimeMessage
-//        MimeMessage mockMimeMessage = mock(MimeMessage.class);
-//
-//        // Prepare the mock MimeMessage
-//        preparator.prepare(mockMimeMessage);
-//
-//        // Extract email content from the mock MimeMessage
-//        String emailContent = ((javax.mail.internet.MimeMessage) mockMimeMessage).getContent().toString();
-//
-//        // Add assertions for the email content
-//        assertEquals("Welcome to BillFold!", mockMimeMessage.getSubject());
-//        assertTrue(emailContent.contains("Hello John")); // Assuming you want to check the user's name
-//        // Add more assertions as needed
-//    }
 }

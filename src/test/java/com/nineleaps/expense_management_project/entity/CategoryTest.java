@@ -3,27 +3,13 @@ package com.nineleaps.expense_management_project.entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 class CategoryTest {
-    /**
-     * Methods under test:
-     *
-     * <ul>
-     *   <li>{@link Category#Category()}
-     *   <li>{@link Category#setCategoryDescription(String)}
-     *   <li>{@link Category#setCategoryId(Long)}
-     *   <li>{@link Category#setCategoryTotal(long)}
-     *   <li>{@link Category#setExpenseList(List)}
-     *   <li>{@link Category#setIsHidden(Boolean)}
-     * </ul>
-     */
+
     @Test
     void testConstructor() {
         // Arrange and Act
@@ -43,9 +29,7 @@ class CategoryTest {
         assertTrue(actualCategory.getIsHidden());
     }
 
-    /**
-     * Method under test: {@link Category#Category(Long, String, long, Boolean, List)}
-     */
+
     @Test
     void testConstructor2() {
         // Arrange and Act
@@ -59,11 +43,8 @@ class CategoryTest {
         assertEquals(1L, actualCategory.getCategoryId().longValue());
     }
 
-    /**
-     * Method under test: {@link Category#Category(Long, String, long, Boolean, List)}
-     */
     @Test
-    void testConstructor3() throws UnsupportedEncodingException {
+    void testConstructor3() {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -126,7 +107,7 @@ class CategoryTest {
         expense.setDescription("The characteristics of someone or something");
         expense.setEmployee(employee);
         expense.setExpenseId(1L);
-        expense.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
         expense.setFileName("foo.txt");
         expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
         expense.setIsHidden(true);
@@ -151,11 +132,8 @@ class CategoryTest {
         assertEquals(1L, actualCategory.getCategoryId().longValue());
     }
 
-    /**
-     * Method under test: {@link Category#Category(Long, String, long, Boolean, List)}
-     */
     @Test
-    void testConstructor4() throws UnsupportedEncodingException {
+    void testConstructor4() {
         // Arrange
         Category category = new Category();
         category.setCategoryDescription("Category Description");
@@ -218,7 +196,7 @@ class CategoryTest {
         expense.setDescription("The characteristics of someone or something");
         expense.setEmployee(employee);
         expense.setExpenseId(1L);
-        expense.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
         expense.setFileName("foo.txt");
         expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
         expense.setIsHidden(true);
@@ -290,7 +268,7 @@ class CategoryTest {
         expense2.setDescription("Description");
         expense2.setEmployee(employee2);
         expense2.setExpenseId(2L);
-        expense2.setFile("AXAXAXAX".getBytes("UTF-8"));
+        expense2.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
         expense2.setFileName("File Name");
         expense2.setFinanceApprovalStatus(FinanceApprovalStatus.REJECTED);
         expense2.setIsHidden(false);

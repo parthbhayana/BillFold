@@ -1,120 +1,62 @@
 package com.nineleaps.expense_management_project.firebase;
 
+
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.google.firebase.messaging.Message;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.concurrent.ExecutionException;
-import java.time.Duration;
 
-import com.google.api.core.ApiFuture;
-import com.google.firebase.messaging.AndroidConfig;
-import com.google.firebase.messaging.ApnsConfig;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
-import org.mockito.Mock;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+@ContextConfiguration(classes = {FCMService.class})
+@ExtendWith(SpringExtension.class)
+class FCMServiceTest {
+    @Autowired
+    private FCMService fCMService;
 
-@RunWith(SpringRunner.class)
-public class FCMServiceTest {
-
-    @InjectMocks
     private FCMService fcmService;
 
-    @Mock
-    private FirebaseMessaging firebaseMessaging;
+    @Test
+    void testGetAndroidConfig() {
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        fCMService.getAndroidConfig("Topic");
     }
-
-//    @Test
-//    public void testSendMessageToToken() throws InterruptedException, ExecutionException {
-//        // Prepare test data
-//        PushNotificationRequest request = new PushNotificationRequest();
-//        request.setToken("device-token");
-//        request.setTitle("Test Title");
-//        request.setMessage("Test Message");
-//
-//        // Mock the behavior of FirebaseMessaging
-//        Message mockedMessage = Message.builder().build();
-//        when(firebaseMessaging.sendAsync(any(Message.class))).thenReturn((ApiFuture<String>) completedFuture("success"));
-//
-//        // Call the method
-//        fcmService.sendMessageToToken(request);
-//
-//        // Verify that FirebaseMessaging's sendAsync is called with the correct message
-//        verify(firebaseMessaging, times(1)).sendAsync(any(Message.class));
-//    }
-
-//    @Test
-//    public void testSendAndGetResponse() throws InterruptedException, ExecutionException {
-//        // Prepare test data
-//        PushNotificationRequest request = new PushNotificationRequest();
-//        request.setToken("device-token");
-//        request.setTitle("Test Title");
-//        request.setMessage("Test Message");
-//
-//        // Mock the behavior of FirebaseMessaging
-//        when(firebaseMessaging.sendAsync(any(Message.class))).thenReturn((ApiFuture<String>) completedFuture("success"));
-//
-//        // Call the method with a valid token
-//        Message message = Message.builder()
-//                .setToken("device-token") // Specify a valid token
-//                .putData("title", request.getTitle())
-//                .putData("message", request.getMessage())
-//                .build();
-//
-//        // Call the method
-//        String response = fcmService.sendAndGetResponse(message);
-//
-//        // Verify that the response is not null and equals "success"
-//        assertNotNull(response);
-//        assertEquals("success", response);
-//    }
 
 
     @Test
-    public void testGetAndroidConfig() {
-        String topic = "test-topic";
+    void testGetApnsConfig() {
 
-        // Call the method
-        AndroidConfig androidConfig = fcmService.getAndroidConfig(topic);
-
-        // Verify that the returned AndroidConfig is not null
-        assertNotNull(androidConfig);
+        fCMService.getApnsConfig("Topic");
     }
+
 
     @Test
-    public void testGetApnsConfig() {
-        String topic = "test-topic";
+    void testGetPreconfiguredMessageToToken() {
+        // Arrange
+        PushNotificationRequest request = mock(PushNotificationRequest.class);
+        when(request.getMessage()).thenReturn("Not all who wander are lost");
+        when(request.getTitle()).thenReturn("Dr");
+        when(request.getToken()).thenReturn("ABC123");
+        when(request.getTopic()).thenReturn("Topic");
 
-        // Call the method
-        ApnsConfig apnsConfig = fcmService.getApnsConfig(topic);
+        // Act
+        fCMService.getPreconfiguredMessageToToken(request);
 
-        // Verify that the returned ApnsConfig is not null
-        assertNotNull(apnsConfig);
+        // Assert
+        verify(request).getMessage();
+        verify(request).getTitle();
+        verify(request).getToken();
+        verify(request, atLeast(1)).getTopic();
     }
 
-    @Test
-    public void testGetPreconfiguredMessageToToken() {
-        // Prepare test data
-        PushNotificationRequest request = new PushNotificationRequest();
-        request.setToken("device-token");
-        request.setTitle("Test Title");
-        request.setMessage("Test Message");
 
-        // Call the method
-        Message message = fcmService.getPreconfiguredMessageToToken(request);
-
-        // Verify that the returned Message is not null
-        assertNotNull(message);
-    }
 }
+

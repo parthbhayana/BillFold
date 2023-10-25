@@ -12,7 +12,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import com.google.api.client.testing.util.TestableByteArrayOutputStream;
 import com.nineleaps.expense_management_project.entity.Category;
 import com.nineleaps.expense_management_project.entity.Employee;
@@ -24,18 +23,13 @@ import com.nineleaps.expense_management_project.entity.Reports;
 import com.nineleaps.expense_management_project.entity.StatusExcel;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ReportsRepository;
-
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.catalina.connector.Response;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -64,11 +58,7 @@ class ExcelGeneratorReportsServiceImplTest {
     @MockBean
     private ReportsRepository reportsRepository;
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate,
-     * StatusExcel)}
-     */
+
     @Test
     void testGenerateExcelAndSendEmail() throws Exception {
         when(reportsRepository.findByDateSubmittedBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any())).thenReturn(new ArrayList<>());
@@ -78,11 +68,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByDateSubmittedBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate,
-     * StatusExcel)}
-     */
+
     @Test
     void testGenerateExcelAndSendEmail2() throws Exception {
         Employee employee = new Employee();
@@ -146,11 +132,6 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByDateSubmittedBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate,
-     * StatusExcel)}
-     */
     @Test
     void testGenerateExcelAndSendEmail3() throws Exception {
         Employee employee = new Employee();
@@ -214,11 +195,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByDateSubmittedBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate,
-     * StatusExcel)}
-     */
+
     @Test
     void testGenerateExcelAndSendEmail4() throws Exception {
         Employee employee = mock(Employee.class);
@@ -320,11 +297,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByDateSubmittedBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate,
-     * StatusExcel)}
-     */
+
     @Test
     void testGenerateExcelAndSendEmail5() throws Exception {
         Employee employee = mock(Employee.class);
@@ -503,11 +476,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByDateSubmittedBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel() throws Exception {
         TestableByteArrayOutputStream excelStream = mock(TestableByteArrayOutputStream.class);
@@ -518,11 +487,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel2() throws Exception {
         TestableByteArrayOutputStream excelStream = mock(TestableByteArrayOutputStream.class);
@@ -533,11 +498,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel3() throws Exception {
         TestableByteArrayOutputStream excelStream = mock(TestableByteArrayOutputStream.class);
@@ -548,11 +509,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel4() throws Exception {
         TestableByteArrayOutputStream excelStream = mock(TestableByteArrayOutputStream.class);
@@ -563,11 +520,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel5() throws Exception {
         when(iExpenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
@@ -606,11 +559,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel6() throws Exception {
         Category category = new Category();
@@ -723,11 +672,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel7() throws Exception {
         when(iExpenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
@@ -766,11 +711,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel8() throws Exception {
         TestableByteArrayOutputStream excelStream = mock(TestableByteArrayOutputStream.class);
@@ -807,11 +748,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel9() throws Exception {
         TestableByteArrayOutputStream excelStream = mock(TestableByteArrayOutputStream.class);
@@ -848,11 +785,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
+
     @Test
     void testGenerateExcel10() throws Exception {
         when(iExpenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
@@ -915,11 +848,6 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(excelStream).write(Mockito.<byte[]>any(), anyInt(), anyInt());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate, StatusExcel,
-     * List)}
-     */
     @Test
     void testGenerateExcel11() throws Exception {
         Category category = new Category();
@@ -1081,10 +1009,6 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reports2).setTotalApprovedAmount(anyFloat());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#sendEmailWithAttachment(String, String, String, byte[], String)}
-     */
     @Test
     void testSendEmailWithAttachment() throws UnsupportedEncodingException, MailException {
         doNothing().when(javaMailSender).send(Mockito.<MimeMessage>any());
@@ -1094,10 +1018,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorReportsServiceImpl#sendEmailWithAttachment(String, String, String, byte[], String)}
-     */
+
     @Test
     void testSendEmailWithAttachment2() throws UnsupportedEncodingException, MailException {
         doThrow(new IllegalStateException("application/vnd.ms-excel")).when(javaMailSender).send(Mockito.<MimeMessage>any());
@@ -1107,9 +1028,6 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorReportsServiceImpl#reimburseAndGenerateExcel(HttpServletResponse)}
-     */
     @Test
     void testReimburseAndGenerateExcel() throws Exception {
         when(reportsRepository.findByfinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any())).thenReturn(new ArrayList<>());
@@ -1117,9 +1035,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByfinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorReportsServiceImpl#reimburseAndGenerateExcel(HttpServletResponse)}
-     */
+
     @Test
     void testReimburseAndGenerateExcel2() throws Exception {
         Employee employee = new Employee();
@@ -1181,9 +1097,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByfinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorReportsServiceImpl#reimburseAndGenerateExcel(HttpServletResponse)}
-     */
+
     @Test
     void testReimburseAndGenerateExcel3() throws Exception {
         Employee employee = new Employee();
@@ -1245,9 +1159,6 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByfinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorReportsServiceImpl#reimburseAndGenerateExcel(HttpServletResponse)}
-     */
     @Test
     void testReimburseAndGenerateExcel4() throws Exception {
         Employee employee = mock(Employee.class);
@@ -1347,9 +1258,7 @@ class ExcelGeneratorReportsServiceImplTest {
         verify(reportsRepository).findByfinanceApprovalStatus(Mockito.<FinanceApprovalStatus>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorReportsServiceImpl#reimburseAndGenerateExcel(HttpServletResponse)}
-     */
+
     @Test
     void testReimburseAndGenerateExcel5() throws Exception {
         Employee employee = mock(Employee.class);

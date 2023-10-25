@@ -3,7 +3,6 @@ package com.nineleaps.expense_management_project.entity;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
-
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

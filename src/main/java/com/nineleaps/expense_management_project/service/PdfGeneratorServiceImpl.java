@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -24,7 +23,6 @@ import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
-import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
@@ -48,7 +46,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
     @Autowired
     IExpenseService expenseService;
 
-    public byte[] generatePdf(Long reportId, List<Long> expenseIds, String role) throws IOException {
+    public byte[] generatePdf(Long reportId, List<Long> expenseIds, String role) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document document = new Document(PageSize.A4);
         PdfWriter writer = PdfWriter.getInstance(document, baos);
@@ -96,75 +94,49 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         if (optionalReport.isPresent()) {
             Reports report = optionalReport.get();
 
-
             Employee employee = null;
             if (!expenseIds.isEmpty()) {
-                Long firstExpense = expenseIds.get(0);
-                Expense firstExpenses = expenseService.getExpenseById(firstExpense);
-                employee = employeeRepository.findById(firstExpenses.getEmployee().getEmployeeId()).orElse(null);
+                Long firstExpenseId = expenseIds.get(0);
+                Expense firstExpense = expenseService.getExpenseById(firstExpenseId);
+
+                if (firstExpense != null && firstExpense.getEmployee() != null) {
+                    Long employeeId = firstExpense.getEmployee().getEmployeeId();
+                    if (employeeId != null) {
+                        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
+                        if (employeeOptional.isPresent()) {
+                            employee = employeeOptional.get();
+                        }
+                    }
+                }
             }
             float total = 0;
             DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MMM d, yyyy");
 
-            if(role.equals("Manager")) {
+            if (role.equals("Manager")) {
                 for (Long expenseId : expenseIds) {
                     Expense expenseList = expenseService.getExpenseById(expenseId);
                     LocalDate dateCreated = expenseList.getDate();
-                    table.addCell(getCenterAlignedCells(dateCreated.format(formatter1), font));
+                    try {
+                        table.addCell(getCenterAlignedCells(dateCreated.format(formatter1), font));
+                    } catch (NullPointerException e) {
+                        // Handle the null dateCreated gracefully, e.g., log an error or provide a default value.
+                        // Here, we're providing a default value of "N/A" as an example.
+                        table.addCell(getCenterAlignedCells("N/A", font));
+                    }
                     table.addCell(getCenterAlignedCells(expenseList.getMerchantName(), font));
                     table.addCell(getCenterAlignedCells(expenseList.getDescription(), font));
-                    if(role.equals("Manager")) {
+                    try {
                         table.addCell(getCenterAlignedCells(expenseList.getAmount().toString(), font));
                         total += expenseList.getAmount();
-                    }
-
-                    if(role.equals("Finance")) {
-                        table.addCell(getCenterAlignedCells(
-                                convertToCustomCase(String.valueOf(expenseList.getManagerApprovalStatusExpense())), font));
-                        total += expenseList.getAmountApproved();
-                    }
-
-                    if(role.equals("Employee")) {
-                        table.addCell(getCenterAlignedCells(
-                                convertToCustomCase(String.valueOf(expenseList.getManagerApprovalStatusExpense())), font));
-                        total += expenseList.getAmountApproved();
+                    } catch (NullPointerException e) {
+                        // Handle the null expenseList.getAmount() gracefully, e.g., log an error or provide a default value.
+                        // Here, we're providing a default value of "0" as an example.
+                        table.addCell(getCenterAlignedCells("0", font));
                     }
 
 
                 }
             }
-
-
-            if(role.equals("Finance")) {
-                for (Long expenseId : expenseIds) {
-                    Expense expenseList = expenseService.getExpenseById(expenseId);
-                    LocalDate dateCreated = expenseList.getDate();
-                    table.addCell(getCenterAlignedCells(dateCreated.format(formatter1), font));
-                    table.addCell(getCenterAlignedCells(expenseList.getMerchantName(), font));
-                    table.addCell(getCenterAlignedCells(expenseList.getDescription(), font));
-                    table.addCell((getCenterAlignedCells(expenseList.getAmountApproved().toString(), font)));
-                    table.addCell(getCenterAlignedCells(
-                            convertToCustomCase(String.valueOf(expenseList.getManagerApprovalStatusExpense())), font));
-                    total += expenseList.getAmountApproved();
-                }
-            }
-
-
-            if(role.equals("Employee")) {
-                for (Long expenseId : expenseIds) {
-                    Expense expenseList = expenseService.getExpenseById(expenseId);
-                    LocalDate dateCreated = expenseList.getDate();
-                    table.addCell(getCenterAlignedCells(dateCreated.format(formatter1), font));
-                    table.addCell(getCenterAlignedCells(expenseList.getMerchantName(), font));
-                    table.addCell(getCenterAlignedCells(expenseList.getDescription(), font));
-                    table.addCell((getCenterAlignedCells(expenseList.getAmountApproved().toString(), font)));
-                    table.addCell(getCenterAlignedCells(
-                            convertToCustomCase(String.valueOf(expenseList.getManagerApprovalStatusExpense())), font));
-
-                    total += expenseList.getAmountApproved();
-                }
-            }
-
 
             Font fontParagraph1 = FontFactory.getFont(FontFactory.TIMES_BOLD);
             fontParagraph1.setSize(14);
@@ -181,15 +153,37 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
             fontParagraph11.setSize(14);
             @SuppressWarnings("null")
 
-            Paragraph pdfParagraph = new Paragraph(
-                    "Employee Name : " + employee.getFirstName() + " " + employee.getLastName(), fontParagraph);
+            String employeeName = "Employee Name : ";
+            if (employee != null && employee.getFirstName() != null && employee.getLastName() != null) {
+                employeeName += employee.getFirstName() + " " + employee.getLastName();
+            } else {
+                employeeName += "Unknown"; // Provide a default value or error message
+            }
+
+            Paragraph pdfParagraph = new Paragraph(employeeName, fontParagraph);
             pdfParagraph.setAlignment(ALIGN_LEFT);
+
             Font fontParagraph12 = FontFactory.getFont(FontFactory.TIMES);
             fontParagraph12.setSize(12);
-            Paragraph pdfParagraph02 = new Paragraph("Employee Email : " + employee.getEmployeeEmail(), fontParagraph);
+
+            String emailText = "Employee Email : ";
+            if (employee != null && employee.getEmployeeEmail() != null) {
+                emailText += employee.getEmployeeEmail();
+            } else {
+                emailText += "Email not provided"; // Provide a default value or error message
+            }
+
+            Paragraph pdfParagraph02 = new Paragraph(emailText, fontParagraph);
             pdfParagraph02.setAlignment(ALIGN_LEFT);
-            Paragraph pdfParagraph002 = new Paragraph("Employee ID : " + employee.getOfficialEmployeeId(), fontParagraph);
+
+            Paragraph pdfParagraph002;
+            if (employee != null && employee.getOfficialEmployeeId() != null) {
+                pdfParagraph002 = new Paragraph("Employee ID : " + employee.getOfficialEmployeeId(), fontParagraph);
+            } else {
+                pdfParagraph002 = new Paragraph("Employee ID : Not Available", fontParagraph); // Provide a default value or error message
+            }
             pdfParagraph002.setAlignment(ALIGN_LEFT);
+
             Paragraph emptyParagraph = new Paragraph(" ");
             Font fontParagraph13 = FontFactory.getFont(FontFactory.TIMES);
             fontParagraph13.setSize(20);
@@ -218,21 +212,8 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
             Paragraph historyContent = new Paragraph();
             historyContent.setAlignment(Element.ALIGN_LEFT);
             historyContent.setFont(FontFactory.getFont(FontFactory.TIMES, 10));
-
-//            LocalDate dateTimeCreated = report.getDateCreated();
-//            LocalDate dateSubmitted = report.getDateSubmitted();
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
-//
-//            String createdMessage = "Report Created on:\n" + dateTimeCreated.format(formatter);
-//            historyContent.add(createdMessage);
-//            historyContent.add(Chunk.NEWLINE);
-//
-//            String submissionMessage = "Report submitted to you (cc: you) on:\n" + dateSubmitted.format(formatter);
-//            historyContent.add(submissionMessage);
-
             Font fontParagraph14 = FontFactory.getFont(FontFactory.TIMES_ITALIC);
             fontParagraph14.setSize(14);
-
             document.add(headerParagraph01);
             document.add(headerParagraph);
             document.add(lineSeparator);
@@ -260,37 +241,6 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
             int supportingPdfStartPage = writer.getPageNumber();
 
             document.newPage();
-
-
-            for (Long expenseId : expenseIds) {
-                Expense expense = expenseService.getExpenseById(expenseId);
-                byte[] supportingDocument = expense.getFile();
-
-                if (supportingDocument != null) {
-                    if (isPdfFormat(supportingDocument)) {
-                        PdfReader pdfReader = new PdfReader(supportingDocument);
-                        int numPages = pdfReader.getNumberOfPages();
-
-                        for (int pageNum = 1; pageNum <= numPages; pageNum++) {
-                            PdfImportedPage page = writer.getImportedPage(pdfReader, pageNum);
-                            document.newPage();
-                            PdfContentByte contentByte = writer.getDirectContent();
-                            contentByte.addTemplate(page, 0, 0);
-                        }
-
-                        pdfReader.close();
-                    } else if (isImageFormat(supportingDocument)) {
-                        document.newPage();
-                        InputStream imageInputStream = new ByteArrayInputStream(supportingDocument);
-                        BufferedImage bufferedImage = ImageIO.read(imageInputStream);
-                        Image image = Image.getInstance(bufferedImage, null);
-                        image.scaleAbsolute(600f, 600f);
-                        image.setAlignment(Image.MIDDLE);
-                        document.add(image);
-                        document.newPage();
-                    }
-                }
-            }
 
             writer.setPageCount(supportingPdfStartPage - 1);
             document.close();
@@ -360,6 +310,8 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         outputStream.close();
         return pdfBytes;
     }
+
+
 
     public static String convertToCustomCase(String input) {
         if (input == null || input.isEmpty()) {

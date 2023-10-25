@@ -33,9 +33,6 @@ class EmployeeDTOTest {
         assertEquals("John", employeeDTO.getFirstName());
     }
 
-    // Repeat the above pattern for the remaining getter and setter methods
-
-    // ...
 
     @Test
     void testGetHrName() {

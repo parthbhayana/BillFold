@@ -3,11 +3,10 @@ package com.nineleaps.expense_management_project.entity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
+
 
 @Getter
 @Entity
@@ -60,7 +59,7 @@ public class Employee {
     @Column(name = "mobile_number")
     private Long mobileNumber;
 
-    @Column(name = "is_admin", nullable = true)
+    @Column(name = "is_admin")
     @ApiModelProperty(hidden = true)
     private Boolean isFinanceAdmin = false;
 
@@ -68,7 +67,7 @@ public class Employee {
     @ApiModelProperty(hidden = true)
     private String imageUrl;
 
-    @Column(name = "is_hidden", nullable = true)
+    @Column(name = "is_hidden")
     @ApiModelProperty(hidden = true)
     private Boolean isHidden = false;
 

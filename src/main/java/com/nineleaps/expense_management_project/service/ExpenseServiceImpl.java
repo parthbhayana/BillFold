@@ -2,24 +2,17 @@ package com.nineleaps.expense_management_project.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-
 import com.nineleaps.expense_management_project.dto.ExpenseDTO;
 import com.nineleaps.expense_management_project.entity.*;
-import com.nineleaps.expense_management_project.firebase.PushNotificationRequest;
-import com.nineleaps.expense_management_project.firebase.PushNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import com.nineleaps.expense_management_project.repository.CategoryRepository;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ExpenseRepository;
@@ -45,15 +38,10 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Autowired
     private ReportsRepository reportsRepository;
 
-    @Autowired
-    private IEmailService emailService;
-
-    @Autowired
-    private PushNotificationService pushNotificationService;
 
     @Transactional
     @Override
-    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) throws IllegalAccessException {
+    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId)  {
         Employee employee = employeeService.getEmployeeById(employeeId);
         Expense expense = new Expense();
         expense.setEmployee(employee);
@@ -194,17 +182,9 @@ public class ExpenseServiceImpl implements IExpenseService {
             throw new IllegalStateException("Expense " + expenseId + " does not exist!");
         }
 
-        if (Boolean.TRUE.equals(expense.getIsReported()) && isApprovedOrPartiallyApproved(expense)) {
-            throw new IllegalStateException("Cannot edit Expense with ExpenseId:" + expenseId + " as it is already reported!");
-        }
 
         return expenseRepository.save(expense);
     }
-
-
-
-
-
 
 
     private boolean isApprovedOrPartiallyApproved(Expense expense) {
@@ -241,7 +221,7 @@ public class ExpenseServiceImpl implements IExpenseService {
         Optional<Expense> expenseOptional = expenseRepository.findById(expenseId);
         if (expenseOptional.isPresent()) {
             Expense expense = expenseOptional.get();
-            if (!expense.getIsHidden()) {
+            if (Boolean.FALSE.equals(expense.getIsHidden())) {
                 boolean removeExpense = false;
                 expense.setIsReported(removeExpense);
                 expense.setReports(null);
@@ -281,33 +261,6 @@ public class ExpenseServiceImpl implements IExpenseService {
         }
         expenseRepository.save(expense);
     }
-
-//    @Scheduled(cron = "0 0 15 * * *")
-//    public void sendExpenseReminder() {
-//        LocalDate currentDate = LocalDate.now();
-//
-//        List<Expense> expenseList = expenseRepository.findByIsReportedAndIsHidden(false, false);
-//        List<Long> expenseIds = new ArrayList<>();
-//        for (Expense expense : expenseList) {
-//            LocalDate submissionDate = expense.getDate();
-//            LocalDate expirationDate = submissionDate.plusDays(60);
-//            if (currentDate.isAfter(expirationDate.minusDays(5)) && currentDate.isBefore(expirationDate)) {
-//                expenseIds.add(expense.getExpenseId());
-//            }
-//        }
-//        emailService.reminderMailToEmployee(expenseIds);
-//        // Push Notification Functionality
-//        for (Long expense : expenseIds) {
-//            Expense exp = getExpenseById(expense);
-//            Long employeeId = exp.getExpenseId();
-//            Employee employee = employeeService.getEmployeeById(employeeId);
-//            PushNotificationRequest notificationRequest = new PushNotificationRequest();
-//            notificationRequest.setTitle("[REMINDER]: Report your pending expenses.");
-//            notificationRequest.setMessage("Unreported expenses will be deleted.");
-//            notificationRequest.setToken(employee.getToken());
-//            pushNotificationService.sendPushNotificationToToken(notificationRequest);
-//        }
-//    }
 
     @Override
     public List<Expense> getRejectedExpensesByReportId(Long reportId) {

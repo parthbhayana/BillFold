@@ -1,72 +1,54 @@
 package com.nineleaps.expense_management_project.controller;
 
+import static org.mockito.Mockito.doNothing;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nineleaps.expense_management_project.firebase.PushNotificationRequest;
-import com.nineleaps.expense_management_project.firebase.PushNotificationResponse;
 import com.nineleaps.expense_management_project.firebase.PushNotificationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Objects;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-
-public class PushNotificationControllerTest {
-
-    @Mock
-    private PushNotificationService pushNotificationService;
-
-    @InjectMocks
+@ContextConfiguration(classes = {PushNotificationController.class})
+@ExtendWith(SpringExtension.class)
+class PushNotificationControllerTest {
+    @Autowired
     private PushNotificationController pushNotificationController;
 
-    private MockMvc mockMvc;
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+    @MockBean
+    private PushNotificationService pushNotificationService;
 
     @Test
-    public void testSendTokenNotification() {
-        // Create a sample PushNotificationRequest
-        PushNotificationRequest request = new PushNotificationRequest();
-        request.setToken("sampleToken");
-        request.setTitle("Test Notification");
-        request.setMessage("This is a test notification");
+    void testSendTokenNotification() throws Exception {
+        // Arrange
+        doNothing().when(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
 
-        // Mock the behavior of the pushNotificationService
-        doNothing().when(pushNotificationService).sendPushNotificationToToken(request);
+        PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+        pushNotificationRequest.setMessage("Not all who wander are lost");
+        pushNotificationRequest.setTitle("Dr");
+        pushNotificationRequest.setToken("ABC123");
+        pushNotificationRequest.setTopic("Topic");
+        String content = (new ObjectMapper()).writeValueAsString(pushNotificationRequest);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/notification/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
 
-        // Call the controller method
-        ResponseEntity<PushNotificationResponse> responseEntity = pushNotificationController.sendTokenNotification(request);
-
-        // Verify that the service method was called
-        verify(pushNotificationService, times(1)).sendPushNotificationToToken(request);
-
-        // Check the response entity
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Notification sent.", Objects.requireNonNull(responseEntity.getBody()).getMessage());
-        assertEquals(HttpStatus.OK.value(), responseEntity.getBody().getStatus());
+        // Act and Assert
+        MockMvcBuilders.standaloneSetup(pushNotificationController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("{\"status\":200,\"message\":\"Notification sent.\"}"));
     }
-
-
-
-
-
-
 }
+

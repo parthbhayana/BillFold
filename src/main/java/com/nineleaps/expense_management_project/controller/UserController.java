@@ -1,11 +1,9 @@
 package com.nineleaps.expense_management_project.controller;
 
 import java.util.List;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.nineleaps.expense_management_project.dto.UserDTO;
 import com.nineleaps.expense_management_project.service.IEmailService;
 import org.json.simple.JSONObject;
@@ -17,13 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nineleaps.expense_management_project.config.JwtUtil;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.service.IEmployeeService;
-
 import static com.nineleaps.expense_management_project.config.JwtUtil.ACCESS_TOKEN_EXPIRATION_TIME;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -38,11 +34,7 @@ public class UserController {
     private IEmailService emailService;
     @Autowired
     private JwtUtil jwtUtil;
-    JSONObject responseJson;
 
-    public UserController(IEmployeeService employeeService) {
-
-    }
 
     @GetMapping("/listTheUser")
     public List<Employee> getAllUserDetails() {
@@ -90,7 +82,7 @@ public class UserController {
             if(employee == null){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }else{
-                emailService.welcomeEmail(email);
+
                 return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
             }
 

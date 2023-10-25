@@ -2,17 +2,13 @@ package com.nineleaps.expense_management_project.entity;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -92,9 +88,7 @@ class CustomIdGeneratorTest {
         when(preparedStatement.executeQuery()).thenThrow(new SQLException("SQL Error"));
 
         // Ensure that a HibernateException is thrown in case of an SQL error
-        assertThrows(HibernateException.class, () -> {
-            customIdGenerator.getSerialNumberForYearAndMonth(connection, "YYYYMM");
-        });
+        assertThrows(HibernateException.class, () -> customIdGenerator.getSerialNumberForYearAndMonth(connection, "YYYYMM"));
     }
 
 

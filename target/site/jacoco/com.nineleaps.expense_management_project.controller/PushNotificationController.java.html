@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PushNotificationController {
 
-    private PushNotificationService pushNotificationService;
+    private final PushNotificationService pushNotificationService;
 
 <span class="fc" id="L17">    public PushNotificationController(PushNotificationService pushNotificationService) {</span>
 <span class="fc" id="L18">        this.pushNotificationService = pushNotificationService;</span>
@@ -21,8 +21,8 @@ public class PushNotificationController {
     @SuppressWarnings(&quot;rawtypes&quot;)
     @PostMapping(&quot;/notification/token&quot;)
     public ResponseEntity sendTokenNotification(@RequestBody PushNotificationRequest request) {
-<span class="nc" id="L24">        pushNotificationService.sendPushNotificationToToken(request);</span>
-<span class="nc" id="L25">        return new ResponseEntity&lt;&gt;(new PushNotificationResponse(HttpStatus.OK.value(), &quot;Notification sent.&quot;), HttpStatus.OK);</span>
+<span class="fc" id="L24">        pushNotificationService.sendPushNotificationToToken(request);</span>
+<span class="fc" id="L25">        return new ResponseEntity&lt;&gt;(new PushNotificationResponse(HttpStatus.OK.value(), &quot;Notification sent.&quot;), HttpStatus.OK);</span>
     }
 
 }

@@ -7,16 +7,12 @@ import org.springframework.stereotype.Service;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.entity.Expense;
 import com.nineleaps.expense_management_project.entity.Reports;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -62,49 +58,6 @@ public class EmailServiceImpl implements IEmailService {
         this.javaMailSender = mailSender;
     }
 
-//    @Override
-//    public void welcomeEmail(String employeeEmail) throws MessagingException {
-//        Employee employee = employeeService.getEmployeeByEmail(employeeEmail);
-//        if (employeeEmail != null) {
-//            MimeMessage message = javaMailSender.createMimeMessage();
-//            MimeMessageHelper eMail = new MimeMessageHelper(message, true);
-//            try {
-//                eMail.setFrom(CONSTANT1);
-//                eMail.setTo(employeeEmail);
-//                eMail.setSubject("Welcome to BillFold!"); //
-//                eMail.setText(CONSTANT6 + employee.getFirstName() + CONSTANT13
-//                        + "Welcome to BillFold! We're thrilled to have you onboard. "
-//                        + "This app is designed to simplify and streamline the process of managing your expenses and reimbursement requests. To get started, follow the steps below:\n\n"
-//                        + "Step 1: Complete Your Profile\n\n"
-//                        + "Before you start submitting expenses, please make sure your profile is complete. This is crucial for efficient processing of your reimbursement requests. Here's what you need to do:\n\n"
-//                        + "- Add your manager's name and email.\n" + "- Provide your official employee ID.\n"
-//                        + "- Enter your phone number.\n\n"
-//                        + "Please note that expenses will not be considered for reimbursement unless your profile details are filled in completely.\n\n"
-//                        + "Step 2: Add Individual Expenses\n\n"
-//                        + "When you incur an eligible expense, use the app to add it. Make sure to provide all the necessary details such as:\n\n"
-//                        + "- Merchant name.\n" + "- Description of the expense.\n" + "- Date of the transaction.\n"
-//                        + "- Attach a clear image of the receipt.\n\n"
-//                        + "This step ensures that each expense is accurately recorded and documented.\n\n"
-//                        + "Step 3: Create an Expense Report\n\n"
-//                        + "To simplify the approval process, group related expenses into a single expense report. Here's how:\n\n"
-//                        + "- Create a new report and give it a meaningful title.\n"
-//                        + "- Attach individual expenses to the report.\n"
-//                        + "- Once all relevant expenses are added, submit the report to your manager for approval.\n\n"
-//                        + "Step 4: Manager Approval\n\n"
-//                        + "Your manager will review the expense report and either approve or reject it. If approved, the report will then be sent to the finance admin for final review.\n\n"
-//                        + "Step 5: Finance Admin Review and Reimbursement\n\n"
-//                        + "The finance admin will conduct a final review of the approved report. Upon successful review, your reimbursement will be processed, and you'll receive the reimbursed amount as per the company's policy.\n\n"
-//                        + "Feel free to explore the app's features and familiarize yourself with its functionalities. If you have any questions or encounter any issues, don't hesitate to reach out to our support team at @billfold.noreply@gmail.com.\n\n"
-//                        + "Thank you for using BillFold. We look forward to making your expense management experience seamless and efficient."
-//                        + CONSTANT3 + CONSTANT10);
-//                javaMailSender.send(message);
-//            }catch (NullPointerException e){
-//                throw new NullPointerException("Error creating mail");
-//            }
-//        } else {
-//            throw new IllegalStateException(CONSTANT12);
-//        }
-//    }
 
     @Override
     public void notifyHr(Long reportId, String hrEmail, String hrName) throws MessagingException {
@@ -212,7 +165,6 @@ public class EmailServiceImpl implements IEmailService {
             throw new IllegalStateException(CONSTANT5 + report.getReportTitle());
         }
     }
-
 
 
 
@@ -328,10 +280,6 @@ public class EmailServiceImpl implements IEmailService {
         }
     }
 
-    @Override
-    public void welcomeEmail(String employeeEmail) throws MessagingException {
-
-    }
 
     @Override
     public void userPartialApprovedExpensesNotification(Long reportId) {
@@ -347,7 +295,7 @@ public class EmailServiceImpl implements IEmailService {
             eMail.setSubject("[PARTIAL APPROVAL] Expense Report: " + report.getReportTitle());
             eMail.setText(CONSTANT6 + employee.getFirstName() + " " + employee.getLastName() + ","
                     + "\n\nCongratulations! Your expense report has been partially approved by your manager. The details of the partial approval are as follows:"
-                    + CONSTANT2 + report.getReportTitle() + "\nApproval Date: " + report.getManagerActionDate() + ""
+                    + CONSTANT2 + report.getReportTitle() + "\nApproval Date: " + report.getManagerActionDate()
                     + "\n\nPlease note that not all expenses have been approved. Some expenses are partially approved according to the company policy. Please login to your BillFold account for detailed information of your expense report."
                     + "\n\nIf you have any questions or need further assistance, please feel free to contact your manager or the HR department."
                     + CONSTANT9 + CONSTANT7 + CONSTANT8 + CONSTANT3);

@@ -3,7 +3,6 @@ package com.nineleaps.expense_management_project.repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.nineleaps.expense_management_project.entity.FinanceApprovalStatus;
 import com.nineleaps.expense_management_project.entity.ManagerApprovalStatus;
@@ -22,13 +21,11 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
     List<Reports> getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Long employeeId, Boolean a, Boolean b);
 
-    List<Reports> findByManagerEmail(String managerEmail);
 
     List<Reports> findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(String managerEmail,
                                                                                       ManagerApprovalStatus managerStatus,
                                                                                       Boolean a, Boolean b);
 
-    List<Reports> findByManagerEmailAndIsSubmittedAndIsHidden(String managerEmail, Boolean a, Boolean b);
 
     List<Reports> findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
             ManagerApprovalStatus managerStatus, FinanceApprovalStatus financeStatus, Boolean a, Boolean b);
@@ -40,8 +37,6 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
     List<Reports> findByDateSubmittedBetween(LocalDate startDate, LocalDate endDate);
 
-
-    List<Reports> findBymanagerApprovalStatus(ManagerApprovalStatus managerApprovalStatus);
 
     List<Reports> getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(Long employeeId,
                                                                             ManagerApprovalStatus managerApprovalStatus,

@@ -3,18 +3,14 @@ package com.nineleaps.expense_management_project.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
 import com.nineleaps.expense_management_project.dto.UserDTO;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
-import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -88,19 +84,6 @@ class EmployeeServiceImplTest {
         verifyNoMoreInteractions(employeeRepository);
     }
 
-//    @Test
-//    void testGetEmployeeById_NonExistingId() {
-//        Long employeeId = 1L;
-//
-//        when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
-//
-//        Employee result = employeeService.getEmployeeById(employeeId);
-//
-//        Assertions.assertNull(result);
-//
-//        verify(employeeRepository, times(1)).findById(employeeId);
-//        verifyNoMoreInteractions(employeeRepository);
-//    }
 
     @Test
     void testDeleteEmployeeDetailsById() {
@@ -180,31 +163,6 @@ class EmployeeServiceImplTest {
         verifyNoMoreInteractions(employeeRepository);
     }
 
-//    @Test
-//    void testEditEmployeeDetails() {
-//        Long employeeId = 1L;
-//        String managerEmail = "manager@example.com";
-//        Long mobileNumber = 1234567890L;
-//        String officialEmployeeId = "EMP001";
-//        String managerName = "John Doe";
-//
-//        Employee existingEmployee = new Employee();
-//        existingEmployee.setEmployeeId(employeeId);
-//
-//        when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(existingEmployee));
-//        when(employeeRepository.save(any(Employee.class))).thenReturn(existingEmployee);
-//
-//        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName);
-//
-//        assertEquals(managerEmail, existingEmployee.getManagerEmail());
-//        assertEquals(mobileNumber, existingEmployee.getMobileNumber());
-//        assertEquals(officialEmployeeId, existingEmployee.getOfficialEmployeeId());
-//        assertEquals(managerName, existingEmployee.getManagerName());
-//
-//        verify(employeeRepository, times(1)).findById(employeeId);
-//        verify(employeeRepository, times(1)).save(any(Employee.class));
-//        verifyNoMoreInteractions(employeeRepository);
-//    }
 
     @Test
     void hideEmployee_ShouldHideEmployee() {
@@ -478,9 +436,7 @@ class EmployeeServiceImplTest {
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(NullPointerException.class, () -> {
-            employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName);
-        });
+        assertThrows(NullPointerException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName));
     }
 
     @Test
@@ -526,9 +482,7 @@ class EmployeeServiceImplTest {
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(NullPointerException.class, () -> {
-            employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);
-        });
+        assertThrows(NullPointerException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName));
     }
 
 

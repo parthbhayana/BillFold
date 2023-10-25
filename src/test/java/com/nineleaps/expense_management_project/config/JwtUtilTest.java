@@ -5,13 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletResponse;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import io.jsonwebtoken.*;
-
-
 import java.security.SecureRandom;
 import java.util.Date;
 
@@ -30,14 +27,11 @@ class JwtUtilTest {
 
     @Test
     void testGenerateTokens() {
-        // Mock HttpServletResponse
+
         HttpServletResponse response = mock(HttpServletResponse.class);
-
         ResponseEntity<JwtUtil.TokenResponse> tokenResponseEntity = jwtUtil.generateTokens("test@example.com", 123L, "ROLE_USER", response);
-
         assertNotNull(tokenResponseEntity);
         assertEquals(200, tokenResponseEntity.getStatusCodeValue());
-
         JwtUtil.TokenResponse tokenResponse = tokenResponseEntity.getBody();
         assertNotNull(tokenResponse);
         assertNotNull(tokenResponse.getAccessToken());
@@ -54,9 +48,7 @@ class JwtUtilTest {
         Long employeeId = 123L;
         String role = "ROLE_USER";
         long expirationTime = 3600000L; // 1 hour in milliseconds
-
         String token = jwtUtil.generateToken(emailId, employeeId, role, expirationTime);
-
         assertNotNull(token);
     }
 
@@ -64,9 +56,7 @@ class JwtUtilTest {
     void testValidateTokenValid() {
         // Generate a valid token
         String token = jwtUtil.generateToken("test@example.com", 123L, "ROLE_USER", 3600000L);
-
         boolean isValid = jwtUtil.validateToken(token);
-
         assertTrue(isValid);
     }
 
@@ -74,9 +64,7 @@ class JwtUtilTest {
     void testValidateTokenInvalid() {
         // An invalid token (modified token)
         String invalidToken = "InvalidTokenString";
-
         boolean isValid = jwtUtil.validateToken(invalidToken);
-
         assertFalse(isValid);
     }
 
@@ -85,9 +73,7 @@ class JwtUtilTest {
     void testIsRefreshTokenExpiredWithFutureExpiration() {
         JwtUtil jwtUtil = new JwtUtil();
         String refreshToken = generateTokenWithFutureExpiration();
-
         boolean isExpired = jwtUtil.isRefreshTokenExpired(refreshToken);
-
         assertFalse(isExpired);
     }
 
@@ -95,9 +81,7 @@ class JwtUtilTest {
     void testIsRefreshTokenExpiredWithPastExpiration() {
         JwtUtil jwtUtil = new JwtUtil();
         String refreshToken = generateTokenWithPastExpiration();
-
         boolean isExpired = jwtUtil.isRefreshTokenExpired(refreshToken);
-
         assertFalse(isExpired);
     }
 
@@ -105,9 +89,7 @@ class JwtUtilTest {
     void testIsAccessTokenExpiredWithFutureExpiration() {
         JwtUtil jwtUtil = new JwtUtil();
         String accessToken = generateTokenWithFutureExpiration();
-
         boolean isExpired = jwtUtil.isAccessTokenExpired(accessToken);
-
         assertFalse(isExpired);
     }
 
@@ -115,19 +97,17 @@ class JwtUtilTest {
     void testIsAccessTokenExpiredWithPastExpiration() {
         JwtUtil jwtUtil = new JwtUtil();
         String accessToken = generateTokenWithPastExpiration();
-
         boolean isExpired = jwtUtil.isAccessTokenExpired(accessToken);
-
         assertFalse(isExpired);
     }
 
-    // Helper methods to generate tokens with future and past expiration dates
+
     private String generateTokenWithFutureExpiration() {
-        return generateToken("yokes.e2nineleaps.com",1L,"EMPLOYEE",System.currentTimeMillis() + 100000);
+        return generateToken("karthik.e2nineleaps.com",1L,"EMPLOYEE",System.currentTimeMillis() + 100000);
     }
 
     private String generateTokenWithPastExpiration() {
-        return generateToken("yokes.e2nineleaps.com",1L,"EMPLOYEE",System.currentTimeMillis() - 100000);
+        return generateToken("karthik.e2nineleaps.com",1L,"EMPLOYEE",System.currentTimeMillis() - 100000);
     }
 
     public String generateToken(String emailId, Long employeeId, String role, long expirationTime) {

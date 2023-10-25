@@ -67,10 +67,6 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 
         Employee financeadmin = employeeRepository.findByRole("FINANCE_ADMIN");
 
-        if (financeadmin == null) {
-            throw new IllegalStateException("finance admin not found");
-        }
-
         boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
                 "Please find the " + "attached Excel report.", excelBytes, "report.xls");
         if (emailsent) {
@@ -121,15 +117,24 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
         for (Category category : categories) {
             HSSFRow dataRow = sheet.getRow(dataRowIndex);
             String categoryName = category.getCategoryDescription();
+
             if (categoryAmountMap.containsKey(categoryName)) {
                 Double totalAmount = categoryAmountMap.get(categoryName);
-                double percentage = (totalAmount / totalAmountSum) * 100;
-                dataRow.createCell(3).setCellValue(percentage);
+
+                // Check if totalAmountSum is not zero before performing the division
+                if (totalAmountSum != 0.0) {
+                    double percentage = (totalAmount / totalAmountSum) * 100;
+                    dataRow.createCell(3).setCellValue(percentage);
+                } else {
+                    // Handle the case when totalAmountSum is zero, e.g., avoid division by zero
+                    dataRow.createCell(3).setCellValue(0.0f);
+                }
             } else {
                 dataRow.createCell(3).setCellValue(0.0f);
             }
             dataRowIndex++;
         }
+
 
         @SuppressWarnings("rawtypes") DefaultPieDataset dataset = new DefaultPieDataset();
         for (Category category : categories) {

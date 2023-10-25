@@ -2,15 +2,11 @@ package com.nineleaps.expense_management_project.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.*;
-
 import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.annotations.ApiModelProperty;
 
 @Getter
@@ -31,7 +27,7 @@ public class Category {
 	@ApiModelProperty(hidden = true)
 	private long categoryTotal;
 
-	@Column(name = "is_hidden", nullable = true)
+	@Column(name = "is_hidden")
 	@ApiModelProperty(hidden = true)
 	private Boolean isHidden = false;
 

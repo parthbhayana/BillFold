@@ -1,16 +1,12 @@
 package com.nineleaps.expense_management_project.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import com.nineleaps.expense_management_project.entity.Category;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.entity.Expense;
@@ -21,26 +17,15 @@ import com.nineleaps.expense_management_project.entity.Reports;
 import com.nineleaps.expense_management_project.repository.CategoryRepository;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ExpenseRepository;
-
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import java.io.UnsupportedEncodingException;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.catalina.connector.Response;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.jfree.chart.JFreeChart;
-import org.junit.jupiter.api.Disabled;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -69,10 +54,7 @@ class ExcelGeneratorCategoryServiceImplTest {
     @MockBean
     private JavaMailSender javaMailSender;
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate)}
-     */
+
     @Test
     void testGenerateExcelAndSendEmail() throws Exception {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
@@ -84,10 +66,6 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate)}
-     */
     @Test
     void testGenerateExcelAndSendEmail2() throws Exception {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
@@ -99,10 +77,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate)}
-     */
+
     @Test
     void testGenerateExcelAndSendEmail3() throws Exception {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
@@ -216,10 +191,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate)}
-     */
+
     @Test
     void testGenerateExcelAndSendEmail4() throws Exception {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
@@ -333,10 +305,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate)}
-     */
+
     @Test
     void testGenerateExcelAndSendEmail5() throws Exception {
         Category category = new Category();
@@ -613,12 +582,8 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(javaMailSender).createMimeMessage();
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcelAndSendEmail(HttpServletResponse, LocalDate, LocalDate)}
-     */
     @Test
-    void testGenerateExcelAndSendEmail7() throws Exception {
+    void testGenerateExcelAndSendEmail7()  {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
         Employee employee = mock(Employee.class);
         doNothing().when(employee).setEmployeeEmail(Mockito.<String>any());
@@ -809,10 +774,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expense).setReports(Mockito.<Reports>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate)}
-     */
+
     @Test
     void testGenerateExcel() throws Exception {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
@@ -824,10 +786,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate)}
-     */
+
     @Test
     void testGenerateExcel2() throws Exception {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
@@ -839,10 +798,6 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate)}
-     */
     @Test
     void testGenerateExcel3() throws Exception {
         Category category = new Category();
@@ -863,10 +818,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate)}
-     */
+
     @Test
     void testGenerateExcel4() throws Exception {
         Category category = new Category();
@@ -895,10 +847,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate)}
-     */
+
     @Test
     void testGenerateExcel5() throws Exception {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
@@ -985,10 +934,6 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#generateExcel(ByteArrayOutputStream, LocalDate, LocalDate)}
-     */
     @Test
     void testGenerateExcel6() throws Exception {
         Category category = new Category();
@@ -1025,33 +970,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorCategoryServiceImpl#loadChartImage(JFreeChart, int, int, HSSFWorkbook)}
-     */
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testLoadChartImage() throws IOException {
-        // TODO: Complete this test.
-        //   Diffblue AI was unable to find a test
 
-        // Arrange
-        // TODO: Populate arranged inputs
-        JFreeChart chart = null;
-        int width = 0;
-        int height = 0;
-        HSSFWorkbook workbook = null;
-
-        // Act
-        int actualLoadChartImageResult =
-                this.excelGeneratorCategoryServiceImpl.loadChartImage(chart, width, height, workbook);
-
-        // Assert
-        // TODO: Add assertions on result
-    }
-
-    /**
-     * Method under test: {@link ExcelGeneratorCategoryServiceImpl#categoryTotalAmount(LocalDate, LocalDate)}
-     */
     @Test
     void testCategoryTotalAmount() {
         when(expenseRepository.findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any())).thenReturn(new ArrayList<>());
@@ -1060,9 +979,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorCategoryServiceImpl#categoryTotalAmount(LocalDate, LocalDate)}
-     */
+
     @Test
     void testCategoryTotalAmount2() throws UnsupportedEncodingException {
         Category category = new Category();
@@ -1148,9 +1065,6 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorCategoryServiceImpl#categoryTotalAmount(LocalDate, LocalDate)}
-     */
     @Test
     void testCategoryTotalAmount3() {
         when(expenseRepository.findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any())).thenThrow(new IllegalStateException("foo"));
@@ -1159,9 +1073,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
     }
 
-    /**
-     * Method under test: {@link ExcelGeneratorCategoryServiceImpl#categoryTotalAmount(LocalDate, LocalDate)}
-     */
+
     @Test
     void testCategoryTotalAmount4() throws UnsupportedEncodingException {
         Category category = new Category();
@@ -1292,10 +1204,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(expense).setReports(Mockito.<Reports>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#sendEmailWithAttachment(String, String, String, byte[], String)}
-     */
+
     @Test
     void testSendEmailWithAttachment() throws UnsupportedEncodingException, MailException {
         doNothing().when(javaMailSender).send(Mockito.<MimeMessage>any());
@@ -1305,10 +1214,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
 
-    /**
-     * Method under test:
-     * {@link ExcelGeneratorCategoryServiceImpl#sendEmailWithAttachment(String, String, String, byte[], String)}
-     */
+
     @Test
     void testSendEmailWithAttachment2() throws UnsupportedEncodingException, MailException {
         doThrow(new IllegalStateException("application/vnd.ms-excel")).when(javaMailSender).send(Mockito.<MimeMessage>any());
@@ -1317,4 +1223,11 @@ class ExcelGeneratorCategoryServiceImplTest {
         verify(javaMailSender).createMimeMessage();
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
+
+
+
+
+
+
+
 }

@@ -2,48 +2,47 @@ package com.nineleaps.expense_management_project.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
 import com.nineleaps.expense_management_project.dto.UserDTO;
 import com.nineleaps.expense_management_project.entity.Employee;
 
 public interface IEmployeeService {
 
-	public List<Employee> getAllEmployeeDetails();
+	 List<Employee> getAllEmployeeDetails();
 
-	public Employee saveEmployeeDetails(EmployeeDTO employee);
+	 Employee saveEmployeeDetails(EmployeeDTO employee);
 
-	public Employee getEmployeeById(Long employeeId);
+	 Employee getEmployeeById(Long employeeId);
 
-	public void deleteEmployeeDetailsById(Long employeeId);
+	 void deleteEmployeeDetailsById(Long employeeId);
 
-	public Employee updateEmployeeDetails(EmployeeDTO newemployee, Long employeeId);
+	 Employee updateEmployeeDetails(EmployeeDTO newemployee, Long employeeId);
 
-	public Employee getEmployeeByEmail(String employeeEmail);
+	 Employee getEmployeeByEmail(String employeeEmail);
 
-	public void hideEmployee(Long employeeId);
+	 void hideEmployee(Long employeeId);
 
-	public Employee getUserByEmail(String emailToVerify);
+	 Employee getUserByEmail(String emailToVerify);
 
-	public List<Employee> getAllUser();
+	 List<Employee> getAllUser();
 
-	public Employee insertUser(UserDTO newUser);
+	 Employee insertUser(UserDTO newUser);
 
-	public Employee updateUser(UserDTO newUser);
-
-
-
-	public Employee findByEmailId(String emailId);
-
-	public void setFinanceAdmin(Long employeeId);
+	 Employee updateUser(UserDTO newUser);
 
 
-	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
+
+	 Employee findByEmailId(String emailId);
+
+	 void setFinanceAdmin(Long employeeId);
+
+
+	 Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
 														Long mobileNumber, String managerName, String hrEmail, String hrName);
 
-	public Optional<Employee> getEmployeeDetails(Long employeeId);
+	 Optional<Employee> getEmployeeDetails(Long employeeId);
 
-	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName);
+	 void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName);
 
-	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName, String hrEmail, String hrName);
+	 void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName, String hrEmail, String hrName);
 }

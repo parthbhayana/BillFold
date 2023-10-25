@@ -2,9 +2,7 @@ package com.nineleaps.expense_management_project.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import javax.persistence.*;
-
 import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -43,11 +41,11 @@ public class Expense {
 	@ApiModelProperty(hidden = true)
 	private String categoryDescription;
 
-	@Column(name = "is_reported", nullable = true)
+	@Column(name = "is_reported")
 	@ApiModelProperty(hidden = true)
 	private Boolean isReported = false;
 
-	@Column(name = "is_hidden", nullable = true)
+	@Column(name = "is_hidden")
 	@ApiModelProperty(hidden = true)
 	private Boolean isHidden = false;
 
@@ -59,12 +57,12 @@ public class Expense {
 	@ApiModelProperty(hidden = true)
 	private Double amountApproved;
 
-	@Column(name = "finance_approval_status", nullable = true)
+	@Column(name = "finance_approval_status")
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
 	private FinanceApprovalStatus financeApprovalStatus;
 
-	@Column(name = "manager_approval_status", nullable = true)
+	@Column(name = "manager_approval_status")
 	@ApiModelProperty(hidden = true)
 	@Enumerated(EnumType.STRING)
 	private ManagerApprovalStatusExpense managerApprovalStatusExpense;
@@ -74,7 +72,7 @@ public class Expense {
 	private Boolean potentialDuplicate = false;
 
 	@Lob
-	@Column(name = "file", nullable = true)
+	@Column(name = "file")
 	private byte[] file;
 
 	@Column(name = "file_name")

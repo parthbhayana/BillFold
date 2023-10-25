@@ -1,16 +1,15 @@
 package com.nineleaps.expense_management_project.entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.persistence.*;
 
+import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModelProperty;
 
+@Getter
 @Entity
 @Table(name = "reports")
 public class Reports {
@@ -46,11 +45,11 @@ public class Reports {
     @ApiModelProperty(hidden = true)
     private String financeComments;
 
-    @Column(name = "is_submitted", nullable = true)
+    @Column(name = "is_submitted")
     @ApiModelProperty(hidden = true)
     private Boolean isSubmitted = false;
 
-    @Column(name = "employee_mail", nullable = true)
+    @Column(name = "employee_mail")
     @ApiModelProperty(hidden = true)
     private String employeeMail;
 
@@ -78,7 +77,7 @@ public class Reports {
     @ApiModelProperty(hidden = true)
     private float totalApprovedAmount;
 
-    @Column(name = "is_hidden", nullable = true)
+    @Column(name = "is_hidden")
     @ApiModelProperty(hidden = true)
     private Boolean isHidden = false;
 
@@ -90,28 +89,21 @@ public class Reports {
     @ApiModelProperty(hidden = true)
     private String managerReviewTime;
 
-    @Column(name = "finance_approval_status", nullable = true)
+    @Column(name = "finance_approval_status")
     @ApiModelProperty(hidden = true)
     @Enumerated(EnumType.STRING)
     private FinanceApprovalStatus financeApprovalStatus;
 
-    @Column(name = "manager_approval_status", nullable = true)
+    @Column(name = "manager_approval_status")
     @ApiModelProperty(hidden = true)
     @Enumerated(EnumType.STRING)
     private ManagerApprovalStatus managerApprovalStatus;
 
-    @Column(name = "expenses_count", nullable = true)
+    @Column(name = "expenses_count")
     @ApiModelProperty(hidden = true)
     private Long expensesCount;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "reports", cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private final List<Expense> expenseList = new ArrayList<>();
 
-    public Reports() {
-
-    }
 
     public Reports(Long reportId, Long employeeId, String employeeName, String officialEmployeeId, String reportTitle,
                    String managerComments, String financeComments ) {
@@ -154,170 +146,89 @@ public class Reports {
         this.expensesCount = expensesCount;
     }
 
+    public Reports() {
 
-
-    public Long getReportId() {
-        return reportId;
     }
+
 
     public void setReportId(Long reportId) {
         this.reportId = reportId;
-    }
-
-    public Long getEmployeeId() {
-        return employeeId;
     }
 
     public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
     }
 
-    public String getEmployeeName() {
-        return employeeName;
-    }
-
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
-    }
-
-    public String getOfficialEmployeeId() {
-        return officialEmployeeId;
     }
 
     public void setOfficialEmployeeId(String officialEmployeeId) {
         this.officialEmployeeId = officialEmployeeId;
     }
 
-    public String getReportTitle() {
-        return reportTitle;
-    }
-
     public void setReportTitle(String reportTitle) {
         this.reportTitle = reportTitle;
-    }
-
-    public String getManagerComments() {
-        return managerComments;
     }
 
     public void setManagerComments(String managerComments) {
         this.managerComments = managerComments;
     }
 
-    public String getFinanceComments() {
-        return financeComments;
-    }
-
     public void setFinanceComments(String financeComments) {
         this.financeComments = financeComments;
-    }
-
-    public Boolean getIsSubmitted() {
-        return isSubmitted;
     }
 
     public void setIsSubmitted(Boolean isSubmitted) {
         this.isSubmitted = isSubmitted;
     }
 
-    public String getEmployeeMail() {
-        return employeeMail;
-    }
-
     public void setEmployeeMail(String employeeMail) {
         this.employeeMail = employeeMail;
-    }
-
-    public LocalDate getDateSubmitted() {
-        return dateSubmitted;
     }
 
     public void setDateSubmitted(LocalDate dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
-    public LocalDate getDateCreated() {
-        return dateCreated;
-    }
-
     public void setDateCreated(LocalDate dateCreated) {
         this.dateCreated = dateCreated;
-    }
-
-    public LocalDate getManagerActionDate() {
-        return managerActionDate;
     }
 
     public void setManagerActionDate(LocalDate managerActionDate) {
         this.managerActionDate = managerActionDate;
     }
 
-    public LocalDate getFinanceActionDate() {
-        return financeActionDate;
-    }
-
     public void setFinanceActionDate(LocalDate financeActionDate) {
         this.financeActionDate = financeActionDate;
-    }
-
-    public float getTotalAmount() {
-        return totalAmount;
     }
 
     public void setTotalAmount(float totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public float getTotalApprovedAmount() {
-        return totalApprovedAmount;
-    }
-
     public void setTotalApprovedAmount(float totalApprovedAmount) {
         this.totalApprovedAmount = totalApprovedAmount;
-    }
-
-    public Boolean getIsHidden() {
-        return isHidden;
     }
 
     public void setIsHidden(Boolean isHidden) {
         this.isHidden = isHidden;
     }
 
-    public String getManagerEmail() {
-        return managerEmail;
-    }
-
     public void setManagerEmail(String managerEmail) {
         this.managerEmail = managerEmail;
-    }
-
-    public String getManagerReviewTime() {
-        return managerReviewTime;
     }
 
     public void setManagerReviewTime(String managerReviewTime) {
         this.managerReviewTime = managerReviewTime;
     }
 
-    public FinanceApprovalStatus getFinanceApprovalStatus() {
-        return financeApprovalStatus;
-    }
-
     public void setFinanceApprovalStatus(FinanceApprovalStatus financeApprovalStatus) {
         this.financeApprovalStatus = financeApprovalStatus;
     }
 
-    public ManagerApprovalStatus getManagerApprovalStatus() {
-        return managerApprovalStatus;
-    }
-
     public void setManagerApprovalStatus(ManagerApprovalStatus managerApprovalStatus) {
         this.managerApprovalStatus = managerApprovalStatus;
-    }
-
-    public Long getExpensesCount() {
-        return expensesCount;
     }
 
     public void setExpensesCount(Long expensesCount) {

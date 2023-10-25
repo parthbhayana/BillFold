@@ -3,11 +3,7 @@ package com.nineleaps.expense_management_project.config;
 import javax.servlet.http.*;
 import java.security.SecureRandom;
 import java.util.Date;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

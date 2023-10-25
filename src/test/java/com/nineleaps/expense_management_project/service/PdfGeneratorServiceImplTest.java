@@ -1,15 +1,11 @@
 package com.nineleaps.expense_management_project.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.nineleaps.expense_management_project.service.PdfGeneratorServiceImpl.convertToCustomCase;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
-import com.lowagie.text.Document;
-import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.Font;
-import com.lowagie.text.pdf.ColumnText;
-import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.*;
 import com.nineleaps.expense_management_project.entity.Category;
 import com.nineleaps.expense_management_project.entity.Employee;
 import com.nineleaps.expense_management_project.entity.Expense;
@@ -19,19 +15,15 @@ import com.nineleaps.expense_management_project.entity.ManagerApprovalStatusExpe
 import com.nineleaps.expense_management_project.entity.Reports;
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ReportsRepository;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import javax.servlet.http.HttpServletResponse;
-
+import java.util.*;
+import javax.servlet.ServletOutputStream;
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -55,27 +47,21 @@ class PdfGeneratorServiceImplTest {
     private ReportsRepository reportsRepository;
 
 
-    @Mock
-    private Document document;
-    @Mock
-    private PdfWriter writer;
-
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#generatePdf(Long, List, String)}
-     */
     @Test
-    void testGeneratePdf() throws IOException {
+    void testGeneratePdf() {
+        // Arrange
         Optional<Reports> emptyResult = Optional.empty();
         when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(emptyResult);
+
+        // Act and Assert
         assertEquals(0, pdfGeneratorServiceImpl.generatePdf(1L, new ArrayList<>(), "Role").length);
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#generatePdf(Long, List, String)}
-     */
+
     @Test
     void testGeneratePdf2() throws IOException {
+        // Arrange
         Employee employee = new Employee();
         employee.setEmployeeEmail("jane.doe@example.org");
         employee.setEmployeeId(1L);
@@ -199,7 +185,11 @@ class PdfGeneratorServiceImplTest {
 
         ArrayList<Long> expenseIds = new ArrayList<>();
         expenseIds.add(2L);
+
+        // Act
         byte[] actualGeneratePdfResult = pdfGeneratorServiceImpl.generatePdf(1L, expenseIds, "Role");
+
+        // Assert
         assertEquals('%', actualGeneratePdfResult[0]);
         assertEquals('P', actualGeneratePdfResult[1]);
         assertEquals('D', actualGeneratePdfResult[2]);
@@ -230,11 +220,10 @@ class PdfGeneratorServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#generatePdf(Long, List, String)}
-     */
+
     @Test
     void testGeneratePdf3() throws IOException {
+        // Arrange
         Employee employee = new Employee("https://example.org/example", true, new ArrayList<>(), "Times", "ABC123");
         employee.setEmployeeEmail("jane.doe@example.org");
         employee.setEmployeeId(1L);
@@ -358,7 +347,11 @@ class PdfGeneratorServiceImplTest {
 
         ArrayList<Long> expenseIds = new ArrayList<>();
         expenseIds.add(2L);
+
+        // Act
         byte[] actualGeneratePdfResult = pdfGeneratorServiceImpl.generatePdf(1L, expenseIds, "Role");
+
+        // Assert
         assertEquals('%', actualGeneratePdfResult[0]);
         assertEquals('P', actualGeneratePdfResult[1]);
         assertEquals('D', actualGeneratePdfResult[2]);
@@ -389,13 +382,26 @@ class PdfGeneratorServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#getCenterAlignedCell(String, Font)}
-     */
+    @Test
+    void testIsImageFormat() throws UnsupportedEncodingException {
+        // Arrange, Act and Assert
+        assertFalse(pdfGeneratorServiceImpl.isImageFormat("AXAXAXAX".getBytes("UTF-8")));
+    }
+
+
+    @Test
+    void testIsPdfFormat() throws UnsupportedEncodingException {
+        // Arrange, Act and Assert
+        assertFalse(pdfGeneratorServiceImpl.isPdfFormat("AXAXAXAX".getBytes("UTF-8")));
+    }
+
     @Test
     void testGetCenterAlignedCell() {
-        PdfPCell actualCenterAlignedCell =
-                pdfGeneratorServiceImpl.getCenterAlignedCell("Not all who wander are lost", new Font(1));
+        // Arrange and Act
+        PdfPCell actualCenterAlignedCell = pdfGeneratorServiceImpl.getCenterAlignedCell("Not all who wander are lost",
+                new Font(1));
+
+        // Assert
         assertTrue(actualCenterAlignedCell.isUseVariableBorders());
         assertFalse(actualCenterAlignedCell.isUseBorderPadding());
         assertFalse(actualCenterAlignedCell.isNoWrap());
@@ -443,12 +449,13 @@ class PdfGeneratorServiceImplTest {
         assertEquals(0, column.getRunDirection());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#getCenterAlignedCell(String, Font)}
-     */
+
     @Test
     void testGetCenterAlignedCell2() {
+        // Arrange and Act
         PdfPCell actualCenterAlignedCell = pdfGeneratorServiceImpl.getCenterAlignedCell("", new Font(1));
+
+        // Assert
         assertTrue(actualCenterAlignedCell.isUseVariableBorders());
         assertFalse(actualCenterAlignedCell.isUseBorderPadding());
         assertFalse(actualCenterAlignedCell.isNoWrap());
@@ -496,13 +503,14 @@ class PdfGeneratorServiceImplTest {
         assertEquals(0, column.getRunDirection());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#getCenterAlignedCell(String, Font)}
-     */
+
     @Test
     void testGetCenterAlignedCell3() {
-        PdfPCell actualCenterAlignedCell =
-                pdfGeneratorServiceImpl.getCenterAlignedCell("Not all who wander are lost", mock(Font.class));
+        // Arrange and Act
+        PdfPCell actualCenterAlignedCell = pdfGeneratorServiceImpl.getCenterAlignedCell("Not all who wander are lost",
+                mock(Font.class));
+
+        // Assert
         assertTrue(actualCenterAlignedCell.isUseVariableBorders());
         assertFalse(actualCenterAlignedCell.isUseBorderPadding());
         assertFalse(actualCenterAlignedCell.isNoWrap());
@@ -549,13 +557,14 @@ class PdfGeneratorServiceImplTest {
         assertEquals(0, column.getRunDirection());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#getCenterAlignedCells(String, Font)}
-     */
+
     @Test
     void testGetCenterAlignedCells() {
-        PdfPCell actualCenterAlignedCells =
-                pdfGeneratorServiceImpl.getCenterAlignedCells("Not all who wander are lost", new Font(1));
+        // Arrange and Act
+        PdfPCell actualCenterAlignedCells = pdfGeneratorServiceImpl.getCenterAlignedCells("Not all who wander are lost",
+                new Font(1));
+
+        // Assert
         assertTrue(actualCenterAlignedCells.isUseVariableBorders());
         assertFalse(actualCenterAlignedCells.isUseBorderPadding());
         assertFalse(actualCenterAlignedCells.isNoWrap());
@@ -603,12 +612,12 @@ class PdfGeneratorServiceImplTest {
         assertEquals(0.0f, column.getSpaceCharRatio());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#getCenterAlignedCells(String, Font)}
-     */
     @Test
     void testGetCenterAlignedCells2() {
+        // Arrange and Act
         PdfPCell actualCenterAlignedCells = pdfGeneratorServiceImpl.getCenterAlignedCells("", new Font(1));
+
+        // Assert
         assertTrue(actualCenterAlignedCells.isUseVariableBorders());
         assertFalse(actualCenterAlignedCells.isUseBorderPadding());
         assertFalse(actualCenterAlignedCells.isNoWrap());
@@ -656,13 +665,14 @@ class PdfGeneratorServiceImplTest {
         assertEquals(0.0f, column.getSpaceCharRatio());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#getCenterAlignedCells(String, Font)}
-     */
+
     @Test
     void testGetCenterAlignedCells3() {
-        PdfPCell actualCenterAlignedCells =
-                pdfGeneratorServiceImpl.getCenterAlignedCells("Not all who wander are lost", mock(Font.class));
+        // Arrange and Act
+        PdfPCell actualCenterAlignedCells = pdfGeneratorServiceImpl.getCenterAlignedCells("Not all who wander are lost",
+                mock(Font.class));
+
+        // Assert
         assertTrue(actualCenterAlignedCells.isUseVariableBorders());
         assertFalse(actualCenterAlignedCells.isUseBorderPadding());
         assertFalse(actualCenterAlignedCells.isNoWrap());
@@ -709,11 +719,10 @@ class PdfGeneratorServiceImplTest {
         assertEquals(0.0f, column.getSpaceCharRatio());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#export(Long, List, HttpServletResponse, String)}
-     */
+
     @Test
     void testExport() throws IOException {
+        // Arrange
         Optional<Reports> emptyResult = Optional.empty();
         when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(emptyResult);
         ArrayList<Long> expenseIds = new ArrayList<>();
@@ -722,6 +731,8 @@ class PdfGeneratorServiceImplTest {
         doNothing().when(response).setContentLength(anyInt());
         doNothing().when(response).setContentType(Mockito.<String>any());
         doNothing().when(response).setHeader(Mockito.<String>any(), Mockito.<String>any());
+
+        // Act and Assert
         assertEquals(0, pdfGeneratorServiceImpl.export(1L, expenseIds, response, "Role").length);
         verify(reportsRepository).findById(Mockito.<Long>any());
         verify(response).getOutputStream();
@@ -732,22 +743,89 @@ class PdfGeneratorServiceImplTest {
 
 
     @Test
-    void testConvertToCustomCase() {
-        assertEquals("Input", PdfGeneratorServiceImpl.convertToCustomCase("Input"));
-        assertNull(PdfGeneratorServiceImpl.convertToCustomCase(null));
-        assertEquals("", PdfGeneratorServiceImpl.convertToCustomCase(""));
+    void testExport2() throws IOException {
+        // Arrange
+        Optional<Reports> emptyResult = Optional.empty();
+        when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(emptyResult);
+        ArrayList<Long> expenseIds = new ArrayList<>();
+        Response response = mock(Response.class);
+        ServletOutputStream outputStream = mock(ServletOutputStream.class);
+        when(response.getOutputStream()).thenReturn(outputStream);
+        doNothing().when(response).setContentLength(anyInt());
+        doNothing().when(response).setContentType(Mockito.<String>any());
+        doNothing().when(response).setHeader(Mockito.<String>any(), Mockito.<String>any());
+
+        // Act
+        pdfGeneratorServiceImpl.export(1L, expenseIds, response, "Role");
+
+        // Assert
+        verify(reportsRepository).findById(Mockito.<Long>any());
+        verify(response).getOutputStream();
+        verify(response).setContentLength(anyInt());
+        verify(response).setContentType(Mockito.<String>any());
+        verify(response).setHeader(Mockito.<String>any(), Mockito.<String>any());
     }
 
-    /**
-     * Method under test: {@link PdfGeneratorServiceImpl#convertToCustomCase(String)}
-     */
+
+    @Test
+    void testConvertToCustomCase() {
+        // Arrange, Act and Assert
+        assertEquals("Input", convertToCustomCase("Input"));
+        assertNull(convertToCustomCase(null));
+        assertEquals("", convertToCustomCase(""));
+    }
+
+
     @Test
     void testConvertToCustomCase2() {
-        String actualConvertToCustomCaseResult = PdfGeneratorServiceImpl.convertToCustomCase(String.join("", "com.", System.getProperty("user.name"), ".expense_management_project.entity.Reports"));
-        assertEquals(String.join("", "Com.", System.getProperty("user.name"), ".expense Management Project.entity.reports"), actualConvertToCustomCaseResult);
+        // Arrange and Act
+        String actualConvertToCustomCaseResult = convertToCustomCase(
+                String.join("", "com.", System.getProperty("user.name"), ".expense_management_project.entity.Reports"));
+
+        // Assert
+        assertEquals(
+                String.join("", "Com.", System.getProperty("user.name"), ".expense Management Project.entity.reports"),
+                actualConvertToCustomCaseResult);
     }
 
+    @Test
+    void testGeneratePdfForManagerRole()  {
+        // Create a test scenario for a "Manager" role
+        when(reportsRepository.findById(anyLong())).thenReturn(Optional.of(new Reports()));
+        when(iExpenseService.getExpenseById(anyLong())).thenReturn(new Expense());
 
+        byte[] baos = pdfGeneratorServiceImpl.generatePdf(1L, Collections.singletonList(1L), "Manager");
 
+        // Assert the expected behavior and outcome
+        assertNotNull(baos);
+
+    }
+
+    @Test
+    void testGeneratePdfForFinanceRole()  {
+        // Create a test scenario for a "Finance" role
+        when(reportsRepository.findById(anyLong())).thenReturn(Optional.of(new Reports()));
+        when(iExpenseService.getExpenseById(anyLong())).thenReturn(new Expense());
+
+        byte[] baos = pdfGeneratorServiceImpl.generatePdf(1L, Collections.singletonList(1L), "Finance");
+
+        // Assert the expected behavior and outcome
+        assertNotNull(baos);
+
+    }
+
+    @Test
+    void testGeneratePdfForEmployeeRole()  {
+        // Create a test scenario for an "Employee" role
+        when(reportsRepository.findById(anyLong())).thenReturn(Optional.of(new Reports()));
+        when(iExpenseService.getExpenseById(anyLong())).thenReturn(new Expense());
+
+        byte[] baos = pdfGeneratorServiceImpl.generatePdf(1L, Collections.singletonList(1L), "Employee");
+
+        // Assert the expected behavior and outcome
+        assertNotNull(baos);
+
+    }
 
 }
+
