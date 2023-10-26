@@ -1,12 +1,13 @@
 package com.nineleaps.expense_management_project.config;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,41 +25,57 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull  FilterChain chain)
             throws ServletException, IOException {
         String servletPath = request.getServletPath();
-        if(servletPath.equals("/theProfile") || servletPath.equals("/regenerateToken")){
-            chain.doFilter(request,response);
-        }else{
-            String header = request.getHeader("Authorization");
-            if (header != null && header.startsWith("Bearer ")) {
-                String token = header.substring(7);
-                if (jwtUtil.validateToken(token) && !jwtUtil.isAccessTokenExpired(token))
-                {
-                    Claims claims = jwtUtil.getClaimsFromToken(token);
-                    String emailId = claims.getSubject();
-                    String role = (String) claims.get("Role");
-                    if (role != null && !role.isEmpty())
-                    {
-                        List<GrantedAuthority> authorities = new ArrayList<>();
-                        authorities.add(new SimpleGrantedAuthority(role));
-                        Authentication authentication = new UsernamePasswordAuthenticationToken(emailId, null, authorities);
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                    }
-                    chain.doFilter(request, response);
-                }
-                else
-                {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Access token Expired");
-                }
-
-
-            }else{
-               response.sendError(HttpServletResponse.SC_FORBIDDEN,"header was null");
-            }
-
+        if (isPublicPath(servletPath)) {
+            chain.doFilter(request, response);
+        } else {
+            handleAuthorizationHeader(request, response, chain);
         }
     }
+
+    private boolean isPublicPath(String servletPath) {
+        return servletPath.equals("/theProfile") || servletPath.equals("/regenerateToken");
+    }
+
+    private void handleAuthorizationHeader(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            if (isValidToken(token)) {
+                Claims claims = jwtUtil.getClaimsFromToken(token);
+                String emailId = claims.getSubject();
+                String role = (String) claims.get("Role");
+                if (isValidRole(role)) {
+                    Authentication authentication = createAuthentication(emailId, role);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    chain.doFilter(request, response);
+                } else {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access token Expired");
+                }
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access token Expired");
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Header was null");
+        }
+    }
+
+    private boolean isValidToken(String token) {
+        return jwtUtil.validateToken(token) && !jwtUtil.isAccessTokenExpired(token);
+    }
+
+    private boolean isValidRole(String role) {
+        return role != null && !role.isEmpty();
+    }
+
+    private Authentication createAuthentication(String emailId, String role) {
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+        return new UsernamePasswordAuthenticationToken(emailId, null, authorities);
+    }
+
 
 
 }

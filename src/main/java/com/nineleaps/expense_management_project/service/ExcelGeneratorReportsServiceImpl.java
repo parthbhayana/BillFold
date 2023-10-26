@@ -66,9 +66,7 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
         byte[] excelBytes = excelStream.toByteArray();
 
         Employee financeAdmin = employeeRepository.findByRole("FINANCE_ADMIN");
-        if (financeAdmin == null) {
-            throw new IllegalStateException("Finance admin cannot be found. So, Email can't be sent");
-        }
+
 
         boolean emailSent = sendEmailWithAttachment(financeAdmin.getEmployeeEmail(), "BillFold:Excel Report",
                 "Please find the attached Excel report.", excelBytes, "report.xls");
@@ -83,29 +81,22 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
     @Override
     public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate,
                               StatusExcel status, List<Reports> reportlist) throws Exception{
-
         try (HSSFWorkbook workbook = new HSSFWorkbook()) {
             HSSFSheet sheet = workbook.createSheet("Billfold_All_reports");
-
-
             HSSFRow headerRow = sheet.createRow(0);
             for (int i = 0; i < COLUMN_HEADERS.length; i++) {
                 headerRow.createCell(i).setCellValue(COLUMN_HEADERS[i]);
             }
-
             int dataRowIndex = 1;
             int sl = 1;
-
             for (Reports report : reportlist) {
                 if (status == StatusExcel.ALL || (status == StatusExcel.PENDING && report.getFinanceApprovalStatus() == FinanceApprovalStatus.PENDING)
                         || (status == StatusExcel.REIMBURSED && report.getFinanceApprovalStatus() == FinanceApprovalStatus.REIMBURSED)) {
-
                     HSSFRow dataRow = sheet.createRow(dataRowIndex);
                     dataRow.createCell(0).setCellValue(sl);
                     dataRow.createCell(1).setCellValue(report.getEmployeeMail());
                     Long id = report.getReportId();
                     List<Expense> expenseList = expenseService.getExpenseByReportId(id);
-
                     if (!expenseList.isEmpty()) {
                         Expense expense = expenseList.get(0);
                         Employee employee = expense.getEmployee();
@@ -117,7 +108,6 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
                         LocalDate submittedDate = report.getDateSubmitted();
                         String monthName = submittedDate.getMonth().toString();
                         dataRow.createCell(7).setCellValue(monthName);
-
                         LocalDate managerActionDate = report.getManagerActionDate();
                         if (managerActionDate != null) {
                             dataRow.createCell(8).setCellValue(managerActionDate.toString());
@@ -125,13 +115,11 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
                         dataRow.createCell(9).setCellValue(employee.getManagerEmail());
                         dataRow.createCell(10).setCellValue(report.getTotalAmount());
                         dataRow.createCell(11).setCellValue(String.valueOf(report.getFinanceApprovalStatus()));
-
                         dataRowIndex++;
                         sl++;
                     }
                 }
             }
-
             workbook.write(excelStream);
         }
     }
@@ -170,9 +158,6 @@ public class ExcelGeneratorReportsServiceImpl implements IExcelGeneratorReportsS
         byte[] excelBytes = excelStream.toByteArray();
 
         Employee financeAdmin = employeeRepository.findByRole("FINANCE_ADMIN");
-        if (financeAdmin == null) {
-            throw new IllegalStateException("Finance admin cannot be found. So, Email can't be sent");
-        }
 
         boolean emailSent = sendEmailWithAttachment(financeAdmin.getEmployeeEmail(), "BillFold:Excel Report",
                 "Please find the attached Excel report.", excelBytes, "report.xls");

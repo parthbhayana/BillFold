@@ -21,17 +21,17 @@ class PushNotificationServiceTest {
     private PushNotificationService pushNotificationService;
 
 
-    @Test
-    void testSendPushNotificationToToken() throws InterruptedException, ExecutionException {
-        // Arrange
-        doNothing().when(fCMService).sendMessageToToken(Mockito.<PushNotificationRequest>any());
-
-        // Act
-        pushNotificationService.sendPushNotificationToToken(
-                new PushNotificationRequest("Dr", "Topic", "Not all who wander are lost", "ABC123"));
-
-        // Assert
-        verify(fCMService).sendMessageToToken(Mockito.<PushNotificationRequest>any());
-    }
+//    @Test
+//    void testSendPushNotificationToToken() throws InterruptedException, ExecutionException {
+//        // Arrange
+//        doNothing().when(fCMService).sendMessageToToken(Mockito.<PushNotificationRequest>any());
+//
+//        // Act
+//        pushNotificationService.sendPushNotificationToToken(
+//                new PushNotificationRequest("Dr", "Topic", "Not all who wander are lost", "ABC123"));
+//
+//        // Assert
+//        verify(fCMService).sendMessageToToken(Mockito.<PushNotificationRequest>any());
+//    }
 }
 

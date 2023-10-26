@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.nineleaps.expense_management_project.service.PdfGeneratorServiceImplTest
--------------------------------------------------------------------------------
-Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.527 s - in com.nineleaps.expense_management_project.service.PdfGeneratorServiceImplTest

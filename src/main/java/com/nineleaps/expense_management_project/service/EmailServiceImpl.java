@@ -72,8 +72,6 @@ public class EmailServiceImpl implements IEmailService {
                     + "CONTENT HERE!!"
                     + CONSTANT3 + CONSTANT10);
             javaMailSender.send(message);
-        } else {
-            throw new IllegalStateException(CONSTANT12);
         }
     }
 
@@ -90,8 +88,6 @@ public class EmailServiceImpl implements IEmailService {
                     + "CONTENT HERE!!"
                     + CONSTANT3 + CONSTANT10);
             javaMailSender.send(message);
-        } else {
-            throw new IllegalStateException(CONSTANT12);
         }
     }
 

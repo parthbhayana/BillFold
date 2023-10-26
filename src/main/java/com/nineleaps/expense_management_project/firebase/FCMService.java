@@ -15,19 +15,19 @@ import com.google.gson.GsonBuilder;
 
 @Service
 public class FCMService {
-	Logger logger = LoggerFactory.getLogger(FCMService.class);
+//	Logger logger = LoggerFactory.getLogger(FCMService.class);
 
-	public void sendMessageToToken(PushNotificationRequest request) throws InterruptedException, ExecutionException {
-		Message message = getPreconfiguredMessageToToken(request);
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String jsonOutput = gson.toJson(message);
-		String response = sendAndGetResponse(message);
-		logger.info("Sent message to token. Device token: {}, {} msg {}", request.getToken(), response, jsonOutput);
-	}
-
-	String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
-		return FirebaseMessaging.getInstance().sendAsync(message).get();
-	}
+//	public void sendMessageToToken(PushNotificationRequest request) throws InterruptedException, ExecutionException {
+//		Message message = getPreconfiguredMessageToToken(request);
+//		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//		String jsonOutput = gson.toJson(message);
+//		String response = sendAndGetResponse(message);
+//		logger.info("Sent message to token. Device token: {}, {} msg {}", request.getToken(), response, jsonOutput);
+//	}
+//
+//	String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
+//		return FirebaseMessaging.getInstance().sendAsync(message).get();
+//	}
 
 	AndroidConfig getAndroidConfig(String topic) {
 		return AndroidConfig.builder().setTtl(Duration.ofMinutes(2).toMillis()).setCollapseKey(topic)

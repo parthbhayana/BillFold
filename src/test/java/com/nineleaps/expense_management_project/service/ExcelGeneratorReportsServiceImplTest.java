@@ -37,12 +37,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ContextConfiguration(classes = {ExcelGeneratorReportsServiceImpl.class})
 @ExtendWith(SpringExtension.class)
-class ExcelGeneratorReportsServiceImplTest {
+public class ExcelGeneratorReportsServiceImplTest {
     @MockBean
     private EmployeeRepository employeeRepository;
 

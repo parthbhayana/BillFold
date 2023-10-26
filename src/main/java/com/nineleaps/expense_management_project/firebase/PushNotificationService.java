@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PushNotificationService {
 
-	Logger logger = LoggerFactory.getLogger(PushNotificationService.class);
+//	Logger logger = LoggerFactory.getLogger(PushNotificationService.class);
 
 	private final FCMService fcmService;
 
@@ -15,13 +15,12 @@ public class PushNotificationService {
 		this.fcmService = fcmService;
 	}
 
-	public void sendPushNotificationToToken(PushNotificationRequest request) {
-		try {
-			fcmService.sendMessageToToken(request);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
+//	public void sendPushNotificationToToken(PushNotificationRequest request) {
+//		try {
+//			fcmService.sendMessageToToken(request);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//		}
 	}
 
 
-}

@@ -382,18 +382,18 @@ class PdfGeneratorServiceImplTest {
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    @Test
-    void testIsImageFormat() throws UnsupportedEncodingException {
-        // Arrange, Act and Assert
-        assertFalse(pdfGeneratorServiceImpl.isImageFormat("AXAXAXAX".getBytes("UTF-8")));
-    }
-
-
-    @Test
-    void testIsPdfFormat() throws UnsupportedEncodingException {
-        // Arrange, Act and Assert
-        assertFalse(pdfGeneratorServiceImpl.isPdfFormat("AXAXAXAX".getBytes("UTF-8")));
-    }
+//    @Test
+//    void testIsImageFormat() throws UnsupportedEncodingException {
+//        // Arrange, Act and Assert
+//        assertFalse(pdfGeneratorServiceImpl.isImageFormat("AXAXAXAX".getBytes("UTF-8")));
+//    }
+//
+//
+//    @Test
+//    void testIsPdfFormat() throws UnsupportedEncodingException {
+//        // Arrange, Act and Assert
+//        assertFalse(pdfGeneratorServiceImpl.isPdfFormat("AXAXAXAX".getBytes("UTF-8")));
+//    }
 
     @Test
     void testGetCenterAlignedCell() {

@@ -250,24 +250,7 @@ public class PdfGeneratorServiceImpl implements IPdfGeneratorService {
         return new byte[0];
     }
 
-    boolean isImageFormat(byte[] data) {
-        try {
-            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(data));
-            return bufferedImage != null;
-        } catch (IOException e) {
-            return false;
-        }
-    }
 
-    boolean isPdfFormat(byte[] data) {
-        try {
-            PdfReader pdfReader = new PdfReader(data);
-            pdfReader.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
 
     @Override
     public PdfPCell getCenterAlignedCell(String content, Font font) {

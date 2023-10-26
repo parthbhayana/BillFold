@@ -76,7 +76,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
         }
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
     public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate,
                               LocalDate endDate) throws Exception {
@@ -113,39 +113,11 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
             dataRowIndex++;
         }
 
-        dataRowIndex = 1;
-        for (Category category : categories) {
-            HSSFRow dataRow = sheet.getRow(dataRowIndex);
-            String categoryName = category.getCategoryDescription();
 
-            if (categoryAmountMap.containsKey(categoryName)) {
-                Double totalAmount = categoryAmountMap.get(categoryName);
-
-                // Check if totalAmountSum is not zero before performing the division
-                if (totalAmountSum != 0.0) {
-                    double percentage = (totalAmount / totalAmountSum) * 100;
-                    dataRow.createCell(3).setCellValue(percentage);
-                } else {
-                    // Handle the case when totalAmountSum is zero, e.g., avoid division by zero
-                    dataRow.createCell(3).setCellValue(0.0f);
-                }
-            } else {
-                dataRow.createCell(3).setCellValue(0.0f);
-            }
-            dataRowIndex++;
-        }
 
 
         @SuppressWarnings("rawtypes") DefaultPieDataset dataset = new DefaultPieDataset();
-        for (Category category : categories) {
-            String categoryName = category.getCategoryDescription();
-            if (categoryAmountMap.containsKey(categoryName)) {
-                Double totalAmount = categoryAmountMap.get(categoryName);
-                dataset.setValue(categoryName, totalAmount);
-            } else {
-                dataset.setValue(categoryName, 0.0f);
-            }
-        }
+
 
         JFreeChart chart = ChartFactory.createPieChart("Category Wise Expense Analytics", dataset, true, true, false);
         @SuppressWarnings("rawtypes") PiePlot plot = (PiePlot) chart.getPlot();

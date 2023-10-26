@@ -3,8 +3,13 @@ package com.nineleaps.expense_management_project.config;
 import javax.servlet.http.*;
 import java.security.SecureRandom;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
@@ -18,6 +23,9 @@ public class JwtUtil {
     private static final String SECRET_KEY = generateRandomSecretKey();
     public static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 10;
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 30;
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+
 
     private static String generateRandomSecretKey() {
         SecureRandom secureRandom = new SecureRandom();
@@ -35,13 +43,15 @@ public class JwtUtil {
 
     public ResponseEntity<TokenResponse> generateTokens(String emailId, Long employeeId,  String role,
                                                         HttpServletResponse response) {
+
+
         String accessToken = generateToken(emailId, employeeId, role, ACCESS_TOKEN_EXPIRATION_TIME);
         String refreshToken = generateToken(emailId, employeeId, role, REFRESH_TOKEN_EXPIRATION_TIME);
 
         response.setHeader("Access_Token", accessToken);
         response.setHeader("Refresh_Token", refreshToken);
-        System.out.println("refresh token generated   "+refreshToken);
-        System.out.println("Access token generated   "+accessToken);
+        logger.info("Refresh token generated: {}", refreshToken);
+        logger.info("Access token generated: {}", accessToken);
 
         TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
         return ResponseEntity.ok(tokenResponse);
@@ -106,8 +116,8 @@ public class JwtUtil {
         Date expirationDate = decodedJWT.getExpiresAt();
         return expirationDate.before(new Date());
     }
-    public boolean isAccessTokenExpired(String AccessToken){
-        DecodedJWT decodedJWT = JWT.decode(AccessToken);
+    public boolean isAccessTokenExpired(String accessToken) {
+        DecodedJWT decodedJWT = JWT.decode(accessToken);
         Date expirationDate = decodedJWT.getExpiresAt();
         return expirationDate.before(new Date());
     }

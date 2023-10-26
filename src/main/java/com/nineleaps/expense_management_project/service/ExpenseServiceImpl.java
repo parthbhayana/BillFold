@@ -182,7 +182,6 @@ public class ExpenseServiceImpl implements IExpenseService {
             throw new IllegalStateException("Expense " + expenseId + " does not exist!");
         }
 
-
         return expenseRepository.save(expense);
     }
 

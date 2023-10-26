@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.nineleaps.expense_management_project.controller.UserControllerTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.034 s - in com.nineleaps.expense_management_project.controller.UserControllerTest

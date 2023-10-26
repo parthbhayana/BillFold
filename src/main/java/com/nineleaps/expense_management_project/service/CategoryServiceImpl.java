@@ -229,11 +229,6 @@ public class CategoryServiceImpl implements ICategoryService {
 	public HashMap<String, Object> getCategoryAnalyticsYearly(Long categoryId) {
 		HashMap<String, Object> analyticsData = new HashMap<>();
 
-		Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-		if (optionalCategory.isPresent()) {
-			optionalCategory.get();
-		}
-
         Map<String, Double> categoryTotalAmountByYear = getCategoryTotalAmountByYearAndCategory(categoryId);
         HashMap<String, Double> yearlyReimbursementRatio = getYearlyReimbursementRatio(categoryId);
 

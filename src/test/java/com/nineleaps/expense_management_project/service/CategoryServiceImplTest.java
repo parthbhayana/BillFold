@@ -14,6 +14,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
+
+import static com.nineleaps.expense_management_project.service.ReportsServiceImpl.CONSTANT1;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
@@ -850,6 +852,37 @@ class CategoryServiceImplTest {
 
         // Assert the exception message
         assertEquals("Category with ID 1 not found", exception.getMessage());
+    }
+
+    @Test
+    void testGetYearlyReimbursementRatioForAllCategories1() {
+        // Arrange
+        Expense expense1 = new Expense();
+        expense1.setDate(LocalDate.of(2022, 1, 10));  // January 2022
+        expense1.setAmountApproved(50.0);
+
+        Expense expense2 = new Expense();
+        expense2.setDate(LocalDate.of(2022, 1, 15));  // January 2022
+        expense2.setAmountApproved(75.0);
+
+        Expense expense3 = new Expense();
+        expense3.setDate(LocalDate.of(2022, 2, 20));  // February 2022
+        expense3.setAmountApproved(100.0);
+
+        when(expenseRepository.findByIsReportedAndIsHidden(true, false))
+                .thenReturn(Arrays.asList(expense1, expense2, expense3));
+
+        // Act
+        HashMap<String, Double> result = categoryService.getYearlyReimbursementRatioForAllCategories();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertEquals(225.0, result.get("2022"));
+
+
+        // Verify that necessary methods were called
+        verify(expenseRepository, times(1)).findByIsReportedAndIsHidden(true, false);
     }
 
 
