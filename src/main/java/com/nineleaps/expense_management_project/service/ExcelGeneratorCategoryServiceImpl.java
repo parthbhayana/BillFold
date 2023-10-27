@@ -45,6 +45,9 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
     private EmployeeRepository employeeRepository;
 
     @Autowired
+    private IExcelGeneratorReportsService iExcelGeneratorReportsService;
+
+    @Autowired
     private JavaMailSender mailSender;
 
     private static final int CHART_IMAGE_WIDTH = 640;
@@ -67,7 +70,8 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 
         Employee financeadmin = employeeRepository.findByRole("FINANCE_ADMIN");
 
-        boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
+        boolean emailsent = iExcelGeneratorReportsService.sendEmailWithAttachment(financeadmin.getEmployeeEmail(),
+                "BillFold:Excel Report",
                 "Please find the " + "attached Excel report.", excelBytes, "report.xls");
         if (emailsent) {
             return "Email sent successfully!";
@@ -160,26 +164,26 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 
     }
 
-    @Override
-    public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
-                                           String attachmentFilename) {
-
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo(toEmail);
-            helper.setSubject(subject);
-            helper.setText(body);
-
-            DataSource attachment = new ByteArrayDataSource(attachmentContent, "application/vnd.ms-excel");
-            helper.addAttachment(attachmentFilename, attachment);
-
-            mailSender.send(message);
-
-            return true;
-
-        } catch (Exception e) {
-            return false;
-        }
-    }
+//    @Override
+//    public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
+//                                           String attachmentFilename) {
+//
+//        try {
+//            MimeMessage message = mailSender.createMimeMessage();
+//            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//            helper.setTo(toEmail);
+//            helper.setSubject(subject);
+//            helper.setText(body);
+//
+//            DataSource attachment = new ByteArrayDataSource(attachmentContent, "application/vnd.ms-excel");
+//            helper.addAttachment(attachmentFilename, attachment);
+//
+//            mailSender.send(message);
+//
+//            return true;
+//
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
 }

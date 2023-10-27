@@ -12,18 +12,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.catalina.connector.Response;
 import org.junit.Assert;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import com.nineleaps.expense_management_project.repository.ExpenseRepository;
 import com.nineleaps.expense_management_project.repository.ReportsRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockHttpServletResponse;
+
 import javax.mail.MessagingException;
+
 import static com.nineleaps.expense_management_project.service.ReportsServiceImpl.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -66,7 +72,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testGetAllReports() {
-        // Create a sample employee and a list of expenses with associated reports
         Employee employee = new Employee();
         employee.setEmployeeId(1L);
 
@@ -84,40 +89,28 @@ class ReportsServiceImplTest {
 
         List<Expense> expenses = Arrays.asList(expense1, expense2);
 
-        // Mock repository calls
         when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
-        when(expenseRepository.findByEmployeeAndIsHidden(employee, false, Sort.by(Sort.Direction.DESC, "dateCreated")))
-                .thenReturn(expenses);
+        when(expenseRepository.findByEmployeeAndIsHidden(employee, false,
+                Sort.by(Sort.Direction.DESC, "dateCreated"))).thenReturn(expenses);
 
         Set<Reports> result = reportsService.getAllReports(1L);
-
-        // Verify the result
-        assert(result.size() == 2);
-        assert(result.contains(reports1));
-        assert(result.contains(reports2));
+        assert (result.size() == 2);
+        assert (result.contains(reports1));
+        assert (result.contains(reports2));
     }
 
     @Test
     void testGetReportById() {
-        // Create a sample report
         Reports report = new Reports();
         report.setReportId(1L);
-
-        // Mock repository call
         when(reportsRepository.findById(1L)).thenReturn(Optional.of(report));
-
         Reports result = reportsService.getReportById(1L);
-
-        // Verify that the result matches the mocked report
         assertEquals(1L, result.getReportId());
     }
 
     @Test
     void testGetReportByIdReportNotFound() {
-        // Mock repository call that returns an empty Optional
         when(reportsRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // Verify that a RuntimeException is thrown with the expected message
         Exception exception = assertThrows(RuntimeException.class, () -> {
             reportsService.getReportById(1L);
         });
@@ -157,14 +150,9 @@ class ReportsServiceImplTest {
 
     @Test
     void testAddReportEmployeeNotFound() {
-        // Create a sample ReportsDTO
         ReportsDTO reportsDTO = new ReportsDTO();
         reportsDTO.setReportTitle("Test Report");
-
-        // Mock repository calls
         when(employeeService.getEmployeeById(1L)).thenReturn(null);
-
-        // Verify that an IllegalArgumentException is thrown
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             reportsService.addReport(reportsDTO, 1L, Collections.emptyList());
         });
@@ -175,16 +163,11 @@ class ReportsServiceImplTest {
 
     @Test
     void testEditReport_WhenReportAlreadySubmitted() {
-        // Mock data for a report that is already submitted
         Reports report = new Reports();
         report.setIsSubmitted(true);
         report.setIsHidden(false);
         report.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
-
-        // Mock behavior for the methods
         when(reportsRepository.findById(1L)).thenReturn(java.util.Optional.of(report));
-
-        // Execute the editReport method and expect an exception
         assertThrows(NullPointerException.class, () -> {
             reportsService.editReport(1L, "New Title", "Description", new ArrayList<>(), new ArrayList<>());
         });
@@ -192,16 +175,11 @@ class ReportsServiceImplTest {
 
     @Test
     void testEditReport_WhenReportIsHidden() {
-        // Mock data for a report that is hidden
         Reports report = new Reports();
         report.setIsSubmitted(false);
         report.setIsHidden(true);
         report.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
-
-        // Mock behavior for the methods
         when(reportsRepository.findById(1L)).thenReturn(java.util.Optional.of(report));
-
-        // Execute the editReport method and expect an exception
         assertThrows(NullPointerException.class, () -> {
             reportsService.editReport(1L, "New Title", "Description", new ArrayList<>(), new ArrayList<>());
         });
@@ -209,16 +187,11 @@ class ReportsServiceImplTest {
 
     @Test
     void testEditReport_WhenReportRejected() {
-        // Mock data for a report that is rejected
         Reports report = new Reports();
         report.setIsSubmitted(true);
         report.setIsHidden(false);
         report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-
-        // Mock behavior for the methods
         when(reportsRepository.findById(1L)).thenReturn(java.util.Optional.of(report));
-
-        // Execute the editReport method and expect an exception
         assertThrows(NullPointerException.class, () -> {
             reportsService.editReport(1L, "New Title", "Description", new ArrayList<>(), new ArrayList<>());
         });
@@ -226,7 +199,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testUpdateReportAndExpenseTitles() {
-        // Mock data for a report and expenses
         Reports report = new Reports();
         report.setReportId(1L);
         report.setReportTitle("Old Title");
@@ -235,56 +207,35 @@ class ReportsServiceImplTest {
         Expense expense1 = new Expense();
         expense1.setExpenseId(1L);
         expenses.add(expense1);
-
-        // Mock behavior for the methods
         when(reportsRepository.findById(1L)).thenReturn(java.util.Optional.of(report));
         when(expenseService.getExpenseByReportId(1L)).thenReturn(expenses);
-
-        // Execute the updateReportAndExpenseTitles method
         reportsService.updateReportAndExpenseTitles(1L, "New Title");
-
-        // Verify that the report and expense titles were updated
-
-//        verify(expenseRepository).save(expense1);
     }
 
     @Test
     void testAddExpensesToReport() {
-        // Mock data for an expense and report
         Expense expense = new Expense();
         expense.setExpenseId(1L);
         expense.setIsReported(false);
 
         Reports report = new Reports();
         report.setReportId(1L);
-
-        // Mock behavior for the methods
         when(expenseService.getExpenseById(1L)).thenReturn(expense);
-
-        // Execute the addExpensesToReport method
         reportsService.addExpensesToReport(1L, List.of(1L));
-
-        // Verify that the expense was added to the report
         verify(expenseService).updateExpense(1L, 1L);
     }
 
     @Test
     void testRemoveExpensesFromReport() {
-        // Mock data for an expense and report
         Expense expense = new Expense();
         expense.setExpenseId(1L);
         expense.setIsReported(true);
         expense.setReports(new Reports());
-
-        // Mock behavior for the methods
         when(expenseService.getExpenseById(1L)).thenReturn(expense);
-
-        // Execute the removeExpensesFromReport method
         reportsService.removeExpensesFromReport(List.of(1L));
-
-        // Verify that the expense is no longer reported in the report
         verify(expenseRepository).save(expense);
     }
+
     @Test
     void testGetReportByEmpId() {
         assertThrows(IllegalArgumentException.class, () -> reportsService.getReportByEmpId(1L, "Request"));
@@ -301,28 +252,34 @@ class ReportsServiceImplTest {
     @Test
     void testGetReportByEmpId3() {
         ArrayList<Reports> reportsList = new ArrayList<>();
-        when(reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Mockito.<Long>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenReturn(reportsList);
+        when(reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Mockito.<Long>any(),
+                Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenReturn(reportsList);
         List<Reports> actualReportByEmpId = reportsService.getReportByEmpId(1L, "drafts");
         assertSame(reportsList, actualReportByEmpId);
         assertTrue(actualReportByEmpId.isEmpty());
-        verify(reportsRepository).getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Mockito.<Long>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any());
+        verify(reportsRepository).getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Mockito.<Long>any(),
+                Mockito.<Boolean>any(), Mockito.<Boolean>any());
     }
 
     @Test
     void testGetReportByEmpId4() {
-        when(reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Mockito.<Long>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenThrow(new IllegalStateException("drafts"));
+        when(reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Mockito.<Long>any(),
+                Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenThrow(new IllegalStateException("drafts"));
         assertThrows(IllegalStateException.class, () -> reportsService.getReportByEmpId(1L, "drafts"));
-        verify(reportsRepository).getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Mockito.<Long>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any());
+        verify(reportsRepository).getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Mockito.<Long>any(),
+                Mockito.<Boolean>any(), Mockito.<Boolean>any());
     }
 
     @Test
     void testGetReportByEmpId5() {
         ArrayList<Reports> reportsList = new ArrayList<>();
-        when(reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(Mockito.<Long>any(), Mockito.<ManagerApprovalStatus>any(), anyBoolean())).thenReturn(reportsList);
+        when(reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(Mockito.<Long>any(),
+                Mockito.<ManagerApprovalStatus>any(), anyBoolean())).thenReturn(reportsList);
         List<Reports> actualReportByEmpId = reportsService.getReportByEmpId(1L, "rejected");
         assertSame(reportsList, actualReportByEmpId);
         assertTrue(actualReportByEmpId.isEmpty());
-        verify(reportsRepository).getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(Mockito.<Long>any(), Mockito.<ManagerApprovalStatus>any(), anyBoolean());
+        verify(reportsRepository).getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(Mockito.<Long>any(),
+                Mockito.<ManagerApprovalStatus>any(), anyBoolean());
     }
 
     @Test
@@ -330,19 +287,17 @@ class ReportsServiceImplTest {
         String managerEmail = "manager@example.com";
         String request = "approved";
 
-        when(reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(
-                managerEmail, ManagerApprovalStatus.APPROVED, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail,
+                ManagerApprovalStatus.APPROVED, true, false)).thenReturn(List.of(new Reports()));
 
-        when(reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(
-                managerEmail, ManagerApprovalStatus.PARTIALLY_APPROVED, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail,
+                ManagerApprovalStatus.PARTIALLY_APPROVED, true, false)).thenReturn(List.of(new Reports()));
 
-        // Act
+
         List<Reports> result = reportsService.getReportsSubmittedToUser(managerEmail, request);
 
-        // Assert
-        assertEquals(2, result.size()); // Ensure that the result contains both approved and partially approved reports
+
+        assertEquals(2, result.size());
     }
 
     @Test
@@ -350,15 +305,14 @@ class ReportsServiceImplTest {
         String managerEmail = "manager@example.com";
         String request = CONSTANT4;
 
-        when(reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsHidden(
-                managerEmail, ManagerApprovalStatus.REJECTED, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsHidden(managerEmail,
+                ManagerApprovalStatus.REJECTED, false)).thenReturn(List.of(new Reports()));
 
-        // Act
+
         List<Reports> result = reportsService.getReportsSubmittedToUser(managerEmail, request);
 
-        // Assert
-        assertEquals(1, result.size()); // Ensure that the result contains the rejected report
+
+        assertEquals(1, result.size());
     }
 
     @Test
@@ -366,20 +320,19 @@ class ReportsServiceImplTest {
         String managerEmail = "manager@example.com";
         String request = CONSTANT7;
 
-        when(reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(
-                managerEmail, ManagerApprovalStatus.PENDING, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerEmailAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail,
+                ManagerApprovalStatus.PENDING, true, false)).thenReturn(List.of(new Reports()));
 
-        // Act
+
         List<Reports> result = reportsService.getReportsSubmittedToUser(managerEmail, request);
 
-        // Assert
-        assertEquals(1, result.size()); // Ensure that the result contains the pending report
+
+        assertEquals(1, result.size());
     }
 
     @Test
     void testGetAllSubmittedReportsWithSubmittedReports() {
-        // Arrange
+
         Reports report1 = new Reports();
         report1.setIsSubmitted(true);
 
@@ -388,16 +341,16 @@ class ReportsServiceImplTest {
 
         when(reportsRepository.findAll()).thenReturn(Arrays.asList(report1, report2));
 
-        // Act
+
         List<Reports> result = reportsService.getAllSubmittedReports();
 
-        // Assert
-        assertEquals(2, result.size()); // Ensure that all submitted reports are in the result
+
+        assertEquals(2, result.size());
     }
 
     @Test
     void testGetAllSubmittedReportsWithNoSubmittedReports() {
-        // Arrange
+
         Reports report1 = new Reports();
         report1.setIsSubmitted(false);
 
@@ -406,112 +359,96 @@ class ReportsServiceImplTest {
 
         when(reportsRepository.findAll()).thenReturn(Arrays.asList(report1, report2));
 
-        // Act
+
         List<Reports> result = reportsService.getAllSubmittedReports();
 
-        // Assert
-        assertEquals(0, result.size()); // Ensure that there are no submitted reports in the result
+
+        assertEquals(0, result.size());
     }
 
     @Test
     void testGetAllSubmittedReportsWithEmptyReportsList() {
-        // Arrange
+
         when(reportsRepository.findAll()).thenReturn(Collections.emptyList());
 
-        // Act
+
         List<Reports> result = reportsService.getAllSubmittedReports();
 
-        // Assert
-        assertEquals(0, result.size()); // Ensure that there are no reports in the result
+
+        assertEquals(0, result.size());
     }
 
 
     @Test
     void testGetAllReportsApprovedByManagerApproved() {
-        // Arrange
+
         String request = CONSTANT5;
 
-        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
-                ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.APPROVED, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.APPROVED, true, false)).thenReturn(List.of(new Reports()));
 
-        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
-                ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.APPROVED, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.APPROVED, true, false)).thenReturn(List.of(new Reports()));
 
-        // Act
+
         List<Reports> result = reportsService.getAllReportsApprovedByManager(request);
 
-        // Assert
-        assertEquals(2, result.size()); // Ensure that the result contains both approved and partially approved reports
+
+        assertEquals(2, result.size());
     }
 
     @Test
     void testGetAllReportsApprovedByManagerRejected() {
-        // Arrange
+
         String request = CONSTANT4;
 
-        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
-                ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REJECTED, true, false)).thenReturn(List.of(new Reports()));
 
-        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
-                ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REJECTED, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REJECTED, true, false)).thenReturn(List.of(new Reports()));
 
-        // Act
+
         List<Reports> result = reportsService.getAllReportsApprovedByManager(request);
 
-        // Assert
-        assertEquals(2, result.size()); // Ensure that the result contains both approved and partially approved reports with rejected finance status
+
+        assertEquals(2, result.size());
     }
 
     @Test
     void testGetAllReportsApprovedByManagerPending() {
-        // Arrange
+
         String request = CONSTANT7;
 
-        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
-                ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.PENDING, true, false)).thenReturn(List.of(new Reports()));
 
-        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
-                ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.PENDING, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.PENDING, true, false)).thenReturn(List.of(new Reports()));
 
-        // Act
+
         List<Reports> result = reportsService.getAllReportsApprovedByManager(request);
 
-        // Assert
-        assertEquals(2, result.size()); // Ensure that the result contains both approved and partially approved reports with pending finance status
+
+        assertEquals(2, result.size());
     }
 
     @Test
     void testGetAllReportsApprovedByManagerReimbursed() {
-        // Arrange
+
         String request = "reimbursed";
 
-        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
-                ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.APPROVED, FinanceApprovalStatus.REIMBURSED, true, false)).thenReturn(List.of(new Reports()));
 
-        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(
-                ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REIMBURSED, true, false))
-                .thenReturn(List.of(new Reports()));
+        when(reportsRepository.findByManagerApprovalStatusAndFinanceApprovalStatusAndIsSubmittedAndIsHidden(ManagerApprovalStatus.PARTIALLY_APPROVED, FinanceApprovalStatus.REIMBURSED, true, false)).thenReturn(List.of(new Reports()));
 
-        // Act
+
         List<Reports> result = reportsService.getAllReportsApprovedByManager(request);
 
-        // Assert
-        assertEquals(2, result.size()); // Ensure that the result contains both approved and partially approved reports with reimbursed finance status
+
+        assertEquals(2, result.size());
     }
 
     @Test
     void testGetAllReportsApprovedByManagerDefault() {
-        // Arrange
+
         String request = "asdfghjk";
 
-        // Act and Assert (This should throw an IllegalArgumentException)
+
         assertThrows(IllegalArgumentException.class, () -> reportsService.getAllReportsApprovedByManager(request));
     }
 
@@ -519,7 +456,8 @@ class ReportsServiceImplTest {
     void testSubmitReport() throws IOException, MessagingException {
         Optional<Reports> emptyResult = Optional.empty();
         when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(emptyResult);
-        assertThrows(RuntimeException.class, () -> reportsService.submitReport(1L, "jane.doe@example.org", new Response()));
+        assertThrows(RuntimeException.class, () -> reportsService.submitReport(1L, "jane.doe@example.org",
+                new Response()));
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
@@ -587,7 +525,6 @@ class ReportsServiceImplTest {
         employee.setToken("ABC123");
         when(employeeService.getEmployeeById(Mockito.<Long>any())).thenReturn(employee);
         when(expenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
-        //doNothing().when(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
         Reports reports = mock(Reports.class);
         when(reports.getManagerApprovalStatus()).thenReturn(ManagerApprovalStatus.APPROVED);
         when(reports.getIsHidden()).thenReturn(false);
@@ -664,16 +601,12 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
         reportsService.rejectReportByFinance(1L, "Comments");
         verify(emailService).userRejectedByFinanceNotification(Mockito.<Long>any());
-        //verify(employeeService).getEmployeeById(Mockito.<Long>any());
-        //verify(expenseService).getExpenseByReportId(Mockito.<Long>any());
-        //verify(pushNotificationService).sendPushNotificationToToken(Mockito.<PushNotificationRequest>any());
         verify(reportsRepository).save(Mockito.<Reports>any());
         verify(reportsRepository).findById(Mockito.<Long>any());
         verify(reports).getManagerApprovalStatus();
         verify(reports, atLeast(1)).getIsHidden();
         verify(reports, atLeast(1)).getIsSubmitted();
         verify(reports).getEmployeeId();
-        //verify(reports).getReportTitle();
         verify(reports).setDateCreated(Mockito.<LocalDate>any());
         verify(reports).setDateSubmitted(Mockito.<LocalDate>any());
         verify(reports).setEmployeeId(Mockito.<Long>any());
@@ -697,7 +630,7 @@ class ReportsServiceImplTest {
         verify(reports).setTotalApprovedAmount(anyFloat());
     }
 
-   
+
     @Test
     void testRejectReportByFinance4() {
         Reports reports = mock(Reports.class);
@@ -748,7 +681,8 @@ class ReportsServiceImplTest {
         reports.setTotalAmount(10.0f);
         reports.setTotalApprovedAmount(10.0f);
         Optional<Reports> ofResult = Optional.of(reports);
-        when(reportsRepository.save(Mockito.<Reports>any())).thenThrow(new IllegalStateException("Accounts admin rejected your expense report."));
+        when(reportsRepository.save(Mockito.<Reports>any())).thenThrow(new IllegalStateException("Accounts admin " +
+                "rejected your expense report."));
         when(reportsRepository.findById(Mockito.<Long>any())).thenReturn(ofResult);
         assertThrows(IllegalStateException.class, () -> reportsService.rejectReportByFinance(1L, "Comments"));
         verify(reportsRepository).save(Mockito.<Reports>any());
@@ -782,7 +716,7 @@ class ReportsServiceImplTest {
 
     @Test
     void testTotalAmountReportFound() {
-        // Arrange
+
         Long reportId = 1L;
 
         Reports report = new Reports();
@@ -797,30 +731,30 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
         when(expenseRepository.findByReports(Optional.of(report))).thenReturn(expenses);
 
-        // Act
+
         float totalAmount = reportsService.totalAmount(reportId);
 
-        // Assert
+
         assertEquals(300.0f, totalAmount, 0.001f);
     }
 
     @Test
     void testTotalAmountReportNotFound() {
-        // Arrange
+
         Long reportId = 1L;
 
         when(reportsRepository.findById(reportId)).thenReturn(Optional.empty());
 
-        // Act
+
         float totalAmount = reportsService.totalAmount(reportId);
 
-        // Assert
+
         assertEquals(0.0f, totalAmount, 0.001f);
     }
 
     @Test
     void testTotalApprovedAmount() {
-        // Arrange
+
         Long reportId = 1L;
 
         Reports report = new Reports();
@@ -832,7 +766,7 @@ class ReportsServiceImplTest {
         Expense expense2 = new Expense();
         expense2.setAmountApproved(200.0);
 
-        Expense expense3 = new Expense(); // This expense is not approved
+        Expense expense3 = new Expense();
         expense3.setAmountApproved(null);
 
         List<Expense> expenses = Arrays.asList(expense1, expense2, expense3);
@@ -840,16 +774,16 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
         when(expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(report, true, false)).thenReturn(expenses);
 
-        // Act
+
         float totalApprovedAmount = reportsService.totalApprovedAmount(reportId);
 
-        // Assert
+
         assertEquals(0.0f, totalApprovedAmount, 0.001f);
     }
 
     @Test
     void testHideReport() {
-        // Arrange
+
         Long reportId = 1L;
 
         Reports report = new Reports();
@@ -874,10 +808,10 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(report));
         when(expenseService.getExpenseByReportId(reportId)).thenReturn(expenses);
 
-        // Act
+
         reportsService.hideReport(reportId);
 
-        // Assert
+
         assertTrue(report.getIsHidden());
 
         for (Expense expense : expenses) {
@@ -891,79 +825,75 @@ class ReportsServiceImplTest {
 
     @Test
     void testGetReportsInDateRangeApproved() {
-        // Arrange
+
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        when(reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(
-                startDate, endDate, FinanceApprovalStatus.APPROVED
-        )).thenReturn(new ArrayList<>());
+        when(reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(startDate, endDate,
+                FinanceApprovalStatus.APPROVED)).thenReturn(new ArrayList<>());
 
-        // Act
+
         List<Reports> reports = reportsService.getReportsInDateRange(startDate, endDate, "approved");
 
-        // Assert
+
         assertNotNull(reports);
     }
 
     @Test
     void testGetReportsInDateRangePending() {
-        // Arrange
+
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        when(reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(
-                startDate, endDate, FinanceApprovalStatus.PENDING
-        )).thenReturn(new ArrayList<>());
+        when(reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(startDate, endDate,
+                FinanceApprovalStatus.PENDING)).thenReturn(new ArrayList<>());
 
-        // Act
+
         List<Reports> reports = reportsService.getReportsInDateRange(startDate, endDate, "pending");
 
-        // Assert
+
         assertNotNull(reports);
     }
 
     @Test
     void testGetReportsInDateRangeReimbursed() {
-        // Arrange
+
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        when(reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(
-                startDate, endDate, FinanceApprovalStatus.REIMBURSED
-        )).thenReturn(new ArrayList<>());
+        when(reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(startDate, endDate,
+                FinanceApprovalStatus.REIMBURSED)).thenReturn(new ArrayList<>());
 
-        // Act
+
         List<Reports> reports = reportsService.getReportsInDateRange(startDate, endDate, "reimbursed");
 
-        // Assert
+
         assertNotNull(reports);
     }
 
     @Test
     void testGetReportsInDateRangeRejected() {
-        // Arrange
+
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        when(reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(
-                startDate, endDate, FinanceApprovalStatus.REJECTED
-        )).thenReturn(new ArrayList<>());
+        when(reportsRepository.findByDateSubmittedBetweenAndFinanceApprovalStatus(startDate, endDate,
+                FinanceApprovalStatus.REJECTED)).thenReturn(new ArrayList<>());
 
-        // Act
+
         List<Reports> reports = reportsService.getReportsInDateRange(startDate, endDate, "rejected");
 
-        // Assert
+
         assertNotNull(reports);
     }
 
     @Test
     void testGetReportsInDateRangeInvalidRequest() {
-        // Arrange
+
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        // Act and Assert (Use assertThrows)
+
         assertThrows(IllegalArgumentException.class, () -> {
             reportsService.getReportsInDateRange(startDate, endDate, "invalid_request");
         });
@@ -971,66 +901,61 @@ class ReportsServiceImplTest {
 
     @Test
     void testGetReportsSubmittedToUserInDateRangeApproved() {
-        // Arrange
+
         String managerEmail = "manager@example.com";
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        when(reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(
-                managerEmail, startDate, endDate, ManagerApprovalStatus.APPROVED, true, false
-        )).thenReturn(new ArrayList<>());
+        when(reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.APPROVED, true, false)).thenReturn(new ArrayList<>());
 
-        // Act
-        List<Reports> reports = reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, "approved");
 
-        // Assert
+        List<Reports> reports =
+                reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, "approved");
+
+
         assertNotNull(reports);
     }
 
     @Test
     void testGetReportsSubmittedToUserInDateRangeRejected() {
-        // Arrange
+
         String managerEmail = "manager@example.com";
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        when(reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(
-                managerEmail, startDate, endDate, ManagerApprovalStatus.REJECTED, true, false
-        )).thenReturn(new ArrayList<>());
+        when(reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.REJECTED, true, false)).thenReturn(new ArrayList<>());
 
-        // Act
-        List<Reports> reports = reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, "rejected");
 
-        // Assert
+        List<Reports> reports =
+                reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, "rejected");
+
+
         assertNotNull(reports);
     }
 
     @Test
     void testGetReportsSubmittedToUserInDateRangePending() {
-        // Arrange
+
         String managerEmail = "manager@example.com";
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        when(reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(
-                managerEmail, startDate, endDate, ManagerApprovalStatus.PENDING, true, false
-        )).thenReturn(new ArrayList<>());
+        when(reportsRepository.findByManagerEmailAndDateSubmittedBetweenAndManagerApprovalStatusAndIsSubmittedAndIsHidden(managerEmail, startDate, endDate, ManagerApprovalStatus.PENDING, true, false)).thenReturn(new ArrayList<>());
 
-        // Act
-        List<Reports> reports = reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, "pending");
 
-        // Assert
+        List<Reports> reports =
+                reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, "pending");
+
+
         assertNotNull(reports);
     }
 
     @Test
     void testGetReportsSubmittedToUserInDateRangeInvalidRequest() {
-        // Arrange
+
         String managerEmail = "mtftm";
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
-
-        // Act and Assert (Use assertThrows)
         assertThrows(IllegalArgumentException.class, () -> {
             reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, "invalid_request");
         });
@@ -1038,11 +963,9 @@ class ReportsServiceImplTest {
 
     @Test
     void testGetAmountOfReportsInDateRange() {
-        // AyourServicerrange
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
 
-        // Create a sample list of reports
         List<Reports> reports = new ArrayList<>();
         Reports report1 = new Reports();
         report1.setTotalAmount(100.0f);
@@ -1053,28 +976,23 @@ class ReportsServiceImplTest {
 
         when(reportsRepository.findByDateSubmittedBetween(startDate, endDate)).thenReturn(reports);
 
-        // Act
+
         String result = reportsService.getAmountOfReportsInDateRange(startDate, endDate);
 
-        // Assert
+
         assertEquals("300.0 INR", result);
     }
 
     @Test
     void testGetAmountOfReportsInDateRangeNoReports() {
-        // Arrange
+
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
-
-        // Create an empty list of reports
         List<Reports> reports = new ArrayList<>();
-
         when(reportsRepository.findByDateSubmittedBetween(startDate, endDate)).thenReturn(reports);
 
-        // Act
         String result = reportsService.getAmountOfReportsInDateRange(startDate, endDate);
 
-        // Assert
         assertEquals("0.0 INR", result);
     }
 
@@ -1107,14 +1025,16 @@ class ReportsServiceImplTest {
         ArrayList<Long> approveExpenseIds = new ArrayList<>();
         ArrayList<Long> rejectExpenseIds = new ArrayList<>();
         HashMap<Long, Float> partiallyApprovedMap = new HashMap<>();
-        assertThrows(IllegalStateException.class, () -> reportsService.updateExpenseStatus(1L, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, "Review Time", "Comments", new Response()));
+        assertThrows(IllegalStateException.class, () -> reportsService.updateExpenseStatus(1L, approveExpenseIds,
+                rejectExpenseIds, partiallyApprovedMap, "Review Time", "Comments", new Response()));
         verify(reportsRepository).findById(Mockito.<Long>any());
     }
 
-    
+
     @Test
     void testUpdateExpenseStatus2() throws IOException, MessagingException {
-        when(expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenReturn(new ArrayList<>());
+        when(expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(),
+                Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenReturn(new ArrayList<>());
         Reports reports = mock(Reports.class);
         when(reports.getIsHidden()).thenReturn(false);
         when(reports.getIsSubmitted()).thenReturn(true);
@@ -1189,8 +1109,10 @@ class ReportsServiceImplTest {
         ArrayList<Long> approveExpenseIds = new ArrayList<>();
         ArrayList<Long> rejectExpenseIds = new ArrayList<>();
         HashMap<Long, Float> partiallyApprovedMap = new HashMap<>();
-        reportsService.updateExpenseStatus(1L, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, "Review Time", "Comments", new Response());
-        verify(expenseRepository).findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any());
+        reportsService.updateExpenseStatus(1L, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, "Review " +
+                "Time", "Comments", new Response());
+        verify(expenseRepository).findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(),
+                Mockito.<Boolean>any(), Mockito.<Boolean>any());
         verify(reportsRepository, atLeast(1)).save(Mockito.<Reports>any());
         verify(reportsRepository, atLeast(1)).findById(Mockito.<Long>any());
         verify(reports).getIsHidden();
@@ -1271,7 +1193,8 @@ class ReportsServiceImplTest {
         ArrayList<Long> approveExpenseIds = new ArrayList<>();
         ArrayList<Long> rejectExpenseIds = new ArrayList<>();
         HashMap<Long, Float> partiallyApprovedMap = new HashMap<>();
-        assertThrows(IllegalStateException.class, () -> reportsService.updateExpenseStatus(1L, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, "Review Time", "Comments", new Response()));
+        assertThrows(IllegalStateException.class, () -> reportsService.updateExpenseStatus(1L, approveExpenseIds,
+                rejectExpenseIds, partiallyApprovedMap, "Review Time", "Comments", new Response()));
         verify(reportsRepository).save(Mockito.<Reports>any());
         verify(reportsRepository).findById(Mockito.<Long>any());
         verify(reports).getIsHidden();
@@ -1375,7 +1298,8 @@ class ReportsServiceImplTest {
 
         ArrayList<Expense> expenseList = new ArrayList<>();
         expenseList.add(expense);
-        when(expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenReturn(expenseList);
+        when(expenseRepository.findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(),
+                Mockito.<Boolean>any(), Mockito.<Boolean>any())).thenReturn(expenseList);
         Reports reports2 = mock(Reports.class);
         when(reports2.getIsHidden()).thenReturn(false);
         when(reports2.getIsSubmitted()).thenReturn(true);
@@ -1450,8 +1374,10 @@ class ReportsServiceImplTest {
         ArrayList<Long> approveExpenseIds = new ArrayList<>();
         ArrayList<Long> rejectExpenseIds = new ArrayList<>();
         HashMap<Long, Float> partiallyApprovedMap = new HashMap<>();
-        reportsService.updateExpenseStatus(1L, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, "Review Time", "Comments", new Response());
-        verify(expenseRepository).findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(), Mockito.<Boolean>any(), Mockito.<Boolean>any());
+        reportsService.updateExpenseStatus(1L, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, "Review " +
+                "Time", "Comments", new Response());
+        verify(expenseRepository).findExpenseByReportsAndIsReportedAndIsHidden(Mockito.<Reports>any(),
+                Mockito.<Boolean>any(), Mockito.<Boolean>any());
         verify(reportsRepository, atLeast(1)).save(Mockito.<Reports>any());
         verify(reportsRepository, atLeast(1)).findById(Mockito.<Long>any());
         verify(reports2).getIsHidden();
@@ -1531,7 +1457,8 @@ class ReportsServiceImplTest {
         ArrayList<Long> approveExpenseIds = new ArrayList<>();
         ArrayList<Long> rejectExpenseIds = new ArrayList<>();
         HashMap<Long, Float> partiallyApprovedMap = new HashMap<>();
-        assertThrows(IllegalStateException.class, () -> reportsService.updateExpenseStatus(1L, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, "Review Time", "Comments", new Response()));
+        assertThrows(IllegalStateException.class, () -> reportsService.updateExpenseStatus(1L, approveExpenseIds,
+                rejectExpenseIds, partiallyApprovedMap, "Review Time", "Comments", new Response()));
         verify(reportsRepository).findById(Mockito.<Long>any());
         verify(reports).getIsHidden();
         verify(reports).getIsSubmitted();
@@ -1618,7 +1545,8 @@ class ReportsServiceImplTest {
 
     @Test
     void testNotifyHR2() throws MessagingException {
-        doThrow(new IllegalStateException("foo")).when(emailService).notifyHr(Mockito.<Long>any(), Mockito.<String>any(), Mockito.<String>any());
+        doThrow(new IllegalStateException("foo")).when(emailService).notifyHr(Mockito.<Long>any(),
+                Mockito.<String>any(), Mockito.<String>any());
 
         Employee employee = new Employee();
         employee.setEmployeeEmail("jane.doe@example.org");
@@ -1733,7 +1661,8 @@ class ReportsServiceImplTest {
 
     @Test
     void testNotifyLnD2() throws MessagingException {
-        doThrow(new IllegalStateException("foo")).when(emailService).notifyLnD(Mockito.<Long>any(), Mockito.<String>any(), Mockito.<String>any());
+        doThrow(new IllegalStateException("foo")).when(emailService).notifyLnD(Mockito.<Long>any(),
+                Mockito.<String>any(), Mockito.<String>any());
 
         Employee employee = new Employee();
         employee.setEmployeeEmail("jane.doe@example.org");
@@ -1790,63 +1719,56 @@ class ReportsServiceImplTest {
 
     @Test
     void testProcessPartiallyApprovedExpenses() {
-        // Arrange
+
         Long expenseId = 1L;
-        Map<Long, Float> partiallyApprovedMap = Collections.singletonMap(expenseId, 50.0f); // Sample values
+        Map<Long, Float> partiallyApprovedMap = Collections.singletonMap(expenseId, 50.0f);
         Expense expense = new Expense();
         expense.setExpenseId(expenseId);
         expense.setIsReported(true);
         expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
-        expense.setAmount(100.0); // Sample amount
+        expense.setAmount(100.0);
 
         when(expenseService.getExpenseById(expenseId)).thenReturn(expense);
 
-        // Act
+
         reportsService.processPartiallyApprovedExpenses(partiallyApprovedMap);
 
-        // Assert
-        verify(expenseRepository).save(expense);
 
-        // Verify that the expense has been updated correctly
+        verify(expenseRepository).save(expense);
         Assert.assertEquals(ManagerApprovalStatusExpense.PARTIALLY_APPROVED, expense.getManagerApprovalStatusExpense());
-        Assert.assertEquals(50.0, expense.getAmountApproved(), 0.001); // Add a delta for floating-point comparison
+        Assert.assertEquals(50.0, expense.getAmountApproved(), 0.001);
     }
 
     @Test
     void testValidateExpenseNotHidden() {
-        // Arrange
+
         Long expenseId = 1L;
         Expense expense = new Expense();
         expense.setExpenseId(expenseId);
         expense.setIsHidden(false);
 
-        // Act and Assert
-        reportsService.validateExpense(expense, expenseId); // This should not throw an exception.
+
+        reportsService.validateExpense(expense, expenseId);
     }
 
     @Test
     void testValidateExpenseHidden() {
-        // Arrange
+
         Long expenseId = 1L;
         Expense expense = new Expense();
         expense.setExpenseId(expenseId);
         expense.setIsHidden(true);
-
-        // Act and Assert (This should throw an exception)
         try {
             reportsService.validateExpense(expense, expenseId);
             fail("Expected an IllegalStateException to be thrown.");
         } catch (IllegalStateException e) {
-            Assert.assertEquals("Expense with ID 1 does not exist!", e.getMessage()); // Add the expected exception message
+            Assert.assertEquals("Expense with ID 1 does not exist!", e.getMessage());
         }
     }
 
 
-
-
     @Test
     void testAddExpenseToHiddenReport() {
-        // Test when a hidden report is provided
         Reports report = new Reports();
         report.setReportId(1L);
         report.setIsHidden(true);
@@ -1862,7 +1784,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testAddMissingExpenseToReport() {
-        // Test when an expense is missing
         when(reportsRepository.findById(1L)).thenReturn(Optional.of(new Reports()));
         when(expenseService.getExpenseById(Mockito.anyLong())).thenReturn(null);
 
@@ -1877,7 +1798,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testAddReportEmployeeNotFound1() {
-        // Test throwing an exception when an employee is not found
 
         ReportsDTO reportsDTO = new ReportsDTO();
         reportsDTO.setReportTitle("Sample Report");
@@ -1891,11 +1811,9 @@ class ReportsServiceImplTest {
 
     @Test
     void testAddExpenseToReportSuccess() {
-        // Test adding expenses to a report with valid data
 
         Reports report = new Reports();
         report.setReportId(REPORT_ID);
-        // Set other required fields
 
         List<Long> expenseIds = new ArrayList<>();
         expenseIds.add(2L);
@@ -1914,8 +1832,6 @@ class ReportsServiceImplTest {
         when(expenseService.getExpenseById(3L)).thenReturn(expense2);
 
         reportsService.addExpenseToReport(REPORT_ID, expenseIds);
-
-        // Add assertions based on your requirements
         verify(expenseService, times(2)).updateExpense(eq(REPORT_ID), anyLong());
         assertFalse(expense1.getIsReported());
         assertFalse(expense2.getIsReported());
@@ -1923,8 +1839,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testAddExpenseToReportReportNotFound() {
-        // Test throwing an exception when the report is not found
-
         List<Long> expenseIds = new ArrayList<>();
         expenseIds.add(2L);
         expenseIds.add(3L);
@@ -1938,7 +1852,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testAddExpenseToReportExpenseNotFound() {
-        // Test throwing an exception when an expense is not found
 
         Reports report = new Reports();
         report.setReportId(REPORT_ID);
@@ -1962,14 +1875,11 @@ class ReportsServiceImplTest {
 
     @Test
     void testUpdateReportTotalAmounts() {
-        // Test updating total amounts for a report
-
         Reports report = new Reports();
         report.setReportId(REPORT_ID);
 
-        // Mock the behavior of getReportById, totalAmount, and totalApprovedAmount
         when(reportsRepository.findById(REPORT_ID)).thenReturn(Optional.of(report));
-        when(reportsRepository.save(report)).thenReturn(report); // Mock saving the report
+        when(reportsRepository.save(report)).thenReturn(report);
 
         reportsService.updateReportTotalAmounts(REPORT_ID);
 
@@ -1978,8 +1888,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testSubmitReportReportHidden() {
-        // Test throwing an exception when the report is hidden
-
         Reports report = new Reports();
         report.setReportId(REPORT_ID);
         report.setIsHidden(true);
@@ -1995,7 +1903,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testSubmitReportHiddenReport() {
-        // Test when the report is hidden
         long reportId = 1L;
 
         Reports report = new Reports();
@@ -2016,7 +1923,6 @@ class ReportsServiceImplTest {
 
     @Test
     void testSubmitReportAlreadySubmitted2() {
-        // Test when the report is already submitted and not rejected
         long reportId = 1L;
 
         Reports report = new Reports();
@@ -2030,7 +1936,8 @@ class ReportsServiceImplTest {
         try {
             reportsService.submitReport(reportId, "manager@example.com", new MockHttpServletResponse());
         } catch (IllegalStateException e) {
-            assertEquals("Report with ID 1 is already submitted!", CONSTANT2 + reportId + " is already submitted!", e.getMessage());
+            assertEquals("Report with ID 1 is already submitted!",
+                    CONSTANT2 + reportId + " is already submitted!", e.getMessage());
         } catch (MessagingException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -2039,10 +1946,7 @@ class ReportsServiceImplTest {
 
     @Test
     void testSubmitReportManagerEmailDBNull() {
-        // Test when manager's email from the database is not found
-
         long reportId = 1L;
-
         Reports report = new Reports();
         report.setReportId(reportId);
         report.setIsHidden(false);
@@ -2053,7 +1957,6 @@ class ReportsServiceImplTest {
         when(expenseService.getRejectedExpensesByReportId(reportId)).thenReturn(Collections.emptyList());
         when(expenseService.getExpenseByReportId(reportId)).thenReturn(Collections.emptyList());
 
-        // Set employee with null managerEmail
         Employee employee = new Employee();
         employee.setEmployeeId(1L);
         when(employeeService.getEmployeeById(1L)).thenReturn(employee);
@@ -2061,25 +1964,23 @@ class ReportsServiceImplTest {
         try {
             reportsService.submitReport(reportId, "manager@example.com", new MockHttpServletResponse());
         } catch (NullPointerException e) {
-            assertEquals( "does not exist!", CONSTANT1, e.getMessage());
+            assertEquals("does not exist!", CONSTANT1, e.getMessage());
         } catch (MessagingException | IOException e) {
             throw new RuntimeException(e);
         }
 
-     
+
     }
 
 
     @Test
     void testEditReportWithCoverage() {
-        // Prepare test data
         Long reportId = 1L;
         String reportTitle = "Updated Title";
         String reportDescription = "Updated Description";
         List<Long> addExpenseIds = Arrays.asList(2L, 3L);
         List<Long> removeExpenseIds = Arrays.asList(4L, 5L);
 
-        // Mock Reports and Expenses
         Reports report = new Reports();
         report.setReportId(1L);
         report.setReportTitle("yuiopghjkl");
@@ -2093,32 +1994,21 @@ class ReportsServiceImplTest {
         when(expenseService.getExpenseById(4L)).thenReturn(null);
         when(expenseService.getExpenseById(5L)).thenReturn(null);
 
-        // Execute the method
-        List<Reports> updatedReports = reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
-
-
-
-
-        verify(expenseService).updateExpense(reportId,expense2.getExpenseId());
-        verify(expenseService).updateExpense(reportId,expense3.getExpenseId());
-
+        List<Reports> updatedReports =
+                reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
+        verify(expenseService).updateExpense(reportId, expense2.getExpenseId());
+        verify(expenseService).updateExpense(reportId, expense3.getExpenseId());
         verify(expenseService, times(0)).deleteExpenseById(any());
-
-
-        // Verify the result
         assertEquals(0, updatedReports.size());
 
     }
 
     @Test
     void testReportNotSubmitted() {
-        // Mock data
         long reportId = 1L;
         Reports report = new Reports();
         report.setIsSubmitted(false);
         report.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
-
-        // Mock the necessary method call
         Mockito.when(reportsRepository.getReportByReportId(reportId)).thenReturn(report);
 
 
@@ -2127,16 +2017,11 @@ class ReportsServiceImplTest {
 
     @Test
     void testReportNotApproved() {
-        // Mock data
         long reportId = 1L;
         Reports report = new Reports();
         report.setIsSubmitted(true);
         report.setManagerApprovalStatus(ManagerApprovalStatus.REJECTED);
-
-        // Mock the necessary method call
         Mockito.when(reportsRepository.getReportByReportId(reportId)).thenReturn(report);
-
-        // Verify that an exception is thrown for not being approved
         assertThrows(IllegalStateException.class, () -> {
             reportsService.validateReportForEdit(report);
         });
@@ -2144,40 +2029,28 @@ class ReportsServiceImplTest {
 
     @Test
     void testReportPartiallyApproved() {
-        // Mock data
         long reportId = 1L;
         Reports report = new Reports();
         report.setIsSubmitted(true);
         report.setManagerApprovalStatus(ManagerApprovalStatus.PARTIALLY_APPROVED);
-
-        // Mock the necessary method call
         Mockito.when(reportsRepository.getReportByReportId(reportId)).thenReturn(report);
-
-        // Verify that no exception is thrown for being partially approved
         reportsService.validateReportForEdit(report);
     }
 
     @Test
     void testReportApproved() {
-        // Mock data
         long reportId = 1L;
         Reports report = new Reports();
         report.setIsSubmitted(true);
         report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
-
-        // Mock the necessary method call
         Mockito.when(reportsRepository.getReportByReportId(reportId)).thenReturn(report);
-
-        // Verify that no exception is thrown for being approved
         reportsService.validateReportForEdit(report);
     }
 
     @Test
     void testSendPushNotificationsToMultipleReports() {
-        // Prepare test data
         List<Long> reportIds = Arrays.asList(1L, 2L, 3L);
 
-        // Mock report data and manager email
         Reports report1 = new Reports();
         Reports report2 = new Reports();
         Reports report3 = new Reports();
@@ -2188,7 +2061,6 @@ class ReportsServiceImplTest {
         when(reportsRepository.findById(2L)).thenReturn(Optional.of(report2));
         when(reportsRepository.findById(3L)).thenReturn(Optional.of(report3));
 
-        // Mock manager data and tokens
         Employee manager1 = new Employee();
         Employee manager2 = new Employee();
         Employee manager3 = new Employee();
@@ -2198,39 +2070,24 @@ class ReportsServiceImplTest {
         when(employeeService.getEmployeeByEmail("manager1@example.com")).thenReturn(manager1);
         when(employeeService.getEmployeeByEmail("manager2@example.com")).thenReturn(manager2);
         when(employeeService.getEmployeeByEmail("manager3@example.com")).thenReturn(manager3);
-
-        // Execute the method
-        //reportsService.sendReportNotApprovedByManagerReminder();
-
-
     }
 
     @Test
     void testGetReportById1() {
         Long reportId = 1L;
-        Reports mockReport = new Reports(); // Create a mock report
-
-        // Mock the behavior of reportsRepository.findById to return the mockReport
+        Reports mockReport = new Reports();
         when(reportsRepository.findById(reportId)).thenReturn(Optional.of(mockReport));
-
-        // Call the service method
         Reports result = reportsService.getReportById(reportId);
-
-        // Verify that reportsRepository.findById was called with the correct argument
         verify(reportsRepository, times(1)).findById(reportId);
-
-        // Assert that the result is the mockReport
         assertEquals(mockReport, result);
     }
 
     @Test
     void testAddReport1() {
-        // Create a sample ReportsDTO
         ReportsDTO reportsDTO = new ReportsDTO("Sample Report");
         Long employeeId = 1L;
         List<Long> expenseIds = new ArrayList<>();
 
-        // Create a mock Employee
         Employee mockEmployee = new Employee();
         mockEmployee.setEmployeeEmail("employee@example.com");
         mockEmployee.setManagerEmail("manager@example.com");
@@ -2238,10 +2095,8 @@ class ReportsServiceImplTest {
         mockEmployee.setLastName("Doe");
         mockEmployee.setOfficialEmployeeId("EMP123");
 
-        // Mock the behavior of employeeService.getEmployeeById to return the mockEmployee
         when(employeeService.getEmployeeById(employeeId)).thenReturn(mockEmployee);
 
-        // Create a mock Reports object
         Reports mockReport = new Reports();
         mockReport.setReportTitle("Sample Report");
         mockReport.setEmployeeMail("employee@example.com");
@@ -2253,42 +2108,30 @@ class ReportsServiceImplTest {
 
         when(reportsRepository.save(Mockito.any(Reports.class))).thenReturn(mockReport);
 
-        // Create mock Expense objects
         List<Expense> mockExpenses = new ArrayList<>();
         for (Long id : expenseIds) {
             Expense mockExpense = new Expense();
-            mockExpense.setAmount(100.0); // Set sample data as needed
+            mockExpense.setAmount(100.0);
             mockExpenses.add(mockExpense);
         }
 
-        // Mock the behavior of expenseRepository.findAllById to return the mockExpenses
         when(expenseRepository.findAllById(expenseIds)).thenReturn(mockExpenses);
-
-        // Call the service method
         Reports result = reportsService.addReport(reportsDTO, employeeId, expenseIds);
-
-        // Verify that reportsRepository.save was called
-        //Mockito.verify(reportsRepository, Mockito.times(1)).save(Mockito.any(Reports.class));
-
-        // Verify that the expenseRepository.save was called for each expense
         for (Expense mockExpense : mockExpenses) {
             Mockito.verify(expenseRepository, Mockito.times(1)).save(mockExpense);
         }
 
-        // Assert that the result is the mockReport
         assertEquals(mockReport, result);
     }
 
 
     @Test
     void testValidateReportForEdit_ReportNotSubmitted() {
-        // Create a report with isSubmitted = false and PENDING status
         Reports report = new Reports();
         report.setIsSubmitted(false);
         report.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
 
         try {
-            // Call the validateReportForEdit method
             reportsService.validateReportForEdit(report);
         } catch (IllegalStateException e) {
             fail("An IllegalStateException should not have been thrown.");
@@ -2297,22 +2140,16 @@ class ReportsServiceImplTest {
 
     @Test
     void testValidateReportForEdit_ReportSubmitted() {
-        // Create a report with isSubmitted = true and PENDING status
         Reports report = new Reports();
         report.setIsSubmitted(true);
         report.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
 
         try {
-            // Call the validateReportForEdit method
             reportsService.validateReportForEdit(report);
             fail("An IllegalStateException should have been thrown.");
         } catch (IllegalStateException e) {
-            // The method should throw an IllegalStateException, which is expected.
         }
     }
-
-
-
 
 
 }

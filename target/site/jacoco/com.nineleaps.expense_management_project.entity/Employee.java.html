@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Employee.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.entity</a> &gt; <span class="el_source">Employee.java</span></div><h1>Employee.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.entity;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+
+
+@Getter
+@Entity
+@Table(name = &quot;employee&quot;)
+public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @ApiModelProperty(hidden = true)
+    @Column(name = &quot;employee_id&quot;)
+<span class="fc" id="L20">    private Long employeeId;</span>
+
+    @Column(name = &quot;official_id&quot;)
+<span class="fc" id="L23">    private String officialEmployeeId;</span>
+
+    @Column(name = &quot;first_name&quot;)
+<span class="fc" id="L26">    private String firstName;</span>
+
+    @Column(name = &quot;middle_name&quot;)
+<span class="fc" id="L29">    private String middleName;</span>
+
+    @Column(name = &quot;last_name&quot;)
+<span class="fc" id="L32">    private String lastName;</span>
+
+    @Column(name = &quot;employee_email&quot;)
+<span class="fc" id="L35">    private String employeeEmail;</span>
+
+    @Column(name = &quot;manager_email&quot;)
+<span class="fc" id="L38">    private String managerEmail;</span>
+
+    @Column(name = &quot;manager_name&quot;)
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L42">    private String managerName;</span>
+
+    @Column(name = &quot;hr_name&quot;)
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L46">    private String hrName;</span>
+
+    @Column(name = &quot;hr_email&quot;)
+<span class="fc" id="L49">    private String hrEmail;</span>
+
+<span class="fc" id="L51">    @Column(name = &quot;lnd_name&quot;)</span>
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L53">    private String lndName = &quot;Vrusha&quot;;</span>
+
+<span class="fc" id="L55">    @Column(name = &quot;lnd_email&quot;)</span>
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L57">    private String lndEmail = &quot;billfoldfinancejsr@gmail.com&quot;;</span>
+
+    @Column(name = &quot;mobile_number&quot;)
+<span class="fc" id="L60">    private Long mobileNumber;</span>
+
+<span class="fc" id="L62">    @Column(name = &quot;is_admin&quot;)</span>
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L64">    private Boolean isFinanceAdmin = false;</span>
+
+    @Column(name = &quot;image_url&quot;)
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L68">    private String imageUrl;</span>
+
+<span class="fc" id="L70">    @Column(name = &quot;is_hidden&quot;)</span>
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L72">    private Boolean isHidden = false;</span>
+
+<span class="fc" id="L74">    @JsonIgnore</span>
+    @OneToMany(mappedBy = &quot;employee&quot;, cascade = CascadeType.ALL)
+<span class="fc" id="L76">    private List&lt;Expense&gt; expenseList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L78">    @Column(name = &quot;role&quot;)</span>
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L80">    private String role = &quot;EMPLOYEE&quot;;</span>
+
+    @Column(name = &quot;fcm_token&quot;)
+    @ApiModelProperty(hidden = true)
+<span class="fc" id="L84">    private String token;</span>
+
+<span class="fc" id="L86">    public Employee() {</span>
+
+<span class="fc" id="L88">    }</span>
+
+    public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
+                    String employeeEmail, String managerEmail) {
+<span class="fc" id="L92">        super();</span>
+<span class="fc" id="L93">        this.employeeId = employeeId;</span>
+<span class="fc" id="L94">        this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L95">        this.firstName = firstName;</span>
+<span class="fc" id="L96">        this.middleName = middleName;</span>
+<span class="fc" id="L97">        this.lastName = lastName;</span>
+<span class="fc" id="L98">        this.employeeEmail = employeeEmail;</span>
+<span class="fc" id="L99">        this.managerEmail = managerEmail;</span>
+
+
+<span class="fc" id="L102">    }</span>
+    public Employee(String managerName, String hrName, String hrEmail,
+                    String lndName, String lndEmail, Long mobileNumber, Boolean isFinanceAdmin)
+<span class="fc" id="L105">    {</span>
+<span class="fc" id="L106">        this.managerName = managerName;</span>
+<span class="fc" id="L107">        this.hrName = hrName;</span>
+<span class="fc" id="L108">        this.hrEmail = hrEmail;</span>
+<span class="fc" id="L109">        this.lndName = lndName;</span>
+<span class="fc" id="L110">        this.lndEmail = lndEmail;</span>
+<span class="fc" id="L111">        this.mobileNumber = mobileNumber;</span>
+<span class="fc" id="L112">        this.isFinanceAdmin = isFinanceAdmin;</span>
+<span class="fc" id="L113">    }</span>
+    public Employee(String imageUrl,
+                    Boolean isHidden, List&lt;Expense&gt; expenseList, String role, String token)
+<span class="fc" id="L116">    {</span>
+<span class="fc" id="L117">        this.imageUrl = imageUrl;</span>
+<span class="fc" id="L118">        this.isHidden = isHidden;</span>
+<span class="fc" id="L119">        this.expenseList = expenseList;</span>
+<span class="fc" id="L120">        this.role = role;</span>
+<span class="fc" id="L121">        this.token = token;</span>
+<span class="fc" id="L122">    }</span>
+
+
+
+    public void setEmployeeId(Long employeeId) {
+<span class="fc" id="L127">        this.employeeId = employeeId;</span>
+<span class="fc" id="L128">    }</span>
+
+    public void setOfficialEmployeeId(String officialEmployeeId) {
+<span class="fc" id="L131">        this.officialEmployeeId = officialEmployeeId;</span>
+<span class="fc" id="L132">    }</span>
+
+    public void setFirstName(String firstName) {
+<span class="fc" id="L135">        this.firstName = firstName;</span>
+<span class="fc" id="L136">    }</span>
+
+    public void setMiddleName(String middleName) {
+<span class="fc" id="L139">        this.middleName = middleName;</span>
+<span class="fc" id="L140">    }</span>
+
+    public void setLastName(String lastName) {
+<span class="fc" id="L143">        this.lastName = lastName;</span>
+<span class="fc" id="L144">    }</span>
+
+    public void setEmployeeEmail(String employeeEmail) {
+<span class="fc" id="L147">        this.employeeEmail = employeeEmail;</span>
+<span class="fc" id="L148">    }</span>
+
+    public void setManagerEmail(String managerEmail) {
+<span class="fc" id="L151">        this.managerEmail = managerEmail;</span>
+<span class="fc" id="L152">    }</span>
+
+    public void setManagerName(String managerName) {
+<span class="fc" id="L155">        this.managerName = managerName;</span>
+<span class="fc" id="L156">    }</span>
+
+    public void setHrName(String hrName) {
+<span class="fc" id="L159">        this.hrName = hrName;</span>
+<span class="fc" id="L160">    }</span>
+
+    public void setHrEmail(String hrEmail) {
+<span class="fc" id="L163">        this.hrEmail = hrEmail;</span>
+<span class="fc" id="L164">    }</span>
+
+    public void setLndName(String lndName) {
+<span class="fc" id="L167">        this.lndName = lndName;</span>
+<span class="fc" id="L168">    }</span>
+
+    public void setLndEmail(String lndEmail) {
+<span class="fc" id="L171">        this.lndEmail = lndEmail;</span>
+<span class="fc" id="L172">    }</span>
+
+    public void setMobileNumber(Long mobileNumber) {
+<span class="fc" id="L175">        this.mobileNumber = mobileNumber;</span>
+<span class="fc" id="L176">    }</span>
+
+    public void setIsFinanceAdmin(Boolean isFinanceAdmin) {
+<span class="fc" id="L179">        this.isFinanceAdmin = isFinanceAdmin;</span>
+<span class="fc" id="L180">    }</span>
+
+    public void setImageUrl(String imageUrl) {
+<span class="fc" id="L183">        this.imageUrl = imageUrl;</span>
+<span class="fc" id="L184">    }</span>
+
+    public void setIsHidden(Boolean isHidden) {
+<span class="fc" id="L187">        this.isHidden = isHidden;</span>
+<span class="fc" id="L188">    }</span>
+
+    public void setExpenseList(List&lt;Expense&gt; expenseList) {
+<span class="fc" id="L191">        this.expenseList = expenseList;</span>
+<span class="fc" id="L192">    }</span>
+
+    public void setRole(String role) {
+<span class="fc" id="L195">        this.role = role;</span>
+<span class="fc" id="L196">    }</span>
+
+    public void setToken(String token) {
+<span class="fc" id="L199">        this.token = token;</span>
+<span class="fc" id="L200">    }</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

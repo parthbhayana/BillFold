@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExcelGeneratorCategoryServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.service</a> &gt; <span class="el_source">ExcelGeneratorCategoryServiceImpl.java</span></div><h1>ExcelGeneratorCategoryServiceImpl.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.service;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import javax.activation.DataSource;
+import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.hssf.usermodel.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+import com.nineleaps.expense_management_project.entity.Category;
+import com.nineleaps.expense_management_project.entity.Employee;
+import com.nineleaps.expense_management_project.entity.Expense;
+import com.nineleaps.expense_management_project.repository.CategoryRepository;
+import com.nineleaps.expense_management_project.repository.EmployeeRepository;
+import com.nineleaps.expense_management_project.repository.ExpenseRepository;
+
+@Service
+<span class="fc" id="L36">public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategoryService {</span>
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ExpenseRepository expenseRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private IExcelGeneratorReportsService iExcelGeneratorReportsService;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    private static final int CHART_IMAGE_WIDTH = 640;
+    private static final int CHART_IMAGE_HEIGHT = 480;
+
+    @Override
+    public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate,
+                                            LocalDate endDate) throws Exception {
+
+<span class="fc" id="L60">        @SuppressWarnings(&quot;unused&quot;) List&lt;Category&gt; categories = categoryRepository.findAll();</span>
+<span class="fc" id="L61">        HashMap&lt;String, Double&gt; categoryAmountMap = categoryTotalAmount(startDate, endDate);</span>
+
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (categoryAmountMap.isEmpty()) {</span>
+<span class="fc" id="L64">            return &quot;No data available for the selected period.So, Email can't be sent!&quot;;</span>
+        }
+
+<span class="fc" id="L67">        ByteArrayOutputStream excelStream = new ByteArrayOutputStream();</span>
+<span class="fc" id="L68">        generateExcel(excelStream, startDate, endDate);</span>
+<span class="fc" id="L69">        byte[] excelBytes = excelStream.toByteArray();</span>
+
+<span class="fc" id="L71">        Employee financeadmin = employeeRepository.findByRole(&quot;FINANCE_ADMIN&quot;);</span>
+
+<span class="fc" id="L73">        boolean emailsent = iExcelGeneratorReportsService.sendEmailWithAttachment(financeadmin.getEmployeeEmail(),</span>
+                &quot;BillFold:Excel Report&quot;,
+                &quot;Please find the &quot; + &quot;attached Excel report.&quot;, excelBytes, &quot;report.xls&quot;);
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (emailsent) {</span>
+<span class="fc" id="L77">            return &quot;Email sent successfully!&quot;;</span>
+        } else {
+<span class="nc" id="L79">            return &quot;Email not sent&quot;;</span>
+        }
+    }
+
+
+    @Override
+    public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate,
+                              LocalDate endDate) throws Exception {
+
+<span class="fc" id="L88">        List&lt;Category&gt; categories = categoryRepository.findAll();</span>
+<span class="fc" id="L89">        HashMap&lt;String, Double&gt; categoryAmountMap = categoryTotalAmount(startDate, endDate);</span>
+
+<span class="fc" id="L91">        HSSFWorkbook workbook = new HSSFWorkbook();</span>
+<span class="fc" id="L92">        HSSFSheet sheet = workbook.createSheet(&quot;Category Wise Expense Analytics&quot;);</span>
+<span class="fc" id="L93">        HSSFRow row = sheet.createRow(0);</span>
+
+<span class="fc" id="L95">        row.createCell(0).setCellValue(&quot;Sl.no.&quot;);</span>
+<span class="fc" id="L96">        row.createCell(1).setCellValue(&quot;Category Name&quot;);</span>
+<span class="fc" id="L97">        row.createCell(2).setCellValue(&quot;Total Amount&quot;);</span>
+<span class="fc" id="L98">        row.createCell(3).setCellValue(&quot;Percentage&quot;);</span>
+<span class="fc" id="L99">        int dataRowIndex = 1;</span>
+<span class="fc" id="L100">        int sl = 1;</span>
+<span class="fc" id="L101">        float totalAmountSum = 0.0f;</span>
+
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        for (Category category : categories) {</span>
+<span class="fc" id="L104">            HSSFRow dataRow = sheet.createRow(dataRowIndex);</span>
+<span class="fc" id="L105">            dataRow.createCell(0).setCellValue(sl);</span>
+<span class="fc" id="L106">            dataRow.createCell(1).setCellValue(category.getCategoryDescription());</span>
+
+<span class="fc" id="L108">            String categoryName = category.getCategoryDescription();</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            if (categoryAmountMap.containsKey(categoryName)) {</span>
+<span class="fc" id="L110">                Double totalAmount = categoryAmountMap.get(categoryName);</span>
+<span class="fc" id="L111">                dataRow.createCell(2).setCellValue(totalAmount);</span>
+<span class="fc" id="L112">                totalAmountSum += totalAmount;</span>
+<span class="fc" id="L113">            } else {</span>
+<span class="fc" id="L114">                dataRow.createCell(2).setCellValue(0.0f);</span>
+            }
+<span class="fc" id="L116">            sl++;</span>
+<span class="fc" id="L117">            dataRowIndex++;</span>
+<span class="fc" id="L118">        }</span>
+
+
+
+
+<span class="fc" id="L123">        @SuppressWarnings(&quot;rawtypes&quot;) DefaultPieDataset dataset = new DefaultPieDataset();</span>
+
+
+<span class="fc" id="L126">        JFreeChart chart = ChartFactory.createPieChart(&quot;Category Wise Expense Analytics&quot;, dataset, true, true, false);</span>
+<span class="fc" id="L127">        @SuppressWarnings(&quot;rawtypes&quot;) PiePlot plot = (PiePlot) chart.getPlot();</span>
+<span class="fc" id="L128">        plot.setLabelGenerator(null);</span>
+
+<span class="fc" id="L130">        HSSFPatriarch drawing = sheet.createDrawingPatriarch();</span>
+<span class="fc" id="L131">        HSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 20, 15);</span>
+<span class="fc" id="L132">        @SuppressWarnings(&quot;unused&quot;) HSSFPicture picture =</span>
+<span class="fc" id="L133">                drawing.createPicture(anchor, loadChartImage(chart, CHART_IMAGE_WIDTH, CHART_IMAGE_HEIGHT, workbook));</span>
+
+<span class="fc" id="L135">        workbook.write(excelStream);</span>
+<span class="fc" id="L136">        workbook.close();</span>
+<span class="fc" id="L137">    }</span>
+
+    @Override
+    public int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException {
+<span class="fc" id="L141">        try (ByteArrayOutputStream chartOut = new ByteArrayOutputStream()) {</span>
+<span class="fc" id="L142">            ChartUtils.writeChartAsPNG(chartOut, chart, width, height);</span>
+<span class="fc" id="L143">            return workbook.addPicture(chartOut.toByteArray(), Workbook.PICTURE_TYPE_PNG);</span>
+        }
+    }
+
+    @Override
+    public HashMap&lt;String, Double&gt; categoryTotalAmount(LocalDate startDate, LocalDate endDate) {
+<span class="fc" id="L149">        List&lt;Expense&gt; expenseList = expenseRepository.findByDateBetween(startDate, endDate);</span>
+<span class="fc" id="L150">        HashMap&lt;String, Double&gt; categoryAmountMap = new HashMap&lt;&gt;();</span>
+
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        for (Expense expense : expenseList) {</span>
+<span class="fc" id="L153">            Category category = expense.getCategory();</span>
+<span class="fc" id="L154">            String categoryName = category.getCategoryDescription();</span>
+<span class="fc" id="L155">            Double amt = expense.getAmountApproved();</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">            if (categoryAmountMap.containsKey(categoryName)) {</span>
+<span class="nc" id="L157">                Double previousAmt = categoryAmountMap.get(categoryName);</span>
+<span class="nc" id="L158">                categoryAmountMap.put(categoryName, previousAmt + amt);</span>
+<span class="nc" id="L159">            } else {</span>
+<span class="fc" id="L160">                categoryAmountMap.put(categoryName, amt);</span>
+            }
+<span class="fc" id="L162">        }</span>
+<span class="fc" id="L163">        return categoryAmountMap;</span>
+
+    }
+
+//    @Override
+//    public boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
+//                                           String attachmentFilename) {
+//
+//        try {
+//            MimeMessage message = mailSender.createMimeMessage();
+//            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//            helper.setTo(toEmail);
+//            helper.setSubject(subject);
+//            helper.setText(body);
+//
+//            DataSource attachment = new ByteArrayDataSource(attachmentContent, &quot;application/vnd.ms-excel&quot;);
+//            helper.addAttachment(attachmentFilename, attachment);
+//
+//            mailSender.send(message);
+//
+//            return true;
+//
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

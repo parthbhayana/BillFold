@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FCMInitializer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.firebase</a> &gt; <span class="el_source">FCMInitializer.java</span></div><h1>FCMInitializer.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.firebase;
+
+import java.io.IOException;
+import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+
+@Service
+<span class="fc" id="L15">public class FCMInitializer {</span>
+
+	@Value(&quot;${app.firebase-configuration-file}&quot;)
+	private String firebaseConfigPath;
+<span class="fc" id="L19">	Logger logger = LoggerFactory.getLogger(FCMInitializer.class);</span>
+
+	@PostConstruct
+	public void initialize() {
+		try {
+<span class="fc" id="L24">			FirebaseOptions options = new FirebaseOptions.Builder()</span>
+<span class="fc" id="L25">					.setCredentials(</span>
+<span class="fc" id="L26">							GoogleCredentials.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream()))</span>
+<span class="fc" id="L27">					.build();</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">			if (FirebaseApp.getApps().isEmpty()) {</span>
+<span class="fc" id="L29">				FirebaseApp.initializeApp(options);</span>
+<span class="fc" id="L30">				logger.info(&quot;Firebase application has been initialized&quot;);</span>
+			}
+<span class="fc" id="L32">		} catch (IOException e) {</span>
+<span class="fc" id="L33">			logger.error(e.getMessage());</span>
+<span class="fc" id="L34">		}</span>
+<span class="fc" id="L35">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

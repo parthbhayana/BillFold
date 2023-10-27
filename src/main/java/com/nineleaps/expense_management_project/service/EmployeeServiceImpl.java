@@ -147,16 +147,16 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 		employeeRepository.save(employee);
 
-		List<Employee> emp = employeeRepository.findAll();
-		Boolean isAdmins = false;
-		String roles = "EMPLOYEE";
-		for (Employee emp1 : emp) {
-			if (Objects.equals(emp1.getEmployeeId(), employeeId))
-				continue;
-			emp1.setIsFinanceAdmin(isAdmins);
-			emp1.setRole(roles);
-			employeeRepository.save(emp1);
-		}
+//		List<Employee> emp = employeeRepository.findAll();
+//		Boolean isAdmins = false;
+//		String roles = "EMPLOYEE";
+//		for (Employee emp1 : emp) {
+//			if (Objects.equals(emp1.getEmployeeId(), employeeId))
+//				continue;
+//			emp1.setIsFinanceAdmin(isAdmins);
+//			emp1.setRole(roles);
+//			employeeRepository.save(emp1);
+//		}
 
 	}
 

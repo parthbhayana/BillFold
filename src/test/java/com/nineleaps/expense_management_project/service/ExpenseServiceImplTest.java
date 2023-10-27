@@ -1994,19 +1994,15 @@ class ExpenseServiceImplTest {
 
     @Test
     void testUpdateExpenses_Success() {
-        // Arrange
+        
         Long expenseId = 1L;
         ExpenseDTO expenseDTO = new ExpenseDTO();
         Expense existingExpense = new Expense();
-
-        // Mocking the repository method calls
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(existingExpense));
         when(expenseRepository.save(any(Expense.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
+        
         Expense updatedExpense = expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
-
-        // Assert
         assertNotNull(updatedExpense);
         assertEquals(expenseDTO.getMerchantName(), updatedExpense.getMerchantName());
         assertEquals(expenseDTO.getDate(), updatedExpense.getDate());
@@ -2017,14 +2013,10 @@ class ExpenseServiceImplTest {
 
     @Test
     void testUpdateExpenses_ExpenseNotFound() {
-        // Arrange
+        
         Long expenseId = 1L;
-        ExpenseDTO expenseDTO = new ExpenseDTO(/* provide necessary data */);
-
-        // Mocking the repository method calls
+        ExpenseDTO expenseDTO = new ExpenseDTO();
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.empty());
-
-        // Act and Assert
         assertThrows(EntityNotFoundException.class, () -> {
             expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
         });
@@ -2032,16 +2024,14 @@ class ExpenseServiceImplTest {
 
     @Test
     void testUpdateExpenses_ExpenseIsHidden() {
-        // Arrange
+        
         Long expenseId = 1L;
-        ExpenseDTO expenseDTO = new ExpenseDTO(/* provide necessary data */);
-        Expense existingExpense = new Expense(/* create an existing expense with hidden=true */);
+        ExpenseDTO expenseDTO = new ExpenseDTO();
+        Expense existingExpense = new Expense();
         existingExpense.setIsHidden(true);
-
-        // Mocking the repository method calls
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(existingExpense));
 
-        // Act and Assert
+        
         assertThrows(IllegalStateException.class, () -> {
             expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
         });
@@ -2050,28 +2040,21 @@ class ExpenseServiceImplTest {
 
     @Test
     void testUpdateExpenses_ExpenseIsReported() {
-        // Arrange
+        
         Long expenseId = 1L;
 
-        // Create an ExpenseDTO with necessary data
         ExpenseDTO expenseDTO = new ExpenseDTO();
-        expenseDTO.setAmount(100.0);  // Set the amount
+        expenseDTO.setAmount(100.0);
         expenseDTO.setDescription("Sample expense description");
         expenseDTO.setMerchantName("Sample Merchant");
-        expenseDTO.setFile(new byte[]{1, 2, 3}); // Example byte array
+        expenseDTO.setFile(new byte[]{1, 2, 3});
         expenseDTO.setFileName("sample.pdf");
-        expenseDTO.setDate(LocalDate.now()); // Set the date
-
-        // Create an existing expense with isReported=true
+        expenseDTO.setDate(LocalDate.now());
         Expense existingExpense = new Expense();
-        // You can set other properties of existingExpense if needed
         existingExpense.setIsReported(true);
         existingExpense.setIsHidden(true);
         existingExpense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
-        // Mocking the repository method calls
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(existingExpense));
-
-        // Act and Assert
         assertThrows(IllegalStateException.class, () -> {
             expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
         });
@@ -2080,13 +2063,8 @@ class ExpenseServiceImplTest {
 
     @Test
     void testGetExpenseById_ExpenseNotFound() {
-        // Arrange
-        Long expenseId = 0L; // An ID that does not exist
-
-        // Mock the behavior of expenseRepository.findById when the expense is not found
+        Long expenseId = 0L;
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.empty());
-
-        // Act and Assert
         assertThrows(EntityNotFoundException.class, () -> {
             expenseServiceImpl.getExpenseById(expenseId);
         });
@@ -2095,13 +2073,11 @@ class ExpenseServiceImplTest {
 
     @Test
     void testRemoveTaggedExpense_ExpenseExistsAndIsHidden() {
-        // Arrange
-        Long expenseId = 1L; // An existing expense ID
+        
+        Long expenseId = 1L; 
         Expense existingExpense = new Expense();
         existingExpense.setIsHidden(true);
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(existingExpense));
-
-        // Act and Assert
         assertThrows(IllegalStateException.class, () -> {
             expenseServiceImpl.removeTaggedExpense(expenseId);
         });
@@ -2110,11 +2086,9 @@ class ExpenseServiceImplTest {
 
     @Test
     void testRemoveTaggedExpense_ExpenseDoesNotExist() {
-        // Arrange
-        Long expenseId = 1L; // An ID that does not exist
+        
+        Long expenseId = 1L; 
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.empty());
-
-        // Act and Assert
         assertThrows(IllegalStateException.class, () -> {
             expenseServiceImpl.removeTaggedExpense(expenseId);
         });
@@ -2123,18 +2097,11 @@ class ExpenseServiceImplTest {
 
     @Test
     void testRemoveTaggedExpense_ExpenseNotHidden() {
-        // Arrange
         Long expenseId = 1L;
         Expense existingExpense = new Expense();
         existingExpense.setIsHidden(false);
-
-        // Mock the repository method calls
         Mockito.when(expenseRepository.findById(expenseId)).thenReturn(java.util.Optional.of(existingExpense));
-
-        // Act
         Expense result = expenseServiceImpl.removeTaggedExpense(expenseId);
-
-        // Assert
         Mockito.verify(expenseRepository, Mockito.times(1)).save(existingExpense);
 
     }

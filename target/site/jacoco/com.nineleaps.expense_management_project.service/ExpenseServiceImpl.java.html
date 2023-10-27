@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpenseServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.service</a> &gt; <span class="el_source">ExpenseServiceImpl.java</span></div><h1>ExpenseServiceImpl.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import com.nineleaps.expense_management_project.dto.ExpenseDTO;
+import com.nineleaps.expense_management_project.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import com.nineleaps.expense_management_project.repository.CategoryRepository;
+import com.nineleaps.expense_management_project.repository.EmployeeRepository;
+import com.nineleaps.expense_management_project.repository.ExpenseRepository;
+import com.nineleaps.expense_management_project.repository.ReportsRepository;
+
+@Service
+<span class="fc" id="L22">public class ExpenseServiceImpl implements IExpenseService {</span>
+    @Autowired
+    private ExpenseRepository expenseRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private IEmployeeService employeeService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private IReportsService reportServices;
+
+    @Autowired
+    private ReportsRepository reportsRepository;
+
+
+    @Transactional
+    @Override
+    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId)  {
+<span class="fc" id="L45">        Employee employee = employeeService.getEmployeeById(employeeId);</span>
+<span class="fc" id="L46">        Expense expense = new Expense();</span>
+<span class="fc" id="L47">        expense.setEmployee(employee);</span>
+<span class="fc" id="L48">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L49">        expense.setDateCreated(now);</span>
+        @SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L51">        String date = expenseDTO.getDate().toString();</span>
+<span class="fc" id="L52">        Category category = categoryRepository.getCategoryByCategoryId(categoryId);</span>
+<span class="fc" id="L53">        String categoryDescription = category.getCategoryDescription();</span>
+
+        // Check for Potential duplicate
+<span class="fc" id="L56">        List&lt;Expense&gt; potentialDuplicateExpense = expenseRepository</span>
+<span class="fc" id="L57">                .findByEmployeeAndAmountAndDateAndCategoryAndMerchantNameAndIsHidden(employee, expenseDTO.getAmount(),</span>
+<span class="fc" id="L58">                        expenseDTO.getDate(), category, expenseDTO.getMerchantName(), false);</span>
+
+
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        if (potentialDuplicateExpense.isEmpty()) {</span>
+<span class="fc" id="L62">            expense.setDescription(expenseDTO.getDescription());</span>
+<span class="fc" id="L63">            expense.setAmount(expenseDTO.getAmount());</span>
+<span class="fc" id="L64">            expense.setMerchantName(expenseDTO.getMerchantName());</span>
+<span class="fc" id="L65">            expense.setFile(expenseDTO.getFile());</span>
+<span class="fc" id="L66">            expense.setFileName(expenseDTO.getFileName());</span>
+<span class="fc" id="L67">            expense.setDate(expenseDTO.getDate());</span>
+<span class="fc" id="L68">            expense.setCategory(category);</span>
+<span class="fc" id="L69">            expense.setCategoryDescription(categoryDescription);</span>
+<span class="fc" id="L70">            expenseRepository.save(expense);</span>
+<span class="fc" id="L71">            return &quot;Expense Added!&quot;;</span>
+        } else {
+<span class="nc" id="L73">            return &quot;Expense might be a potential duplicate!&quot;;</span>
+        }
+    }
+
+    @Transactional
+    @Override
+    public Expense addPotentialDuplicateExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
+<span class="fc" id="L80">        Employee employee = employeeService.getEmployeeById(employeeId);</span>
+<span class="fc" id="L81">        Expense expense = new Expense();</span>
+<span class="fc" id="L82">        expense.setEmployee(employee);</span>
+<span class="fc" id="L83">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L84">        expense.setDateCreated(now);</span>
+        @SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L86">        String date = expenseDTO.getDate().toString();</span>
+<span class="fc" id="L87">        Category category = categoryRepository.getCategoryByCategoryId(categoryId);</span>
+<span class="fc" id="L88">        String categoryDescription = category.getCategoryDescription();</span>
+<span class="fc" id="L89">        expense.setDescription(expenseDTO.getDescription());</span>
+<span class="fc" id="L90">        expense.setAmount(expenseDTO.getAmount());</span>
+<span class="fc" id="L91">        expense.setMerchantName(expenseDTO.getMerchantName());</span>
+<span class="fc" id="L92">        expense.setFile(expenseDTO.getFile());</span>
+<span class="fc" id="L93">        expense.setFileName(expenseDTO.getFileName());</span>
+<span class="fc" id="L94">        expense.setDate(expenseDTO.getDate());</span>
+<span class="fc" id="L95">        expense.setCategory(category);</span>
+<span class="fc" id="L96">        expense.setCategoryDescription(categoryDescription);</span>
+<span class="fc" id="L97">        expense.setPotentialDuplicate(true);</span>
+<span class="fc" id="L98">        return expenseRepository.save(expense);</span>
+    }
+
+    @Override
+    public List&lt;Expense&gt; getAllExpenses() {
+<span class="fc" id="L103">        LocalDate sixtyDaysAgo = LocalDate.now().minusDays(60);</span>
+<span class="fc" id="L104">        List&lt;Expense&gt; unreportedExpenses = expenseRepository.findByIsReportedAndDateBefore(false, sixtyDaysAgo);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        for (Expense expense : unreportedExpenses) {</span>
+<span class="fc" id="L106">            expense.setIsHidden(true);</span>
+<span class="fc" id="L107">            expenseRepository.save(expense);</span>
+<span class="fc" id="L108">        }</span>
+<span class="fc" id="L109">        return expenseRepository.findAll();</span>
+    }
+
+    @Override
+    public Expense getExpenseById(Long expenseId) {
+<span class="fc" id="L114">        Optional&lt;Expense&gt; expenseOptional = expenseRepository.findById(expenseId);</span>
+
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (expenseOptional.isPresent()) {</span>
+<span class="fc" id="L117">            return expenseOptional.get();</span>
+        } else {
+
+<span class="fc" id="L120">            throw new EntityNotFoundException(&quot;Expense with ID &quot; + expenseId + &quot; not found&quot;);</span>
+        }
+    }
+    @Override
+    public Expense updateExpense(Long reportId, Long employeeId) {
+<span class="fc" id="L125">        Expense expense = getExpenseById(employeeId);</span>
+<span class="fc" id="L126">        Reports report = reportServices.getReportById(reportId);</span>
+
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        if (expense != null) {</span>
+<span class="fc" id="L129">            String reportTitle = report.getReportTitle();</span>
+<span class="fc" id="L130">            boolean reportedStatus = true;</span>
+
+<span class="fc" id="L132">            expense.setReports(report);</span>
+<span class="fc" id="L133">            expense.setIsReported(reportedStatus);</span>
+<span class="fc" id="L134">            expense.setReportTitle(reportTitle);</span>
+<span class="fc" id="L135">            expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);</span>
+
+<span class="fc" id="L137">            return expenseRepository.save(expense);</span>
+        } else {
+
+<span class="nc" id="L140">            throw new IllegalStateException(&quot;Expense with ID &quot; + employeeId + &quot; not found.&quot;);</span>
+        }
+    }
+
+    @Override
+    public void deleteExpenseById(Long expenseId) {
+<span class="fc" id="L146">        expenseRepository.deleteById(expenseId);</span>
+<span class="fc" id="L147">    }</span>
+
+    @Override
+    public List&lt;Expense&gt; getExpenseByEmployeeId(Long employeeId) {
+<span class="fc" id="L151">        Optional&lt;Employee&gt; employeeOptional = employeeRepository.findById(employeeId);</span>
+
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (employeeOptional.isPresent()) {</span>
+<span class="fc" id="L154">            Employee employee = employeeOptional.get();</span>
+<span class="fc" id="L155">            Sort sort = Sort.by(Sort.Direction.DESC, &quot;dateCreated&quot;);</span>
+<span class="fc" id="L156">            return expenseRepository.findByEmployeeAndIsHidden(employee, false, sort);</span>
+        } else {
+
+<span class="fc" id="L159">            return Collections.emptyList();</span>
+        }
+    }
+
+
+
+    @Override
+    public Expense updateExpenses(ExpenseDTO expenseDTO, Long expenseId) {
+<span class="fc" id="L167">        Expense expense = getExpenseById(expenseId);</span>
+
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        boolean isNotHidden = !expense.getIsHidden();</span>
+<span class="pc bpc" id="L170" title="1 of 4 branches missed.">        boolean isNotReportedOrRejected = !expense.getIsReported() || expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED;</span>
+
+<span class="pc bpc" id="L172" title="2 of 8 branches missed.">        if ((isNotHidden &amp;&amp; isNotReportedOrRejected) || (expense.getIsReported() &amp;&amp; isNotApprovedOrPartiallyApproved(expense))) {</span>
+<span class="fc" id="L173">            expense.setMerchantName(expenseDTO.getMerchantName());</span>
+<span class="fc" id="L174">            expense.setDate(expenseDTO.getDate());</span>
+<span class="fc" id="L175">            expense.setAmount(expenseDTO.getAmount());</span>
+<span class="fc" id="L176">            expense.setDescription(expenseDTO.getDescription());</span>
+<span class="fc" id="L177">            expense.setFile(expenseDTO.getFile());</span>
+<span class="fc" id="L178">            LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L179">            expense.setDateCreated(now);</span>
+<span class="fc" id="L180">            expenseRepository.save(expense);</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">        } else if (Boolean.TRUE.equals(expense.getIsHidden())) {</span>
+<span class="fc" id="L182">            throw new IllegalStateException(&quot;Expense &quot; + expenseId + &quot; does not exist!&quot;);</span>
+        }
+
+<span class="fc" id="L185">        return expenseRepository.save(expense);</span>
+    }
+
+
+    private boolean isApprovedOrPartiallyApproved(Expense expense) {
+<span class="fc" id="L190">        ManagerApprovalStatusExpense status = expense.getManagerApprovalStatusExpense();</span>
+<span class="pc bpc" id="L191" title="3 of 6 branches missed.">        return status == ManagerApprovalStatusExpense.PENDING ||</span>
+                status == ManagerApprovalStatusExpense.APPROVED ||
+                status == ManagerApprovalStatusExpense.PARTIALLY_APPROVED;
+    }
+
+    private boolean isNotApprovedOrPartiallyApproved(Expense expense) {
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        return !isApprovedOrPartiallyApproved(expense);</span>
+    }
+
+    @Override
+    public List&lt;Expense&gt; getExpensesByEmployeeId(Long employeeId) {
+<span class="fc" id="L202">        Optional&lt;Employee&gt; employeeOptional = employeeRepository.findById(employeeId);</span>
+
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (employeeOptional.isPresent()) {</span>
+<span class="fc" id="L205">            Employee employee = employeeOptional.get();</span>
+<span class="fc" id="L206">            return expenseRepository.findByEmployeeAndIsReported(employee, false);</span>
+        } else {
+
+<span class="fc" id="L209">            return Collections.emptyList();</span>
+        }
+    }
+
+
+
+
+
+
+    @Override
+    public Expense removeTaggedExpense(Long expenseId) {
+<span class="fc" id="L220">        Optional&lt;Expense&gt; expenseOptional = expenseRepository.findById(expenseId);</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (expenseOptional.isPresent()) {</span>
+<span class="fc" id="L222">            Expense expense = expenseOptional.get();</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">            if (Boolean.FALSE.equals(expense.getIsHidden())) {</span>
+<span class="fc" id="L224">                boolean removeExpense = false;</span>
+<span class="fc" id="L225">                expense.setIsReported(removeExpense);</span>
+<span class="fc" id="L226">                expense.setReports(null);</span>
+<span class="fc" id="L227">                return expenseRepository.save(expense);</span>
+            } else {
+<span class="fc" id="L229">                throw new IllegalStateException(&quot;Expense &quot; + expenseId + &quot; is hidden and cannot be removed.&quot;);</span>
+            }
+        } else {
+<span class="fc" id="L232">            throw new IllegalStateException(&quot;Expense &quot; + expenseId + &quot; does not exist.&quot;);</span>
+        }
+    }
+
+
+    @Override
+    public List&lt;Expense&gt; getExpenseByReportId(Long reportId) {
+<span class="fc" id="L239">        Optional&lt;Reports&gt; reportOptional = reportsRepository.findById(reportId);</span>
+
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        if (reportOptional.isPresent()) {</span>
+<span class="fc" id="L242">            Reports report = reportOptional.get();</span>
+<span class="fc" id="L243">            return expenseRepository.findByReportsAndIsHidden(report, false);</span>
+        } else {
+
+<span class="fc" id="L246">            return Collections.emptyList();</span>
+        }
+    }
+
+    @Override
+    public void hideExpense(Long expId) {
+<span class="fc" id="L252">        boolean hidden = true;</span>
+<span class="fc" id="L253">        Expense expense = getExpenseById(expId);</span>
+
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">        if (Boolean.FALSE.equals(expense.getIsReported())) {</span>
+<span class="nc" id="L256">            expense.setIsHidden(hidden);</span>
+        } else {
+<span class="fc" id="L258">            throw new IllegalStateException(&quot;Cannot delete expense &quot; + expId + &quot; as it is already reported in Report: &quot;</span>
+<span class="fc" id="L259">                    + expense.getReportTitle());</span>
+        }
+<span class="nc" id="L261">        expenseRepository.save(expense);</span>
+<span class="nc" id="L262">    }</span>
+
+    @Override
+    public List&lt;Expense&gt; getRejectedExpensesByReportId(Long reportId) {
+<span class="fc" id="L266">        return getExpenseByReportId(reportId).stream()</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">                .filter(expense -&gt; expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED)</span>
+<span class="fc" id="L268">                .collect(Collectors.toList());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

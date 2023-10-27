@@ -3,10 +3,12 @@ package com.nineleaps.expense_management_project.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
 import com.nineleaps.expense_management_project.dto.UserDTO;
 import com.nineleaps.expense_management_project.entity.Employee;
@@ -166,7 +168,7 @@ class EmployeeServiceImplTest {
 
     @Test
     void hideEmployee_ShouldHideEmployee() {
-        // Arrange
+
         Long employeeId = 1L;
         Employee employee = new Employee();
         employee.setEmployeeId(employeeId);
@@ -176,15 +178,15 @@ class EmployeeServiceImplTest {
         savedEmployee.setIsHidden(true);
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
         when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(savedEmployee);
-        // Act
+
         employeeService.hideEmployee(employeeId);
-        // Assert
+
         assertTrue(savedEmployee.getIsHidden());
     }
 
     @Test
     void setFinanceAdmin_ShouldSetFinanceAdminAndRoles() {
-        // Arrange
+
         Long employeeId = 1L;
         Employee employee = new Employee();
         employee.setEmployeeId(employeeId);
@@ -198,9 +200,9 @@ class EmployeeServiceImplTest {
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
         when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(savedEmployee);
         when(employeeRepository.findAll()).thenReturn(allEmployees);
-        // Act
+
         employeeService.setFinanceAdmin(employeeId);
-        // Assert
+
         assertTrue(savedEmployee.getIsFinanceAdmin());
         assertEquals("FINANCE_ADMIN", savedEmployee.getRole());
         for (Employee emp : allEmployees) {
@@ -211,9 +213,10 @@ class EmployeeServiceImplTest {
         }
 
     }
+
     @Test
     void insertUser_ShouldSaveEmployee() {
-        // Arrange
+
         UserDTO userDTO = new UserDTO();
         userDTO.setEmployeeEmail("john.doe@example.com");
         userDTO.setImageUrl("https://example.com/profile.jpg");
@@ -228,23 +231,24 @@ class EmployeeServiceImplTest {
         savedEmployee.setMiddleName(userDTO.getMiddleName());
         savedEmployee.setLastName(userDTO.getLastName());
         when(employeeRepository.save(ArgumentMatchers.any(Employee.class))).thenReturn(savedEmployee);
-        // Act
+
         Employee result = employeeService.insertUser(userDTO);
-        // Assert
+
         assertEquals(savedEmployee, result);
     }
+
     @Test
     void getAllUser_ShouldReturnAllUsers() {
-        // Arrange
+
         Employee employee1 = new Employee();
         employee1.setEmployeeId(1L);
         Employee employee2 = new Employee();
         employee2.setEmployeeId(2L);
         List<Employee> expectedUsers = Arrays.asList(employee1, employee2);
         when(employeeRepository.findAll()).thenReturn(expectedUsers);
-        // Act
+
         List<Employee> actualUsers = employeeService.getAllUser();
-        // Assert
+
         assertEquals(expectedUsers.size(), actualUsers.size());
         assertEquals(expectedUsers, actualUsers);
     }
@@ -260,13 +264,17 @@ class EmployeeServiceImplTest {
         String hrEmail = "hr@example.com";
         String hrName = "HR Name";
 
-        Employee employee = new Employee(); // Create an Employee object with default values or use a builder pattern if available.
+        Employee employee =
+                new Employee(); // Create an Employee object with default values or use a builder pattern if available.
 
-        // Mock the behavior of the repository to return the employee when getEmployeeById is called and to save the employee.
+        // Mock the behavior of the repository to return the employee when getEmployeeById is called and to save the
+        // employee.
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
 
         // Call the method you want to test
-        Optional<Employee> updatedEmployee = employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber, managerName, hrEmail, hrName);
+        Optional<Employee> updatedEmployee =
+                employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,
+                        managerName, hrEmail, hrName);
 
         // Verify that the employee was saved
         verify(employeeRepository, times(1)).save(employee);
@@ -380,7 +388,8 @@ class EmployeeServiceImplTest {
         Employee employee = new Employee();
         employee.setEmployeeEmail(userDTO.getEmployeeEmail());
 
-        // Mock the behavior of the repository to return the employee when findByEmployeeEmail is called and to save the employee
+        // Mock the behavior of the repository to return the employee when findByEmployeeEmail is called and to save
+        // the employee
         when(employeeRepository.findByEmployeeEmail(userDTO.getEmployeeEmail())).thenReturn(employee);
         when(employeeRepository.save(employee)).thenReturn(employee);
 
@@ -399,7 +408,7 @@ class EmployeeServiceImplTest {
 
     @Test
     void testEditEmployeeDetails() {
-        // Arrange
+
         Long employeeId = 1L;
         String managerEmail = "newmanager@example.com";
         Long mobileNumber = 1234567890L;
@@ -411,10 +420,10 @@ class EmployeeServiceImplTest {
 
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
 
-        // Act
+
         employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName);
 
-        // Assert
+
         verify(employeeRepository, times(1)).findById(employeeId);
         verify(employeeRepository, times(1)).save(any(Employee.class));
 
@@ -426,7 +435,7 @@ class EmployeeServiceImplTest {
 
     @Test
     void testEditEmployeeDetails_NullEmployee() {
-        // Arrange
+
         Long employeeId = 1L;
         String managerEmail = "newmanager@example.com";
         Long mobileNumber = 1234567890L;
@@ -435,13 +444,14 @@ class EmployeeServiceImplTest {
 
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
 
-        // Act and Assert
-        assertThrows(NullPointerException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName));
+
+        assertThrows(NullPointerException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail,
+                mobileNumber, officialEmployeeId, managerName));
     }
 
     @Test
     void testEditEmployeeDetails_EmployeeExists() {
-        // Arrange
+
         Long employeeId = 1L;
         String managerEmail = "newmanager@example.com";
         Long mobileNumber = 1234567890L;
@@ -455,10 +465,11 @@ class EmployeeServiceImplTest {
 
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(existingEmployee));
 
-        // Act
-        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);
 
-        // Assert
+        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName,
+                hrEmail, hrName);
+
+
         verify(existingEmployee).setManagerEmail(managerEmail);
         verify(existingEmployee).setMobileNumber(mobileNumber);
         verify(existingEmployee).setOfficialEmployeeId(officialEmployeeId);
@@ -470,7 +481,7 @@ class EmployeeServiceImplTest {
 
     @Test
     void testEditEmployeeDetails_EmployeeDoesNotExist() {
-        // Arrange
+
         Long employeeId = 1L;
         String managerEmail = "newmanager@example.com";
         Long mobileNumber = 1234567890L;
@@ -481,8 +492,9 @@ class EmployeeServiceImplTest {
 
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
 
-        // Act and Assert
-        assertThrows(NullPointerException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName));
+
+        assertThrows(NullPointerException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail,
+                mobileNumber, officialEmployeeId, managerName, hrEmail, hrName));
     }
 
 

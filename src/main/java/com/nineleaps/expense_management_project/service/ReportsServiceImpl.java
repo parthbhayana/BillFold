@@ -5,6 +5,7 @@ import java.util.*;
 import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+
 import com.nineleaps.expense_management_project.dto.ReportsDTO;
 import com.nineleaps.expense_management_project.entity.*;
 import com.nineleaps.expense_management_project.firebase.PushNotificationService;
@@ -91,7 +92,6 @@ public class ReportsServiceImpl implements IReportsService {
         String managerEmail = employee.getManagerEmail();
         String employeeName = (employee.getFirstName() + " " + employee.getLastName());
         String officialEmployeeId = employee.getOfficialEmployeeId();
-
         Reports newReport = new Reports();
         newReport.setReportTitle(reportsDTO.getReportTitle());
         newReport.setEmployeeMail(employeeEmail);
@@ -101,11 +101,8 @@ public class ReportsServiceImpl implements IReportsService {
         newReport.setDateCreated(LocalDate.now());
         newReport.setEmployeeId(employeeId);
         reportsRepository.save(newReport);
-
-
         return reportsRepository.save(newReport);
     }
-
 
 
     @Override
@@ -133,7 +130,6 @@ public class ReportsServiceImpl implements IReportsService {
         }
 
 
-
         if (report != null) {
             if (Boolean.TRUE.equals(report.getIsSubmitted()) &&
                     report.getManagerApprovalStatus() == ManagerApprovalStatus.REJECTED) {
@@ -146,25 +142,15 @@ public class ReportsServiceImpl implements IReportsService {
 
     void updateReportAndExpenseTitles(Long reportId, String reportTitle) {
         Reports report = reportsRepository.getReportByReportId(reportId);
-        if(report != null) {
+        if (report != null) {
             report.setReportTitle(reportTitle);
             reportsRepository.save(report);
-
-
         }
     }
 
     void addExpensesToReport(Long reportId, List<Long> expenseIds) {
         for (Long expenseId : expenseIds) {
             Expense expense = expenseServices.getExpenseById(expenseId);
-            if (expense != null && expenseId != null) {
-                if (Boolean.TRUE.equals(expense.getIsReported())) {
-                    throw new IllegalStateException("Expense " + expenseId + " is already reported in another report.");
-                }
-
-            }
-
-
             expenseServices.updateExpense(reportId, expenseId);
         }
     }
@@ -174,7 +160,7 @@ public class ReportsServiceImpl implements IReportsService {
 
         for (Long expenseId : expenseIds) {
             Expense expense = expenseServices.getExpenseById(expenseId);
-            if(expense != null && (Boolean.TRUE.equals(expense.getIsReported()))) {
+            if (expense != null && (Boolean.TRUE.equals(expense.getIsReported()))) {
                 expense.setIsReported(reportedStatus);
                 expense.setReports(null);
                 expense.setReportTitle(null);
@@ -187,10 +173,11 @@ public class ReportsServiceImpl implements IReportsService {
 
     void updateReportTotalAmounts(Long reportId) {
         Reports report = reportsRepository.getReportByReportId(reportId);
-        if(report != null){
+        if (report != null) {
             report.setTotalAmount(totalAmount(reportId));
             report.setTotalApprovedAmount(totalApprovedAmount(reportId));
-            reportsRepository.save(report);}
+            reportsRepository.save(report);
+        }
     }
 
     @Override
@@ -203,9 +190,6 @@ public class ReportsServiceImpl implements IReportsService {
 
                 throw new NullPointerException("Expense not found for ID: " + expenseId);
             }
-//            else if (Boolean.TRUE.equals(expense.getIsReported())) {
-//                throw new IllegalStateException(CONSTANT3 + expenseId + " is already reported in another report!");
-//            }
             else {
                 expenseServices.updateExpense(reportId, expenseId);
             }
@@ -335,15 +319,14 @@ public class ReportsServiceImpl implements IReportsService {
 
 
         re.setIsSubmitted(submissionStatus);
-        re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
-        re.setDateSubmitted(LocalDate.now());
-        re.setTotalAmount(totalAmount(reportId));
+//        re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
+//        re.setDateSubmitted(LocalDate.now());
+//        re.setTotalAmount(totalAmount(reportId));
 
 
         reportsRepository.save(re);
 
     }
-
 
 
     @Override
@@ -372,9 +355,6 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
 
-
-
-
     @Override
     public void rejectReportByFinance(Long reportId, String comments) {
         FinanceApprovalStatus approvalStatus = FinanceApprovalStatus.REJECTED;
@@ -395,6 +375,7 @@ public class ReportsServiceImpl implements IReportsService {
 
         }
     }
+
     @Override
     public float totalAmount(Long reportId) {
         Optional<Reports> reportOptional = reportsRepository.findById(reportId);
@@ -422,9 +403,9 @@ public class ReportsServiceImpl implements IReportsService {
         float totalApprovedAmount = 0;
         for (Expense expense2 : expenseList) {
             Double amountApproved = expense2.getAmountApproved();
-            if (amountApproved != null) {
-                totalApprovedAmount += amountApproved.floatValue();
-            }
+//            if (amountApproved != null) {
+            totalApprovedAmount += amountApproved.floatValue();
+//            }
         }
         return totalApprovedAmount;
     }
@@ -520,7 +501,6 @@ public class ReportsServiceImpl implements IReportsService {
             throw new IllegalStateException(CONSTANT2 + reportId + " is not submitted!");
         }
     }
-
 
 
     void processPartiallyApprovedExpenses(Map<Long, Float> partiallyApprovedMap) {

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmailServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.service</a> &gt; <span class="el_source">EmailServiceImpl.java</span></div><h1>EmailServiceImpl.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.service;
+
+import com.nineleaps.expense_management_project.repository.EmployeeRepository;
+import com.nineleaps.expense_management_project.repository.ExpenseRepository;
+import com.nineleaps.expense_management_project.repository.ReportsRepository;
+import org.springframework.stereotype.Service;
+import com.nineleaps.expense_management_project.entity.Employee;
+import com.nineleaps.expense_management_project.entity.Expense;
+import com.nineleaps.expense_management_project.entity.Reports;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+@Service
+public class EmailServiceImpl implements IEmailService {
+
+    @Autowired
+    private IReportsService reportsService;
+    @Autowired
+    private ExpenseRepository expenseRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private IExpenseService expenseService;
+    @Autowired
+    private IEmployeeService employeeService;
+    @Autowired
+    private ReportsRepository reportsRepository;
+    @Autowired
+    private IPdfGeneratorService pdfGeneratorService;
+
+    private final JavaMailSender javaMailSender;
+    private static final String CONSTANT1 = &quot;billfold.noreply@gmail.com&quot;;
+    private static final String CONSTANT2 = &quot;\n\nReport Title: &quot;;
+    private static final String CONSTANT3 = &quot;\n\nThis is an automated message. Please do not reply to this email.&quot;;
+    private static final String CONSTANT4 = &quot;Document.pdf&quot;;
+    private static final String CONSTANT5 = &quot;No expenses are added to the report &quot;;
+    private static final String CONSTANT6 = &quot;Dear &quot;;
+    private static final String CONSTANT7 = &quot;\n\nBest Regards,&quot;;
+    private static final String CONSTANT8 = &quot;\nBillFold&quot;;
+    private static final String CONSTANT9 = &quot;\n\nThank you for your cooperation and timely submission of the expense report.&quot;;
+    private static final String CONSTANT10 = &quot;\n\nThanks!&quot;;
+    private static final String CONSTANT11 = &quot;\nTotal Amount: ₹&quot;;
+    private static final String CONSTANT12 = &quot;Employee does not exist!&quot;;
+    private static final String CONSTANT13 = &quot;,\n\n&quot;;
+
+<span class="fc" id="L57">    public EmailServiceImpl(JavaMailSender mailSender) {</span>
+<span class="fc" id="L58">        this.javaMailSender = mailSender;</span>
+<span class="fc" id="L59">    }</span>
+
+
+    @Override
+    public void notifyHr(Long reportId, String hrEmail, String hrName) throws MessagingException {
+<span class="fc" id="L64">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (reportId != null) {</span>
+<span class="fc" id="L66">            MimeMessage message = javaMailSender.createMimeMessage();</span>
+<span class="fc" id="L67">            MimeMessageHelper eMail = new MimeMessageHelper(message, true);</span>
+<span class="fc" id="L68">            eMail.setFrom(CONSTANT1);</span>
+<span class="fc" id="L69">            eMail.setTo(hrEmail);</span>
+<span class="fc" id="L70">            eMail.setSubject(&quot;Expense Report: &quot; + report.getReportTitle());</span>
+<span class="fc" id="L71">            eMail.setText(CONSTANT6 + hrName + CONSTANT13</span>
+                    + &quot;CONTENT HERE!!&quot;
+                    + CONSTANT3 + CONSTANT10);
+<span class="fc" id="L74">            javaMailSender.send(message);</span>
+        }
+<span class="fc" id="L76">    }</span>
+
+    @Override
+    public void notifyLnD(Long reportId, String lndEmail, String lndName) throws MessagingException {
+<span class="fc" id="L80">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (reportId != null) {</span>
+<span class="fc" id="L82">            MimeMessage message = javaMailSender.createMimeMessage();</span>
+<span class="fc" id="L83">            MimeMessageHelper eMail = new MimeMessageHelper(message, true);</span>
+<span class="fc" id="L84">            eMail.setFrom(CONSTANT1);</span>
+<span class="fc" id="L85">            eMail.setTo(lndEmail);</span>
+<span class="fc" id="L86">            eMail.setSubject(&quot;Expense Report: &quot; + report.getReportTitle()); //</span>
+<span class="fc" id="L87">            eMail.setText(CONSTANT6 + lndName + CONSTANT13</span>
+                    + &quot;CONTENT HERE!!&quot;
+                    + CONSTANT3 + CONSTANT10);
+<span class="fc" id="L90">            javaMailSender.send(message);</span>
+        }
+<span class="fc" id="L92">    }</span>
+
+    @Override
+    public void managerNotification(Long reportId, List&lt;Long&gt; expenseIds, HttpServletResponse response)
+            throws IOException, MessagingException {
+<span class="fc" id="L97">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="fc" id="L98">        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(reportId);</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (!expenseList.isEmpty()) {</span>
+<span class="fc" id="L100">            Expense expense = expenseList.get(0);</span>
+<span class="fc" id="L101">            Employee employee = expense.getEmployee();</span>
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">            if (employee != null &amp;&amp; employee.getManagerEmail() != null) {</span>
+<span class="fc" id="L103">                MimeMessage message = javaMailSender.createMimeMessage();</span>
+<span class="fc" id="L104">                MimeMessageHelper eMail = new MimeMessageHelper(message, true);</span>
+<span class="fc" id="L105">                eMail.setFrom(CONSTANT1);</span>
+<span class="fc" id="L106">                eMail.setTo(employee.getManagerEmail());</span>
+<span class="fc" id="L107">                eMail.setSubject(&quot;BillFold - &quot; + employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
+<span class="fc" id="L108">                eMail.setText(CONSTANT6 + employee.getManagerName() + &quot;.\n\n&quot;</span>
+<span class="fc" id="L109">                        + employee.getFirstName() + &quot; &quot; + employee.getLastName()</span>
+                        + &quot; has submitted you a report for approval. As a designated manager, we kindly request your prompt attention to review and take necessary action on the report.&quot;
+<span class="fc" id="L111">                        + &quot;\n\nBelow are the details of the report submission:&quot; + CONSTANT2 + report.getReportTitle()</span>
+<span class="fc" id="L112">                        + &quot;\nSubmitter's Name: &quot; + employee.getFirstName() + &quot; &quot; + employee.getLastName()</span>
+<span class="fc" id="L113">                        + &quot;\nSubmission Date: &quot; + report.getDateSubmitted() + CONSTANT11</span>
+<span class="fc" id="L114">                        + report.getTotalAmount()</span>
+                        + &quot;\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment.&quot;
+                        + CONSTANT3 + CONSTANT10);
+<span class="fc" id="L117">                byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response,&quot;Manager&quot;);</span>
+<span class="fc" id="L118">                ByteArrayResource resource = new ByteArrayResource(fileData);</span>
+<span class="fc" id="L119">                eMail.addAttachment(CONSTANT4, resource);</span>
+<span class="fc" id="L120">                javaMailSender.send(message);</span>
+<span class="fc" id="L121">            } else {</span>
+<span class="fc" id="L122">                throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+            }
+<span class="fc" id="L124">        } else {</span>
+<span class="fc" id="L125">            throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+        }
+<span class="fc" id="L127">    }</span>
+
+    @Override
+    public void managerNotification(Long reportId, List&lt;Long&gt; expenseIds, String managerEmail,
+                                    HttpServletResponse response) throws IOException, MessagingException {
+
+<span class="fc" id="L133">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="fc" id="L134">        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(reportId);</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (!expenseList.isEmpty()) {</span>
+<span class="fc" id="L136">            Expense expense = expenseList.get(0);</span>
+<span class="fc" id="L137">            Employee employee = expense.getEmployee();</span>
+<span class="pc bpc" id="L138" title="1 of 4 branches missed.">            if (employee != null &amp;&amp; employee.getManagerEmail() != null) {</span>
+<span class="fc" id="L139">                MimeMessage message = javaMailSender.createMimeMessage();</span>
+<span class="fc" id="L140">                MimeMessageHelper eMail = new MimeMessageHelper(message, true);</span>
+<span class="fc" id="L141">                eMail.setFrom(CONSTANT1);</span>
+<span class="fc" id="L142">                eMail.setTo(managerEmail);</span>
+<span class="fc" id="L143">                eMail.setSubject(&quot;BillFold - &quot; + employee.getFirstName() + &quot; &quot; + employee.getLastName());</span>
+<span class="fc" id="L144">                eMail.setText(CONSTANT6 + employee.getManagerName() + CONSTANT13</span>
+<span class="fc" id="L145">                        + employee.getFirstName() + &quot; &quot; + employee.getLastName()</span>
+                        + &quot; has submitted you a report for approval. As a designated manager, we kindly request your prompt attention to review and take necessary action on the report.&quot;
+<span class="fc" id="L147">                        + &quot;\n\nBelow are the details of the report submission:&quot; + CONSTANT2 + report.getReportTitle()</span>
+<span class="fc" id="L148">                        + &quot;\nSubmitter's Name: &quot; + employee.getFirstName() + &quot; &quot; + employee.getLastName()</span>
+<span class="fc" id="L149">                        + &quot;\nSubmission Date: &quot; + report.getDateSubmitted() + CONSTANT11</span>
+<span class="fc" id="L150">                        + report.getTotalAmount()</span>
+                        + &quot;\n\nPlease log in to your Billfold account to access the report and review its contents. We kindly request you to carefully evaluate the report and take appropriate action based on your assessment.&quot;
+                        + CONSTANT3 + CONSTANT10);
+<span class="fc" id="L153">                byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response,&quot;Manager&quot;);</span>
+<span class="fc" id="L154">                ByteArrayResource resource = new ByteArrayResource(fileData);</span>
+<span class="fc" id="L155">                eMail.addAttachment(CONSTANT4, resource);</span>
+<span class="fc" id="L156">                javaMailSender.send(message);</span>
+<span class="fc" id="L157">            } else {</span>
+<span class="fc" id="L158">                throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+            }
+<span class="fc" id="L160">        } else {</span>
+<span class="fc" id="L161">            throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+        }
+<span class="fc" id="L163">    }</span>
+
+
+
+    @Override
+    public void userApprovedNotification(Long reportId, List&lt;Long&gt; expenseIds, HttpServletResponse response) throws IOException, MessagingException {
+<span class="fc" id="L169">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="fc" id="L170">        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(reportId);</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (!expenseList.isEmpty()) {</span>
+<span class="fc" id="L172">            Expense expense = expenseList.get(0);</span>
+<span class="fc" id="L173">            Employee employee = expense.getEmployee();</span>
+<span class="fc" id="L174">            MimeMessage message = javaMailSender.createMimeMessage();</span>
+<span class="fc" id="L175">            MimeMessageHelper eMail = new MimeMessageHelper(message, true);</span>
+<span class="fc" id="L176">            eMail.setFrom(CONSTANT1);</span>
+<span class="fc" id="L177">            eMail.setTo(employee.getEmployeeEmail());</span>
+<span class="fc" id="L178">            eMail.setSubject(&quot;[APPROVED] Expense Report: &quot; + report.getReportTitle());</span>
+<span class="fc" id="L179">            eMail.setText(CONSTANT6 + employee.getFirstName() + &quot; &quot; + employee.getLastName() + &quot;,&quot;</span>
+                    + &quot;\n\nCongratulations! Your expense report has been approved by your manager. The details of the approval are as follows:&quot;
+<span class="fc" id="L181">                    + CONSTANT2 + report.getReportTitle() + &quot;\nApproved Amount: ₹&quot; + report.getTotalApprovedAmount()</span>
+<span class="fc" id="L182">                    + &quot;\nApproval Date: &quot; + report.getManagerActionDate()</span>
+                    + &quot;\n\nIf you have any questions or need further assistance, please feel free to contact your manager or the HR department.&quot;
+                    + CONSTANT9 + CONSTANT7 + CONSTANT8 + CONSTANT3);
+
+<span class="fc" id="L186">            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response,&quot;Employee&quot;);</span>
+<span class="fc" id="L187">            ByteArrayResource resource = new ByteArrayResource(fileData);</span>
+<span class="fc" id="L188">            eMail.addAttachment(CONSTANT4, resource);</span>
+<span class="fc" id="L189">            this.javaMailSender.send(message);</span>
+<span class="fc" id="L190">        } else {</span>
+<span class="fc" id="L191">            throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+        }
+<span class="fc" id="L193">    }</span>
+
+    @Override
+    public void userReimbursedNotification(Long reportId) {
+<span class="fc" id="L197">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="fc" id="L198">        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(reportId);</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        if (!expenseList.isEmpty()) {</span>
+<span class="fc" id="L200">            Expense expense = expenseList.get(0);</span>
+<span class="fc" id="L201">            Employee employee = expense.getEmployee();</span>
+<span class="fc" id="L202">            SimpleMailMessage eMail = new SimpleMailMessage();</span>
+<span class="fc" id="L203">            eMail.setFrom(CONSTANT1);</span>
+<span class="fc" id="L204">            eMail.setTo(employee.getEmployeeEmail());</span>
+<span class="fc" id="L205">            eMail.setSubject(&quot;[PUSHED TO REIMBURSEMENT] Expense Report: &quot; + report.getReportTitle());</span>
+<span class="fc" id="L206">            eMail.setText(CONSTANT6 + employee.getFirstName() + &quot; &quot; + employee.getLastName() + &quot;,&quot;</span>
+                    + &quot;\n\nCongratulations! Your expense report has been pushed to reimbursement by the finance department. The details of the reimbursement are as follows:&quot;
+<span class="fc" id="L208">                    + CONSTANT2 + report.getReportTitle() + &quot;\n\nAmount Reimbursed: ₹&quot; + report.getTotalApprovedAmount()</span>
+<span class="fc" id="L209">                    + &quot;\nReimbursement Date: &quot; + report.getFinanceActionDate()</span>
+                    + &quot;\n\nPlease check your bank account for the credited amount. If you have any questions or concerns regarding the reimbursement, please reach out to the finance department.&quot;
+                    + CONSTANT9 + CONSTANT7 + CONSTANT8 + CONSTANT3);
+
+<span class="fc" id="L213">            this.javaMailSender.send(eMail);</span>
+<span class="fc" id="L214">        } else {</span>
+<span class="fc" id="L215">            throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+        }
+<span class="fc" id="L217">    }</span>
+
+    @Override
+    public void userRejectedByFinanceNotification(Long reportId) {
+<span class="fc" id="L221">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="fc" id="L222">        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(reportId);</span>
+
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (!expenseList.isEmpty()) {</span>
+<span class="fc" id="L225">            Expense expense = expenseList.get(0);</span>
+<span class="fc" id="L226">            Employee employee = expense.getEmployee();</span>
+<span class="fc" id="L227">            SimpleMailMessage email = new SimpleMailMessage();</span>
+<span class="fc" id="L228">            email.setFrom(CONSTANT1);</span>
+<span class="fc" id="L229">            email.setTo(employee.getEmployeeEmail());</span>
+<span class="fc" id="L230">            email.setSubject(&quot;[REJECTED] Expense Report: &quot; + report.getReportTitle());</span>
+<span class="fc" id="L231">            email.setText(CONSTANT6 + employee.getFirstName() + &quot; &quot; + employee.getLastName() + &quot;,&quot;</span>
+                    + &quot;\n\nWe regret to inform you that your expense report has been rejected by the finance department. The details of the rejection are as follows:&quot;
+<span class="fc" id="L233">                    + CONSTANT2 + report.getReportTitle() + &quot;\n\nRejection Reason: &quot; + report.getFinanceComments()</span>
+<span class="fc" id="L234">                    + &quot;\nRejection Date: &quot; + report.getFinanceActionDate()</span>
+                    + &quot;\n\nPlease review the feedback provided by the finance department and make the necessary revisions to your expense report. Once you have made the required changes, resubmit the report for further processing.&quot;
+                    + &quot;\n\nIf you have any questions or need clarification regarding the rejection, please reach out to the finance department or your manager.&quot;
+                    + &quot;\n\nThank you for your understanding and cooperation.&quot; + CONSTANT7 + CONSTANT8 + CONSTANT3);
+
+<span class="fc" id="L239">            this.javaMailSender.send(email);</span>
+<span class="fc" id="L240">        } else {</span>
+<span class="fc" id="L241">            throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+        }
+<span class="fc" id="L243">    }</span>
+
+    @Override
+    public void financeNotification(Long reportId, List&lt;Long&gt; expenseIds, HttpServletResponse response)
+            throws IOException, MessagingException {
+<span class="fc" id="L248">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="fc" id="L249">        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(reportId);</span>
+<span class="fc" id="L250">        Employee admin = employeeRepository.findByRole(&quot;FINANCE_ADMIN&quot;);</span>
+<span class="fc" id="L251">        String adminEmail = admin.getEmployeeEmail();</span>
+
+<span class="fc bfc" id="L253" title="All 2 branches covered.">        if (!expenseList.isEmpty()) {</span>
+<span class="fc" id="L254">            Expense expense = expenseList.get(0);</span>
+<span class="fc" id="L255">            Employee employee = expense.getEmployee();</span>
+<span class="fc" id="L256">            MimeMessage message = javaMailSender.createMimeMessage();</span>
+<span class="fc" id="L257">            MimeMessageHelper eMail = new MimeMessageHelper(message, true);</span>
+<span class="fc" id="L258">            eMail.setFrom(CONSTANT1);</span>
+<span class="fc" id="L259">            eMail.setTo(adminEmail);</span>
+<span class="fc" id="L260">            eMail.setSubject(&quot;Expense Reimbursement Request: &quot; + report.getReportTitle());</span>
+<span class="fc" id="L261">            eMail.setText(CONSTANT6 + admin.getFirstName() + &quot;,&quot;</span>
+                    + &quot;\n\nYou have received a request for expense reimbursement from employee &quot;
+<span class="fc" id="L263">                    + employee.getFirstName() + &quot; &quot; + employee.getLastName()</span>
+<span class="fc" id="L264">                    + &quot;. The details of the expense report are as follows:&quot; + CONSTANT2 + report.getReportTitle()</span>
+<span class="fc" id="L265">                    + &quot;\nEmployee: &quot; + employee.getFirstName() + &quot; &quot; + employee.getLastName() + CONSTANT11</span>
+<span class="fc" id="L266">                    + report.getTotalApprovedAmount() + &quot; &quot;</span>
+                    + &quot;\n\nPlease review the attached expense report and process the reimbursement accordingly. If there are any additional details required or if you have any questions, please reach out to the employee or the HR department.&quot;
+                    + &quot;\n\nThank you for your attention to this matter.&quot; + CONSTANT7 + CONSTANT8 + CONSTANT3);
+
+<span class="fc" id="L270">            byte[] fileData = pdfGeneratorService.export(reportId, expenseIds, response,&quot;Finance&quot;);</span>
+<span class="fc" id="L271">            ByteArrayResource resource = new ByteArrayResource(fileData);</span>
+<span class="fc" id="L272">            eMail.addAttachment(CONSTANT4, resource);</span>
+<span class="fc" id="L273">            this.javaMailSender.send(message);</span>
+<span class="fc" id="L274">        } else {</span>
+<span class="fc" id="L275">            throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+        }
+<span class="fc" id="L277">    }</span>
+
+
+    @Override
+    public void userPartialApprovedExpensesNotification(Long reportId) {
+<span class="fc" id="L282">        Reports report = reportsService.getReportById(reportId);</span>
+<span class="fc" id="L283">        List&lt;Expense&gt; expenseList = expenseService.getExpenseByReportId(reportId);</span>
+
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (!expenseList.isEmpty()) {</span>
+<span class="fc" id="L286">            Expense expense = expenseList.get(0);</span>
+<span class="fc" id="L287">            Employee employee = expense.getEmployee();</span>
+<span class="fc" id="L288">            SimpleMailMessage eMail = new SimpleMailMessage();</span>
+<span class="fc" id="L289">            eMail.setFrom(CONSTANT1);</span>
+<span class="fc" id="L290">            eMail.setTo(employee.getEmployeeEmail());</span>
+<span class="fc" id="L291">            eMail.setSubject(&quot;[PARTIAL APPROVAL] Expense Report: &quot; + report.getReportTitle());</span>
+<span class="fc" id="L292">            eMail.setText(CONSTANT6 + employee.getFirstName() + &quot; &quot; + employee.getLastName() + &quot;,&quot;</span>
+                    + &quot;\n\nCongratulations! Your expense report has been partially approved by your manager. The details of the partial approval are as follows:&quot;
+<span class="fc" id="L294">                    + CONSTANT2 + report.getReportTitle() + &quot;\nApproval Date: &quot; + report.getManagerActionDate()</span>
+                    + &quot;\n\nPlease note that not all expenses have been approved. Some expenses are partially approved according to the company policy. Please login to your BillFold account for detailed information of your expense report.&quot;
+                    + &quot;\n\nIf you have any questions or need further assistance, please feel free to contact your manager or the HR department.&quot;
+                    + CONSTANT9 + CONSTANT7 + CONSTANT8 + CONSTANT3);
+
+<span class="fc" id="L299">            this.javaMailSender.send(eMail);</span>
+<span class="fc" id="L300">        } else {</span>
+<span class="fc" id="L301">            throw new IllegalStateException(CONSTANT5 + report.getReportTitle());</span>
+        }
+<span class="fc" id="L303">    }</span>
+
+    public void reminderMailToEmployee(List&lt;Long&gt; expenseIds) {
+<span class="fc bfc" id="L306" title="All 2 branches covered.">        for (Long expenseId : expenseIds) {</span>
+<span class="fc" id="L307">            Optional&lt;Expense&gt; expenseOptional = expenseRepository.findById(expenseId);</span>
+
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">            if (expenseOptional.isPresent()) {</span>
+<span class="fc" id="L310">                Expense expense = expenseOptional.get();</span>
+<span class="fc" id="L311">                Employee employee = expense.getEmployee();</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">                if (employee != null) {</span>
+<span class="fc" id="L313">                    SimpleMailMessage email = new SimpleMailMessage();</span>
+<span class="fc" id="L314">                    email.setFrom(CONSTANT1);</span>
+<span class="fc" id="L315">                    email.setTo(employee.getEmployeeEmail());</span>
+<span class="fc" id="L316">                    email.setSubject(&quot;[ACTION REQUIRED] Expense Report Submission Reminder&quot;);</span>
+<span class="fc" id="L317">                    email.setText(CONSTANT6 + employee.getFirstName() + &quot; &quot; + employee.getLastName() + &quot;,&quot;</span>
+                            + &quot;\n\nWe hope this email finds you well. We would like to remind you that you have not yet reported some of your expenses.It is important to submit your expense report in a timely manner to ensure accurate reimbursement and compliance with company policies.&quot;
+                            + &quot;\n\nPlease note that if your expenses are not reported within 60 days from the end of the reporting period, they will not be eligible for reimbursement. Therefore, we kindly request you to submit your expense report by the submission deadline. This will allow us to review and process your expenses promptly.&quot;
+                            + &quot;\n\nTo report your expenses, please access your BillFold account and follow the instructions provided. Ensure that all receipts and necessary supporting documents are attached for proper validation.&quot;
+                            + &quot;\n\nIf you have any questions or need assistance with the expense reporting process, please reach out to our HR department or your manager. We are here to help and ensure a smooth reimbursement process for you.&quot;
+                            + &quot;Thank you for your attention to this matter. Your cooperation in submitting your expense report within the specified deadline is greatly appreciated.&quot;
+                            + CONSTANT7 + CONSTANT8 + CONSTANT3);
+
+<span class="fc" id="L325">                    this.javaMailSender.send(email);</span>
+                }
+            }
+<span class="fc" id="L328">        }</span>
+<span class="fc" id="L329">    }</span>
+
+    @Override
+    public void reminderMailToManager(List&lt;Long&gt; reportIds) {
+
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        for (Long reportId : reportIds) {</span>
+<span class="fc" id="L335">            Optional&lt;Reports&gt; reportOptional = reportsRepository.findById(reportId);</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">            if (reportOptional.isPresent()) {</span>
+<span class="fc" id="L337">                Reports report = reportOptional.get();</span>
+<span class="fc" id="L338">                Long employeeId = report.getEmployeeId();</span>
+<span class="fc" id="L339">                Employee employee = employeeService.getEmployeeById(employeeId);</span>
+<span class="fc" id="L340">                SimpleMailMessage email = new SimpleMailMessage();</span>
+<span class="fc" id="L341">                email.setFrom(CONSTANT1);</span>
+<span class="fc" id="L342">                email.setTo(employee.getManagerEmail());</span>
+<span class="fc" id="L343">                email.setSubject(&quot;[REMINDER] Pending Action on Expense Reports&quot;);</span>
+<span class="fc" id="L344">                email.setText(CONSTANT6 + employee.getManagerName() + &quot;,&quot;</span>
+                        + &quot;\n\nThis is a friendly reminder that you have pending expense reports awaiting your action. The reports have been submitted more than 30 days ago and are still pending approval.&quot;
+                        + &quot;\n\nPlease review and take appropriate action on the following report:&quot; + &quot;\n\n&quot;
+<span class="fc" id="L347">                        + report.getReportTitle()</span>
+                        + &quot;\n\nTo take action on these reports, please log in to the BillFold app.&quot;
+                        + &quot;\n\nThank you for your attention to this matter.&quot; + CONSTANT7 + CONSTANT8 + CONSTANT3);
+<span class="fc" id="L350">                this.javaMailSender.send(email);</span>
+            }
+<span class="fc" id="L352">        }</span>
+<span class="fc" id="L353">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
