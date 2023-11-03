@@ -1,12 +1,11 @@
 package com.nineleaps.expensemanagementproject.service;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jfree.chart.JFreeChart;
 
@@ -18,7 +17,7 @@ public interface IExcelGeneratorCategoryService {
 
 	int loadChartImage(JFreeChart chart, int width, int height, HSSFWorkbook workbook) throws IOException;
 
-	HashMap<String, Double> CategoryTotalAmount(LocalDate startDate, LocalDate endDate);
+	HashMap<String, Double> categoryTotalAmount(LocalDate startDate, LocalDate endDate);
 
 	boolean sendEmailWithAttachment(String toEmail, String subject, String body, byte[] attachmentContent,
 									String attachmentFilename);

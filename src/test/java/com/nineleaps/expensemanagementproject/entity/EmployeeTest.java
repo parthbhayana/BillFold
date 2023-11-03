@@ -1,207 +1,272 @@
 package com.nineleaps.expensemanagementproject.entity;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
+import com.nineleaps.expensemanagementproject.controller.EmployeeController;
+import com.nineleaps.expensemanagementproject.service.EmployeeServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class EmployeeTest {
+
+    @InjectMocks
     private Employee employee;
+
+    @Mock
+    private Expense expense;
+
+    @InjectMocks
+    private EmployeeController employeeController;
+
+    @Mock
+    private EmployeeServiceImpl employeeService;
+
     @BeforeEach
     void setUp() {
-        Long employeeId = 1L;
-        String officialEmployeeId = "E001";
-        String firstName = "John";
-        String middleName = "Doe";
-        String lastName = "Smith";
-        String employeeEmail = "john@example.com";
-        String managerEmail = "manager@example.com";
-        String managerName = "Manager";
-        Long mobileNumber = 1234567890L;
-        Boolean isFinanceAdmin = false;
-        String imageUrl = "https://example.com/image.jpg";
-        Boolean isHidden = false;
-        List<Expense> expenseList = new ArrayList<>();
-        String role = "EMPLOYEE";
-
-        employee = new Employee(employeeId, officialEmployeeId, firstName, middleName, lastName, employeeEmail,
-                managerEmail, managerName, mobileNumber, isFinanceAdmin, imageUrl, isHidden, expenseList, role);
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    void getEmployeeId() {
+    void testGetEmployeeId() {
         Long employeeId = 1L;
+        employee.setEmployeeId(employeeId);
         assertEquals(employeeId, employee.getEmployeeId());
     }
 
     @Test
-    void setEmployeeId() {
-        Long newEmployeeId = 2L;
-        employee.setEmployeeId(newEmployeeId);
-        assertEquals(newEmployeeId, employee.getEmployeeId());
-    }
-
-    @Test
-    void getOfficialEmployeeId() {
-        String officialEmployeeId = "E001";
+    void testGetOfficialEmployeeId() {
+        String officialEmployeeId = "EMP001";
+        employee.setOfficialEmployeeId(officialEmployeeId);
         assertEquals(officialEmployeeId, employee.getOfficialEmployeeId());
     }
 
     @Test
-    void setOfficialEmployeeId() {
-        String newOfficialEmployeeId = "E002";
-        employee.setOfficialEmployeeId(newOfficialEmployeeId);
-        assertEquals(newOfficialEmployeeId, employee.getOfficialEmployeeId());
-    }
-
-    @Test
-    void getFirstName() {
+    void testGetFirstName() {
         String firstName = "John";
+        employee.setFirstName(firstName);
         assertEquals(firstName, employee.getFirstName());
     }
 
     @Test
-    void setFirstName() {
-        String newFirstName = "Jane";
-        employee.setFirstName(newFirstName);
-        assertEquals(newFirstName, employee.getFirstName());
-    }
-
-    @Test
-    void getMiddleName() {
-        String middleName = "Doe";
+    void testGetMiddleName() {
+        String middleName = "James";
+        employee.setMiddleName(middleName);
         assertEquals(middleName, employee.getMiddleName());
     }
 
     @Test
-    void setMiddleName() {
-        String newMiddleName = "Sue";
-        employee.setMiddleName(newMiddleName);
-        assertEquals(newMiddleName, employee.getMiddleName());
-    }
-
-    @Test
-    void getLastName() {
-        String lastName = "Smith";
+    void testGetLastName() {
+        String lastName = "Doe";
+        employee.setLastName(lastName);
         assertEquals(lastName, employee.getLastName());
     }
 
     @Test
-    void setLastName() {
-        String newLastName = "Johnson";
-        employee.setLastName(newLastName);
-        assertEquals(newLastName, employee.getLastName());
-    }
-
-    @Test
-    void getEmployeeEmail() {
-        String employeeEmail = "john@example.com";
+    void testGetEmployeeEmail() {
+        String employeeEmail = "john.doe@example.com";
+        employee.setEmployeeEmail(employeeEmail);
         assertEquals(employeeEmail, employee.getEmployeeEmail());
     }
 
     @Test
-    void setEmployeeEmail() {
-        String newEmployeeEmail = "jane@example.com";
-        employee.setEmployeeEmail(newEmployeeEmail);
-        assertEquals(newEmployeeEmail, employee.getEmployeeEmail());
-    }
-
-    @Test
-    void getManagerEmail() {
+    void testGetManagerEmail() {
         String managerEmail = "manager@example.com";
+        employee.setManagerEmail(managerEmail);
         assertEquals(managerEmail, employee.getManagerEmail());
     }
 
     @Test
-    void setManagerEmail() {
-        String newManagerEmail = "newmanager@example.com";
-        employee.setManagerEmail(newManagerEmail);
-        assertEquals(newManagerEmail, employee.getManagerEmail());
+    void testGetManagerName() {
+        String managerName = "Manager Name";
+        employee.setManagerName(managerName);
+        assertEquals(managerName, employee.getManagerName());
     }
 
     @Test
-    void setManagerName() {
-        String newManagerName = "New Manager";
-        employee.setManagerName(newManagerName);
-        assertEquals(newManagerName, employee.getManagerName());
+    void testGetHrName() {
+        String hrName = "HR Name";
+        employee.setHrName(hrName);
+        assertEquals(hrName, employee.getHrName());
     }
 
     @Test
-    void getMobileNumber() {
+    void testGetHrEmail() {
+        String hrEmail = "hr@example.com";
+        employee.setHrEmail(hrEmail);
+        assertEquals(hrEmail, employee.getHrEmail());
+    }
+
+    @Test
+    void testGetLndName() {
+        String lndName = "LND Name";
+        employee.setLndName(lndName);
+        assertEquals(lndName, employee.getLndName());
+    }
+
+    @Test
+    void testGetLndEmail() {
+        String lndEmail = "lnd@example.com";
+        employee.setLndEmail(lndEmail);
+        assertEquals(lndEmail, employee.getLndEmail());
+    }
+
+    @Test
+    void testGetMobileNumber() {
         Long mobileNumber = 1234567890L;
+        employee.setMobileNumber(mobileNumber);
         assertEquals(mobileNumber, employee.getMobileNumber());
     }
 
     @Test
-    void setMobileNumber() {
-        Long newMobileNumber = 9876543210L;
-        employee.setMobileNumber(newMobileNumber);
-        assertEquals(newMobileNumber, employee.getMobileNumber());
+    void testGetIsFinanceAdmin() {
+        Boolean isFinanceAdmin = true;
+        employee.setIsFinanceAdmin(isFinanceAdmin);
+        assertEquals(isFinanceAdmin, employee.getIsFinanceAdmin());
     }
 
     @Test
-    void getIsFinanceAdmin() {
-        Boolean isFinanceAdmin = false;
-        assertFalse(employee.getIsFinanceAdmin());
-    }
-
-    @Test
-    void setIsFinanceAdmin() {
-        employee.setIsFinanceAdmin(true);
-        assertTrue(employee.getIsFinanceAdmin());
-    }
-
-    @Test
-    void getImageUrl() {
-        String imageUrl = "https://example.com/image.jpg";
-        assertEquals(imageUrl, employee.getImageUrl());
-    }
-
-    @Test
-    void setImageUrl() {
-        String imageUrl = "https://example.com/image.jpg";
+    void testGetImageUrl() {
+        String imageUrl = "http://example.com/image.jpg";
         employee.setImageUrl(imageUrl);
         assertEquals(imageUrl, employee.getImageUrl());
     }
 
     @Test
-    void getIsHidden() {
-        assertFalse(employee.getIsHidden());
+    void testGetIsHidden() {
+        Boolean isHidden = true;
+        employee.setIsHidden(isHidden);
+        assertEquals(isHidden, employee.getIsHidden());
     }
 
     @Test
-    void setIsHidden() {
-        employee.setIsHidden(true);
-        assertTrue(employee.getIsHidden());
+    void testGetExpenseList() {
+        List<Expense> expenses = new ArrayList<>();
+        expenses.add(expense);
+        employee.setExpenseList(expenses);
+        assertEquals(expenses, employee.getExpenseList());
     }
 
     @Test
-    void getExpenseList() {
-        assertNotNull(employee.getExpenseList());
-        assertTrue(employee.getExpenseList().isEmpty());
-    }
-
-    @Test
-    void setExpenseList() {
-        Expense expense = new Expense();
-        List<Expense> expenseList = new ArrayList<>();
-        expenseList.add(expense);
-        employee.setExpenseList(expenseList);
-        assertEquals(expenseList, employee.getExpenseList());
-    }
-
-    @Test
-    void getRole() {
-        assertEquals("EMPLOYEE", employee.getRole());
-    }
-
-    @Test
-    void setRole() {
-        String role = "MANAGER";
+    void testGetRole() {
+        String role = "ADMIN";
         employee.setRole(role);
         assertEquals(role, employee.getRole());
     }
+
+    @Test
+    void testGetToken() {
+        String token = "abc123";
+        employee.setToken(token);
+        assertEquals(token, employee.getToken());
+    }
+
+    @Test
+    void testEmployeeConstructor() {
+        // Arrange
+        Long employeeId = 1L;
+        String officialEmployeeId = "EMP001";
+        String firstName = "John";
+        String middleName = "Doe";
+        String lastName = "Smith";
+        String employeeEmail = "john.smith@example.com";
+        String managerEmail = "manager@example.com";
+
+        // Act
+        Employee employee = new Employee(
+                employeeId, officialEmployeeId, firstName, middleName, lastName, employeeEmail, managerEmail);
+
+        // Assert
+        assertNotNull(employee);
+        assertEquals(employeeId, employee.getEmployeeId());
+        assertEquals(officialEmployeeId, employee.getOfficialEmployeeId());
+        assertEquals(firstName, employee.getFirstName());
+        assertEquals(middleName, employee.getMiddleName());
+        assertEquals(lastName, employee.getLastName());
+        assertEquals(employeeEmail, employee.getEmployeeEmail());
+        assertEquals(managerEmail, employee.getManagerEmail());
+    }
+
+    @Test
+    void testEmployeeConstructorWithAdditionalParameters() {
+        // Arrange
+        String imageUrl = "http://example.com/image.jpg";
+        Boolean isHidden = true;
+        List<Expense> expenseList = new ArrayList<>(); // Create an empty list or add sample expenses
+        String role = "Manager";
+        String token = "abc123token";
+
+        // Act
+        Employee employee = new Employee(imageUrl, isHidden, expenseList, role, token);
+
+        // Assert
+        assertNotNull(employee);
+        assertEquals(imageUrl, employee.getImageUrl());
+        assertEquals(isHidden, employee.getIsHidden());
+        assertEquals(expenseList, employee.getExpenseList());
+        assertEquals(role, employee.getRole());
+        assertEquals(token, employee.getToken());
+    }
+
+    @Test
+    void testUpdateEmployee() {
+        // Create a sample EmployeeDTO
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setFirstName("John");
+        employeeDTO.setEmployeeEmail("john@example.com");
+
+        // Create a sample Employee entity
+        Employee employee = new Employee();
+        employee.setEmployeeId(1L);
+        employee.setFirstName("John");
+        employee.setEmployeeEmail("john@example.com");
+
+        // Mock the service method to return the updated Employee
+        when(employeeService.updateEmployeeDetails(employeeDTO, 1L)).thenReturn(employee);
+
+        // Call the method
+        Employee updatedEmployee = employeeController.updateEmployee(employeeDTO, 1L);
+
+        // Verify the response
+        assertEquals(employee, updatedEmployee);
+
+        // Verify that the service method was called with the correct arguments
+        verify(employeeService).updateEmployeeDetails(employeeDTO, 1L);
+    }
+
+    @Test
+    void testSave() {
+        // Create a sample EmployeeDTO
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setFirstName("John");
+        employeeDTO.setEmployeeEmail("john@example.com");
+
+        // Create a sample Employee entity
+        Employee employee = new Employee();
+        employee.setEmployeeId(1L);
+        employee.setFirstName("John");
+        employee.setEmployeeEmail("john@example.com");
+
+        // Mock the service method to return the saved Employee
+        when(employeeService.saveEmployeeDetails(employeeDTO)).thenReturn(employee);
+
+        // Call the method
+        Employee savedEmployee = employeeController.save(employeeDTO);
+
+        // Verify the response
+        assertEquals(employee, savedEmployee);
+
+        // Verify that the service method was called with the correct arguments
+        verify(employeeService).saveEmployeeDetails(employeeDTO);
+    }
+
 }

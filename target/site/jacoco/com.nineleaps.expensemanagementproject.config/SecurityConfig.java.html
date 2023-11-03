@@ -7,23 +7,20 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
-<span class="fc" id="L12">public class SecurityConfig {</span>
+<span class="fc" id="L11">public class SecurityConfig {</span>
 
     @Autowired
     private JwtUtil jwtUtil;
-    private static final String CONSTANT1=&quot;EMPLOYEE&quot;;
-    private static final String CONSTANT2=&quot;FINANCE_ADMIN&quot;;
+    @SuppressWarnings(&quot;unused&quot;)
+    private static final String CONSTANT1 = &quot;EMPLOYEE&quot;;
+    @SuppressWarnings(&quot;unused&quot;)
+    private static final String CONSTANT2 = &quot;FINANCE_ADMIN&quot;;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-<span class="fc" id="L21">        http</span>
-<span class="fc" id="L22">                .csrf().disable()</span>
-<span class="fc" id="L23">                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)</span>
-<span class="fc" id="L24">                .authorizeRequests(authorizeRequests -&gt;</span>
-                                authorizeRequests
-<span class="fc" id="L26">                                .antMatchers(AUTH_WHITELIST).permitAll()</span>
+<span class="fc" id="L22">        http.csrf().disable().addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)</span>
+<span class="fc" id="L23">                .authorizeRequests(authorizeRequests -&gt; authorizeRequests.antMatchers(AUTH_WHITELIST).permitAll()</span>
 //                                        .antMatchers(&quot;/theProfile&quot;).permitAll()
 //                                        .antMatchers(&quot;/getProfileData&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
 //                                        .antMatchers(&quot;/getExpenseByEmployeeId/{employeeId}&quot;).hasAnyAuthority(CONSTANT1,CONSTANT2)
@@ -60,17 +57,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 //                                        .antMatchers(&quot;/updateExpenseStatus/{reportId}&quot;).hasAuthority(CONSTANT1)
 
                 );
-<span class="fc" id="L63">        return http.build();</span>
+<span class="fc" id="L60">        return http.build();</span>
     }
 
-<span class="fc" id="L66">    private static final String[] AUTH_WHITELIST = {</span>
-            &quot;/v3/api-docs/**&quot;,
-            &quot;/swagger-ui/**&quot;,
-            &quot;/v2/api-docs/**&quot;,
-            &quot;/swagger-resources/**&quot;,
-            &quot;/api/v1/auth/**&quot;,
-            &quot;/v3/api-docs/.yaml&quot;,
-            &quot;/swagger-ui.html&quot;
-    };
+<span class="fc" id="L63">    private static final String[] AUTH_WHITELIST = { &quot;/v3/api-docs/**&quot;, &quot;/swagger-ui/**&quot;, &quot;/v2/api-docs/**&quot;,</span>
+            &quot;/swagger-resources/**&quot;, &quot;/api/v1/auth/**&quot;, &quot;/v3/api-docs/.yaml&quot;, &quot;/swagger-ui.html&quot; };
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

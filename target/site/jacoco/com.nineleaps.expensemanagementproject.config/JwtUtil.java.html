@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.config</a> &gt; <span class="el_source">JwtUtil.java</span></div><h1>JwtUtil.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.config;
 
+
 import javax.servlet.http.*;
+import java.security.SecureRandom;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
@@ -9,48 +18,69 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
-<span class="fc" id="L12">public class JwtUtil {</span>
-    private static final String SECRET_KEY = &quot;67c3f3e463358fb9cb3fb8538e04c05b6c1707563df66d2fb8a990ee04b22019&quot;;
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 10;
+<span class="fc" id="L21">public class JwtUtil {</span>
+
+
+<span class="fc" id="L24">    private static final String SECRET_KEY = generateRandomSecretKey();</span>
+    public static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 10;
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 30;
 
+<span class="fc" id="L28">    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);</span>
 
-    public ResponseEntity&lt;TokenResponse&gt; generateTokens(String emailId, Long employeeId,  String role,
-                                            HttpServletResponse response) {
-<span class="fc" id="L20">        String accessToken = generateToken(emailId, employeeId, role, ACCESS_TOKEN_EXPIRATION_TIME);</span>
-<span class="fc" id="L21">        String refreshToken = generateToken(emailId, employeeId, role, REFRESH_TOKEN_EXPIRATION_TIME);</span>
 
-<span class="fc" id="L23">        response.setHeader(&quot;Access_Token&quot;, accessToken);</span>
-<span class="fc" id="L24">        response.setHeader(&quot;Refresh_Token&quot;, refreshToken);</span>
+    private static String generateRandomSecretKey() {
+<span class="fc" id="L32">        SecureRandom secureRandom = new SecureRandom();</span>
+<span class="fc" id="L33">        byte[] keyBytes = new byte[32]; // 256 bits</span>
+<span class="fc" id="L34">        secureRandom.nextBytes(keyBytes);</span>
 
-<span class="fc" id="L26">        TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);</span>
-<span class="fc" id="L27">        return ResponseEntity.ok(tokenResponse);</span>
+        // Convert the random bytes to a hexadecimal string
+<span class="fc" id="L37">        StringBuilder keyBuilder = new StringBuilder();</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        for (byte b : keyBytes) {</span>
+<span class="fc" id="L39">            keyBuilder.append(String.format(&quot;%02x&quot;, b));</span>
+        }
+
+<span class="fc" id="L42">        return keyBuilder.toString();</span>
     }
 
-    String generateToken(String emailId, Long employeeId, String role, long expirationTime) {
-<span class="fc" id="L31">        return Jwts.builder()</span>
-<span class="fc" id="L32">                .setSubject(emailId)</span>
-<span class="fc" id="L33">                .claim(&quot;EmployeeID&quot;, employeeId)</span>
-<span class="fc" id="L34">                .claim(&quot;Role&quot;, role)</span>
-<span class="fc" id="L35">                .setIssuedAt(new Date())</span>
-<span class="fc" id="L36">                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))</span>
-<span class="fc" id="L37">                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)</span>
-<span class="fc" id="L38">                .compact();</span>
+    public ResponseEntity&lt;TokenResponse&gt; generateTokens(String emailId, Long employeeId,  String role,
+                                                        HttpServletResponse response) {
+
+
+<span class="fc" id="L49">        String accessToken = generateToken(emailId, employeeId, role, ACCESS_TOKEN_EXPIRATION_TIME);</span>
+<span class="fc" id="L50">        String refreshToken = generateToken(emailId, employeeId, role, REFRESH_TOKEN_EXPIRATION_TIME);</span>
+
+<span class="fc" id="L52">        response.setHeader(&quot;Access_Token&quot;, accessToken);</span>
+<span class="fc" id="L53">        response.setHeader(&quot;Refresh_Token&quot;, refreshToken);</span>
+<span class="fc" id="L54">        logger.info(&quot;Refresh token generated: {}&quot;, refreshToken);</span>
+<span class="fc" id="L55">        logger.info(&quot;Access token generated: {}&quot;, accessToken);</span>
+
+<span class="fc" id="L57">        TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);</span>
+<span class="fc" id="L58">        return ResponseEntity.ok(tokenResponse);</span>
+    }
+
+    public String generateToken(String emailId, Long employeeId, String role, long expirationTime) {
+<span class="fc" id="L62">        return Jwts.builder()</span>
+<span class="fc" id="L63">                .setSubject(emailId)</span>
+<span class="fc" id="L64">                .claim(&quot;EmployeeID&quot;, employeeId)</span>
+<span class="fc" id="L65">                .claim(&quot;Role&quot;, role)</span>
+<span class="fc" id="L66">                .setIssuedAt(new Date())</span>
+<span class="fc" id="L67">                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))</span>
+<span class="fc" id="L68">                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)</span>
+<span class="fc" id="L69">                .compact();</span>
     }
 
     public boolean validateToken(String token) {
         try {
-<span class="fc" id="L43">            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);</span>
-<span class="fc" id="L44">            return true;</span>
-<span class="fc" id="L45">        } catch (Exception e) {</span>
-<span class="fc" id="L46">            return false;</span>
+<span class="fc" id="L74">            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);</span>
+<span class="fc" id="L75">            return true;</span>
+<span class="fc" id="L76">        } catch (Exception e) {</span>
+<span class="fc" id="L77">            return false;</span>
         }
     }
 
     public Claims getClaimsFromToken(String token) {
-<span class="fc" id="L51">        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();</span>
+<span class="nc" id="L82">        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();</span>
     }
-
 
 
 
@@ -58,30 +88,39 @@ import io.jsonwebtoken.SignatureAlgorithm;
         private final String accessToken;
         private final String refreshToken;
 
-<span class="fc" id="L61">        public TokenResponse(String accessToken, String refreshToken) {</span>
-<span class="fc" id="L62">            this.accessToken = accessToken;</span>
-<span class="fc" id="L63">            this.refreshToken = refreshToken;</span>
-<span class="fc" id="L64">        }</span>
+<span class="fc" id="L91">        public TokenResponse(String accessToken, String refreshToken) {</span>
+<span class="fc" id="L92">            this.accessToken = accessToken;</span>
+<span class="fc" id="L93">            this.refreshToken = refreshToken;</span>
+<span class="fc" id="L94">        }</span>
 
 
 
 
         @SuppressWarnings(&quot;unused&quot;)
         public String getAccessToken() {
-<span class="fc" id="L71">            return accessToken;</span>
+<span class="fc" id="L101">            return accessToken;</span>
         }
 
         @SuppressWarnings(&quot;unused&quot;)
         public String getRefreshToken() {
-<span class="fc" id="L76">            return refreshToken;</span>
-        }
-
-        public String setAccessToken(String testToken){
-<span class="nc" id="L80">            return accessToken;</span>
+<span class="fc" id="L106">            return refreshToken;</span>
         }
 
 
 
+
+
+    }
+
+    public boolean isRefreshTokenExpired(String refreshToken){
+<span class="fc" id="L116">        DecodedJWT decodedJWT = JWT.decode(refreshToken);</span>
+<span class="fc" id="L117">        Date expirationDate = decodedJWT.getExpiresAt();</span>
+<span class="fc" id="L118">        return expirationDate.before(new Date());</span>
+    }
+    public boolean isAccessTokenExpired(String accessToken) {
+<span class="fc" id="L121">        DecodedJWT decodedJWT = JWT.decode(accessToken);</span>
+<span class="fc" id="L122">        Date expirationDate = decodedJWT.getExpiresAt();</span>
+<span class="fc" id="L123">        return expirationDate.before(new Date());</span>
     }
 
 }

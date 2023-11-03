@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -71,8 +70,8 @@ public class ReportsController {
     }
 
     @PostMapping("/submitReport/{reportId}")
-    public void submitReport(@PathVariable Long reportId, HttpServletResponse response)
-            throws MessagingException, IOException {
+    public void submitReport(@PathVariable Long reportId,
+                             HttpServletResponse response) throws MessagingException, IOException {
 
         reportsService.submitReport(reportId, response);
     }
@@ -91,11 +90,7 @@ public class ReportsController {
         return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
 
-    @PostMapping("/approveReportByFinance")
-    public void reimburseReportByFinance(@RequestParam ArrayList<Long> reportIds,
-                                         @RequestParam(value = "comments", defaultValue = "null") String comments) {
-        reportsService.reimburseReportByFinance(reportIds, comments);
-    }
+
 
     @PostMapping("/rejectReportByFinance/{reportId}")
     public void rejectReportByFinance(@PathVariable Long reportId,
@@ -123,7 +118,8 @@ public class ReportsController {
     @GetMapping("/getReportsSubmittedToUserInDateRange")
     public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam String request) {
+                                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                                              @RequestParam String request) {
         return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);
     }
 
@@ -149,44 +145,37 @@ public class ReportsController {
         reportsService.notifyLnD(reportId);
     }
 
-    @GetMapping("/numberOfExpenses/{reportId}")
-    public int numberOfExpenses(@RequestParam Long reportId) {
-        return reportsService.numberOfExpenses(reportId);
-    }
-
     @PostMapping("/updateExpenseStatus/{reportId}")
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,
-                                    @RequestParam String json, @RequestParam String comments, HttpServletResponse response)
-            throws ParseException {
+                                    @RequestParam String json, @RequestParam String comments,
+                                    HttpServletResponse response) throws ParseException, MessagingException,
+            IOException {
         JSONParser parser = new JSONParser();
-        try {
-            Map<Long, Float> partialApprovedMap = new HashMap<>();
-            List<Long> approvedIds = new ArrayList<>();
-            List<Long> rejectedIds = new ArrayList<>();
-            JSONArray jsonArray = (JSONArray) parser.parse(json);
-            for (Object object : jsonArray) {
-                JSONObject jsonObject = (JSONObject) object;
 
-                long expenseId = (Long) jsonObject.get("expenseId");
-                float amountApproved = (Long) jsonObject.get("amountApproved");
-                String status = (String) jsonObject.get("status");
+        Map<Long, Float> partialApprovedMap = new HashMap<>();
+        List<Long> approvedIds = new ArrayList<>();
+        List<Long> rejectedIds = new ArrayList<>();
 
-                if (Objects.equals(status, "approved")) {
-                    approvedIds.add(expenseId);
-                }
-                if (Objects.equals(status, "rejected")) {
-                    rejectedIds.add(expenseId);
-                }
-                if (Objects.equals(status, "partiallyApproved")) {
-                    partialApprovedMap.put(expenseId, amountApproved);
-                }
+        JSONArray jsonArray = (JSONArray) parser.parse(json);
+        for (Object object : jsonArray) {
+            JSONObject jsonObject = (JSONObject) object;
+
+            long expenseId = (Long) jsonObject.get("expenseId");
+            double amountApproved = (double) jsonObject.get("amountApproved");
+            String status = (String) jsonObject.get("status");
+
+            if (Objects.equals(status, "approved")) {
+                approvedIds.add(expenseId);
             }
-            reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,
-                    comments, response);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (MessagingException | IOException e) {
-            throw new RuntimeException(e);
+            if (Objects.equals(status, "rejected")) {
+                rejectedIds.add(expenseId);
+            }
+            if (Objects.equals(status, "partiallyApproved")) {
+                partialApprovedMap.put(expenseId, (float) amountApproved);
+            }
         }
+        reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,
+                comments, response);
     }
+
 }

@@ -1,154 +1,424 @@
 package com.nineleaps.expensemanagementproject.controller;
 
-import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
-import com.nineleaps.expensemanagementproject.entity.Expense;
-import com.nineleaps.expensemanagementproject.entity.Reports;
-import com.nineleaps.expensemanagementproject.service.IExpenseService;
+import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONArray;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.catalina.connector.Response;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@ContextConfiguration(classes = {ReportsController.class})
+@ExtendWith(SpringExtension.class)
 class ReportsControllerTest {
+    @MockBean
+    private IReportsService iReportsService;
 
-    private MockMvc mockMvc;
-
-    @Mock
-    private IReportsService reportsService;
-
-
-    @Mock
-    private ReportsDTO reportsDTO;
-
-    @Mock
-    private ExpenseController expenseController;
-
-    @Mock
-    private IExpenseService expenseService;
-
-
-    @InjectMocks
+    @Autowired
     private ReportsController reportsController;
 
+    @Test
+    @Disabled("TODO: Complete this test")
+    void testAddExpensesToReport1() throws Exception {
 
+        Object[] uriVariables = new Object[]{1L};
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/addExpenseToReport/{reportId}",
+                uriVariables);
+        Object[] controllers = new Object[]{reportsController};
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(controllers).build();
 
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(reportsController).build();
     }
+
 
     @Test
     void testGetAllReports() throws Exception {
-        List<Reports> reportsList = new ArrayList<>();
 
-        when(reportsService.getAllReports()).thenReturn(reportsList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/getAllReports"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
-
-        verify(reportsService, times(1)).getAllReports();
-        verifyNoMoreInteractions(reportsService);
+        when(iReportsService.getAllReports(Mockito.<Long>any())).thenReturn(new HashSet<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllReports/{employeeId}", 1L);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+
     @Test
-    void testGetReportByReportId() throws Exception {
-        Long reportId = 1L;
-        Reports report = new Reports();
+    void testGetAllReports2() throws Exception {
 
-        when(reportsService.getReportById(reportId)).thenReturn(report);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/getByReportId/{reportId}", reportId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").exists());
-
-        verify(reportsService, times(1)).getReportById(reportId);
-        verifyNoMoreInteractions(reportsService);
+        when(iReportsService.getAllReports(Mockito.<Long>any())).thenReturn(new HashSet<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllReports/{employeeId}", 1L);
+        requestBuilder.characterEncoding("Encoding");
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
+
     @Test
-    void testGetReportByEmployeeId() throws Exception {
-        Long employeeId = 1L;
-        String request = "test";
-        List<Reports> reportsList = new ArrayList<>();
+    void testGetReportByEmpId() throws Exception {
 
-        when(reportsService.getReportByEmpId(employeeId, request)).thenReturn(reportsList);
+        when(iReportsService.getReportByEmpId(Mockito.<Long>any(), Mockito.<String>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/getReportByEmployeeId/{employeeId}", 1L)
+                .param("request", "foo");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/getReportByEmployeeId/{employeeId}", employeeId)
-                        .param("request", request))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
 
-        verify(reportsService, times(1)).getReportByEmpId(employeeId, request);
-        verifyNoMoreInteractions(reportsService);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
 
     @Test
     void testGetReportsSubmittedToUser() throws Exception {
-        String managerEmail = "test@test.com";
-        String request = "test";
-        List<Reports> reportsList = new ArrayList<>();
 
-        when(reportsService.getReportsSubmittedToUser(managerEmail, request)).thenReturn(reportsList);
+        when(iReportsService.getReportsSubmittedToUser(Mockito.<String>any(), Mockito.<String>any()))
+                .thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/getReportsSubmittedToUser/{managerEmail}", "jane.doe@example.org")
+                .param("request", "foo");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/getReportsSubmittedToUser/{managerEmail}", managerEmail)
-                        .param("request", request))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
 
-        verify(reportsService, times(1)).getReportsSubmittedToUser(managerEmail, request);
-        verifyNoMoreInteractions(reportsService);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
+
 
     @Test
     void testGetAllSubmittedReports() throws Exception {
-        List<Reports> reportsList = new ArrayList<>();
 
-        when(reportsService.getAllSubmittedReports()).thenReturn(reportsList);
+        when(iReportsService.getAllSubmittedReports()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllSubmittedReports");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/getAllSubmittedReports"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
 
-        verify(reportsService, times(1)).getAllSubmittedReports();
-        verifyNoMoreInteractions(reportsService);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
     @Test
+    void testGetAllSubmittedReports2() throws Exception {
+
+        when(iReportsService.getAllSubmittedReports()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllSubmittedReports");
+        requestBuilder.characterEncoding("Encoding");
+
+
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
+
+
+    @Test
     void testGetAllReportsApprovedByManager() throws Exception {
-        String request = "test";
-        List<Reports> reportsList = new ArrayList<>();
 
-        when(reportsService.getAllReportsApprovedByManager(request)).thenReturn(reportsList);
+        when(iReportsService.getAllReportsApprovedByManager(Mockito.<String>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getAllReportsApprovedByManager")
+                .param("request", "foo");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/getAllReportsApprovedByManager")
-                        .param("request", request))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
 
-        verify(reportsService, times(1)).getAllReportsApprovedByManager(request);
-        verifyNoMoreInteractions(reportsService);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
+    @Test
+    void testSubmitReport() throws Exception {
+
+        doNothing().when(iReportsService)
+                .submitReport(Mockito.<Long>any(), Mockito.<String>any(), Mockito.<HttpServletResponse>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/submitReportToManager/{reportId}", 1L)
+                .param("managerEmail", "foo");
+
+
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+    @Test
+    void testSubmitReport2() throws Exception {
+
+        doNothing().when(iReportsService).submitReport(Mockito.<Long>any(), Mockito.<HttpServletResponse>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/submitReport/{reportId}", 1L);
+
+
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+
+    @Test
+    void testRejectReportByFinance() throws Exception {
+
+        doNothing().when(iReportsService).rejectReportByFinance(Mockito.<Long>any(), Mockito.<String>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/rejectReportByFinance/{reportId}", 1L)
+                .param("comments", "foo");
+
+
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void testHideReport() throws Exception {
+
+        doNothing().when(iReportsService).hideReport(Mockito.<Long>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/hideReport/{reportId}", 1L);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void testHideReport2() throws Exception {
+
+        doNothing().when(iReportsService).hideReport(Mockito.<Long>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/hideReport/{reportId}", 1L);
+        requestBuilder.characterEncoding("Encoding");
+
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void testTotalApprovedAmount() throws Exception {
+        when(iReportsService.totalApprovedAmount(Mockito.<Long>any())).thenReturn(10.0f);
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getTotalApprovedAmount");
+        MockHttpServletRequestBuilder requestBuilder = getResult.param("reportId", String.valueOf(1L));
+
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("10.0"));
+    }
+
+    @Test
+    void testNotifyLnD() throws Exception {
+
+        doNothing().when(iReportsService).notifyLnD(Mockito.<Long>any());
+        MockHttpServletRequestBuilder postResult = MockMvcRequestBuilders.post("/notifyLnD/{reportId}", 1L);
+        MockHttpServletRequestBuilder requestBuilder = postResult.param("reportId", String.valueOf(1L));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+
+    @Test
+     void testAddReport1() throws Exception {
+
+        Object[] uriVariables = new Object[]{1L};
+        MockHttpServletRequestBuilder postResult = MockMvcRequestBuilders.post("/addReport/{employeeId}", uriVariables);
+        ReportsDTO reportsDTO = new ReportsDTO();
+        String[] values = new String[]{String.valueOf(reportsDTO)};
+        MockHttpServletRequestBuilder requestBuilder = postResult.param("reportsDTO", values);
+        Object[] controllers = new Object[]{reportsController};
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(controllers).build();
+
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
+
+    }
+
+
+    @Test
+    void testEditReport() throws Exception {
+
+        Object[] uriVariables = new Object[]{1L};
+        String[] values = new String[]{"foo"};
+        String[] values2 = new String[]{"foo"};
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .patch("/editReport/{reportId}", uriVariables)
+                .param("reportDescription", values)
+                .param("reportTitle", values2);
+        Object[] controllers = new Object[]{reportsController};
+        MockMvc buildResult = MockMvcBuilders.standaloneSetup(controllers).build();
+
+
+        ResultActions actualPerformResult = buildResult.perform(requestBuilder);
+
+    }
+
+
+    @Test
+    void testGetAmountOfReportsInDateRange() throws Exception {
+
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getAmountOfReportsInDateRange");
+        MockHttpServletRequestBuilder paramResult = getResult.param("endDate", String.valueOf((Object) null));
+        MockHttpServletRequestBuilder requestBuilder = paramResult.param("startDate", String.valueOf((Object) null));
+
+
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder);
+
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+
+    @Test
+    void testGetReportByReportId() throws Exception {
+
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+        when(iReportsService.getReportById(Mockito.<Long>any())).thenReturn(reports);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getByReportId/{reportId}", 1L);
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"reportId\":1,\"employeeId\":1,\"employeeName\":\"Employee Name\",\"officialEmployeeId\":\"42\",\"reportTitle\":"
+                                        + "\"Dr\",\"managerComments\":\"Manager Comments\",\"financeComments\":\"Finance Comments\",\"isSubmitted\":true,"
+                                        + "\"employeeMail\":\"Employee Mail\",\"dateSubmitted\":[1970,1,1],\"dateCreated\":[1970,1,1],\"managerActionDate"
+                                        + "\":[1970,1,1],\"financeActionDate\":[1970,1,1],\"totalAmount\":10.0,\"totalApprovedAmount\":10.0,\"isHidden\""
+                                        + ":true,\"managerEmail\":\"jane.doe@example.org\",\"managerReviewTime\":\"Manager Review Time\",\"financeApprovalStatus"
+                                        + "\":\"REIMBURSED\",\"managerApprovalStatus\":\"APPROVED\",\"expensesCount\":3}"));
+    }
+
+    @Test
+    void testGetReportsInDateRange() throws Exception {
+
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getReportsInDateRange");
+        MockHttpServletRequestBuilder paramResult = getResult.param("endDate", String.valueOf((Object) null))
+                .param("request", "foo");
+        MockHttpServletRequestBuilder requestBuilder = paramResult.param("startDate", String.valueOf((Object) null));
+
+
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder);
+
+
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+
+    @Test
+    void testGetReportsSubmittedToUserInDateRange() throws Exception {
+
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getReportsSubmittedToUserInDateRange");
+        MockHttpServletRequestBuilder paramResult = getResult.param("endDate", String.valueOf((Object) null))
+                .param("managerEmail", "foo")
+                .param("request", "foo");
+        MockHttpServletRequestBuilder requestBuilder = paramResult.param("startDate", String.valueOf((Object) null));
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder);
+
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+
+
+    @Test
+    void testNotifyHr() throws Exception {
+
+        doNothing().when(iReportsService).notifyHR(Mockito.<Long>any());
+        MockHttpServletRequestBuilder postResult = MockMvcRequestBuilders.post("/notifyHr/{reportId}", 1L);
+        MockHttpServletRequestBuilder requestBuilder = postResult.param("reportId", String.valueOf(1L));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void testTotalAmountINR() throws Exception {
+
+        when(iReportsService.totalAmount(Mockito.<Long>any())).thenReturn(10.0f);
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/getTotalAmountInrByReportId");
+        MockHttpServletRequestBuilder requestBuilder = getResult.param("reportId", String.valueOf(1L));
+        MockMvcBuilders.standaloneSetup(reportsController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("10.0"));
     }
 
     @Test
@@ -156,7 +426,7 @@ class ReportsControllerTest {
         // Create a sample ReportsDTO
         ReportsDTO reportsDTO = new ReportsDTO();
         reportsDTO.setReportTitle("Sample Report");
-        reportsDTO.setReportDescription("Sample Report Description");
+        reportsDTO.setReportTitle("Sample Report Description");
 
         // Create a sample employeeId
         Long employeeId = 1L;
@@ -170,17 +440,17 @@ class ReportsControllerTest {
         Reports reports = new Reports();
         reports.setReportId(1L);
         reports.setReportTitle("Sample Report");
-        reports.setReportDescription("Sample Report Description");
+        reports.setReportTitle("Sample Report Description");
 
         // Mock the service method
-        when(reportsService.addReport(reportsDTO, employeeId, expenseIds)).thenReturn(reports);
+        when(iReportsService.addReport(reportsDTO, employeeId, expenseIds)).thenReturn(reports);
 
         // Call the controller method
         Reports result = reportsController.addReport(reportsDTO, employeeId, expenseIds);
 
         // Verify the result
         assertEquals(reports, result);
-        verify(reportsService, times(1)).addReport(reportsDTO, employeeId, expenseIds);
+        verify(iReportsService, times(1)).addReport(reportsDTO, employeeId, expenseIds);
     }
 
     @Test
@@ -197,36 +467,21 @@ class ReportsControllerTest {
         Reports reports = new Reports();
         reports.setReportId(1L);
         reports.setReportTitle("Sample Report");
-        reports.setReportDescription("Sample Report Description");
+        reports.setReportTitle("Sample Report Description");
 
         // Mock the service method
-        when(reportsService.addExpenseToReport(reportId, expenseIds)).thenReturn(reports);
+        when(iReportsService.addExpenseToReport(reportId, expenseIds)).thenReturn(reports);
 
         // Call the controller method
         Reports result = reportsController.addExpensesToReport(reportId, expenseIds);
 
         // Verify the result
         assertEquals(reports, result);
-        verify(reportsService, times(1)).addExpenseToReport(reportId, expenseIds);
+        verify(iReportsService, times(1)).addExpenseToReport(reportId, expenseIds);
     }
 
     @Test
-    void testSubmitReport() throws MessagingException, IOException {
-        // Create a sample reportId
-        Long reportId = 1L;
-
-        // Create a mock HttpServletResponse
-        HttpServletResponse response = mock(HttpServletResponse.class);
-
-        // Call the controller method
-        reportsController.submitReport(reportId, response);
-
-        // Verify the service method is called
-        verify(reportsService, times(1)).submitReport(reportId, response);
-    }
-
-    @Test
-    void testEditReport() {
+    void testEditReport1() {
         // Create a sample reportId
         Long reportId = 1L;
 
@@ -250,166 +505,40 @@ class ReportsControllerTest {
         reportsList.add(report2);
 
         // Mock the service method
-        when(reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds)).thenReturn(reportsList);
+        when(iReportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds)).thenReturn(reportsList);
 
         // Call the controller method
         List<Reports> result = reportsController.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
 
         // Verify the result
         assertEquals(reportsList, result);
-        verify(reportsService, times(1)).editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
-    }
-    @Test
-    void testAddReport_Success() {
-        Reports expectedReport = new Reports();
-
-        // Mocking the reportsService.addReport method to return the expected report
-        when(reportsService.addReport(any(ReportsDTO.class), any(Long.class), any(List.class)))
-                .thenReturn(expectedReport);
-
-        // Create actual Long objects instead of mocking Long
-        Long employeeId = 1L;
-        List<Long> expenseIds = Arrays.asList(1L, 2L, 3L);
-
-        // Invoke the addReport method
-        Reports result = reportsController.addReport(reportsDTO, employeeId, expenseIds);
-
-        // Verify that the reportsService.addReport method was called with the correct arguments
-        verify(reportsService).addReport(reportsDTO, employeeId, expenseIds);
-
-        // Verify the result
-        assertEquals(expectedReport, result);
+        verify(iReportsService, times(1)).editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);
     }
 
-    @Test
-    void testApproveReportByManager() throws MessagingException, IOException {
-        // Create a mock HttpServletResponse
-        HttpServletResponse response = mock(HttpServletResponse.class);
 
-        // Create test data
-        Long reportId = 1L;
-        String comments = "Approved";
-
-        // Invoke the method
-        reportsController.approveReportByManager(reportId, comments, response);
-
-        // Verify that the reportsService.approveReportByManager method was called with the correct arguments
-        verify(reportsService).approveReportByManager(reportId, comments, response);
-    }
 
     @Test
-    void testRejectReportByManager() throws MessagingException, IOException {
-        // Create a mock HttpServletResponse
-        HttpServletResponse response = mock(HttpServletResponse.class);
-
-        // Create test data
-        Long reportId = 1L;
-        String comments = "Rejected";
-
-        // Invoke the method
-        reportsController.rejectReportByManager(reportId, comments, response);
-
-        // Verify that the reportsService.rejectReportByManager method was called with the correct arguments
-        verify(reportsService).rejectReportByManager(reportId, comments, response);
-    }
-
-    @Test
-    void testReimburseReportByFinance() {
-        // Create test data
-        ArrayList<Long> reportIds = new ArrayList<>(Arrays.asList(1L, 2L, 3L));
-        String comments = "Reimbursement approved";
-
-        // Invoke the method
-        reportsController.reimburseReportByFinance(reportIds, comments);
-
-        // Verify that the reportsService.reimburseReportByFinance method was called with the correct arguments
-        verify(reportsService).reimburseReportByFinance(reportIds, comments);
-    }
-
-    @Test
-    void testRejectReportByFinance() {
-        // Create test data
-        Long reportId = 1L;
-        String comments = "Reimbursement rejected";
-
-        // Invoke the method
-        reportsController.rejectReportByFinance(reportId, comments);
-
-        // Verify that the reportsService.rejectReportByFinance method was called with the correct arguments
-        verify(reportsService).rejectReportByFinance(reportId, comments);
-    }
-
-    @Test
-    void testHideReport() {
-        // Create test data
-        Long reportId = 1L;
-
-        // Invoke the method
-        reportsController.hideReport(reportId);
-
-        // Verify that the reportsService.hideReport method was called with the correct argument
-        verify(reportsService).hideReport(reportId);
-    }
-
-    @Test
-    void testTotalAmountINR() {
-        // Create test data
-        Long reportId = 1L;
-        float expectedAmount = 1000.0f;
-
-        // Mock the reportsService.totalAmountINR method
-        when(reportsService.totalAmountINR(reportId)).thenReturn(expectedAmount);
-
-        // Invoke the method
-        float result = reportsController.totalAmountINR(reportId);
-
-        // Verify the result
-        assertEquals(expectedAmount, result, 0.001);
-
-        // Verify that the reportsService.totalAmountINR method was called with the correct argument
-        verify(reportsService).totalAmountINR(reportId);
-    }
-    @Test
-    void testTotalAmountCurrency() {
-        // Create test data
-        Long reportId = 1L;
-        float expectedAmount = 1000.0f;
-
-        // Mock the reportsService.totalAmountCurrency method
-        when(reportsService.totalAmountCurrency(reportId)).thenReturn(expectedAmount);
-
-        // Invoke the method
-        float result = reportsController.totalAmountCurrency(reportId);
-
-        // Verify the result
-        assertEquals(expectedAmount, result, 0.001);
-
-        // Verify that the reportsService.totalAmountCurrency method was called with the correct argument
-        verify(reportsService).totalAmountCurrency(reportId);
-    }
-
-    @Test
-    void testGetReportsInDateRange() {
+    void testGetReportsInDateRange1() {
         // Create test data
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 1, 31);
         List<Reports> expectedReports = new ArrayList<>(); // Add your expected reports here
 
         // Mock the reportsService.getReportsInDateRange method
-        when(reportsService.getReportsInDateRange(startDate, endDate)).thenReturn(expectedReports);
+        when(iReportsService.getReportsInDateRange(startDate, endDate, String.valueOf(endDate))).thenReturn(expectedReports);
 
         // Invoke the method
-        List<Reports> result = reportsController.getReportsInDateRange(startDate, endDate);
+        List<Reports> result = reportsController.getReportsInDateRange(startDate, endDate, String.valueOf(endDate));
 
         // Verify the result
         assertEquals(expectedReports, result);
 
         // Verify that the reportsService.getReportsInDateRange method was called with the correct arguments
-        verify(reportsService).getReportsInDateRange(startDate, endDate);
+        verify(iReportsService).getReportsInDateRange(startDate, endDate, String.valueOf(endDate));
     }
 
     @Test
-    void testGetReportsSubmittedToUserInDateRange() {
+    void testGetReportsSubmittedToUserInDateRange1() {
         // Create test data
         String managerEmail = "example@example.com";
         LocalDate startDate = LocalDate.of(2023, 1, 1);
@@ -418,7 +547,7 @@ class ReportsControllerTest {
         List<Reports> expectedReports = new ArrayList<>(); // Add your expected reports here
 
         // Mock the reportsService.getReportsSubmittedToUserInDateRange method
-        when(reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request)).thenReturn(expectedReports);
+        when(iReportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request)).thenReturn(expectedReports);
 
         // Invoke the method
         List<Reports> result = reportsController.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);
@@ -427,18 +556,18 @@ class ReportsControllerTest {
         assertEquals(expectedReports, result);
 
         // Verify that the reportsService.getReportsSubmittedToUserInDateRange method was called with the correct arguments
-        verify(reportsService).getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);
+        verify(iReportsService).getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);
     }
 
     @Test
-    void testGetAmountOfReportsInDateRange() {
+    void testGetAmountOfReportsInDateRange1() {
         // Create test data
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 1, 31);
         String expectedAmount = "1000"; // Add your expected amount here
 
         // Mock the reportsService.getAmountOfReportsInDateRange method
-        when(reportsService.getAmountOfReportsInDateRange(startDate, endDate)).thenReturn(expectedAmount);
+        when(iReportsService.getAmountOfReportsInDateRange(startDate, endDate)).thenReturn(expectedAmount);
 
         // Invoke the method
         String result = reportsController.getAmountOfReportsInDateRange(startDate, endDate);
@@ -447,52 +576,59 @@ class ReportsControllerTest {
         assertEquals(expectedAmount, result);
 
         // Verify that the reportsService.getAmountOfReportsInDateRange method was called with the correct arguments
-        verify(reportsService).getAmountOfReportsInDateRange(startDate, endDate);
+        verify(iReportsService).getAmountOfReportsInDateRange(startDate, endDate);
     }
 
-    @Test
-    void testTotalApprovedAmount() {
-        // Create test data
-        Long reportId = 123L; // Add your report ID here
-        float expectedAmount = 1000.0f; // Add your expected amount here
-
-        // Mock the reportsService.totalApprovedAmountCurrency method
-        when(reportsService.totalApprovedAmountCurrency(reportId)).thenReturn(expectedAmount);
-
-        // Invoke the method
-        float result = reportsController.totalApprovedAmount(reportId);
-
-        // Verify the result
-        assertEquals(expectedAmount, result, 0.001); // Use a delta value for float comparison
-
-        // Verify that the reportsService.totalApprovedAmountCurrency method was called with the correct argument
-        verify(reportsService).totalApprovedAmountCurrency(reportId);
-    }
-    @Test
-    void testUpdateExpenses() {
-        // Initialize mocks
-        MockitoAnnotations.openMocks(this);
-
-        // Mock input parameters
-        Long expenseId = 1L;
-        ExpenseDTO expenseDTO = new ExpenseDTO();
-        expenseDTO.setDescription("New description");
-
-        // Mock the expected result
-        Expense expected = new Expense();
-        expected.setExpenseId(expenseId);
-        expected.setDescription("New description");
-
-        // Mock the behavior of the expenseService interface
-        when(expenseService.updateExpenses(expenseDTO, expenseId)).thenReturn(expected);
-
-        // Call the controller method
-        Expense result = expenseService.updateExpenses(expenseDTO, expenseId);
-
-        // Verify the interactions and expected behavior
-        verify(expenseService).updateExpenses(expenseDTO, expenseId);
-        assertEquals(expected, result);
-    }
-
-
+//    @Test
+//    void testUpdateExpenseStatus() throws ParseException, MessagingException, IOException {
+//        // Arrange
+//
+//        Long reportId = 1L;
+//        String reviewTime = "2023-10-18";
+//        String json = "[{\"expenseId\": 1, \"amountApproved\": 100.0, \"status\": \"approved\"}]";
+//        String comments = "Test comments";
+//        MockHttpServletResponse response = new MockHttpServletResponse();
+//
+//        JSONParser parser = new JSONParser();
+//        JSONArray jsonArray = (JSONArray) parser.parse(json);
+//
+//        List<Long> approvedIds = new ArrayList<>();
+//        List<Long> rejectedIds = new ArrayList<>();
+//        Map<Long, Float> partialApprovedMap = new HashMap<>();
+//
+//        for (Object object : jsonArray) {
+//            JSONObject jsonObject = (JSONObject) object;
+//            long expenseId = (Long) jsonObject.get("expenseId");
+//            double amountApproved = (double) jsonObject.get("amountApproved");
+//            String status = (String) jsonObject.get("status");
+//
+//            if ("approved".equals(status)) {
+//                approvedIds.add(expenseId);
+//            } else if ("rejected".equals(status)) {
+//                rejectedIds.add(expenseId);
+//            } else if ("partiallyApproved".equals(status)) {
+//                partialApprovedMap.put(expenseId, (float) amountApproved);
+//            }
+//        }
+//
+//        doNothing().when(iReportsService).updateExpenseStatus(
+//                eq(reportId), eq(approvedIds), eq(rejectedIds), eq(partialApprovedMap),
+//                eq(reviewTime), eq(comments), eq(response)
+//        );
+//
+//        // Act
+//        reportsController.updateExpenseStatus(reportId, reviewTime, json, comments, response);
+//
+//        // Assert
+//        verify(iReportsService).updateExpenseStatus(
+//                eq(reportId), eq(approvedIds), eq(rejectedIds), eq(partialApprovedMap),
+//                eq(reviewTime), eq(comments), eq(response)
+//        );
+//    }
 }
+
+
+
+
+
+

@@ -1,149 +1,224 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+import static com.nineleaps.expensemanagementproject.config.JwtUtil.ACCESS_TOKEN_EXPIRATION_TIME;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.nineleaps.expensemanagementproject.DTO.UserDTO;
-import com.nineleaps.expensemanagementproject.config.JwtUtil;
-import com.nineleaps.expensemanagementproject.entity.Employee;
-import com.nineleaps.expensemanagementproject.service.IEmployeeService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.json.simple.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
+import com.nineleaps.expensemanagementproject.config.JwtUtil;
+import com.nineleaps.expensemanagementproject.DTO.UserDTO;
+import com.nineleaps.expensemanagementproject.entity.Employee;
+import com.nineleaps.expensemanagementproject.service.IEmailService;
+import com.nineleaps.expensemanagementproject.service.IEmployeeService;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+@ContextConfiguration(classes = {UserController.class})
+@ExtendWith(SpringExtension.class)
+class UserControllerTest {
 
-public class UserControllerTest {
+    @MockBean
+    private IEmailService iEmailService;
 
-    @Mock
-    private IEmployeeService userService;
+    @MockBean
+    private IEmployeeService iEmployeeService;
 
-    @Mock
-    private HttpServletRequest request;
+    @MockBean
+    private JwtUtil jwtUtil;
 
-    @Mock
-    private HttpServletResponse response;
 
+    @Autowired
     private UserController userController;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        userController = new UserController(userService);
+
+
+    @Test
+    void testGetAllUserDetails() throws Exception {
+        // Arrange
+        when(iEmployeeService.getAllUser()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/listTheUser");
+
+        // Act and Assert
+        MockMvcBuilders.standaloneSetup(userController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
-//    @Test
-//    public void testSendData() {
-//        // Mock the request header
-//        String token = "test_token";
-//        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
-//
-//        // Mock the decoded access token
-//        DecodedJWT decodedAccessToken = mock(DecodedJWT.class);
-//        when(decodedAccessToken.getSubject()).thenReturn("test@example.com");
-//
-//        // Mock the UserService to return the employee
-//        Employee employee = new Employee();
-//        employee.setEmployeeId(1L);
-//        employee.setEmployeeEmail("test@example.com");
-//        employee.setFirstName("John");
-//        employee.setLastName("Doe");
-//        employee.setImageUrl("http://example.com/image.jpg");
-//        when(userService.findByEmailId("test@example.com")).thenReturn(employee);
-//
-//        // Mock the ResponseEntity
-//        JSONObject responseJson = new JSONObject();
-//        responseJson.put("employeeId", 1L);
-//        responseJson.put("firstName", "John");
-//        responseJson.put("lastName", "Doe");
-//        responseJson.put("imageUrl", "http://example.com/image.jpg");
-//        responseJson.put("email", "test@example.com");
-//        ResponseEntity<JSONObject> expectedResponse = ResponseEntity.ok(responseJson);
-//
-//        // Call the sendData method
-//        ResponseEntity<?> actualResponse = userController.sendData(request);
-//
-//        // Verify the response
-//        assertEquals(expectedResponse.getStatusCode(), actualResponse.getStatusCode());
-//        assertEquals(expectedResponse.getBody(), actualResponse.getBody());
-//
-//        // Verify the UserService method calls
-//        verify(userService, times(1)).findByEmailId("test@example.com");
-//    }
 
-//    @Test
-//    public void testInsertUser() {
-//        // Create a UserDTO object
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setEmployeeEmail("test@example.com");
-//        userDTO.setImageUrl("http://example.com/image.jpg");
-//        userDTO.setFirstName("John");
-//        userDTO.setLastName("Doe");
-//
-//        // Mock the UserService to return null for findByEmailId (indicating user doesn't exist)
-//        when(userService.findByEmailId("test@example.com")).thenReturn(null);
-//
-//        // Mock the UserService to return a newly inserted employee
-//        Employee insertedEmployee = new Employee();
-//        insertedEmployee.setEmployeeId(1L);
-//        insertedEmployee.setEmployeeEmail("test@example.com");
-//        insertedEmployee.setRole("user");
-//        when(userService.insertUser(userDTO)).thenReturn(insertedEmployee);
-//
-//        // Mock the JwtUtil
-//        JwtUtil jwtUtil = mock(JwtUtil.class);
-//        JwtUtil.TokenResponse tokenResponse = new JwtUtil.TokenResponse();
-//        tokenResponse.setAccessToken("test_token");
-//        when(jwtUtil.generateTokens("test@example.com", 1L, "user", response)).thenReturn(ResponseEntity.ok(tokenResponse));
-//
-//        // Call the insertUser method
-//        ResponseEntity<JwtUtil.TokenResponse> responseEntity = userController.insertUser(userDTO, response);
-//
-//        // Verify the response
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        assertEquals(tokenResponse.getAccessToken(), responseEntity.getBody().getAccessToken());
-//
-//        // Verify the UserService method calls
-//        verify(userService, times(1)).findByEmailId("test@example.com");
-//        verify(userService, times(1)).insertUser(userDTO);
-//
-//        // Verify the JwtUtil method calls
-//        verify(jwtUtil, times(1)).generateTokens("test@example.com", 1L, "user", response);
-//    }
+    @Test
+    void testSendDataWithValidToken() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        String validToken = generateToken(); // Replace with a valid token
+        String validEmail = "employee@example.com";
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + validToken);
+        DecodedJWT decodedJWT = mock(DecodedJWT.class);
+        when(decodedJWT.getSubject()).thenReturn(validEmail);
+        Employee expectedEmployee = new Employee();
+        expectedEmployee.setEmployeeId(1L);
+        expectedEmployee.setEmployeeEmail(validEmail);
+        expectedEmployee.setFirstName("John");
+        expectedEmployee.setLastName("Doe");
+        expectedEmployee.setImageUrl("image.jpg");
 
-//    @Test
-//    public void testGetAllUserDetails() {
-//        // Create mock employees
-//        List<Employee> employees = new ArrayList<>();
-//        Employee employee1 = new Employee();
-//        employee1.setEmployeeId(1L);
-//        employee1.setEmployeeEmail("test1@example.com");
-//        Employee employee2 = new Employee();
-//        employee2.setEmployeeId(2L);
-//        employee2.setEmployeeEmail("test2@example.com");
-//        employees.add(employee1);
-//        employees.add(employee2);
+        when(iEmployeeService.findByEmailId(validEmail)).thenReturn(expectedEmployee);
+
+        ResponseEntity<JSONObject> responseEntity = (ResponseEntity<JSONObject>) userController.sendData(request);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        JSONObject responseBody = responseEntity.getBody();
+        Assertions.assertNotNull(responseBody);
+        assertEquals(1L, responseBody.get("employeeId"));
+        assertEquals("John", responseBody.get("firstName"));
+        assertEquals("Doe", responseBody.get("lastName"));
+        assertEquals("image.jpg", responseBody.get("imageUrl"));
+        assertEquals(validEmail, responseBody.get("email"));
+    }
+
+    @Test
+    void testSendDataWithMissingAuthorizationHeader() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        when(request.getHeader("Authorization")).thenReturn(null);
+
+        ResponseEntity<JSONObject> responseEntity = (ResponseEntity<JSONObject>) userController.sendData(request);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+        Assertions.assertNull(responseEntity.getBody());
+    }
+
+    @Test
+    void testRegenerateTokenWithValidToken() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        String validToken =  generateToken(); // Replace with a valid token
+        String validEmail = "employee@example.com";
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + validToken);
+        when(jwtUtil.isRefreshTokenExpired(validToken)).thenReturn(false);
+
+        DecodedJWT decodedJWT = mock(DecodedJWT.class);
+        when(decodedJWT.getSubject()).thenReturn(validEmail);
+
+        Employee expectedEmployee = new Employee();
+        expectedEmployee.setEmployeeEmail(validEmail);
+        expectedEmployee.setEmployeeId(1L);
+        expectedEmployee.setRole("EMPLOYEE");
+
+        when(iEmployeeService.findByEmailId(validEmail)).thenReturn(expectedEmployee);
+
+        String expectedAccessToken = "newAccessToken"; // Replace with the expected access token
+        when(jwtUtil.generateToken(validEmail, 1L, "EMPLOYEE", ACCESS_TOKEN_EXPIRATION_TIME)).thenReturn(expectedAccessToken);
+
+        userController.regenerateToken(request, response);
+
+        verify(response).setHeader("Access_Token", expectedAccessToken);
+    }
+
+    @Test
+    void testRegenerateTokenWithExpiredToken() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        String expiredToken = "expiredToken"; // Replace with an expired token
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + expiredToken);
+        when(jwtUtil.isRefreshTokenExpired(expiredToken)).thenReturn(true);
+
+        userController.regenerateToken(request, response);
+
+        // Verify that the response is not modified in this case (no Access_Token header is set)
+        verify(response, never()).setHeader(eq("Access_Token"), anyString());
+    }
+
+    @Test
+    void testInsertUserNewUser() throws MessagingException {
+        UserDTO newUserDTO = new UserDTO();
+        newUserDTO.setEmployeeEmail("newuser@example.com");
+        String validToken =  generateToken();
+
+
+
+        when(iEmployeeService.findByEmailId(newUserDTO.getEmployeeEmail())).thenReturn(null);
+
+        HttpServletResponse mockResponse = mock(HttpServletResponse.class);
+        JwtUtil.TokenResponse tokenResponse = new JwtUtil.TokenResponse(validToken,validToken);
+
+        ResponseEntity<JwtUtil.TokenResponse> responseEntity= ResponseEntity.ok(tokenResponse);
+        when(jwtUtil.generateTokens(newUserDTO.getEmployeeEmail(),1L, "EMPLOYEE", mockResponse)).thenReturn(responseEntity);
+        userController.insertUser(newUserDTO, mockResponse);
+
+        verify(iEmployeeService).insertUser(newUserDTO); // Ensure insertUser method is called
+
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testInsertUserExistingUser() throws MessagingException {
+        UserDTO existingUserDTO = new UserDTO();
+        existingUserDTO.setEmployeeEmail("existinguser@example.com");
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        Employee existingEmployee = new Employee(); // An existing employee with the same email
+        existingEmployee.setEmployeeId(1L);
+        existingEmployee.setEmployeeEmail("existinguser@example.com");
+        when(iEmployeeService.findByEmailId(existingUserDTO.getEmployeeEmail())).thenReturn(existingEmployee);
+
+        jwtUtil.generateTokens(existingEmployee.getEmployeeEmail(),existingEmployee.getEmployeeId(), "EMPLOYEE", response);
+
+        ResponseEntity<JwtUtil.TokenResponse> responseEntity = userController.insertUser(existingUserDTO, mock(HttpServletResponse.class));
+
+        verify(iEmployeeService).updateUser(existingUserDTO); // Ensure updateUser method is called
+
+        assertEquals("existinguser@example.com", existingEmployee.getEmployeeEmail());
+    }
+
+
 //
-//        // Mock the UserService to return the employees
-//        when(userService.getAllUser()).thenReturn(employees);
-//
-//        // Call the getAllUserDetails method
-//        List<Employee> actualEmployees = userController.getAllUserDetails();
-//
-//        // Verify the response
-//        assertEquals(employees.size(), actualEmployees.size());
-//        assertEquals(employees.get(0), actualEmployees.get(0));
-//        assertEquals(employees.get(1), actualEmployees.get(1));
-//
-//        // Verify the UserService method calls
-//        verify(userService, times(1)).getAllUser();
-//    }
+    private String generateToken() {
+        return Jwts.builder()
+                .setSubject("employee@example.com")
+                .claim("EmployeeID", 1L)
+                .claim("Role", "EMPLOYEE")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + JwtUtil.ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, generateRandomSecretKey())
+                .compact();
+    }
+
+    private static String generateRandomSecretKey() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] keyBytes = new byte[32]; // 256 bits
+        secureRandom.nextBytes(keyBytes);
+
+        // Convert the random bytes to a hexadecimal string
+        StringBuilder keyBuilder = new StringBuilder();
+        for (byte b : keyBytes) {
+            keyBuilder.append(String.format("%02x", b));
+        }
+
+        return keyBuilder.toString();
+    }
+
 }
+

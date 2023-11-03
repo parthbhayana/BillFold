@@ -1,181 +1,141 @@
 package com.nineleaps.expensemanagementproject.controller;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
-import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
 class EmployeeControllerTest {
-
-    @Mock
-    private IEmployeeService employeeService;
 
     @InjectMocks
     private EmployeeController employeeController;
 
+    @Mock
+    private IEmployeeService employeeService;
+
+
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
+
+
 
     @Test
     void testGetAllEmployeeDetails() {
-        // Create a list of employees
-        List<Employee> employeeList = new ArrayList<>();
-        employeeList.add(new Employee());
-        employeeList.add(new Employee());
-        employeeList.add(new Employee());
+        List<Employee> employees = new ArrayList<>();
+        Employee employee1 = new Employee();
+        employee1.setEmployeeId(1L);
+        employee1.setFirstName("John");
 
-        // Mock the service method
-        when(employeeService.getAllEmployeeDetails()).thenReturn(employeeList);
+        Employee employee2 = new Employee();
+        employee2.setEmployeeId(2L);
+        employee2.setFirstName("Jane");
 
-        // Call the controller method
-        List<Employee> result = employeeController.getAllEmployeeDetails();
+        employees.add(employee1);
+        employees.add(employee2);
 
-        // Verify the result
-        assertEquals(3, result.size());
-        verify(employeeService, times(1)).getAllEmployeeDetails();
-    }
+        when(employeeService.getAllEmployeeDetails()).thenReturn(employees);
 
-    @Test
-    void testSaveEmployeeDetails() {
-        // Create a sample employeeDTO
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmployeeEmail("test@example.com");
-        employeeDTO.setFirstName("John");
-        employeeDTO.setLastName("Doe");
+        List<Employee> response = employeeController.getAllEmployeeDetails();
 
-        // Create a sample employee entity
-        Employee employee = new Employee();
-        employee.setEmployeeEmail("test@example.com");
-        employee.setFirstName("John");
-        employee.setLastName("Doe");
-
-        // Mock the service method
-        when(employeeService.saveEmployeeDetails(employeeDTO)).thenReturn(employee);
-
-        // Call the controller method
-        Employee result = employeeController.save(employeeDTO);
-
-        // Verify the result
-        assertEquals(employee, result);
-        verify(employeeService, times(1)).saveEmployeeDetails(employeeDTO);
-    }
-
-    @Test
-    void testUpdateEmployeeDetails() {
-        // Create a sample employeeDTO
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmployeeEmail("test@example.com");
-        employeeDTO.setFirstName("John");
-        employeeDTO.setLastName("Doe");
-
-        // Create a sample employee entity
-        Employee employee = new Employee();
-        employee.setEmployeeEmail("test@example.com");
-        employee.setFirstName("John");
-        employee.setLastName("Doe");
-
-        // Mock the service method
-        when(employeeService.updateEmployeeDetails(employeeDTO, 1L)).thenReturn(employee);
-
-        // Call the controller method
-        Employee result = employeeController.updateEmployee(employeeDTO, 1L);
-
-        // Verify the result
-        assertEquals(employee, result);
-        verify(employeeService, times(1)).updateEmployeeDetails(employeeDTO, 1L);
+        assertEquals(employees, response);
     }
 
 
     @Test
     void testGetEmployeeById() {
-        // Create a sample employee
-        Employee employee = new Employee();
-        employee.setEmployeeId(1L);
-        employee.setFirstName("John");
-        employee.setLastName("Doe");
 
-        // Mock the service method
-        when(employeeService.getEmployeeById(1L)).thenReturn(employee);
+        Long employeeId = 1L;
+        Employee mockEmployee = new Employee();
+        when(employeeService.getEmployeeById(employeeId)).thenReturn(mockEmployee);
+        Employee resultEmployee = employeeController.getEmployeeById(employeeId);
+        verify(employeeService, times(1)).getEmployeeById(employeeId);
+        assertEquals(mockEmployee, resultEmployee);
+    }
 
-        // Call the controller method
-        Employee result = employeeController.getEmployeeById(1L);
+    @Test
+    void testAdditionalEmployeeDetails() {
+        Long employeeId = 1L;
+        String officialEmployeeId = "EMP123";
+        String managerEmail = "manager@example.com";
+        Long mobileNumber = 1234567890L;
+        String managerName = "Manager";
+        String hrName = "HR";
+        String hrEmail = "hr@example.com";
 
-        // Verify the result
-        assertEquals(employee, result);
-        verify(employeeService, times(1)).getEmployeeById(1L);
+        Employee additionalDetailsEmployee = new Employee();
+        additionalDetailsEmployee.setEmployeeId(employeeId);
+        additionalDetailsEmployee.setOfficialEmployeeId(officialEmployeeId);
+        additionalDetailsEmployee.setManagerEmail(managerEmail);
+        additionalDetailsEmployee.setMobileNumber(mobileNumber);
+        additionalDetailsEmployee.setManagerName(managerName);
+        additionalDetailsEmployee.setHrName(hrName);
+        additionalDetailsEmployee.setHrEmail(hrEmail);
+
+        when(employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,
+                managerName, hrEmail, hrName)).thenReturn(Optional.of(additionalDetailsEmployee));
+
+        Optional<Employee> response = employeeController.additionalEmployeeDetails(employeeId, officialEmployeeId,
+                managerEmail, mobileNumber, managerName, hrName, hrEmail);
+
+        assertTrue(response.isPresent());
+        assertEquals(additionalDetailsEmployee, response.get());
     }
 
     @Test
     void testDeleteEmployeeById() {
-        // Call the controller method
-        employeeController.deleteEmployeeById(1L);
 
-        // Verify the method call
-        verify(employeeService, times(1)).deleteEmployeeDetailsById(1L);
+        Long employeeId = 1L;
+        employeeController.deleteEmployeeById(employeeId);
+        verify(employeeService, times(1)).deleteEmployeeDetailsById(employeeId);
     }
 
     @Test
     void testHideEmployee() {
-        // Call the controller method
-        employeeController.hideEmployee(1L);
 
-        // Verify the method call
-        verify(employeeService, times(1)).hideEmployee(1L);
+        Long employeeId = 1L;
+        employeeController.hideEmployee(employeeId);
+        verify(employeeService, times(1)).hideEmployee(employeeId);
     }
 
     @Test
     void testSetFinanceAdmin() {
-        // Call the controller method
-        employeeController.setFinanceAdmin(1L);
 
-        // Verify the method call
-        verify(employeeService, times(1)).setFinanceAdmin(1L);
+        Long employeeId = 1L;
+        employeeController.setFinanceAdmin(employeeId);
+        verify(employeeService, times(1)).setFinanceAdmin(employeeId);
     }
 
     @Test
     void testGetEmployeeDetails() {
-        // Create a sample employee
-        Employee employee = new Employee();
-        employee.setEmployeeId(1L);
-        employee.setFirstName("John");
-        employee.setLastName("Doe");
 
-        // Mock the service method
-        when(employeeService.getEmployeeDetails(1L)).thenReturn(Optional.of(employee));
-
-        // Call the controller method
-        Optional<Employee> result = employeeController.getEmployeeDetails(1L);
-
-        // Verify the result
-        assertTrue(result.isPresent());
-        assertEquals(employee, result.get());
-        verify(employeeService, times(1)).getEmployeeDetails(1L);
+        Long employeeId = 1L;
+        Employee mockEmployee = new Employee();
+        when(employeeService.getEmployeeDetails(employeeId)).thenReturn(Optional.of(mockEmployee));
+        Optional<Employee> resultEmployee = employeeController.getEmployeeDetails(employeeId);
+        verify(employeeService, times(1)).getEmployeeDetails(employeeId);
+        assertTrue(resultEmployee.isPresent());
+        assertEquals(mockEmployee, resultEmployee.get());
     }
 
     @Test
     void testEditEmployeeDetails() {
-        // Call the controller method
-        employeeController.editEmployeeDetails(1L, "manager@example.com", 1234567890L, "EMP001", "Manager");
 
-        // Verify the method call
-        verify(employeeService, times(1)).editEmployeeDetails(1L, "manager@example.com", 1234567890L, "EMP001", "Manager");
+        employeeController.editEmployeeDetails(1L, "manager@example.com", 1234567890L, "EMP001", "Manager", "karthik", "karthik.r@nineleaps.com");
+        verify(employeeService, times(1)).editEmployeeDetails(1L, "manager@example.com", 1234567890L, "EMP001", "Manager", "karthik.r@nineleaps.com", "karthik");
     }
+
 
 
 

@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nineleaps.expensemanagementproject.service.CategoryServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 s - in com.nineleaps.expensemanagementproject.service.CategoryServiceImplTest
+Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.12 s - in com.nineleaps.expensemanagementproject.service.CategoryServiceImplTest

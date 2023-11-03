@@ -1,5 +1,6 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+
 import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
 import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.service.ICategoryService;
@@ -8,203 +9,209 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-import java.util.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CategoryControllerTest {
-    @Mock
-    private ICategoryService categoryService;
 
     @InjectMocks
     private CategoryController categoryController;
 
+    @Mock
+    private ICategoryService categoryService;
+
+
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    void addCategory_ValidCategoryDTO_ReturnsCategory() {
-        // Prepare test data
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryDescription("Test Category");
+    void testAddCategory() {
+        CategoryDTO categoryDTO = new CategoryDTO("Food");
+        Category addedCategory = new Category();
+        addedCategory.setCategoryId(1L);
+        addedCategory.setCategoryDescription("Food");
 
-        Category category = new Category();
-        category.setCategoryId(1L);
-        category.setCategoryDescription("Test Category");
+        when(categoryService.addCategory(categoryDTO)).thenReturn(addedCategory);
 
-        // Mock the categoryService
-        when(categoryService.addCategory(categoryDTO)).thenReturn(category);
+        ResponseEntity<Object> response = categoryController.addCategory(categoryDTO);
 
-        // Call the addCategory method
-        Category result = categoryController.addCategory(categoryDTO);
-
-        // Verify the categoryService was called and the result
-        verify(categoryService).addCategory(categoryDTO);
-        assertNotNull(result);
-        assertEquals(category, result);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(addedCategory, response.getBody());
     }
 
     @Test
-    void getAllCategory_ReturnsListOfCategories() {
-        // Prepare test data
-        List<Category> categories = Arrays.asList(new Category(), new Category(), new Category());
+    void testAddCategoryBadRequest() {
+        CategoryDTO categoryDTO = new CategoryDTO(null);
 
-        // Mock the categoryService
+        when(categoryService.addCategory(categoryDTO)).thenThrow(new IllegalArgumentException("Invalid category name"));
+
+        ResponseEntity<Object> response = categoryController.addCategory(categoryDTO);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Invalid category name", response.getBody());
+    }
+
+    @Test
+    void testGetAllCategory() {
+        List<Category> categories = new ArrayList<>();
+        Category category1 = new Category();
+        category1.setCategoryId(1L);
+        category1.setCategoryDescription("Food");
+
+        Category category2 = new Category();
+        category2.setCategoryId(2L);
+        category2.setCategoryDescription("Travel");
+
+        categories.add(category1);
+        categories.add(category2);
+
         when(categoryService.getAllCategories()).thenReturn(categories);
 
-        // Call the getAllCategory method
-        List<Category> result = categoryController.getAllCategory();
+        List<Category> response = categoryController.getAllCategory();
 
-        // Verify the categoryService was called and the result
-        verify(categoryService).getAllCategories();
-        assertNotNull(result);
-        assertEquals(categories, result);
+        assertEquals(categories, response);
     }
 
     @Test
-    void getCategoryById_WithValidCategoryId_ReturnsCategory() {
-        // Prepare test data
+    void testGetCategoryById() {
         Long categoryId = 1L;
         Category category = new Category();
         category.setCategoryId(categoryId);
-        category.setCategoryDescription("Test Category");
+        category.setCategoryDescription("Food");
 
-        // Mock the categoryService
         when(categoryService.getCategoryById(categoryId)).thenReturn(category);
 
-        // Call the getCategoryById method
-        Category result = categoryController.getCategoryById(categoryId);
+        Category response = categoryController.getCategoryById(categoryId);
 
-        // Verify the categoryService was called and the result
-        verify(categoryService).getCategoryById(categoryId);
-        assertNotNull(result);
-        assertEquals(category, result);
+        assertEquals(category, response);
     }
 
     @Test
-    void updateCategory_WithValidCategoryIdAndCategoryDTO_ReturnsUpdatedCategory() {
-        // Prepare test data
+    void testUpdateCategory() {
         Long categoryId = 1L;
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryDescription("Updated Category");
-
+        CategoryDTO categoryDTO = new CategoryDTO("Groceries");
         Category updatedCategory = new Category();
         updatedCategory.setCategoryId(categoryId);
-        updatedCategory.setCategoryDescription("Updated Category");
+        updatedCategory.setCategoryDescription("Groceries");
 
-        // Mock the categoryService
         when(categoryService.updateCategory(categoryId, categoryDTO)).thenReturn(updatedCategory);
 
-        // Call the updateCategory method
-        Category result = categoryController.updateCategory(categoryId, categoryDTO);
+        Category response = categoryController.updateCategory(categoryId, categoryDTO);
 
-        // Verify the categoryService was called and the result
-        verify(categoryService).updateCategory(categoryId, categoryDTO);
-        assertNotNull(result);
-        assertEquals(updatedCategory, result);
+        assertEquals(updatedCategory, response);
     }
 
     @Test
-    void hideCategory_WithValidCategoryId_VerifyCategoryServiceCalled() {
-        // Prepare test data
+    void testHideCategory() {
         Long categoryId = 1L;
 
-        // Call the hideCategory method
-        categoryController.hideCategory(categoryId);
+        assertDoesNotThrow(() -> categoryController.hideCategory(categoryId));
 
-        // Verify the categoryService was called
-        verify(categoryService).hideCategory(categoryId);
+        verify(categoryService, times(1)).hideCategory(categoryId);
     }
 
     @Test
     void testGetCategoryTotalAmount() {
-        // Mock input parameters
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate endDate = LocalDate.of(2023, 12, 31);
+        HashMap<String, Double> categoryTotalAmount = new HashMap<>();
+        categoryTotalAmount.put("Food", 500.0);
+        categoryTotalAmount.put("Travel", 1000.0);
 
-        // Mock the expected result
-        HashMap<String, Float> expected = new HashMap<>();
-        expected.put("Category1", 100.0f);
-        expected.put("Category2", 200.0f);
+        when(categoryService.getCategoryTotalAmount(startDate, endDate)).thenReturn(categoryTotalAmount);
 
-        // Mock the categoryService method
-        when(categoryService.getCategoryTotalAmount(startDate, endDate)).thenReturn(expected);
+        Map<String, Double> response = categoryController.getCategoryTotalAmount(startDate, endDate);
 
-        // Call the controller method
-        Map<String, Float> result = categoryController.getCategoryTotalAmount(startDate, endDate);
-
-        // Verify the result
-        assertEquals(expected, result);
+        assertEquals(categoryTotalAmount, response);
     }
+
     @Test
-    void testGetCategoryAnalytics() {
-        // Mock input parameter
+    void testGetCategoryAnalyticsYearly() {
         Long categoryId = 1L;
+        Map<String, Object> analyticsData = createSampleAnalyticsData(); // Create sample analytics data
 
-        // Mock the expected result
-        HashMap<String, Object> expected = new HashMap<>();
-        expected.put("Year", 2023);
-        expected.put("Category1", 100.0f);
-        expected.put("Category2", 200.0f);
+        when(categoryService.getCategoryAnalyticsYearly(categoryId)).thenReturn((HashMap<String, Object>) analyticsData);
 
-        // Mock the categoryService method
-        when(categoryService.getCategoryAnalyticsYearly(categoryId)).thenReturn(expected);
+        Map<String, Object> response = categoryController.getCategoryAnalytics(categoryId);
 
-        // Call the controller method
-        Map<String, Object> result = categoryController.getCategoryAnalytics(categoryId);
+        assertEquals(analyticsData, response);
+    }
 
-        // Verify the result
-        assertEquals(expected, result);
+    // Create a sample analytics data map for testing
+    private Map<String, Object> createSampleAnalyticsData() {
+        Map<String, Object> analyticsData = new HashMap<>();
+        analyticsData.put("year", 2023);
+        analyticsData.put("categoryName", "Food");
+        analyticsData.put("totalExpenses", 1500.0);
+        analyticsData.put("averageExpense", 500.0);
+        // Add more data as needed for your specific test case
+
+        return analyticsData;
+    }
+
+    @Test
+    void testGetCategoryAnalyticsMonthly() {
+        Long categoryId = 1L;
+        Long year = 2023L;
+        Map<String, Object> analyticsData = createSampleAnalyticsData(); // Create sample analytics data
+
+        when(categoryService.getCategoryAnalyticsMonthly(categoryId, year)).thenReturn((HashMap<String, Object>) analyticsData);
+
+        Map<String, Object> response = categoryController.getCategoryAnalytics(categoryId, year);
+
+        assertEquals(analyticsData, response);
     }
 
     @Test
     void testGetYearlyCategoryAnalyticsForAllCategories() {
-        // Mock the expected result
-        HashMap<String, Object> expected = new HashMap<>();
-        expected.put("Year", 2023);
-        expected.put("Category1", 100.0f);
-        expected.put("Category2", 200.0f);
+        Map<String, Object> yearlyAnalyticsData = createSampleYearlyAnalyticsData(); // Create sample yearly analytics data
 
-        // Mock the categoryService method
-        when(categoryService.getYearlyCategoryAnalyticsForAllCategories()).thenReturn(expected);
+        when(categoryService.getYearlyCategoryAnalyticsForAllCategories()).thenReturn((HashMap<String, Object>) yearlyAnalyticsData);
 
-        // Call the controller method
-        Map<String, Object> result = categoryController.getYearlyCategoryAnalyticsForAllCategories();
+        Map<String, Object> response = categoryController.getYearlyCategoryAnalyticsForAllCategories();
 
-        // Verify the result
-        assertEquals(expected, result);
+        assertEquals(yearlyAnalyticsData, response);
     }
+
     @Test
     void testGetMonthlyCategoryAnalyticsForAllCategories() {
-        // Mock input parameter
         Long year = 2023L;
+        Map<String, Object> monthlyAnalyticsData = createSampleMonthlyAnalyticsData(); // Create sample monthly analytics data
 
-        // Mock the expected result
-        HashMap<String, Object> expected = new HashMap<>();
-        expected.put("Month", "January");
-        expected.put("Category1", 100.0f);
-        expected.put("Category2", 200.0f);
+        when(categoryService.getMonthlyCategoryAnalyticsForAllCategories(year)).thenReturn((HashMap<String, Object>) monthlyAnalyticsData);
 
-        // Mock the categoryService method
-        when(categoryService.getMonthlyCategoryAnalyticsForAllCategories(year)).thenReturn(expected);
+        Map<String, Object> response = categoryController.getMonthlyCategoryAnalyticsForAllCategories(year);
 
-        // Call the controller method
-        Map<String, Object> result = categoryController.getMonthlyCategoryAnalyticsForAllCategories(year);
-
-        // Verify the result
-        assertEquals(expected, result);
+        assertEquals(monthlyAnalyticsData, response);
     }
 
+    private Map<String, Object> createSampleYearlyAnalyticsData() {
+        Map<String, Object> yearlyAnalyticsData = new HashMap<>();
+        yearlyAnalyticsData.put("year", 2023);
+        yearlyAnalyticsData.put("totalExpenses", 1500.0);
+        // Add more data as needed for your specific test case
 
+        return yearlyAnalyticsData;
+    }
 
+    // Create a sample monthly analytics data map for testing
+    private Map<String, Object> createSampleMonthlyAnalyticsData() {
+        Map<String, Object> monthlyAnalyticsData = new HashMap<>();
+        monthlyAnalyticsData.put("year", 2023);
+        monthlyAnalyticsData.put("month", "January");
+        monthlyAnalyticsData.put("totalExpenses", 500.0);
+        // Add more data as needed for your specific test case
 
-
-
+        return monthlyAnalyticsData;
+    }
 }

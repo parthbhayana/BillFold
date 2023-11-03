@@ -1,382 +1,308 @@
 package com.nineleaps.expensemanagementproject.entity;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class ExpenseTest {
 
     @Test
-    void getExpenseId() {
-        Long expenseId = 1L;
-        Expense expense = new Expense();
-        expense.setExpenseId(expenseId);
-        assertEquals(expenseId, expense.getExpenseId());
-    }
-
-    @Test
-    void setExpenseId() {
-        Long expenseId = 2L;
-        Expense expense = new Expense();
-        expense.setExpenseId(expenseId);
-        assertEquals(expenseId, expense.getExpenseId());
-    }
-
-    @Test
-    void getMerchantName() {
-        String merchantName = "ABC Store";
-        Expense expense = new Expense();
-        expense.setMerchantName(merchantName);
-        assertEquals(merchantName, expense.getMerchantName());
-    }
-
-    @Test
-    void setMerchantName() {
-        String merchantName = "XYZ Store";
-        Expense expense = new Expense();
-        expense.setMerchantName(merchantName);
-        assertEquals(merchantName, expense.getMerchantName());
-    }
-
-    @Test
-    void getDate() {
-        LocalDate date = LocalDate.of(2023, 7, 10);
-        Expense expense = new Expense();
-        expense.setDate(date);
-        assertEquals(date, expense.getDate());
-    }
-
-    @Test
-    void setDate() {
-        LocalDate date = LocalDate.of(2023, 7, 15);
-        Expense expense = new Expense();
-        expense.setDate(date);
-        assertEquals(date, expense.getDate());
-    }
-
-    @Test
-    void getDateCreated() {
-        LocalDateTime dateCreated = LocalDateTime.of(2023, 7, 10, 12, 0);
-        Expense expense = new Expense();
-        expense.setDateCreated(dateCreated);
-        assertEquals(dateCreated, expense.getDateCreated());
-    }
-
-    @Test
-    void setDateCreated() {
-        LocalDateTime dateCreated = LocalDateTime.of(2023, 7, 15, 9, 30);
-        Expense expense = new Expense();
-        expense.setDateCreated(dateCreated);
-        assertEquals(dateCreated, expense.getDateCreated());
-    }
-
-    @Test
-    void getCurrency() {
-        String currency = "USD";
-        Expense expense = new Expense();
-        expense.setCurrency(currency);
-        assertEquals(currency, expense.getCurrency());
-    }
-
-    @Test
-    void setCurrency() {
-        String currency = "EUR";
-        Expense expense = new Expense();
-        expense.setCurrency(currency);
-        assertEquals(currency, expense.getCurrency());
-    }
-
-    @Test
-    void getAmount() {
-        Long amount = 1000L;
-        Expense expense = new Expense();
-        expense.setAmount(amount);
-        assertEquals(amount, expense.getAmount());
-    }
-
-    @Test
-    void setAmount() {
-        Long amount = 2000L;
-        Expense expense = new Expense();
-        expense.setAmount(amount);
-        assertEquals(amount, expense.getAmount());
-    }
-
-    @Test
-    void getAmountINR() {
-        float amountINR = 1500.0f;
-        Expense expense = new Expense();
-        expense.setAmountINR(amountINR);
-        assertEquals(amountINR, expense.getAmountINR());
-    }
-
-    @Test
-    void setAmountINR() {
-        float amountINR = 2500.0f;
-        Expense expense = new Expense();
-        expense.setAmountINR(amountINR);
-        assertEquals(amountINR, expense.getAmountINR());
-    }
-
-    @Test
-    void getDescription() {
-        String description = "Expense for dinner";
-        Expense expense = new Expense();
-        expense.setDescription(description);
-        assertEquals(description, expense.getDescription());
-    }
-
-    @Test
-    void setDescription() {
-        String description = "Expense for lunch";
-        Expense expense = new Expense();
-        expense.setDescription(description);
-        assertEquals(description, expense.getDescription());
-    }
-
-    @Test
-    void getCategoryDescription() {
-        String categoryDescription = "Food";
-        Expense expense = new Expense();
-        expense.setCategoryDescription(categoryDescription);
-        assertEquals(categoryDescription, expense.getCategoryDescription());
-    }
-
-    @Test
-    void setCategoryDescription() {
-        String categoryDescription = "Transportation";
-        Expense expense = new Expense();
-        expense.setCategoryDescription(categoryDescription);
-        assertEquals(categoryDescription, expense.getCategoryDescription());
-    }
-
-    @Test
-    void getIsReported() {
-        Boolean isReported = true;
-        Expense expense = new Expense();
-        expense.setIsReported(isReported);
-        assertEquals(isReported, expense.getIsReported());
-    }
-
-    @Test
-    void setIsReported() {
-        Boolean isReported = false;
-        Expense expense = new Expense();
-        expense.setIsReported(isReported);
-        assertEquals(isReported, expense.getIsReported());
-    }
-
-    @Test
-    void getIsHidden() {
-        Boolean isHidden = true;
-        Expense expense = new Expense();
-        expense.setIsHidden(isHidden);
-        assertEquals(isHidden, expense.getIsHidden());
-    }
-
-    @Test
-    void setIsHidden() {
-        Boolean isHidden = false;
-        Expense expense = new Expense();
-        expense.setIsHidden(isHidden);
-        assertEquals(isHidden, expense.getIsHidden());
-    }
-
-    @Test
-    void getReportTitle() {
-        String reportTitle = "Expense Report 2023";
-        Expense expense = new Expense();
-        expense.setReportTitle(reportTitle);
-        assertEquals(reportTitle, expense.getReportTitle());
-    }
-
-    @Test
-    void setReportTitle() {
-        String reportTitle = "Expense Report Q2 2023";
-        Expense expense = new Expense();
-        expense.setReportTitle(reportTitle);
-        assertEquals(reportTitle, expense.getReportTitle());
-    }
-
-    @Test
-    void getAmountApproved() {
-        Float amountApproved = 500.0f;
-        Expense expense = new Expense();
-        expense.setAmountApproved(amountApproved);
-        assertEquals(amountApproved, expense.getAmountApproved());
-    }
-
-    @Test
-    void setAmountApproved() {
-        Float amountApproved = 1000.0f;
-        Expense expense = new Expense();
-        expense.setAmountApproved(amountApproved);
-        assertEquals(amountApproved, expense.getAmountApproved());
-    }
-
-    @Test
-    void getFinanceApprovalStatus() {
-        FinanceApprovalStatus financeApprovalStatus = FinanceApprovalStatus.APPROVED;
-        Expense expense = new Expense();
-        expense.setFinanceApprovalStatus(financeApprovalStatus);
-        assertEquals(financeApprovalStatus, expense.getFinanceApprovalStatus());
-    }
-
-    @Test
-    void setFinanceApprovalStatus() {
-        FinanceApprovalStatus financeApprovalStatus = FinanceApprovalStatus.PENDING;
-        Expense expense = new Expense();
-        expense.setFinanceApprovalStatus(financeApprovalStatus);
-        assertEquals(financeApprovalStatus, expense.getFinanceApprovalStatus());
-    }
-
-    @Test
-    void getManagerApprovalStatusExpense() {
-        ManagerApprovalStatusExpense managerApprovalStatusExpense = ManagerApprovalStatusExpense.APPROVED;
-        Expense expense = new Expense();
-        expense.setManagerApprovalStatusExpense(managerApprovalStatusExpense);
-        assertEquals(managerApprovalStatusExpense, expense.getManagerApprovalStatusExpense());
-    }
-
-    @Test
-    void setManagerApprovalStatusExpense() {
-        ManagerApprovalStatusExpense managerApprovalStatusExpense = ManagerApprovalStatusExpense.PENDING;
-        Expense expense = new Expense();
-        expense.setManagerApprovalStatusExpense(managerApprovalStatusExpense);
-        assertEquals(managerApprovalStatusExpense, expense.getManagerApprovalStatusExpense());
-    }
-
-    @Test
-    void getSupportingDocuments() {
-        byte[] supportingDocuments = {1, 2, 3};
-        Expense expense = new Expense();
-        expense.setFile(supportingDocuments);
-        assertArrayEquals(supportingDocuments, expense.getFile());
-    }
-
-    @Test
-    void setSupportingDocuments() {
-        byte[] supportingDocuments = {4, 5, 6};
-        Expense expense = new Expense();
-        expense.setFile(supportingDocuments);
-        assertArrayEquals(supportingDocuments, expense.getFile());
-    }
-
-    @Test
-    void getEmployee() {
-        Employee employee = new Employee();
-        Expense expense = new Expense();
-        expense.setEmployee(employee);
-        assertEquals(employee, expense.getEmployee());
-    }
-
-    @Test
-    void setEmployee() {
-        Employee employee = new Employee();
-        Expense expense = new Expense();
-        expense.setEmployee(employee);
-        assertEquals(employee, expense.getEmployee());
-    }
-
-    @Test
-    void getReports() {
-        Reports reports = new Reports();
-        Expense expense = new Expense();
-        expense.setReports(reports);
-        assertEquals(reports, expense.getReports());
-    }
-
-    @Test
-    void setReports() {
-        Reports reports = new Reports();
-        Expense expense = new Expense();
-        expense.setReports(reports);
-        assertEquals(reports, expense.getReports());
-    }
-
-    @Test
-    void getCategory() {
+    void testConstructor() throws UnsupportedEncodingException {
+        // Arrange and Act
+        Expense actualExpense = new Expense();
+        actualExpense.setAmount(10.0d);
+        actualExpense.setAmountApproved(10.0d);
         Category category = new Category();
-        Expense expense = new Expense();
-        expense.setCategory(category);
-        assertEquals(category, expense.getCategory());
-    }
-
-    @Test
-    void setCategory() {
-        Category category = new Category();
-        Expense expense = new Expense();
-        expense.setCategory(category);
-        assertEquals(category, expense.getCategory());
-    }
-    @Test
-    void getAmountApprovedINR() {
-        Double amountApprovedINR = 1000.0;
-        Expense expense = new Expense();
-        expense.setAmountApprovedINR(amountApprovedINR);
-        assertEquals(amountApprovedINR, expense.getAmountApprovedINR());
-    }
-
-    @Test
-    void setAmountApprovedINR() {
-        Double amountApprovedINR = 2000.0;
-        Expense expense = new Expense();
-        expense.setAmountApprovedINR(amountApprovedINR);
-        assertEquals(amountApprovedINR, expense.getAmountApprovedINR());
-    }
-
-    @Test
-    void Expense_Constructor_WithValidArguments_CreatesExpenseObject() {
-        // Prepare test data
-        Long expenseId = 1L;
-        String merchantName = "Test Merchant";
-        LocalDate date = LocalDate.of(2023, 1, 1);
-        LocalDateTime dateCreated = LocalDateTime.now();
-        String currency = "USD";
-        Long amount = 100L;
-        float amountINR = 100.0f;
-        String description = "Test Expense";
-        String categoryDescription = "Test Category";
-        Boolean isReported = true;
-        Boolean isHidden = false;
-        String reportTitle = "Test Report";
-        Float amountApproved = 50.0f;
-        Double amountApprovedINR = 50.0;
-        FinanceApprovalStatus financeApprovalStatus = FinanceApprovalStatus.APPROVED;
-        ManagerApprovalStatusExpense managerApprovalStatusExpense = ManagerApprovalStatusExpense.APPROVED;
-        byte[] supportingDocuments = new byte[0];
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
+        actualExpense.setCategory(category);
+        actualExpense.setCategoryDescription("Category Description");
+        LocalDate date = LocalDate.of(1970, 1, 1);
+        actualExpense.setDate(date);
+        LocalDateTime dateCreated = LocalDate.of(1970, 1, 1).atStartOfDay();
+        actualExpense.setDateCreated(dateCreated);
+        actualExpense.setDescription("The characteristics of someone or something");
         Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
+        actualExpense.setEmployee(employee);
+        actualExpense.setExpenseId(1L);
+        byte[] file = "AXAXAXAX".getBytes("UTF-8");
+        actualExpense.setFile(file);
+        actualExpense.setFileName("foo.txt");
+        actualExpense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        actualExpense.setIsHidden(true);
+        actualExpense.setIsReported(true);
+        actualExpense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        actualExpense.setMerchantName("Merchant Name");
+        actualExpense.setPotentialDuplicate(true);
+        actualExpense.setReportTitle("Dr");
         Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+        actualExpense.setReports(reports);
+        Double actualAmount = actualExpense.getAmount();
+        Double actualAmountApproved = actualExpense.getAmountApproved();
+        Category actualCategory = actualExpense.getCategory();
+        String actualCategoryDescription = actualExpense.getCategoryDescription();
+        LocalDate actualDate = actualExpense.getDate();
+        LocalDateTime actualDateCreated = actualExpense.getDateCreated();
+        String actualDescription = actualExpense.getDescription();
+        Employee actualEmployee = actualExpense.getEmployee();
+        Long actualExpenseId = actualExpense.getExpenseId();
+        byte[] actualFile = actualExpense.getFile();
+        String actualFileName = actualExpense.getFileName();
+        FinanceApprovalStatus actualFinanceApprovalStatus = actualExpense.getFinanceApprovalStatus();
+        Boolean actualIsHidden = actualExpense.getIsHidden();
+        Boolean actualIsReported = actualExpense.getIsReported();
+        ManagerApprovalStatusExpense actualManagerApprovalStatusExpense = actualExpense.getManagerApprovalStatusExpense();
+        String actualMerchantName = actualExpense.getMerchantName();
+        Boolean actualPotentialDuplicate = actualExpense.getPotentialDuplicate();
+        String actualReportTitle = actualExpense.getReportTitle();
+        Reports actualReports = actualExpense.getReports();
+
+        // Assert that nothing has changed
+        assertEquals(10.0d, actualAmount.doubleValue());
+        assertEquals(10.0d, actualAmountApproved.doubleValue());
+        assertSame(category, actualCategory);
+        assertEquals("Category Description", actualCategoryDescription);
+        assertSame(date, actualDate);
+        assertSame(dateCreated, actualDateCreated);
+        assertEquals("The characteristics of someone or something", actualDescription);
+        assertSame(employee, actualEmployee);
+        assertEquals(1L, actualExpenseId.longValue());
+        assertSame(file, actualFile);
+        assertEquals("foo.txt", actualFileName);
+        assertEquals(FinanceApprovalStatus.REIMBURSED, actualFinanceApprovalStatus);
+        assertTrue(actualIsHidden);
+        assertTrue(actualIsReported);
+        assertEquals(ManagerApprovalStatusExpense.APPROVED, actualManagerApprovalStatusExpense);
+        assertEquals("Merchant Name", actualMerchantName);
+        assertTrue(actualPotentialDuplicate);
+        assertEquals("Dr", actualReportTitle);
+        assertSame(reports, actualReports);
+    }
+
+
+    @Test
+    void testConstructor2() throws UnsupportedEncodingException {
+        // Arrange
+        LocalDate date = LocalDate.of(1970, 1, 1);
+        LocalDateTime dateCreated = LocalDate.of(1970, 1, 1).atStartOfDay();
+        byte[] file = "AXAXAXAX".getBytes("UTF-8");
+
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
+
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+
         Category category = new Category();
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
 
-        // Call the Expense constructor
-        Expense expense = new Expense(expenseId, merchantName, date, dateCreated, currency, amount, amountINR,
-                description, categoryDescription, isReported, isHidden, reportTitle, amountApproved, amountApprovedINR,
-                financeApprovalStatus, managerApprovalStatusExpense, supportingDocuments, employee, reports, category);
+        // Act
+        Expense actualExpense = new Expense(1L, "Merchant Name", date, dateCreated, 10.0d,
+                "The characteristics of someone or something", "Category Description", true, true, "Dr", 10.0d,
+                FinanceApprovalStatus.REIMBURSED, ManagerApprovalStatusExpense.APPROVED, true, file, "foo.txt", employee,
+                reports, category);
+        actualExpense.setAmount(10.0d);
+        actualExpense.setAmountApproved(10.0d);
+        Category category2 = new Category();
+        category2.setCategoryDescription("Category Description");
+        category2.setCategoryId(1L);
+        category2.setCategoryTotal(1L);
+        category2.setExpenseList(new ArrayList<>());
+        category2.setIsHidden(true);
+        actualExpense.setCategory(category2);
+        actualExpense.setCategoryDescription("Category Description");
+        LocalDate date2 = LocalDate.of(1970, 1, 1);
+        actualExpense.setDate(date2);
+        LocalDateTime dateCreated2 = LocalDate.of(1970, 1, 1).atStartOfDay();
+        actualExpense.setDateCreated(dateCreated2);
+        actualExpense.setDescription("The characteristics of someone or something");
+        Employee employee2 = new Employee();
+        employee2.setEmployeeEmail("jane.doe@example.org");
+        employee2.setEmployeeId(1L);
+        employee2.setExpenseList(new ArrayList<>());
+        employee2.setFirstName("Jane");
+        employee2.setHrEmail("jane.doe@example.org");
+        employee2.setHrName("Hr Name");
+        employee2.setImageUrl("https://example.org/example");
+        employee2.setIsFinanceAdmin(true);
+        employee2.setIsHidden(true);
+        employee2.setLastName("Doe");
+        employee2.setLndEmail("jane.doe@example.org");
+        employee2.setLndName("Lnd Name");
+        employee2.setManagerEmail("jane.doe@example.org");
+        employee2.setManagerName("Manager Name");
+        employee2.setMiddleName("Middle Name");
+        employee2.setMobileNumber(1L);
+        employee2.setOfficialEmployeeId("42");
+        employee2.setRole("Role");
+        employee2.setToken("ABC123");
+        actualExpense.setEmployee(employee2);
+        actualExpense.setExpenseId(1L);
+        byte[] file2 = "AXAXAXAX".getBytes("UTF-8");
+        actualExpense.setFile(file2);
+        actualExpense.setFileName("foo.txt");
+        actualExpense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        actualExpense.setIsHidden(true);
+        actualExpense.setIsReported(true);
+        actualExpense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        actualExpense.setMerchantName("Merchant Name");
+        actualExpense.setPotentialDuplicate(true);
+        actualExpense.setReportTitle("Dr");
+        Reports reports2 = new Reports();
+        reports2.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports2.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports2.setEmployeeId(1L);
+        reports2.setEmployeeMail("Employee Mail");
+        reports2.setEmployeeName("Employee Name");
+        reports2.setExpensesCount(3L);
+        reports2.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports2.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports2.setFinanceComments("Finance Comments");
+        reports2.setIsHidden(true);
+        reports2.setIsSubmitted(true);
+        reports2.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports2.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports2.setManagerComments("Manager Comments");
+        reports2.setManagerEmail("jane.doe@example.org");
+        reports2.setManagerReviewTime("Manager Review Time");
+        reports2.setOfficialEmployeeId("42");
+        reports2.setReportId(1L);
+        reports2.setReportTitle("Dr");
+        reports2.setTotalAmount(10.0f);
+        reports2.setTotalApprovedAmount(10.0f);
+        actualExpense.setReports(reports2);
+        Double actualAmount = actualExpense.getAmount();
+        Double actualAmountApproved = actualExpense.getAmountApproved();
+        Category actualCategory = actualExpense.getCategory();
+        String actualCategoryDescription = actualExpense.getCategoryDescription();
+        LocalDate actualDate = actualExpense.getDate();
+        LocalDateTime actualDateCreated = actualExpense.getDateCreated();
+        String actualDescription = actualExpense.getDescription();
+        Employee actualEmployee = actualExpense.getEmployee();
+        Long actualExpenseId = actualExpense.getExpenseId();
+        byte[] actualFile = actualExpense.getFile();
+        String actualFileName = actualExpense.getFileName();
+        FinanceApprovalStatus actualFinanceApprovalStatus = actualExpense.getFinanceApprovalStatus();
+        Boolean actualIsHidden = actualExpense.getIsHidden();
+        Boolean actualIsReported = actualExpense.getIsReported();
+        ManagerApprovalStatusExpense actualManagerApprovalStatusExpense = actualExpense.getManagerApprovalStatusExpense();
+        String actualMerchantName = actualExpense.getMerchantName();
+        Boolean actualPotentialDuplicate = actualExpense.getPotentialDuplicate();
+        String actualReportTitle = actualExpense.getReportTitle();
+        Reports actualReports = actualExpense.getReports();
 
-        // Assert the fields of the created Expense object
-        assertEquals(expenseId, expense.getExpenseId());
-        assertEquals(merchantName, expense.getMerchantName());
-        assertEquals(date, expense.getDate());
-        assertEquals(dateCreated, expense.getDateCreated());
-        assertEquals(currency, expense.getCurrency());
-        assertEquals(amount, expense.getAmount());
-        assertEquals(amountINR, expense.getAmountINR());
-        assertEquals(description, expense.getDescription());
-        assertEquals(categoryDescription, expense.getCategoryDescription());
-        assertEquals(isReported, expense.getIsReported());
-        assertEquals(isHidden, expense.getIsHidden());
-        assertEquals(reportTitle, expense.getReportTitle());
-        assertEquals(amountApproved, expense.getAmountApproved());
-        assertEquals(amountApprovedINR, expense.getAmountApprovedINR());
-        assertEquals(financeApprovalStatus, expense.getFinanceApprovalStatus());
-        assertEquals(managerApprovalStatusExpense, expense.getManagerApprovalStatusExpense());
-        assertEquals(supportingDocuments, expense.getFile());
-        assertEquals(employee, expense.getEmployee());
-        assertEquals(reports, expense.getReports());
-        assertEquals(category, expense.getCategory());
+        // Assert that nothing has changed
+        assertEquals(10.0d, actualAmount.doubleValue());
+        assertEquals(10.0d, actualAmountApproved.doubleValue());
+        assertSame(category2, actualCategory);
+        assertEquals("Category Description", actualCategoryDescription);
+        assertSame(date2, actualDate);
+        assertSame(dateCreated2, actualDateCreated);
+        assertEquals("The characteristics of someone or something", actualDescription);
+        assertSame(employee2, actualEmployee);
+        assertEquals(1L, actualExpenseId.longValue());
+        assertSame(file2, actualFile);
+        assertEquals("foo.txt", actualFileName);
+        assertEquals(FinanceApprovalStatus.REIMBURSED, actualFinanceApprovalStatus);
+        assertTrue(actualIsHidden);
+        assertTrue(actualIsReported);
+        assertEquals(ManagerApprovalStatusExpense.APPROVED, actualManagerApprovalStatusExpense);
+        assertEquals("Merchant Name", actualMerchantName);
+        assertTrue(actualPotentialDuplicate);
+        assertEquals("Dr", actualReportTitle);
+        assertSame(reports2, actualReports);
     }
 }
+

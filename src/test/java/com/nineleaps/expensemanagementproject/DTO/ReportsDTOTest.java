@@ -2,31 +2,38 @@ package com.nineleaps.expensemanagementproject.DTO;
 
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ReportsDTOTest {
 
     @Test
-    void testReportsDTOConstructor() {
-        String reportTitle = "Test Report";
-        String reportDescription = "This is a test report";
+    void testDefaultConstructor() {
+        ReportsDTO reportsDTO = new ReportsDTO();
+
+        // Verify that the default constructor initializes fields to their default values
+        assertNull(reportsDTO.getReportTitle());
+    }
+
+    @Test
+    void testParameterizedConstructor() {
+        String reportTitle = "Expense Report";
 
         ReportsDTO reportsDTO = new ReportsDTO(reportTitle);
 
+        // Verify that the parameterized constructor initializes the report title correctly
         assertEquals(reportTitle, reportsDTO.getReportTitle());
     }
 
     @Test
-    void testGetSetReportTitle() {
+    void testGetterAndSetterMethods() {
         ReportsDTO reportsDTO = new ReportsDTO();
 
-        assertNull(reportsDTO.getReportTitle());
-
-        String reportTitle = "Test Report";
+        // Set the report title using the setter method
+        String reportTitle = "Updated Report Title";
         reportsDTO.setReportTitle(reportTitle);
 
+        // Verify that the getter method returns the expected report title
         assertEquals(reportTitle, reportsDTO.getReportTitle());
     }
 }

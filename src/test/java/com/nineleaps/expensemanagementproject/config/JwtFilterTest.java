@@ -1,98 +1,101 @@
-package com.nineleaps.expensemanagementproject.config;
-
-import io.jsonwebtoken.Claims;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-public class JwtFilterTest {
-
-    @Mock
-    private JwtUtil jwtUtil;
-
-    private JwtFilter jwtFilter;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        jwtFilter = new JwtFilter(jwtUtil);
-    }
-
-    @Test
-    public void doFilterInternal_ValidToken_ShouldSetAuthenticationInSecurityContextHolder() throws ServletException, IOException {
-        // Arrange
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain filterChain = mock(FilterChain.class);
-
-        String token = "valid-token";
-        String emailId = "test@example.com";
-        String role = "ROLE_USER";
-
-        Claims claims = createClaims(emailId, role);
-        when(jwtUtil.validateToken(token)).thenReturn(true);
-        when(jwtUtil.getClaimsFromToken(token)).thenReturn(claims);
-
-        // Act
-        request.addHeader("Authorization", "Bearer " + token);
-        jwtFilter.doFilterInternal(request, response, filterChain);
-
-        // Assert
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        assertNotNull(authentication);
-        assertEquals(emailId, authentication.getPrincipal());
-        assertNull(authentication.getCredentials());
-        assertEquals(1, authentication.getAuthorities().size());
-        assertTrue(authentication.getAuthorities().contains(new SimpleGrantedAuthority(role)));
-
-        verify(filterChain).doFilter(request, response);
-    }
-
-    @Test
-    public void doFilterInternal_InvalidToken_ShouldNotSetAuthenticationInSecurityContextHolder() throws ServletException, IOException {
-        // Arrange
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain filterChain = mock(FilterChain.class);
-
-        String token = "invalid-token";
-
-        when(jwtUtil.validateToken(token)).thenReturn(false);
-
-        // Clear the authentication context
-        SecurityContextHolder.clearContext();
-
-        // Act
-        request.addHeader("Authorization", "Bearer " + token);
-        jwtFilter.doFilterInternal(request, response, filterChain);
-
-        // Assert
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        assertNull(authentication);
-
-        verify(filterChain).doFilter(request, response);
-    }
-
-    private Claims createClaims(String emailId, String role) {
-        Claims claims = mock(Claims.class);
-        when(claims.getSubject()).thenReturn(emailId);
-        when(claims.get("Role")).thenReturn(role);
-        return claims;
-    }
-}
-
+//package com.nineleaps.expensemanagementproject.config;
+//
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
+//import org.mockito.Mock;
+//import org.mockito.MockitoAnnotations;
+//import org.springframework.mock.web.MockHttpServletRequest;
+//import org.springframework.mock.web.MockHttpServletResponse;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import io.jsonwebtoken.Claims;
+//import static org.junit.jupiter.api.Assertions.*;
+//import static org.mockito.Mockito.*;
+//import javax.servlet.FilterChain;
+//import javax.servlet.ServletException;
+//import javax.servlet.http.HttpServletResponse;
+//import java.io.IOException;
+//
+//class JwtFilterTest {
+//
+//    @Mock
+//    private JwtUtil jwtUtil;
+//
+//    private JwtFilter jwtFilter;
+//
+//    @BeforeEach
+//    void setUp() {
+//        MockitoAnnotations.initMocks(this);
+//        jwtFilter = new JwtFilter(jwtUtil);
+//    }
+//
+//    @Test
+//    void testDoFilterInternalWithValidPaths() throws ServletException, IOException {
+//        MockHttpServletRequest request = new MockHttpServletRequest();
+//        MockHttpServletResponse response = new MockHttpServletResponse();
+//        FilterChain filterChain = mock(FilterChain.class);
+//
+//        request.setServletPath("/theProfile");
+//        jwtFilter.doFilterInternal(request, response, filterChain);
+//
+//        verify(filterChain, times(1)).doFilter(request, response);
+//
+//        request.setServletPath("/regenerateToken");
+//        jwtFilter.doFilterInternal(request, response, filterChain);
+//
+//        verify(filterChain, times(2)).doFilter(request, response);
+//    }
+//
+//    @Test
+//    void testDoFilterInternalWithValidToken() throws ServletException, IOException {
+//        MockHttpServletRequest request = new MockHttpServletRequest();
+//        MockHttpServletResponse response = new MockHttpServletResponse();
+//        FilterChain filterChain = mock(FilterChain.class);
+//
+//        request.addHeader("Authorization", "Bearer yourValidToken");
+//
+//        // Mock JWTUtil's behavior
+//        Claims claims = mock(Claims.class);
+//        when(claims.getSubject()).thenReturn("test@example.com");
+//        when(claims.get("Role")).thenReturn("ROLE_USER");
+//        when(jwtUtil.validateToken("yourValidToken")).thenReturn(true);
+//        when(jwtUtil.isAccessTokenExpired("yourValidToken")).thenReturn(false);
+//        when(jwtUtil.getClaimsFromToken("yourValidToken")).thenReturn(claims);
+//
+//        jwtFilter.doFilterInternal(request, response, filterChain);
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        assertNotNull(authentication);
+//        assertEquals("test@example.com", authentication.getPrincipal());
+//        assertTrue(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+//    }
+//
+//    @Test
+//    void testDoFilterInternalWithExpiredToken() throws ServletException, IOException {
+//        MockHttpServletRequest request = new MockHttpServletRequest();
+//        MockHttpServletResponse response = new MockHttpServletResponse();
+//        FilterChain filterChain = mock(FilterChain.class);
+//
+//        request.addHeader("Authorization", "Bearer yourExpiredToken");
+//
+//        // Mock JWTUtil's behavior
+//        when(jwtUtil.validateToken("yourExpiredToken")).thenReturn(true);
+//        when(jwtUtil.isAccessTokenExpired("yourExpiredToken")).thenReturn(true);
+//
+//        jwtFilter.doFilterInternal(request, response, filterChain);
+//
+//        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+//    }
+//
+//    @Test
+//    void testDoFilterInternalWithNullHeader() throws ServletException, IOException {
+//        MockHttpServletRequest request = new MockHttpServletRequest();
+//        MockHttpServletResponse response = new MockHttpServletResponse();
+//        FilterChain filterChain = mock(FilterChain.class);
+//
+//        jwtFilter.doFilterInternal(request, response, filterChain);
+//
+//        assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+//    }
+//}

@@ -11,7 +11,7 @@ import com.nineleaps.expensemanagementproject.entity.Expense;
 
 	public static BufferedImage convertToBufferedImage(Expense expense) throws IOException {
 
-<span class="nc" id="L14">		byte[] imageData = expense.getSupportingDocuments();</span>
+<span class="nc" id="L14">		byte[] imageData = expense.getFile();</span>
 <span class="nc" id="L15">		InputStream in = new ByteArrayInputStream(imageData);</span>
 <span class="nc" id="L16">		BufferedImage image = ImageIO.read(in);</span>
 <span class="nc" id="L17">		return image;</span>

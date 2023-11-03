@@ -1,212 +1,441 @@
 package com.nineleaps.expensemanagementproject.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
+import com.nineleaps.expensemanagementproject.entity.Category;
+import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
+import com.nineleaps.expensemanagementproject.entity.FinanceApprovalStatus;
+import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatus;
+import com.nineleaps.expensemanagementproject.entity.ManagerApprovalStatusExpense;
+import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IExpenseService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+
+@ContextConfiguration(classes = {ExpenseController.class})
+@ExtendWith(SpringExtension.class)
 class ExpenseControllerTest {
-
-    @Mock
-    private IExpenseService expenseService;
-
-
-    @InjectMocks
+    @Autowired
     private ExpenseController expenseController;
 
-    private MockMvc mockMvc;
 
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(expenseController).build();
-    }
-
-
-
+    @MockBean
+    private IExpenseService iExpenseService;
 
 
     @Test
-    void getExpenseById_ShouldReturnExpense() throws Exception {
-        // Arrange
-        Long expenseId = 1L;
-        Expense expense = new Expense();
-        when(expenseService.getExpenseById(expenseId)).thenReturn(expense);
+    @Disabled("TODO: Complete this test")
+    void testAddPotentialDuplicateExpense1() throws Exception {
 
-        // Act
-        mockMvc.perform(get("/findExpense/{expenseId}", expenseId))
-                .andExpect(status().isOk())
-                .andReturn();
+        MockHttpServletRequestBuilder postResult = MockMvcRequestBuilders.post("/addPotentialDuplicateExpense/{employeeId}",
+                1L);
+        MockHttpServletRequestBuilder contentTypeResult = postResult.param("categoryId", String.valueOf(1L))
+                .contentType(MediaType.APPLICATION_JSON);
 
-        // Assert
-        verify(expenseService, times(1)).getExpenseById(expenseId);
-    }
-
-    @Test
-    void updateExpenses_ShouldReturnUpdatedExpense() throws Exception {
-        // Arrange
-        Long expenseId = 1L;
         ExpenseDTO expenseDTO = new ExpenseDTO();
-        Expense updatedExpense = new Expense();
-        when(expenseService.updateExpenses(any(ExpenseDTO.class), eq(expenseId))).thenReturn(updatedExpense);
-
-        // Act
-        mockMvc.perform(put("/updateExpenses/{expenseId}", expenseId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(expenseDTO)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // Assert
-        verify(expenseService, times(1)).updateExpenses(any(ExpenseDTO.class), eq(expenseId));
+        expenseDTO.setAmount(10.0d);
+        expenseDTO.setDate(LocalDate.of(1970, 1, 1));
+        expenseDTO.setDescription("The characteristics of someone or something");
+        expenseDTO.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
+        expenseDTO.setFileName("foo.txt");
+        expenseDTO.setMerchantName("Merchant Name");
+        MockHttpServletRequestBuilder requestBuilder = contentTypeResult
+                .content((new ObjectMapper()).writeValueAsString(expenseDTO));
+        MockMvcBuilders.standaloneSetup(expenseController).build().perform(requestBuilder);
     }
 
 
-
+    @Test
+    void testGetAllExpenses() throws Exception {
+        when(iExpenseService.getAllExpenses()).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/showAllExpenses");
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
 
 
     @Test
-    void removeTaggedExpense_ShouldReturnExpense() throws Exception {
-        // Arrange
-        Long expenseId = 1L;
+    void testGetExpenseById() throws Exception {
+        Category category = new Category();
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
         Expense expense = new Expense();
-        when(expenseService.removeTaggedExpense(expenseId)).thenReturn(expense);
-
-        // Act
-        mockMvc.perform(post("/removeTaggedExpense/{expenseId}", expenseId))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // Assert
-        verify(expenseService, times(1)).removeTaggedExpense(expenseId);
+        expense.setAmount(10.0d);
+        expense.setAmountApproved(10.0d);
+        expense.setCategory(category);
+        expense.setCategoryDescription("Category Description");
+        expense.setDate(LocalDate.of(1970, 1, 1));
+        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense.setDescription("The characteristics of someone or something");
+        expense.setEmployee(employee);
+        expense.setExpenseId(1L);
+        expense.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
+        expense.setFileName("foo.txt");
+        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        expense.setIsHidden(true);
+        expense.setIsReported(true);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        expense.setMerchantName("Merchant Name");
+        expense.setPotentialDuplicate(true);
+        expense.setReportTitle("Dr");
+        expense.setReports(reports);
+        when(iExpenseService.getExpenseById(Mockito.<Long>any())).thenReturn(expense);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/findExpense/{expenseId}", 1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"expenseId\":1,\"merchantName\":\"Merchant Name\",\"date\":[1970,1,1],\"dateCreated\":[1970,1,1,0,0],\"amount"
+                                        + "\":10.0,\"description\":\"The characteristics of someone or something\",\"categoryDescription\":\"Category"
+                                        + " Description\",\"isReported\":true,\"isHidden\":true,\"reportTitle\":\"Dr\",\"amountApproved\":10.0,\"financeApp"
+                                        + "rovalStatus\":\"REIMBURSED\",\"managerApprovalStatusExpense\":\"APPROVED\",\"potentialDuplicate\":true,\"file\""
+                                        + ":\"QVhBWEFYQVg=\",\"fileName\":\"foo.txt\"}"));
     }
 
+
     @Test
-    void testSaveExpense_Success() {
-        // Mocking the request data
+    void testUpdateExpenses() throws Exception {
+        Category category = new Category();
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
+        Expense expense = new Expense();
+        expense.setAmount(10.0d);
+        expense.setAmountApproved(10.0d);
+        expense.setCategory(category);
+        expense.setCategoryDescription("Category Description");
+        expense.setDate(LocalDate.of(1970, 1, 1));
+        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense.setDescription("The characteristics of someone or something");
+        expense.setEmployee(employee);
+        expense.setExpenseId(1L);
+        expense.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
+        expense.setFileName("foo.txt");
+        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        expense.setIsHidden(true);
+        expense.setIsReported(true);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        expense.setMerchantName("Merchant Name");
+        expense.setPotentialDuplicate(true);
+        expense.setReportTitle("Dr");
+        expense.setReports(reports);
+        when(iExpenseService.updateExpenses(Mockito.any(), Mockito.<Long>any())).thenReturn(expense);
         ExpenseDTO expenseDTO = new ExpenseDTO();
-        // Set expense DTO properties as needed
+        expenseDTO.setAmount(10.0d);
+        expenseDTO.setDate(null);
+        expenseDTO.setDescription("The characteristics of someone or something");
+        expenseDTO.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
+        expenseDTO.setFileName("foo.txt");
+        expenseDTO.setMerchantName("Merchant Name");
+        String content = (new ObjectMapper()).writeValueAsString(expenseDTO);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/updateExpenses/{expenseId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"expenseId\":1,\"merchantName\":\"Merchant Name\",\"date\":[1970,1,1],\"dateCreated\":[1970,1,1,0,0],\"amount"
+                                        + "\":10.0,\"description\":\"The characteristics of someone or something\",\"categoryDescription\":\"Category"
+                                        + " Description\",\"isReported\":true,\"isHidden\":true,\"reportTitle\":\"Dr\",\"amountApproved\":10.0,\"financeApp"
+                                        + "rovalStatus\":\"REIMBURSED\",\"managerApprovalStatusExpense\":\"APPROVED\",\"potentialDuplicate\":true,\"file\""
+                                        + ":\"QVhBWEFYQVg=\",\"fileName\":\"foo.txt\"}"));
+    }
 
-        Long employeeId = 1L;
-        Long categoryId = 2L;
 
-        // Mocking the expense service response
+    @Test
+    void testGetExpenseByReportId() throws Exception {
+        when(iExpenseService.getExpenseByReportId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getExpenseByReportId/{reportId}", 1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
+    }
+
+
+    @Test
+    void testRemoveTaggedExpense() throws Exception {
+        Category category = new Category();
+        category.setCategoryDescription("Category Description");
+        category.setCategoryId(1L);
+        category.setCategoryTotal(1L);
+        category.setExpenseList(new ArrayList<>());
+        category.setIsHidden(true);
+        Employee employee = new Employee();
+        employee.setEmployeeEmail("jane.doe@example.org");
+        employee.setEmployeeId(1L);
+        employee.setExpenseList(new ArrayList<>());
+        employee.setFirstName("Jane");
+        employee.setHrEmail("jane.doe@example.org");
+        employee.setHrName("Hr Name");
+        employee.setImageUrl("https://example.org/example");
+        employee.setIsFinanceAdmin(true);
+        employee.setIsHidden(true);
+        employee.setLastName("Doe");
+        employee.setLndEmail("jane.doe@example.org");
+        employee.setLndName("Lnd Name");
+        employee.setManagerEmail("jane.doe@example.org");
+        employee.setManagerName("Manager Name");
+        employee.setMiddleName("Middle Name");
+        employee.setMobileNumber(1L);
+        employee.setOfficialEmployeeId("42");
+        employee.setRole("Role");
+        employee.setToken("ABC123");
+        Reports reports = new Reports();
+        reports.setDateCreated(LocalDate.of(1970, 1, 1));
+        reports.setDateSubmitted(LocalDate.of(1970, 1, 1));
+        reports.setEmployeeId(1L);
+        reports.setEmployeeMail("Employee Mail");
+        reports.setEmployeeName("Employee Name");
+        reports.setExpensesCount(3L);
+        reports.setFinanceActionDate(LocalDate.of(1970, 1, 1));
+        reports.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        reports.setFinanceComments("Finance Comments");
+        reports.setIsHidden(true);
+        reports.setIsSubmitted(true);
+        reports.setManagerActionDate(LocalDate.of(1970, 1, 1));
+        reports.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
+        reports.setManagerComments("Manager Comments");
+        reports.setManagerEmail("jane.doe@example.org");
+        reports.setManagerReviewTime("Manager Review Time");
+        reports.setOfficialEmployeeId("42");
+        reports.setReportId(1L);
+        reports.setReportTitle("Dr");
+        reports.setTotalAmount(10.0f);
+        reports.setTotalApprovedAmount(10.0f);
         Expense expense = new Expense();
-        // Set expense properties as needed
-//        when(expenseService.addExpense(expenseDTO, employeeId, categoryId)).thenReturn(expense);
+        expense.setAmount(10.0d);
+        expense.setAmountApproved(10.0d);
+        expense.setCategory(category);
+        expense.setCategoryDescription("Category Description");
+        expense.setDate(LocalDate.of(1970, 1, 1));
+        expense.setDateCreated(LocalDate.of(1970, 1, 1).atStartOfDay());
+        expense.setDescription("The characteristics of someone or something");
+        expense.setEmployee(employee);
+        expense.setExpenseId(1L);
+        expense.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
+        expense.setFileName("foo.txt");
+        expense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
+        expense.setIsHidden(true);
+        expense.setIsReported(true);
+        expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.APPROVED);
+        expense.setMerchantName("Merchant Name");
+        expense.setPotentialDuplicate(true);
+        expense.setReportTitle("Dr");
+        expense.setReports(reports);
+        when(iExpenseService.removeTaggedExpense(Mockito.<Long>any())).thenReturn(expense);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/removeTaggedExpense/{expenseId}",
+                1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"expenseId\":1,\"merchantName\":\"Merchant Name\",\"date\":[1970,1,1],\"dateCreated\":[1970,1,1,0,0],\"amount"
+                                        + "\":10.0,\"description\":\"The characteristics of someone or something\",\"categoryDescription\":\"Category"
+                                        + " Description\",\"isReported\":true,\"isHidden\":true,\"reportTitle\":\"Dr\",\"amountApproved\":10.0,\"financeApp"
+                                        + "rovalStatus\":\"REIMBURSED\",\"managerApprovalStatusExpense\":\"APPROVED\",\"potentialDuplicate\":true,\"file\""
+                                        + ":\"QVhBWEFYQVg=\",\"fileName\":\"foo.txt\"}"));
+    }
 
-        // Performing the controller method
-//        Expense savedExpense = expenseController.saveExpense(expenseDTO, employeeId, categoryId);
 
-        // Verifying the response
-//        assertNotNull(savedExpense);
-        // Add more assertions to verify the properties of the saved expense
+    @Test
+    void testHideExpense() throws Exception {
+        doNothing().when(iExpenseService).hideExpense(Mockito.<Long>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/hideExpense/{expenseId}", 1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+    @Test
+    void testHideExpense2() throws Exception {
+        doNothing().when(iExpenseService).hideExpense(Mockito.<Long>any());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/hideExpense/{expenseId}", 1L);
+        requestBuilder.characterEncoding("Encoding");
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+    @Test
+    void testGetExpenseByEmpId() throws Exception {
+        when(iExpenseService.getExpenseByEmployeeId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/getExpenseByEmployeeId/{employeeId}",
+                1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
     @Test
-    void testGetAllExpenses() {
-        // Mocking the expense service response
-        List<Expense> mockExpenses = new ArrayList<>();
-        // Add mock Expense objects to the list
-
-        when(expenseService.getAllExpenses()).thenReturn(mockExpenses);
-
-        // Performing the controller method
-        List<Expense> result = expenseController.getAllExpenses();
-
-        // Verifying the response
-        assertNotNull(result);
-        assertEquals(mockExpenses.size(), result.size());
-        // Add more assertions to verify the content of the returned list
+    void testGetExpensesById() throws Exception {
+        when(iExpenseService.getExpensesByEmployeeId(Mockito.<Long>any())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/getUnreportedExpensesByEmployeeId/{employeeId}", 1L);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
+
+
     @Test
-    void testGetExpenseByEmpId() {
-        // Mocking the employeeId
-        Long employeeId = 1L;
+    void testSaveExpense() throws Exception {
+        when(iExpenseService.addExpense(Mockito.any(), Mockito.<Long>any(), Mockito.<Long>any()))
+                .thenReturn("Add Expense");
 
-        // Mocking the expense service response
-        List<Expense> mockExpenses = new ArrayList<>();
-        // Add mock Expense objects to the list
-
-        when(expenseService.getExpenseByEmployeeId(employeeId)).thenReturn(mockExpenses);
-
-        // Performing the controller method
-        List<Expense> result = expenseController.getExpenseByEmpId(employeeId);
-
-        // Verifying the response
-        assertNotNull(result);
-        assertEquals(mockExpenses.size(), result.size());
-        // Add more assertions to verify the content of the returned list
-    }
-    @Test
-    void testGetExpenseByReportId() {
-        // Mocking the reportId
-        Long reportId = 1L;
-
-        // Mocking the expense service response
-        List<Expense> mockExpenses = new ArrayList<>();
-        // Add mock Expense objects to the list
-
-        when(expenseService.getExpenseByReportId(reportId)).thenReturn(mockExpenses);
-
-        // Performing the controller method
-        List<Expense> result = expenseController.getExpenseByReportId(reportId);
-
-        // Verifying the response
-        assertNotNull(result);
-        assertEquals(mockExpenses.size(), result.size());
-        // Add more assertions to verify the content of the returned list
-    }
-    @Test
-    void testGetExpensesById() {
-        // Mocking the employeeId
-        Long employeeId = 1L;
-
-        // Mocking the expense service response
-        List<Expense> mockExpenses = new ArrayList<>();
-        // Add mock Expense objects to the list
-
-        when(expenseService.getExpensesByEmployeeId(employeeId)).thenReturn(mockExpenses);
-
-        // Performing the controller method
-        List<Expense> result = expenseController.getExpensesById(employeeId);
-
-        // Verifying the response
-        assertNotNull(result);
-        assertEquals(mockExpenses.size(), result.size());
-        // Add more assertions to verify the content of the returned list
-    }
-    @Test
-    void testHideExpense() {
-        // Mocking the expenseId
-        Long expenseId = 1L;
-
-        // Performing the controller method
-        expenseController.hideExpense(expenseId);
-
-        // Verifying the service method invocation
-        verify(expenseService).hideExpense(expenseId);
+        ExpenseDTO expenseDTO = new ExpenseDTO();
+        expenseDTO.setAmount(10.0d);
+        expenseDTO.setDate(null);
+        expenseDTO.setDescription("The characteristics of someone or something");
+        expenseDTO.setFile("AXAXAXAX".getBytes(StandardCharsets.UTF_8));
+        expenseDTO.setFileName("foo.txt");
+        expenseDTO.setMerchantName("Merchant Name");
+        String content = (new ObjectMapper()).writeValueAsString(expenseDTO);
+        MockHttpServletRequestBuilder postResult = MockMvcRequestBuilders.post("/insertExpenses/{employeeId}", 1L);
+        MockHttpServletRequestBuilder requestBuilder = postResult.param("categoryId", String.valueOf(1L))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        MockMvcBuilders.standaloneSetup(expenseController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
+                .andExpect(MockMvcResultMatchers.content().string("Add Expense"));
     }
 
-    private byte[] asJsonString(Object object) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsBytes(object);
-    }
+
 }

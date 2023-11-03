@@ -1,74 +1,128 @@
 package com.nineleaps.expensemanagementproject.DTO;
 
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
- class EmployeeDTOTest {
+class EmployeeDTOTest {
 
     @Test
-     void testEmployeeDTOConstructor() {
-        String employeeEmail = "employee@example.com";
-        String firstName = "John";
-        String officialEmployeeId = "E12345";
-        Long mobileNumber = 1234567890L;
-        String middleName = "Michael";
-        String lastName = "Doe";
-        String managerEmail = "manager@example.com";
-        String managerName = "Jane Smith";
+    void testGetEmployeeEmail() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeEmail("test@example.com");
+        assertEquals("test@example.com", employeeDTO.getEmployeeEmail());
+    }
 
-        EmployeeDTO employeeDTO = new EmployeeDTO(
-                employeeEmail, firstName, officialEmployeeId, mobileNumber, middleName, lastName, managerEmail, managerName);
+    @Test
+    void testSetEmployeeEmail() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeEmail("test@example.com");
+        assertEquals("test@example.com", employeeDTO.getEmployeeEmail());
+    }
 
-        assertEquals(employeeEmail, employeeDTO.getEmployeeEmail());
-        assertEquals(firstName, employeeDTO.getFirstName());
+    @Test
+    void testGetFirstName() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setFirstName("John");
+        assertEquals("John", employeeDTO.getFirstName());
+    }
+
+    @Test
+    void testSetFirstName() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setFirstName("John");
+        assertEquals("John", employeeDTO.getFirstName());
+    }
+
+
+    @Test
+    void testGetHrName() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setHrName("HR Manager");
+        assertEquals("HR Manager", employeeDTO.getHrName());
+    }
+
+    @Test
+    void testSetHrName() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setHrName("HR Manager");
+        assertEquals("HR Manager", employeeDTO.getHrName());
+    }
+
+    @Test
+    void testSetOfficialEmployeeId() {
+        // Arrange
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        String officialEmployeeId = "EMP123";
+
+        // Act
+        employeeDTO.setOfficialEmployeeId(officialEmployeeId);
+
+        // Assert
         assertEquals(officialEmployeeId, employeeDTO.getOfficialEmployeeId());
+    }
+
+    @Test
+    void testSetMobileNumber() {
+        // Arrange
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        Long mobileNumber = 1234567890L;
+
+        // Act
+        employeeDTO.setMobileNumber(mobileNumber);
+
+        // Assert
         assertEquals(mobileNumber, employeeDTO.getMobileNumber());
-        assertEquals(middleName, employeeDTO.getMiddleName());
-        assertEquals(lastName, employeeDTO.getLastName());
-        assertEquals(managerEmail, employeeDTO.getManagerEmail());
+    }
+
+    @Test
+    void testSetManagerName() {
+        // Arrange
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        String managerName = "John Doe";
+
+        // Act
+        employeeDTO.setManagerName(managerName);
+
+        // Assert
         assertEquals(managerName, employeeDTO.getManagerName());
     }
 
     @Test
-    void testGetSetMethods() {
+    void testSetHrEmail() {
+        // Arrange
         EmployeeDTO employeeDTO = new EmployeeDTO();
+        String hrEmail = "hr@example.com";
 
-        assertNull(employeeDTO.getEmployeeEmail());
-        assertNull(employeeDTO.getFirstName());
-        assertNull(employeeDTO.getOfficialEmployeeId());
-        assertNull(employeeDTO.getMobileNumber());
-        assertNull(employeeDTO.getMiddleName());
-        assertNull(employeeDTO.getLastName());
-        assertNull(employeeDTO.getManagerEmail());
-        assertNull(employeeDTO.getManagerName());
+        // Act
+        employeeDTO.setHrEmail(hrEmail);
 
-        String employeeEmail = "employee@example.com";
-        String firstName = "John";
-        String officialEmployeeId = "E12345";
-        Long mobileNumber = 1234567890L;
-        String middleName = "Michael";
-        String lastName = "Doe";
-        String managerEmail = "manager@example.com";
-        String managerName = "Jane Smith";
+        // Assert
+        assertEquals(hrEmail, employeeDTO.getHrEmail());
+    }
 
-        employeeDTO.setEmployeeEmail(employeeEmail);
-        employeeDTO.setFirstName(firstName);
-        employeeDTO.setOfficialEmployeeId(officialEmployeeId);
-        employeeDTO.setMobileNumber(mobileNumber);
+    @Test
+    void testSetMiddleName() {
+        // Arrange
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        String middleName = "Middle";
+
+        // Act
         employeeDTO.setMiddleName(middleName);
-        employeeDTO.setLastName(lastName);
-        employeeDTO.setManagerEmail(managerEmail);
-        employeeDTO.setManagerName(managerName);
 
-        assertEquals(employeeEmail, employeeDTO.getEmployeeEmail());
-        assertEquals(firstName, employeeDTO.getFirstName());
-        assertEquals(officialEmployeeId, employeeDTO.getOfficialEmployeeId());
-        assertEquals(mobileNumber, employeeDTO.getMobileNumber());
+        // Assert
         assertEquals(middleName, employeeDTO.getMiddleName());
-        assertEquals(lastName, employeeDTO.getLastName());
+    }
+
+    @Test
+    void testSetManagerEmail() {
+        // Arrange
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        String managerEmail = "manager@example.com";
+
+        // Act
+        employeeDTO.setManagerEmail(managerEmail);
+
+        // Assert
         assertEquals(managerEmail, employeeDTO.getManagerEmail());
-        assertEquals(managerName, employeeDTO.getManagerName());
     }
 }

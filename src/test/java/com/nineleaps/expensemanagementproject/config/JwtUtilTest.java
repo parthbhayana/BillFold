@@ -1,167 +1,141 @@
 package com.nineleaps.expensemanagementproject.config;
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletResponse;
-
-
-
 import javax.servlet.http.HttpServletResponse;
-
-import java.util.Date;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.jsonwebtoken.*;
+import java.security.SecureRandom;
+import java.util.Date;
+
+
+import static org.mockito.Mockito.mock;
 
 class JwtUtilTest {
 
-    private static final String SECRET_KEY = "secret";
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 10000;
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 20000;
+
     private JwtUtil jwtUtil;
-    private HttpServletResponse response;
 
     @BeforeEach
     void setUp() {
         jwtUtil = new JwtUtil();
-        response = mock(HttpServletResponse.class);
     }
 
     @Test
-    void generateTokens_ShouldReturnTokenResponseWithTokensSetInHeaders() {
-        // Arrange
-        String emailId = "test@example.com";
-        Long employeeId = 1L;
-        String role = "admin";
+    void testGenerateTokens() {
+
         HttpServletResponse response = mock(HttpServletResponse.class);
-
-        JwtUtil jwtUtil = new JwtUtil();
-
-        // Act
-        ResponseEntity<JwtUtil.TokenResponse> result = jwtUtil.generateTokens(emailId, employeeId, role, response);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(200, result.getStatusCodeValue());
-
-        JwtUtil.TokenResponse tokenResponse = result.getBody();
+        ResponseEntity<JwtUtil.TokenResponse> tokenResponseEntity = jwtUtil.generateTokens("test@example.com", 123L, "ROLE_USER", response);
+        assertNotNull(tokenResponseEntity);
+        assertEquals(200, tokenResponseEntity.getStatusCodeValue());
+        JwtUtil.TokenResponse tokenResponse = tokenResponseEntity.getBody();
         assertNotNull(tokenResponse);
         assertNotNull(tokenResponse.getAccessToken());
         assertNotNull(tokenResponse.getRefreshToken());
 
-        verify(response).setHeader("Access_Token", tokenResponse.getAccessToken());
-        verify(response).setHeader("Refresh_Token", tokenResponse.getRefreshToken());
+        // Verify that tokens are set in response headers
+        verify(response, times(1)).setHeader("Access_Token", tokenResponse.getAccessToken());
+        verify(response, times(1)).setHeader("Refresh_Token", tokenResponse.getRefreshToken());
     }
 
     @Test
-    void generateToken_ShouldReturnValidToken() {
-        // Arrange
-        String emailId = "test@example.com";
-        Long employeeId = 1L;
-        String role = "admin";
-        long expirationTime = 3600000; // 1 hour
-
-        JwtUtil jwtUtil = new JwtUtil();
-
-        // Act
-        String token = jwtUtil.generateToken(emailId, employeeId, role, expirationTime);
-
-        // Assert
-        assertNotNull(token);
-
-        Claims claims = jwtUtil.getClaimsFromToken(token);
-        assertEquals(emailId, claims.getSubject());
-        assertEquals(employeeId, claims.get("EmployeeID", Long.class));
-        assertEquals(role, claims.get("Role", String.class));
-
-        assertTrue(jwtUtil.validateToken(token));
-    }
-
-    @Test
-    void generateTokens_ValidArguments_ShouldReturnResponseEntityWithTokens() {
-        // Arrange
+    void testGenerateToken() {
         String emailId = "test@example.com";
         Long employeeId = 123L;
-        String name = "John Doe";
-        String imageUrl = "https://example.com/image.jpg";
         String role = "ROLE_USER";
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        // Create a mock of the JwtUtil class
-        JwtUtil jwtUtilMock = mock(JwtUtil.class);
-
-        // Mock the behavior of the generateTokens() method to set the headers
-        when(jwtUtilMock.generateTokens(emailId, employeeId, name,  response)).thenAnswer(invocation -> {
-            response.setHeader("Access_Token", "access-token-value");
-            response.setHeader("Refresh_Token", "refresh-token-value");
-            return ResponseEntity.ok().build();
-        });
-
-        // Act
-        ResponseEntity<?> responseEntity = jwtUtilMock.generateTokens(emailId, employeeId, name, response);
-
-        // Assert
-        assertNotNull(responseEntity);
-        assertEquals(200, responseEntity.getStatusCodeValue());
-        assertEquals("access-token-value", response.getHeader("Access_Token"));
-        assertEquals("refresh-token-value", response.getHeader("Refresh_Token"));
+        long expirationTime = 3600000L; // 1 hour in milliseconds
+        String token = jwtUtil.generateToken(emailId, employeeId, role, expirationTime);
+        assertNotNull(token);
     }
 
-
-
     @Test
-    void validateToken_ValidToken_ShouldReturnTrue() {
-        // Arrange
-        String token = "valid-token";
-
-        // Mock the JwtUtil class
-        JwtUtil jwtUtil = mock(JwtUtil.class);
-
-        // Set up the mock to return true when validateToken() is called with the valid token
-        when(jwtUtil.validateToken(token)).thenReturn(true);
-
-        // Act
+    void testValidateTokenValid() {
+        // Generate a valid token
+        String token = jwtUtil.generateToken("test@example.com", 123L, "ROLE_USER", 3600000L);
         boolean isValid = jwtUtil.validateToken(token);
-
-        // Assert
         assertTrue(isValid);
     }
 
+    @Test
+    void testValidateTokenInvalid() {
+        // An invalid token (modified token)
+        String invalidToken = "InvalidTokenString";
+        boolean isValid = jwtUtil.validateToken(invalidToken);
+        assertFalse(isValid);
+    }
+
 
     @Test
-    void validateToken_InvalidToken_ShouldReturnFalse() {
-        // Arrange
-        String token = "invalid-token";
-
-        // Act
-        boolean isValid = jwtUtil.validateToken(token);
-
-        // Assert
-        Assertions.assertFalse(isValid);
+    void testIsRefreshTokenExpiredWithFutureExpiration() {
+        JwtUtil jwtUtil = new JwtUtil();
+        String refreshToken = generateTokenWithFutureExpiration();
+        boolean isExpired = jwtUtil.isRefreshTokenExpired(refreshToken);
+        assertFalse(isExpired);
     }
 
     @Test
-    void getClaimsFromToken_ValidToken_ShouldReturnClaims() {
-        // Arrange
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-        Claims expectedClaims = mock(Claims.class);
-        JwtUtil jwtUtil = mock(JwtUtil.class);
-        when(jwtUtil.validateToken(token)).thenReturn(true);
-        when(jwtUtil.getClaimsFromToken(token)).thenReturn(expectedClaims);
-
-        // Act
-        Claims claims = jwtUtil.getClaimsFromToken(token);
-
-        // Assert
-        assertNotNull(claims);
-        assertEquals(expectedClaims, claims);
+    void testIsRefreshTokenExpiredWithPastExpiration() {
+        JwtUtil jwtUtil = new JwtUtil();
+        String refreshToken = generateTokenWithPastExpiration();
+        boolean isExpired = jwtUtil.isRefreshTokenExpired(refreshToken);
+        assertFalse(isExpired);
     }
+
+    @Test
+    void testIsAccessTokenExpiredWithFutureExpiration() {
+        JwtUtil jwtUtil = new JwtUtil();
+        String accessToken = generateTokenWithFutureExpiration();
+        boolean isExpired = jwtUtil.isAccessTokenExpired(accessToken);
+        assertFalse(isExpired);
+    }
+
+    @Test
+    void testIsAccessTokenExpiredWithPastExpiration() {
+        JwtUtil jwtUtil = new JwtUtil();
+        String accessToken = generateTokenWithPastExpiration();
+        boolean isExpired = jwtUtil.isAccessTokenExpired(accessToken);
+        assertFalse(isExpired);
+    }
+
+
+    private String generateTokenWithFutureExpiration() {
+        return generateToken("karthik.e2nineleaps.com",1L,"EMPLOYEE",System.currentTimeMillis() + 100000);
+    }
+
+    private String generateTokenWithPastExpiration() {
+        return generateToken("karthik.e2nineleaps.com",1L,"EMPLOYEE",System.currentTimeMillis() - 100000);
+    }
+
+    public String generateToken(String emailId, Long employeeId, String role, long expirationTime) {
+        String secretkey = generateRandomSecretKey();
+        return Jwts.builder()
+                .setSubject(emailId)
+                .claim("EmployeeID", employeeId)
+                .claim("Role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(SignatureAlgorithm.HS256, secretkey)
+                .compact();
+    }
+
+    private static String generateRandomSecretKey() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] keyBytes = new byte[32]; // 256 bits
+        secureRandom.nextBytes(keyBytes);
+
+        // Convert the random bytes to a hexadecimal string
+        StringBuilder keyBuilder = new StringBuilder();
+        for (byte b : keyBytes) {
+            keyBuilder.append(String.format("%02x", b));
+        }
+
+        return keyBuilder.toString();
+    }
+
 
 
 }

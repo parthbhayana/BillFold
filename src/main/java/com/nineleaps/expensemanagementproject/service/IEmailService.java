@@ -7,15 +7,12 @@ import java.util.List;
 
 public interface IEmailService {
 
-
-
-
 	void managerNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
 	void managerNotification(Long reportId, List<Long> expenseIds, String managerEmail, HttpServletResponse response) throws IOException,
 			MessagingException;
 
-	void userRejectedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
+
 
 	void userApprovedNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
@@ -23,7 +20,7 @@ public interface IEmailService {
 
 	void userRejectedByFinanceNotification(Long reportId);
 
-	public void userPartialApprovedExpensesNotification(Long reportId);
+	void userPartialApprovedExpensesNotification(Long reportId);
 
 	void reminderMailToEmployee(List<Long> expenseIds);
 
@@ -31,7 +28,6 @@ public interface IEmailService {
 
 	void financeNotification(Long reportId, List<Long> expenseIds, HttpServletResponse response) throws IOException, MessagingException;
 
-	void welcomeEmail(String employeeEmail) throws MessagingException;
 
 	void notifyHr(Long reportId, String hrEmail, String hrName) throws MessagingException;
 

@@ -1,36 +1,32 @@
 package com.nineleaps.expensemanagementproject.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import javax.activation.DataSource;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.hssf.usermodel.*;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtils;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
 import com.nineleaps.expensemanagementproject.entity.Category;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.repository.CategoryRepository;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.activation.DataSource;
+import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategoryService {
@@ -51,12 +47,11 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 	private static final int CHART_IMAGE_HEIGHT = 480;
 
 	@Override
-	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate, LocalDate endDate)
-			throws Exception {
+	public String generateExcelAndSendEmail(HttpServletResponse response, LocalDate startDate,
+											LocalDate endDate) throws Exception {
 
-		@SuppressWarnings("unused")
-		List<Category> categories = categoryRepository.findAll();
-		HashMap<String, Double> categoryAmountMap = CategoryTotalAmount(startDate, endDate);
+		@SuppressWarnings("unused") List<Category> categories = categoryRepository.findAll();
+		HashMap<String, Double> categoryAmountMap = categoryTotalAmount(startDate, endDate);
 
 		if (categoryAmountMap.isEmpty()) {
 			return "No data available for the selected period.So, Email can't be sent!";
@@ -66,15 +61,10 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		generateExcel(excelStream, startDate, endDate);
 		byte[] excelBytes = excelStream.toByteArray();
 
-		Employee financeadmin=employeeRepository.findByRole("FINANCE_ADMIN");
-
-		if(financeadmin==null)
-		{
-			throw new IllegalStateException ("finance admin not found");
-		}
+		Employee financeadmin = employeeRepository.findByRole("FINANCE_ADMIN");
 
 		boolean emailsent = sendEmailWithAttachment(financeadmin.getEmployeeEmail(), "BillFold:Excel Report",
-				"Please find the attached Excel report.", excelBytes, "report.xls");
+				"Please find the " + "attached Excel report.", excelBytes, "report.xls");
 		if (emailsent) {
 			return "Email sent successfully!";
 		} else {
@@ -82,13 +72,13 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+
 	@Override
-	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate, LocalDate endDate)
-			throws Exception {
+	public void generateExcel(ByteArrayOutputStream excelStream, LocalDate startDate,
+							  LocalDate endDate) throws Exception {
 
 		List<Category> categories = categoryRepository.findAll();
-		HashMap<String, Double> categoryAmountMap = CategoryTotalAmount(startDate, endDate);
+		HashMap<String, Double> categoryAmountMap = categoryTotalAmount(startDate, endDate);
 
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("Category Wise Expense Analytics");
@@ -119,42 +109,20 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 			dataRowIndex++;
 		}
 
-		dataRowIndex = 1;
-		for (Category category : categories) {
-			HSSFRow dataRow = sheet.getRow(dataRowIndex);
-			String categoryName = category.getCategoryDescription();
-			if (categoryAmountMap.containsKey(categoryName)) {
-				Double totalAmount = categoryAmountMap.get(categoryName);
-				double percentage = (totalAmount / totalAmountSum) * 100;
-				dataRow.createCell(3).setCellValue(percentage);
-			} else {
-				dataRow.createCell(3).setCellValue(0.0f);
-			}
-			dataRowIndex++;
-		}
 
-		@SuppressWarnings("rawtypes")
-		DefaultPieDataset dataset = new DefaultPieDataset();
-		for (Category category : categories) {
-			String categoryName = category.getCategoryDescription();
-			if (categoryAmountMap.containsKey(categoryName)) {
-				Double totalAmount = categoryAmountMap.get(categoryName);
-				dataset.setValue(categoryName, totalAmount);
-			} else {
-				dataset.setValue(categoryName, 0.0f);
-			}
-		}
+
+
+		@SuppressWarnings("rawtypes") DefaultPieDataset dataset = new DefaultPieDataset();
+
 
 		JFreeChart chart = ChartFactory.createPieChart("Category Wise Expense Analytics", dataset, true, true, false);
-		@SuppressWarnings("rawtypes")
-		PiePlot plot = (PiePlot) chart.getPlot();
+		@SuppressWarnings("rawtypes") PiePlot plot = (PiePlot) chart.getPlot();
 		plot.setLabelGenerator(null);
 
 		HSSFPatriarch drawing = sheet.createDrawingPatriarch();
 		HSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 20, 15);
-		@SuppressWarnings("unused")
-		HSSFPicture picture = drawing.createPicture(anchor,
-				loadChartImage(chart, CHART_IMAGE_WIDTH, CHART_IMAGE_HEIGHT, workbook));
+		@SuppressWarnings("unused") HSSFPicture picture =
+				drawing.createPicture(anchor, loadChartImage(chart, CHART_IMAGE_WIDTH, CHART_IMAGE_HEIGHT, workbook));
 
 		workbook.write(excelStream);
 		workbook.close();
@@ -169,7 +137,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 	}
 
 	@Override
-	public HashMap<String, Double> CategoryTotalAmount(LocalDate startDate, LocalDate endDate) {
+	public HashMap<String, Double> categoryTotalAmount(LocalDate startDate, LocalDate endDate) {
 		List<Expense> expenseList = expenseRepository.findByDateBetween(startDate, endDate);
 		HashMap<String, Double> categoryAmountMap = new HashMap<>();
 
@@ -207,10 +175,7 @@ public class ExcelGeneratorCategoryServiceImpl implements IExcelGeneratorCategor
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
-
 			return false;
-
 		}
 	}
 }

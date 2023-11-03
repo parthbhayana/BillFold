@@ -1,7 +1,6 @@
 package com.nineleaps.expensemanagementproject.controller;
 
 import java.util.List;
-
 import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.service.IExpenseService;
 

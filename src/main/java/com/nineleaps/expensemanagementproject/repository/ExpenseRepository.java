@@ -2,7 +2,7 @@ package com.nineleaps.expensemanagementproject.repository;
 
 import java.time.LocalDate;
 import java.util.List;
-
+import java.util.Optional;
 import com.nineleaps.expensemanagementproject.entity.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import com.nineleaps.expensemanagementproject.entity.Category;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
-	List<Expense> findByReports(Reports reports);
+	List<Expense> findByReports(Optional<Reports> reports);
 
 	List<Expense> findByReportsAndIsHidden(Reports reports, Boolean b);
 
@@ -20,7 +20,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
 	List<Expense> findByEmployeeAndIsReported(Employee employee, boolean b);
 
-	Expense getExpenseByexpenseId(Long expenseID);
 
 	List<Expense> findByDateBetween(LocalDate startDate, LocalDate endDate);
 
@@ -37,5 +36,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 	List<Expense> findByEmployeeAndAmountAndDateAndCategoryAndMerchantNameAndIsHidden(Employee employee, Double amount,
 																					  LocalDate date, Category category,
 																					  String merchantName, boolean a);
+
+
 
 }
