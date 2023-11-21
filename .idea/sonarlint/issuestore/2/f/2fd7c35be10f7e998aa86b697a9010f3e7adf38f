@@ -1,4 +1,10 @@
 
+Y
+java:S2629"7Use the built-in formatting to construct this argument.(³ßœÿÿÿÿÿ8×…¯¦¹1
+^
+java:S3457"AFormat specifiers should be used instead of string concatenation.(Ùñ‘‡8ğ…¯¦¹1
+Q
+java:S1874@"4Remove this use of "Notification"; it is deprecated.(Ãå¨é8ù…¯¦¹1
 b
 java:S11444"GRemove this unused private "getPreconfiguredMessageWithoutData" method.(éÈ¨¢ÿÿÿÿÿ
 _

@@ -2,7 +2,6 @@ com/nineleaps/expensemanagementproject/service/EmailServiceImplTest.class
 com/nineleaps/expensemanagementproject/firebase/PushNotificationRequestTest.class
 com/nineleaps/expensemanagementproject/entity/ExpenseTest.class
 com/nineleaps/expensemanagementproject/DTO/EmployeeDTOTest.class
-com/nineleaps/expensemanagementproject/firebase/PushNotificationServiceTest.class
 com/nineleaps/expensemanagementproject/controller/ReportsControllerTest.class
 com/nineleaps/expensemanagementproject/firebase/FCMInitializerTest.class
 com/nineleaps/expensemanagementproject/controller/UserControllerTest.class

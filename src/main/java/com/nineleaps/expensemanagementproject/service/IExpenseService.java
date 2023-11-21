@@ -7,32 +7,32 @@ import com.nineleaps.expensemanagementproject.entity.Expense;
 
 public interface IExpenseService {
 
-    public List<Expense> getAllExpenses();
+    List<Expense> getAllExpenses();
 
-    public Expense getExpenseById(Long expenseId);
+     Expense getExpenseById(Long expenseId);
 
-    public Expense updateSupportingDocument(String supportingDoc, Long expenseId);
+     Expense updateSupportingDocument(String supportingDoc, Long expenseId);
 
-    public Expense updateExpense(Long reportId, Long employeeId);
+     Expense updateExpense(Long reportId, Long employeeId);
 
-    public void deleteExpenseById(Long expenseId);
+     void deleteExpenseById(Long expenseId);
 
-    public List<Expense> getExpenseByEmployeeId(Long employeeId);
+     List<Expense> getExpenseByEmployeeId(Long employeeId);
 
-    public List<Expense> getExpenseByReportId(Long employeeId);
+     List<Expense> getExpenseByReportId(Long employeeId);
 
-    public Expense updateExpenses(ExpenseDTO expense, Long expenseId);
+     Expense updateExpenses(ExpenseDTO expense, Long expenseId);
 
-    public String addExpense(ExpenseDTO expense, Long employeeid, Long catId) throws IllegalAccessException;
+     String addExpense(ExpenseDTO expense, Long employeeid, Long catId) throws IllegalAccessException;
 
-    public Expense addPotentialDuplicateExpense(ExpenseDTO expense, Long employeeid, Long catId);
+     Expense addPotentialDuplicateExpense(ExpenseDTO expense, Long employeeid, Long catId);
 
-    public Expense removeTaggedExpense(Long expenseId);
+     Expense removeTaggedExpense(Long expenseId);
 
 
-    public List<Expense> getExpensesByEmployeeId(Long employeeId);
+     List<Expense> getExpensesByEmployeeId(Long employeeId);
 
-    public void hideExpense(Long expId);
+     void hideExpense(Long expId);
 
     List<Expense> getRejectedExpensesByReportId(Long reportId);
 }

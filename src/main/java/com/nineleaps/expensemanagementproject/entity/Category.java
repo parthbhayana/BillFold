@@ -1,9 +1,13 @@
 package com.nineleaps.expensemanagementproject.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+
+import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModelProperty;
 
+@Getter
 @Entity
 @Table(name = "category")
 public class Category {
@@ -37,8 +42,15 @@ public class Category {
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private List<Expense> expenseList = new ArrayList<>();
 
+
+	@Getter
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "creation_date", updatable = false)
+	@CreationTimestamp
+	private Date creationDate;
+
 	public Category() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
@@ -49,46 +61,31 @@ public class Category {
 		this.categoryTotal = categoryTotal;
 		this.isHidden = isHidden;
 		this.expenseList = expenseList;
-	}
-
-	public Long getCategoryId() {
-		return categoryId;
+		this.creationDate = creationDate;
 	}
 
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 
-	public String getCategoryDescription() {
-		return categoryDescription;
-	}
-
 	public void setCategoryDescription(String categoryDescription) {
 		this.categoryDescription = categoryDescription;
-	}
-
-	public long getCategoryTotal() {
-		return categoryTotal;
 	}
 
 	public void setCategoryTotal(long categoryTotal) {
 		this.categoryTotal = categoryTotal;
 	}
 
-	public Boolean getIsHidden() {
-		return isHidden;
-	}
-
 	public void setIsHidden(Boolean isHidden) {
 		this.isHidden = isHidden;
 	}
 
-	public List<Expense> getExpenseList() {
-		return expenseList;
-	}
-
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 }

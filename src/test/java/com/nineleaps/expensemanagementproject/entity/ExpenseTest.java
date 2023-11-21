@@ -3,8 +3,7 @@ package com.nineleaps.expensemanagementproject.entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import org.junit.jupiter.api.Test;
 class ExpenseTest {
 
     @Test
-    void testConstructor() throws UnsupportedEncodingException {
+    void testConstructor() {
         // Arrange and Act
         Expense actualExpense = new Expense();
         actualExpense.setAmount(10.0d);
@@ -54,7 +53,7 @@ class ExpenseTest {
         employee.setToken("ABC123");
         actualExpense.setEmployee(employee);
         actualExpense.setExpenseId(1L);
-        byte[] file = "AXAXAXAX".getBytes("UTF-8");
+        byte[] file = "AXAXAXAX".getBytes(StandardCharsets.UTF_8);
         actualExpense.setFile(file);
         actualExpense.setFileName("foo.txt");
         actualExpense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);
@@ -131,11 +130,11 @@ class ExpenseTest {
 
 
     @Test
-    void testConstructor2() throws UnsupportedEncodingException {
+    void testConstructor2() {
         // Arrange
         LocalDate date = LocalDate.of(1970, 1, 1);
         LocalDateTime dateCreated = LocalDate.of(1970, 1, 1).atStartOfDay();
-        byte[] file = "AXAXAXAX".getBytes("UTF-8");
+        byte[] file = "AXAXAXAX".getBytes(StandardCharsets.UTF_8);
 
         Employee employee = new Employee();
         employee.setEmployeeEmail("jane.doe@example.org");
@@ -230,7 +229,7 @@ class ExpenseTest {
         employee2.setToken("ABC123");
         actualExpense.setEmployee(employee2);
         actualExpense.setExpenseId(1L);
-        byte[] file2 = "AXAXAXAX".getBytes("UTF-8");
+        byte[] file2 = "AXAXAXAX".getBytes(StandardCharsets.UTF_8);
         actualExpense.setFile(file2);
         actualExpense.setFileName("foo.txt");
         actualExpense.setFinanceApprovalStatus(FinanceApprovalStatus.REIMBURSED);

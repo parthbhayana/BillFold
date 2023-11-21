@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nineleaps.expensemanagementproject.firebase.FCMServiceTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.094 s - in com.nineleaps.expensemanagementproject.firebase.FCMServiceTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.107 s - in com.nineleaps.expensemanagementproject.firebase.FCMServiceTest

@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
-import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
+
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationService;
 import com.nineleaps.expensemanagementproject.repository.EmployeeRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
@@ -49,8 +49,7 @@ public class ReportsServiceImpl implements IReportsService {
     public static final String CONSTANT6 = "Enter a valid request !";
     public static final String CONSTANT7 = "pending";
     private static final String CONSTANT8 = "Report ";
-    public static final String CONSTANT9 = " is not Submitted!";
-    private static final String CONSTANT10 = "Submitted you an expense report.";
+
 
     @Override
     public Set<Reports> getAllReports(Long employeeId) {
@@ -205,9 +204,6 @@ public class ReportsServiceImpl implements IReportsService {
 
                 throw new NullPointerException("Expense not found for ID: " + expenseId);
             }
-//            else if (Boolean.TRUE.equals(expense.getIsReported())) {
-//                throw new IllegalStateException(CONSTANT3 + expenseId + " is already reported in another report!");
-//            }
             else {
                 expenseServices.updateExpense(reportId, expenseId);
             }
@@ -326,7 +322,7 @@ public class ReportsServiceImpl implements IReportsService {
     }
 
     @Override
-    public void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException {
+    public void submitReport(Long reportId, HttpServletResponse response) {
         boolean submissionStatus = true;
         Reports re = getReportById(reportId);
 
@@ -504,15 +500,15 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public void updateExpenseStatus(Long reportId, List<Long> approveExpenseIds, List<Long> rejectExpenseIds,
                                     Map<Long, Float> partiallyApprovedMap, String reviewTime, String comments,
-                                    HttpServletResponse response) throws MessagingException, IOException {
+                                    HttpServletResponse response) {
         LocalDate managerActionDate = LocalDate.now();
         Reports report = getReportById(reportId);
         validateReport(report, reportId);
 
         processPartiallyApprovedExpenses(partiallyApprovedMap);
 
-        updateReportStatus(reportId, report, approveExpenseIds, rejectExpenseIds, partiallyApprovedMap, reviewTime,
-                comments, managerActionDate, response);
+        updateReportStatus(reportId, report, rejectExpenseIds, partiallyApprovedMap, reviewTime,
+                comments, managerActionDate);
     }
 
     private void validateReport(Reports report, Long reportId) {
@@ -544,10 +540,9 @@ public class ReportsServiceImpl implements IReportsService {
         }
     }
 
-    private void updateReportStatus(Long reportId, Reports report, List<Long> approveExpenseIds,
+    private void updateReportStatus(Long reportId, Reports report,
                                     List<Long> rejectExpenseIds, Map<Long, Float> partiallyApprovedMap,
-                                    String reviewTime, String comments, LocalDate managerActionDate,
-                                    HttpServletResponse response) {
+                                    String reviewTime, String comments, LocalDate managerActionDate) {
         if (rejectExpenseIds.isEmpty() && partiallyApprovedMap.isEmpty()) {
             report.setManagerApprovalStatus(ManagerApprovalStatus.APPROVED);
             report.setFinanceApprovalStatus(FinanceApprovalStatus.PENDING);

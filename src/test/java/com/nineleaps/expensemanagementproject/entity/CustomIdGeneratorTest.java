@@ -32,10 +32,10 @@ class CustomIdGeneratorTest {
         doNothing().when(resultSet).close();
         PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        doNothing().when(preparedStatement).setString(anyInt(), Mockito.<String>any());
+        doNothing().when(preparedStatement).setString(anyInt(), Mockito.any());
         doNothing().when(preparedStatement).close();
         Connection connection = mock(Connection.class);
-        when(connection.prepareStatement(Mockito.<String>any())).thenReturn(preparedStatement);
+        when(connection.prepareStatement(Mockito.any())).thenReturn(preparedStatement);
         SessionDelegatorBaseImpl session = mock(SessionDelegatorBaseImpl.class);
         when(session.connection()).thenReturn(connection);
 
@@ -44,9 +44,9 @@ class CustomIdGeneratorTest {
 
         // Assert
         verify(session).connection();
-        verify(connection).prepareStatement(Mockito.<String>any());
+        verify(connection).prepareStatement(Mockito.any());
         verify(preparedStatement).executeQuery();
-        verify(preparedStatement).setString(anyInt(), Mockito.<String>any());
+        verify(preparedStatement).setString(anyInt(), Mockito.any());
         verify(preparedStatement).close();
         verify(resultSet).next();
         verify(resultSet).getInt(anyInt());
@@ -66,19 +66,19 @@ class CustomIdGeneratorTest {
         doNothing().when(resultSet).close();
         PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        doNothing().when(preparedStatement).setString(anyInt(), Mockito.<String>any());
+        doNothing().when(preparedStatement).setString(anyInt(), Mockito.any());
         doNothing().when(preparedStatement).close();
         Connection connection = mock(Connection.class);
-        when(connection.prepareStatement(Mockito.<String>any())).thenReturn(preparedStatement);
+        when(connection.prepareStatement(Mockito.any())).thenReturn(preparedStatement);
         SessionDelegatorBaseImpl session = mock(SessionDelegatorBaseImpl.class);
         when(session.connection()).thenReturn(connection);
 
         // Act and Assert
         assertThrows(HibernateException.class, () -> customIdGenerator.generate(session, "Object"));
         verify(session).connection();
-        verify(connection).prepareStatement(Mockito.<String>any());
+        verify(connection).prepareStatement(Mockito.any());
         verify(preparedStatement).executeQuery();
-        verify(preparedStatement).setString(anyInt(), Mockito.<String>any());
+        verify(preparedStatement).setString(anyInt(), Mockito.any());
         verify(preparedStatement).close();
         verify(resultSet).next();
         verify(resultSet).getInt(anyInt());
@@ -98,19 +98,19 @@ class CustomIdGeneratorTest {
         doNothing().when(resultSet).close();
         PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        doNothing().when(preparedStatement).setString(anyInt(), Mockito.<String>any());
+        doNothing().when(preparedStatement).setString(anyInt(), Mockito.any());
         doNothing().when(preparedStatement).close();
         Connection connection = mock(Connection.class);
-        when(connection.prepareStatement(Mockito.<String>any())).thenReturn(preparedStatement);
+        when(connection.prepareStatement(Mockito.any())).thenReturn(preparedStatement);
         SessionDelegatorBaseImpl session = mock(SessionDelegatorBaseImpl.class);
         when(session.connection()).thenReturn(connection);
 
         // Act and Assert
         assertThrows(HibernateException.class, () -> customIdGenerator.generate(session, "Object"));
         verify(session).connection();
-        verify(connection).prepareStatement(Mockito.<String>any());
+        verify(connection).prepareStatement(Mockito.any());
         verify(preparedStatement).executeQuery();
-        verify(preparedStatement).setString(anyInt(), Mockito.<String>any());
+        verify(preparedStatement).setString(anyInt(), Mockito.any());
         verify(preparedStatement).close();
         verify(resultSet).next();
         verify(resultSet).getInt(anyInt());
@@ -129,10 +129,10 @@ class CustomIdGeneratorTest {
         doNothing().when(resultSet).close();
         PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        doNothing().when(preparedStatement).setString(anyInt(), Mockito.<String>any());
+        doNothing().when(preparedStatement).setString(anyInt(), Mockito.any());
         doNothing().when(preparedStatement).close();
         Connection connection = mock(Connection.class);
-        when(connection.prepareStatement(Mockito.<String>any())).thenReturn(preparedStatement);
+        when(connection.prepareStatement(Mockito.any())).thenReturn(preparedStatement);
         SessionDelegatorBaseImpl session = mock(SessionDelegatorBaseImpl.class);
         when(session.connection()).thenReturn(connection);
 
@@ -141,9 +141,9 @@ class CustomIdGeneratorTest {
 
         // Assert
         verify(session).connection();
-        verify(connection).prepareStatement(Mockito.<String>any());
+        verify(connection).prepareStatement(Mockito.any());
         verify(preparedStatement).executeQuery();
-        verify(preparedStatement).setString(anyInt(), Mockito.<String>any());
+        verify(preparedStatement).setString(anyInt(), Mockito.any());
         verify(preparedStatement).close();
         verify(resultSet).next();
         verify(resultSet).close();

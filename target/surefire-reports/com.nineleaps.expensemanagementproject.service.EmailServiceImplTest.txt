@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nineleaps.expensemanagementproject.service.EmailServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.374 s - in com.nineleaps.expensemanagementproject.service.EmailServiceImplTest
+Tests run: 39, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.359 s - in com.nineleaps.expensemanagementproject.service.EmailServiceImplTest

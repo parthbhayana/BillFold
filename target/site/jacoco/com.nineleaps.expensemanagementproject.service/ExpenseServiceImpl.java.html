@@ -50,7 +50,7 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
     @Transactional
     @Override
-    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) throws IllegalAccessException {
+    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
 <span class="fc" id="L54">        Employee employee = employeeService.getEmployeeById(employeeId);</span>
 <span class="fc" id="L55">        Expense expense = new Expense();</span>
 <span class="fc" id="L56">        expense.setEmployee(employee);</span>
@@ -253,22 +253,11 @@ import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 <span class="nc" id="L253">        }</span>
 <span class="fc" id="L254">    }</span>
 
-    @Override
-//    public List&lt;Expense&gt; getRejectedExpensesByReportId(Long reportId) {
-//        List&lt;Expense&gt; rejectedExpenses = new ArrayList&lt;&gt;();
-//        List&lt;Expense&gt; expenses = getExpenseByReportId(reportId);
-//
-//        for (Expense expense : expenses) {
-//            if (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED) {
-//                rejectedExpenses.add(expense);
-//            }
-//        }
-//        return rejectedExpenses;
-//    }
+
     public List&lt;Expense&gt; getRejectedExpensesByReportId(Long reportId) {
-<span class="fc" id="L269">        return getExpenseByReportId(reportId).stream()</span>
-<span class="fc bfc" id="L270" title="All 2 branches covered.">                .filter(expense -&gt; expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED)</span>
-<span class="fc" id="L271">                .collect(Collectors.toList());</span>
+<span class="fc" id="L258">        return getExpenseByReportId(reportId).stream()</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">                .filter(expense -&gt; expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED)</span>
+<span class="fc" id="L260">                .collect(Collectors.toList());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

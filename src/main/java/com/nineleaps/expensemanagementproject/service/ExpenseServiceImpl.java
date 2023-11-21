@@ -3,9 +3,10 @@ package com.nineleaps.expensemanagementproject.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import java.util.logging.Logger;
 import javax.transaction.Transactional;
 
 import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
@@ -48,9 +49,11 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Autowired
     private PushNotificationService pushNotificationService;
 
+    private static final Logger LOGGER = Logger.getLogger(ExpenseServiceImpl.class.getName());
+
     @Transactional
     @Override
-    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) throws IllegalAccessException {
+    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
         Expense expense = new Expense();
         expense.setEmployee(employee);
@@ -71,7 +74,11 @@ public class ExpenseServiceImpl implements IExpenseService {
             expense.setDescription(expenseDTO.getDescription());
             expense.setAmount(expenseDTO.getAmount());
             expense.setMerchantName(expenseDTO.getMerchantName());
-            expense.setFile(expenseDTO.getFile());
+
+            String fileType = getFileType(expenseDTO.getFile());
+            if (!isValidFileType(fileType)) {
+                return "Invalid file type. Please upload a valid file.";
+            }
             expense.setFileName(expenseDTO.getFileName());
             expense.setDate(expenseDTO.getDate());
             expense.setCategory(category);
@@ -81,6 +88,19 @@ public class ExpenseServiceImpl implements IExpenseService {
         } else {
             return "Expense might be a potential duplicate!";
         }
+    }
+    private String getFileType(byte[] fileContent) {
+        if (fileContent.length >= 4) {
+            if (fileContent[0] == 0x25 && fileContent[1] == 0x50 && fileContent[2] == 0x44 && fileContent[3] == 0x46) {
+                return "application/pdf";
+            }
+        }
+        return "unknown";
+    }
+
+    private boolean isValidFileType(String fileType) {
+
+        return fileType == null || fileType.equals("image/png") || fileType.equals("image/jpeg") || fileType.equals("application/pdf");
     }
 
     @Transactional
@@ -247,24 +267,13 @@ public class ExpenseServiceImpl implements IExpenseService {
             notificationRequest.setTitle("[REMINDER]: Report your pending expenses.");
             notificationRequest.setMessage("Unreported expenses will be deleted.");
             notificationRequest.setToken(employee.getToken());
-            System.out.println("TOKEN-" + employee.getToken());
+            LOGGER.info("TOKEN-" + employee.getToken());
 
             pushNotificationService.sendPushNotificationToToken(notificationRequest);
         }
     }
 
-    @Override
-//    public List<Expense> getRejectedExpensesByReportId(Long reportId) {
-//        List<Expense> rejectedExpenses = new ArrayList<>();
-//        List<Expense> expenses = getExpenseByReportId(reportId);
-//
-//        for (Expense expense : expenses) {
-//            if (expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED) {
-//                rejectedExpenses.add(expense);
-//            }
-//        }
-//        return rejectedExpenses;
-//    }
+
     public List<Expense> getRejectedExpensesByReportId(Long reportId) {
         return getExpenseByReportId(reportId).stream()
                 .filter(expense -> expense.getManagerApprovalStatusExpense() == ManagerApprovalStatusExpense.REJECTED)

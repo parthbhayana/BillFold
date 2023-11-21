@@ -84,7 +84,7 @@ class UserControllerTest {
 
         when(iEmployeeService.findByEmailId(validEmail)).thenReturn(expectedEmployee);
 
-        ResponseEntity<JSONObject> responseEntity = (ResponseEntity<JSONObject>) userController.sendData(request);
+        ResponseEntity<JSONObject> responseEntity = userController.sendData(request);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         JSONObject responseBody = responseEntity.getBody();
@@ -102,7 +102,7 @@ class UserControllerTest {
 
         when(request.getHeader("Authorization")).thenReturn(null);
 
-        ResponseEntity<JSONObject> responseEntity = (ResponseEntity<JSONObject>) userController.sendData(request);
+        ResponseEntity<JSONObject> responseEntity = userController.sendData(request);
 
         assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
         Assertions.assertNull(responseEntity.getBody());

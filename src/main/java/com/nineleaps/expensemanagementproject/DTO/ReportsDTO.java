@@ -1,5 +1,8 @@
 package com.nineleaps.expensemanagementproject.DTO;
 
+import lombok.Getter;
+
+@Getter
 public class ReportsDTO {
     private String reportTitle;
 
@@ -8,10 +11,6 @@ public class ReportsDTO {
 
     public ReportsDTO(String reportTitle) {
         this.reportTitle = reportTitle;
-    }
-
-    public String getReportTitle() {
-        return reportTitle;
     }
 
     public void setReportTitle(String reportTitle) {

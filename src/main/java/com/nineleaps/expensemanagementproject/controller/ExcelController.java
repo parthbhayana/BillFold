@@ -1,5 +1,39 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+
+/**
+		  ExcelController
+
+		      Manages endpoints related to generating and handling Excel reports for expense categories and reimbursement submissions.
+
+		      ## Endpoints
+
+		      ### GET /excel/categoryBreakup
+
+		      - **Description:** Generates an Excel report for category-wise expense analytics within a specified date range.
+		      - **Request Parameters:**
+		          - startDate (LocalDate) - Start date for analytics.
+		          - endDate (LocalDate) - End date for analytics.
+		      - **Response:** Sends an Excel file with category-wise expense analytics.
+
+		      ### GET /excel/allReports
+
+		      - **Description:** Generates an Excel report for all submissions' status within a specified date range and status.
+		      - **Request Parameters:**
+		          - startDate (LocalDate) - Start date for report.
+		          - endDate (LocalDate) - End date for report.
+		          - status (StatusExcel) - Status of submissions.
+		      - **Response:** Sends an Excel file with submission status details.
+
+		      ### GET /reimburse/allReports
+
+		      - **Description:** Generates an Excel report for reimbursement submissions' status.
+		      - **Response:** Sends an Excel file with reimbursement submissions' status details.
+
+		      ## Note
+		      - These endpoints generate Excel reports based on specified criteria and respond with the generated Excel files or relevant messages.
+		      - The `generateExcelAndSendEmail` and `reimburseAndGenerateExcel` methods handle the Excel generation and sending logic.
+ */
 import java.time.LocalDate;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

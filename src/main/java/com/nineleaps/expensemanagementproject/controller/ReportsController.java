@@ -1,5 +1,82 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+/**
+          ReportsController
+
+          Manages endpoints related to reports, including CRUD operations, report submissions, and status updates.
+
+          ## Endpoints (Continued)
+
+          [Previous documented endpoints...]
+
+          ### GET /getReportsSubmittedToUser/{managerEmail}
+
+          - **Description:** Retrieves reports submitted to a specific manager based on their email and request type.
+          - **Path Parameters:**
+            - managerEmail (String) - Email of the manager.
+          - **Query Parameters:**
+            - request (String) - Request parameter.
+          - **Returns:** List of Reports objects submitted to the provided manager's email with the specified request type.
+
+          ### GET /getAllSubmittedReports
+
+          - **Description:** Retrieves all submitted reports.
+          - **Returns:** List of all submitted Reports objects.
+
+          ### GET /getAllReportsApprovedByManager
+
+          - **Description:** Retrieves reports approved by a manager based on the request type.
+          - **Query Parameters:**
+            - request (String) - Request parameter.
+          - **Returns:** List of Reports objects approved by the manager with the specified request type.
+          ### POST /addReport/{employeeId}
+
+          - **Description:** Adds a new report associated with the given employee and their related expense IDs.
+          - **Request Body:** ReportsDTO object containing report details.
+          - **Path Parameters:**
+            - employeeId (Long) - ID of the associated employee.
+          - **Query Parameters:**
+            - expenseIds (List<Long>) - List of expense IDs associated with the report.
+          - **Returns:** Reports object representing the newly added report.
+
+          ### PATCH /addExpenseToReport/{reportId}
+
+          - **Description:** Adds expenses to an existing report identified by the given report ID.
+          - **Path Parameters:**
+            - reportId (Long) - ID of the report to which expenses will be added.
+          - **Query Parameters:**
+            - expenseIds (List<Long>) - List of expense IDs to be added to the report.
+          - **Returns:** Reports object after adding expenses to the specified report.
+
+          ### POST /submitReport/{reportId}
+
+          - **Description:** Submits a report identified by the given report ID.
+          - **Path Parameters:**
+            - reportId (Long) - ID of the report to be submitted.
+          - **Response:** HTTP Response indicating the success or failure of the submission.
+
+          ### POST /submitReportToManager/{reportId}
+
+          - **Description:** Submits a report identified by the given report ID to a specific manager's email.
+          - **Path Parameters:**
+            - reportId (Long) - ID of the report to be submitted.
+          - **Request Parameters:**
+            - managerEmail (String) - Email address of the manager to whom the report is submitted.
+          - **Response:** HTTP Response indicating the success or failure of the submission.
+
+          ### PATCH /editReport/{reportId}
+
+          - **Description:** Edits a report identified by the given report ID, updating its title, description, and expense associations.
+          - **Path Parameters:**
+            - reportId (Long) - ID of the report to be edited.
+          - **Request Parameters:**
+            - reportTitle (String) - Updated title for the report.
+            - reportDescription (String) - Updated description for the report.
+            - addExpenseIds (List<Long>) - IDs of expenses to be added to the report.
+            - removeExpenseIds (List<Long>) - IDs of expenses to be removed from the report.
+            - **Returns:** List of Reports objects after editing the specified report.
+*/
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;

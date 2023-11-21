@@ -1,7 +1,10 @@
 package com.nineleaps.expensemanagementproject.DTO;
 
+import lombok.Getter;
+
 import java.time.LocalDate;
 
+@Getter
 public class ExpenseDTO {
 
 	private Double amount;
@@ -26,48 +29,24 @@ public class ExpenseDTO {
 		this.date = date;
 	}
 
-	public Double getAmount() {
-		return amount;
-	}
-
 	public void setAmount(Double amount) {
 		this.amount = amount;
-	}
-
-	public String getDescription() {
-		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public String getMerchantName() {
-		return merchantName;
-	}
-
 	public void setMerchantName(String merchantName) {
 		this.merchantName = merchantName;
-	}
-
-	public byte[] getFile() {
-		return file;
 	}
 
 	public void setFile(byte[] file) {
 		this.file = file;
 	}
 
-	public String getFileName() {
-		return fileName;
-	}
-
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
-	}
-
-	public LocalDate getDate() {
-		return date;
 	}
 
 	public void setDate(LocalDate date) {

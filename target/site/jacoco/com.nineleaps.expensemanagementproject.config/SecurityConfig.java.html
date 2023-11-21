@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expensemanagementproject.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package com.nineleaps.expensemanagementproject.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,57 +10,56 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 <span class="fc" id="L11">public class SecurityConfig {</span>
 
-    @Autowired
-    private JwtUtil jwtUtil;
+
     @SuppressWarnings(&quot;unused&quot;)
     private static final String CONSTANT1 = &quot;EMPLOYEE&quot;;
     @SuppressWarnings(&quot;unused&quot;)
     private static final String CONSTANT2 = &quot;FINANCE_ADMIN&quot;;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-<span class="fc" id="L22">        http.csrf().disable().addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)</span>
-<span class="fc" id="L23">                .authorizeRequests(authorizeRequests -&gt; authorizeRequests.antMatchers(AUTH_WHITELIST).permitAll()</span>
-//                                        .antMatchers(&quot;/theProfile&quot;).permitAll()
-//                                        .antMatchers(&quot;/getProfileData&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/getExpenseByEmployeeId/{employeeId}&quot;).hasAnyAuthority(CONSTANT1,CONSTANT2)
-//                                        .antMatchers(&quot;/updateCategory/{categoryId}&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/showAllCategories&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/hideCategory/{categoryId}&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/categoryTotalAmount&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/insertCategory&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/currencyList&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/insertExpenses/{employeeId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/getExpenseByReportId/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/getReportByEmployeeId/{employeeId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/addReport/{employeeId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/getReportsSubmittedToUser/{managerEmail}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/getAllReportsApprovedByManager&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/submitReport/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/approveReportByFinance/{reportId}&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/approveReportByManager/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/rejectReportByFinance/{reportId}&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/rejectReportByManager/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/updateExpenses/{expenseId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/editReport/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/hideExpense/{expenseId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/hideReport/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/getReportsInDateRange&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/openpdf/export/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)
-//                                        .antMatchers(&quot;/excel/reports&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/excel/categoryBreakup&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/getReportsSubmittedToUserInDateRange&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/getCategoryAnalyticsYearly/{categoryId}&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/getCategoryAnalyticsMonthly/{categoryId}&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/getAllCategoryAnalyticsYearly&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/getAllCategoryAnalyticsMonthly&quot;).hasAuthority(CONSTANT2)
-//                                        .antMatchers(&quot;/updateExpenseStatus/{reportId}&quot;).hasAuthority(CONSTANT1)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtUtil jwtUtil) throws Exception {
+<span class="fc" id="L21">        http.csrf().disable().addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)</span>
+<span class="fc" id="L22">                .authorizeRequests(authorizeRequests -&gt; authorizeRequests</span>
+<span class="fc" id="L23">                        .antMatchers(&quot;/theProfile&quot;).permitAll()</span>
+<span class="fc" id="L24">                        .antMatchers(&quot;/getProfileData&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L25">                        .antMatchers(&quot;/getExpenseByEmployeeId/{employeeId}&quot;).hasAnyAuthority(CONSTANT1,CONSTANT2)</span>
+<span class="fc" id="L26">                        .antMatchers(&quot;/updateCategory/{categoryId}&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L27">                        .antMatchers(&quot;/showAllCategories&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L28">                        .antMatchers(&quot;/hideCategory/{categoryId}&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L29">                        .antMatchers(&quot;/categoryTotalAmount&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L30">                        .antMatchers(&quot;/insertCategory&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L31">                        .antMatchers(&quot;/currencyList&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L32">                        .antMatchers(&quot;/insertExpenses/{employeeId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L33">                        .antMatchers(&quot;/getExpenseByReportId/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L34">                        .antMatchers(&quot;/getReportByEmployeeId/{employeeId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L35">                        .antMatchers(&quot;/addReport/{employeeId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L36">                        .antMatchers(&quot;/getReportsSubmittedToUser/{managerEmail}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L37">                        .antMatchers(&quot;/getAllReportsApprovedByManager&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L38">                        .antMatchers(&quot;/submitReport/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L39">                        .antMatchers(&quot;/approveReportByFinance/{reportId}&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L40">                        .antMatchers(&quot;/approveReportByManager/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L41">                        .antMatchers(&quot;/rejectReportByFinance/{reportId}&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L42">                        .antMatchers(&quot;/rejectReportByManager/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L43">                        .antMatchers(&quot;/updateExpenses/{expenseId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L44">                        .antMatchers(&quot;/editReport/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L45">                        .antMatchers(&quot;/hideExpense/{expenseId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L46">                        .antMatchers(&quot;/hideReport/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L47">                        .antMatchers(&quot;/getReportsInDateRange&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L48">                        .antMatchers(&quot;/openpdf/export/{reportId}&quot;).hasAnyAuthority(CONSTANT1, CONSTANT2)</span>
+<span class="fc" id="L49">                        .antMatchers(&quot;/excel/reports&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L50">                        .antMatchers(&quot;/excel/categoryBreakup&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L51">                        .antMatchers(&quot;/getReportsSubmittedToUserInDateRange&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L52">                        .antMatchers(&quot;/getCategoryAnalyticsYearly/{categoryId}&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L53">                        .antMatchers(&quot;/getCategoryAnalyticsMonthly/{categoryId}&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L54">                        .antMatchers(&quot;/getAllCategoryAnalyticsYearly&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L55">                        .antMatchers(&quot;/getAllCategoryAnalyticsMonthly&quot;).hasAuthority(CONSTANT2)</span>
+<span class="fc" id="L56">                        .antMatchers(&quot;/updateExpenseStatus/{reportId}&quot;).hasAuthority(CONSTANT1)</span>
 
                 );
-<span class="fc" id="L60">        return http.build();</span>
+<span class="fc" id="L59">        return http.build();</span>
     }
 
-<span class="fc" id="L63">    private static final String[] AUTH_WHITELIST = { &quot;/v3/api-docs/**&quot;, &quot;/swagger-ui/**&quot;, &quot;/v2/api-docs/**&quot;,</span>
+<span class="fc" id="L62">    private static final String[] AUTH_WHITELIST = { &quot;/v3/api-docs/**&quot;, &quot;/swagger-ui/**&quot;, &quot;/v2/api-docs/**&quot;,</span>
             &quot;/swagger-resources/**&quot;, &quot;/api/v1/auth/**&quot;, &quot;/v3/api-docs/.yaml&quot;, &quot;/swagger-ui.html&quot; };
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

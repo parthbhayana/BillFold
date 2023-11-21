@@ -9,43 +9,42 @@ import com.nineleaps.expensemanagementproject.entity.Employee;
 
 public interface IEmployeeService {
 
-	public List<Employee> getAllEmployeeDetails();
+	 List<Employee> getAllEmployeeDetails();
 
-	public Employee saveEmployeeDetails(EmployeeDTO employee);
+	 Employee saveEmployeeDetails(EmployeeDTO employee);
 
-	public Employee getEmployeeById(Long employeeId);
+	 Employee getEmployeeById(Long employeeId);
 
-	public void deleteEmployeeDetailsById(Long employeeId);
+	 void deleteEmployeeDetailsById(Long employeeId);
 
-	public Employee updateEmployeeDetails(EmployeeDTO newemployee, Long employeeId);
+	 Employee updateEmployeeDetails(EmployeeDTO newemployee, Long employeeId);
 
-	public Employee getEmployeeByEmail(String employeeEmail);
+	 Employee getEmployeeByEmail(String employeeEmail);
 
-	public void hideEmployee(Long employeeId);
+	 void hideEmployee(Long employeeId);
 
-	public Employee getUserByEmail(String emailToVerify);
+	 Employee getUserByEmail(String emailToVerify);
 
-	public List<Employee> getAllUser();
+	 List<Employee> getAllUser();
 
-	public Employee insertUser(UserDTO newUser);
+	 Employee insertUser(UserDTO newUser);
 
-	public Employee updateUser(UserDTO newUser);
+	 Employee updateUser(UserDTO newUser);
 
-	public Employee insertuser(Employee newUser);
+	 Employee insertuser(Employee newUser);
 
 	public Employee findByEmailId(String emailId);
 
-	public void setFinanceAdmin(Long employeeId);
+	 void setFinanceAdmin(Long employeeId);
 
-//	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
-//			Long mobileNumber, String managerName);
 
-	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
+
+	 Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
 														Long mobileNumber, String managerName, String hrEmail, String hrName);
 
-	public Optional<Employee> getEmployeeDetails(Long employeeId);
+	 Optional<Employee> getEmployeeDetails(Long employeeId);
 
-	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName);
+	 void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName);
 
-	public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName, String hrEmail, String hrName);
+	 void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId, String managerName, String hrEmail, String hrName);
 }

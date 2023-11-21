@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,23 +57,23 @@ class ExcelGeneratorCategoryServiceImplTest {
     @Test
     void testGenerateExcelAndSendEmail() throws Exception {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
-        when(expenseRepository.findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any())).thenReturn(new ArrayList<>());
+        when(expenseRepository.findByDateBetween(Mockito.any(), Mockito.any())).thenReturn(new ArrayList<>());
         Response response = new Response();
         LocalDate startDate = LocalDate.of(1970, 1, 1);
         assertEquals("No data available for the selected period.So, Email can't be sent!", excelGeneratorCategoryServiceImpl.generateExcelAndSendEmail(response, startDate, LocalDate.of(1970, 1, 1)));
         verify(categoryRepository).findAll();
-        verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
+        verify(expenseRepository).findByDateBetween(Mockito.any(), Mockito.any());
     }
 
     @Test
-    void testGenerateExcelAndSendEmail2() throws Exception {
+    void testGenerateExcelAndSendEmail2() {
         when(categoryRepository.findAll()).thenReturn(new ArrayList<>());
-        when(expenseRepository.findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any())).thenThrow(new IllegalStateException("No data available for the selected period.So, Email can't be sent!"));
+        when(expenseRepository.findByDateBetween(Mockito.any(), Mockito.any())).thenThrow(new IllegalStateException("No data available for the selected period.So, Email can't be sent!"));
         Response response = new Response();
         LocalDate startDate = LocalDate.of(1970, 1, 1);
         assertThrows(IllegalStateException.class, () -> excelGeneratorCategoryServiceImpl.generateExcelAndSendEmail(response, startDate, LocalDate.of(1970, 1, 1)));
         verify(categoryRepository).findAll();
-        verify(expenseRepository).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
+        verify(expenseRepository).findByDateBetween(Mockito.any(), Mockito.any());
     }
 
 
@@ -102,7 +101,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         employee.setOfficialEmployeeId("42");
         employee.setRole("Role");
         employee.setToken("ABC123");
-        when(employeeRepository.findByRole(Mockito.<String>any())).thenReturn(employee);
+        when(employeeRepository.findByRole(Mockito.any())).thenReturn(employee);
 
         Category category = new Category();
         category.setCategoryDescription("No data available for the selected period.So, Email can't be sent!");
@@ -178,15 +177,15 @@ class ExcelGeneratorCategoryServiceImplTest {
 
         ArrayList<Expense> expenseList = new ArrayList<>();
         expenseList.add(expense);
-        when(expenseRepository.findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any())).thenReturn(expenseList);
+        when(expenseRepository.findByDateBetween(Mockito.any(), Mockito.any())).thenReturn(expenseList);
         doNothing().when(javaMailSender).send(Mockito.<MimeMessage>any());
         when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
         Response response = new Response();
         LocalDate startDate = LocalDate.of(1970, 1, 1);
         assertEquals("Email sent successfully!", excelGeneratorCategoryServiceImpl.generateExcelAndSendEmail(response, startDate, LocalDate.of(1970, 1, 1)));
         verify(categoryRepository, atLeast(1)).findAll();
-        verify(employeeRepository).findByRole(Mockito.<String>any());
-        verify(expenseRepository, atLeast(1)).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
+        verify(employeeRepository).findByRole(Mockito.any());
+        verify(expenseRepository, atLeast(1)).findByDateBetween(Mockito.any(), Mockito.<LocalDate>any());
         verify(javaMailSender).createMimeMessage();
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
@@ -292,15 +291,15 @@ class ExcelGeneratorCategoryServiceImplTest {
 
         ArrayList<Expense> expenseList = new ArrayList<>();
         expenseList.add(expense);
-        when(expenseRepository.findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any())).thenReturn(expenseList);
+        when(expenseRepository.findByDateBetween(Mockito.any(), Mockito.any())).thenReturn(expenseList);
         doThrow(new IllegalStateException("Category Wise Expense Analytics")).when(javaMailSender).send(Mockito.<MimeMessage>any());
         when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
         Response response = new Response();
         LocalDate startDate = LocalDate.of(1970, 1, 1);
         assertEquals("Email not sent", excelGeneratorCategoryServiceImpl.generateExcelAndSendEmail(response, startDate, LocalDate.of(1970, 1, 1)));
         verify(categoryRepository, atLeast(1)).findAll();
-        verify(employeeRepository).findByRole(Mockito.<String>any());
-        verify(expenseRepository, atLeast(1)).findByDateBetween(Mockito.<LocalDate>any(), Mockito.<LocalDate>any());
+        verify(employeeRepository).findByRole(Mockito.any());
+        verify(expenseRepository, atLeast(1)).findByDateBetween(Mockito.any(), Mockito.any());
         verify(javaMailSender).createMimeMessage();
         verify(javaMailSender).send(Mockito.<MimeMessage>any());
     }
@@ -339,7 +338,7 @@ class ExcelGeneratorCategoryServiceImplTest {
         employee.setOfficialEmployeeId("42");
         employee.setRole("Role");
         employee.setToken("ABC123");
-        when(employeeRepository.findByRole(Mockito.<String>any())).thenReturn(employee);
+        when(employeeRepository.findByRole(Mockito.any())).thenReturn(employee);
 
         Category category2 = new Category();
         category2.setCategoryDescription("No data available for the selected period.So, Email can't be sent!");
@@ -436,10 +435,10 @@ class ExcelGeneratorCategoryServiceImplTest {
         when(employee.getEmployeeEmail()).thenReturn("");
         doNothing().when(employee).setEmployeeEmail(Mockito.<String>any());
         doNothing().when(employee).setEmployeeId(Mockito.<Long>any());
-        doNothing().when(employee).setExpenseList(Mockito.<List<Expense>>any());
-        doNothing().when(employee).setFirstName(Mockito.<String>any());
-        doNothing().when(employee).setHrEmail(Mockito.<String>any());
-        doNothing().when(employee).setHrName(Mockito.<String>any());
+        doNothing().when(employee).setExpenseList(Mockito.any());
+        doNothing().when(employee).setFirstName(Mockito.any());
+        doNothing().when(employee).setHrEmail(Mockito.any());
+        doNothing().when(employee).setHrName(Mockito.any());
         doNothing().when(employee).setImageUrl(Mockito.<String>any());
         doNothing().when(employee).setIsFinanceAdmin(Mockito.<Boolean>any());
         doNothing().when(employee).setIsHidden(Mockito.<Boolean>any());

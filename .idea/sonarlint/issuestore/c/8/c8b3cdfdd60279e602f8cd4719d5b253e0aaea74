@@ -1,5 +1,6 @@
 
-H
-java:S14523"&Remove usage of generic wildcard type.(¹Å×ìúÿÿÿÿ8íè»¹©1
-b
-java:S1117@"@Rename "responseJson" which hides the field declared at line 38.(ƒø ëÿÿÿÿÿ8öè»¹©1
+r	java:S117i"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Æß¥ÿÿÿÿÿ8¦ü ¡¹1
+˜
+java:S1130J"vRemove the declaration of thrown exception 'javax.mail.MessagingException', as it cannot be thrown from method's body.(ÒÆ¾åşÿÿÿÿ8ÜÚÅ¦¹1
+G	java:S106d"+Replace this use of System.out by a logger.(¯ÑÔî8¶ü ¡¹1
+G	java:S106m"+Replace this use of System.out by a logger.(ğ¾³º8¸ü ¡¹1

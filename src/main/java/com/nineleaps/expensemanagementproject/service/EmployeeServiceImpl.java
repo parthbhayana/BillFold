@@ -60,18 +60,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		return employeeRepository.save(employee);
 	}
 
-//	@Override
-//	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail,
-//			Long mobileNumber, String managerName) {
-//		Employee employee = getEmployeeById(employeeId);
-//		employee.setOfficialEmployeeId(officialEmployeeId);
-//		employee.setManagerEmail(managerEmail);
-//		employee.setMobileNumber(mobileNumber);
-//		employee.setManagerName(managerName);
-//		employeeRepository.save(employee);
-//		return getEmployeeDetails(employeeId);
-//	}
-
 	@Override
 	public Optional<Employee> additionalEmployeeDetails(Long employeeId, String officialEmployeeId, String managerEmail, Long mobileNumber, String managerName, String hrEmail, String hrName) {
 		Employee employee = getEmployeeById(employeeId);

@@ -7,16 +7,12 @@ import org.springframework.stereotype.Service;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.entity.Reports;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -56,7 +52,6 @@ public class EmailServiceImpl implements IEmailService {
     private static final String CONSTANT9 = "\n\nThank you for your cooperation and timely submission of the expense report.";
     private static final String CONSTANT10 = "\n\nThanks!";
     private static final String CONSTANT11 = "\nTotal Amount: ₹";
-    private static final String CONSTANT12 = "Employee does not exist!";
     private static final String CONSTANT13 = ",\n\n";
 
     public EmailServiceImpl(JavaMailSender mailSender) {

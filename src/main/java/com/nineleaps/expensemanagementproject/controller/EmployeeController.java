@@ -1,5 +1,56 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+
+/**
+      EmployeeController
+
+          Manages operations related to employee details including retrieval, modification, and addition.
+
+          ## Endpoints
+
+          ### GET /employee/listEmployee
+
+          - **Description:** Fetches details of all employees.
+          - **Returns:** List of Employee objects containing employee details.
+
+          ### POST /employee/insertEmployee
+
+          - **Description:** Saves new employee details.
+          - **Request Body:** EmployeeDTO object containing employee details.
+          - **Returns:** The saved Employee object.
+
+          ### PUT /employee/updateEmployee/{employeeId}
+
+          - **Description:** Updates employee details based on the provided ID and information.
+          - **Path Variable:** employeeId (Long) - The ID of the employee to be updated.
+          - **Request Body:** EmployeeDTO object containing updated employee details.
+          - **Returns:** The updated Employee object.
+
+          ### POST /employee/additionalEmployeeDetails
+
+         - **Description:** Adds additional details for an employee.
+          - **Request Parameters:**
+              - employeeId (Long) - The ID of the employee.
+              - officialEmployeeId (String) - Official employee ID.
+              - managerEmail (String) - Manager's email.
+              - mobileNumber (Long) - Mobile number.
+              - managerName (String) - Manager's name.
+              - hrName (String) - HR name.
+              - hrEmail (String) - HR email.
+          - **Returns:** Optional<Employee> containing additional details if available.
+
+          ### GET /employee/findEmployee/{employeeId}
+
+          - **Description:** Retrieves an employee by their ID.
+          - **Path Variable:** employeeId (Long) - The ID of the employee to be retrieved.
+          - **Returns:** The Employee object matching the provided ID.
+
+          // ... (Continuing with the rest of the endpoints)
+
+          ## Note
+          - Some endpoints may require certain parameters or request bodies for successful execution.
+          - Ensure proper authorization and validation for sensitive operations.
+ */
 import java.util.List;
 import java.util.Optional;
 import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;

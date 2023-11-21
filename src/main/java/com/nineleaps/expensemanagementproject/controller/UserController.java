@@ -1,5 +1,40 @@
 package com.nineleaps.expensemanagementproject.controller;
 
+ /**
+   UserController
+
+        This controller manages user-related operations, authentication, and profile retrieval.
+
+        ## Endpoints
+
+        ### GET /listTheUser
+
+        - **Description:** Fetches details of all users.
+        - **Returns:** A list of Employee objects containing user details.
+
+        ### GET /getProfileData
+
+        - **Description:** Retrieves profile data for the authenticated user.
+        - **Returns:** JSON object containing the user's `employeeId`, `firstName`, `lastName`, `imageUrl`, and `email`.
+
+        ### POST /theProfile
+
+        - **Description:** Creates or updates a user profile based on the provided information.
+        - **Request Body:** UserDTO object containing user details.
+        - **Returns:** JWT TokenResponse object containing access and refresh tokens upon successful creation or update of the user profile.
+
+        ### POST /regenerateToken
+
+        - **Description:** Regenerates an access token using the refresh token.
+        - **Request Header:** Bearer token in the authorization header.
+        - **Response Header:** `Access_Token` containing the regenerated access token if successful.
+
+        ## Note
+        - Endpoints `/listTheUser` and `/getProfileData` require a valid authorization token in the header.
+        - For `/theProfile`, if the user does not exist, it creates a new profile. If the user exists, it updates the existing profile.
+        - `/regenerateToken` regenerates an access token using the refresh token if it's not expired.
+*/
+
 import java.util.List;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
