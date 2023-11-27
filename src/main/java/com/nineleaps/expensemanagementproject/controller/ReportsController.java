@@ -89,17 +89,13 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 import com.nineleaps.expensemanagementproject.service.IReportsService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
+@RequestMapping("/api/v1")
 public class ReportsController {
 
     @Autowired
@@ -168,7 +164,11 @@ public class ReportsController {
     }
 
 
-
+    @PostMapping("/approveReportByFinance")
+    public void reimburseReportByFinance(@RequestParam List<Long> reportIds,
+                                         @RequestParam(value = "comments", defaultValue = "null") String comments) {
+        reportsService.reimburseReportByFinance((ArrayList<Long>) reportIds, comments);
+    }
     @PostMapping("/rejectReportByFinance/{reportId}")
     public void rejectReportByFinance(@PathVariable Long reportId,
                                       @RequestParam(value = "comments", defaultValue = "null") String comments) {
@@ -238,7 +238,7 @@ public class ReportsController {
             JSONObject jsonObject = (JSONObject) object;
 
             long expenseId = (Long) jsonObject.get("expenseId");
-            double amountApproved = (double) jsonObject.get("amountApproved");
+            long amountApproved = (Long) jsonObject.get("amountApproved");
             String status = (String) jsonObject.get("status");
 
             if (Objects.equals(status, "approved")) {

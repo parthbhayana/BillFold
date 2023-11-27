@@ -53,7 +53,7 @@ public class ExpenseServiceImpl implements IExpenseService {
 
     @Transactional
     @Override
-    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) {
+    public String addExpense(ExpenseDTO expenseDTO, Long employeeId, Long categoryId) throws IllegalAccessException {
         Employee employee = employeeService.getEmployeeById(employeeId);
         Expense expense = new Expense();
         expense.setEmployee(employee);
@@ -68,17 +68,13 @@ public class ExpenseServiceImpl implements IExpenseService {
         List<Expense> potentialDuplicateExpense = expenseRepository
                 .findByEmployeeAndAmountAndDateAndCategoryAndMerchantNameAndIsHidden(employee, expenseDTO.getAmount(),
                         expenseDTO.getDate(), category, expenseDTO.getMerchantName(), false);
-        System.out.println("Potential Duplicate List = " + potentialDuplicateExpense);
+
 
         if (potentialDuplicateExpense.isEmpty()) {
             expense.setDescription(expenseDTO.getDescription());
             expense.setAmount(expenseDTO.getAmount());
             expense.setMerchantName(expenseDTO.getMerchantName());
-
-            String fileType = getFileType(expenseDTO.getFile());
-            if (!isValidFileType(fileType)) {
-                return "Invalid file type. Please upload a valid file.";
-            }
+            expense.setFile(expenseDTO.getFile());
             expense.setFileName(expenseDTO.getFileName());
             expense.setDate(expenseDTO.getDate());
             expense.setCategory(category);
@@ -89,14 +85,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             return "Expense might be a potential duplicate!";
         }
     }
-    private String getFileType(byte[] fileContent) {
-        if (fileContent.length >= 4) {
-            if (fileContent[0] == 0x25 && fileContent[1] == 0x50 && fileContent[2] == 0x44 && fileContent[3] == 0x46) {
-                return "application/pdf";
-            }
-        }
-        return "unknown";
-    }
+
 
     private boolean isValidFileType(String fileType) {
 
@@ -147,15 +136,21 @@ public class ExpenseServiceImpl implements IExpenseService {
     public Expense updateExpense(Long reportId, Long employeeId) {
         Expense expense = getExpenseById(employeeId);
         Reports report = reportServices.getReportById(reportId);
-        String reportTitle = report.getReportTitle();
-        boolean reportedStatus = true;
+
         if (expense != null) {
+            String reportTitle = report.getReportTitle();
+            boolean reportedStatus = true;
+
             expense.setReports(report);
             expense.setIsReported(reportedStatus);
             expense.setReportTitle(reportTitle);
             expense.setManagerApprovalStatusExpense(ManagerApprovalStatusExpense.PENDING);
+
+            return expenseRepository.save(expense);
+        } else {
+
+            throw new IllegalStateException("Expense with ID " + employeeId + " not found.");
         }
-        return expenseRepository.save(expense);
     }
 
     @Override

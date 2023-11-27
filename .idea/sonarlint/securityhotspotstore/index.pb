@@ -143,3 +143,5 @@ Ysrc/main/java/com/nineleaps/expensemanagementproject/service/PdfGeneratorServic
 Msrc/test/java/com/nineleaps/expensemanagementproject/entity/EmployeeTest.java,0/0/00041d7b60f53f2802ca3f64f601338d1d7715f7
 ç
 ]src/test/java/com/nineleaps/expensemanagementproject/service/PdfGeneratorServiceImplTest.java,3/6/36338f08da3b6738c97e22ef6a8af94fb0239e43
+}
+Msrc/main/java/com/nineleaps/expensemanagementproject/constants/Constants.java,9/c/9cdb63f648ff43b84148fc903c8d6cea319ef22c

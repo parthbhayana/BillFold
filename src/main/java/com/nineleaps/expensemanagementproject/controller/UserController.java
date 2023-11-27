@@ -59,7 +59,7 @@ import static com.nineleaps.expensemanagementproject.config.JwtUtil.ACCESS_TOKEN
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/api/v1")
 public class UserController {
 
     @Autowired

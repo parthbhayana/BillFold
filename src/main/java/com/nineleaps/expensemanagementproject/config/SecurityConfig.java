@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .antMatchers("/getCategoryAnalyticsMonthly/{categoryId}").hasAuthority(CONSTANT2)
                         .antMatchers("/getAllCategoryAnalyticsYearly").hasAuthority(CONSTANT2)
                         .antMatchers("/getAllCategoryAnalyticsMonthly").hasAuthority(CONSTANT2)
-                        .antMatchers("/updateExpenseStatus/{reportId}").hasAuthority(CONSTANT1)
+                        .antMatchers("/updateExpenseStatus/{reportId}").hasAuthority(CONSTANT2)
 
                 );
         return http.build();

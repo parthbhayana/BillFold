@@ -54,21 +54,13 @@ package com.nineleaps.expensemanagementproject.controller;
 import java.util.List;
 import java.util.Optional;
 import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/api/v1/employee")
 public class EmployeeController {
 
     @Autowired
@@ -94,7 +86,8 @@ public class EmployeeController {
                                                         @RequestParam String officialEmployeeId,
                                                         @RequestParam String managerEmail,
                                                         @RequestParam Long mobileNumber,
-                                                        @RequestParam String managerName, @RequestParam String hrName,
+                                                        @RequestParam String managerName,
+                                                        @RequestParam String hrName,
                                                         @RequestParam String hrEmail) {
         return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,
                 managerName, hrEmail, hrName);
@@ -103,7 +96,6 @@ public class EmployeeController {
     @GetMapping("/findEmployee/{employeeId}")
     public Employee getEmployeeById(@PathVariable Long employeeId) {
         return employeeService.getEmployeeById(employeeId);
-
     }
 
     @DeleteMapping("/deleteEmployee/{employeeId}")
@@ -128,11 +120,8 @@ public class EmployeeController {
 
     @PostMapping("/editEmployeeDetails")
     public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId,
-                                    String managerName,@RequestParam String hrName,
+                                    String managerName, @RequestParam String hrName,
                                     @RequestParam String hrEmail) {
         employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);
     }
-
-
-
 }

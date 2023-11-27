@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-
+import java.util.ArrayList;
 import com.nineleaps.expensemanagementproject.DTO.ReportsDTO;
 import com.nineleaps.expensemanagementproject.entity.Reports;
 
@@ -64,6 +64,8 @@ public interface IReportsService {
     void notifyHR(Long reportId) throws MessagingException;
 
     void notifyLnD(Long reportId) throws MessagingException;
+
+    void reimburseReportByFinance(ArrayList<Long> reportIds, String comments);
 
 
 }
