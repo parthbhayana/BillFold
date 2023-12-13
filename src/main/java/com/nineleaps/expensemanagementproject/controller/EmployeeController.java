@@ -56,10 +56,13 @@ import java.util.Optional;
 import com.nineleaps.expensemanagementproject.DTO.EmployeeDTO;
 import com.nineleaps.expensemanagementproject.entity.Employee;
 import com.nineleaps.expensemanagementproject.service.IEmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/employee")
 public class EmployeeController {
 
@@ -67,21 +70,44 @@ public class EmployeeController {
     private IEmployeeService employeeService;
 
     @GetMapping("/listEmployee")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public List<Employee> getAllEmployeeDetails() {
-        return employeeService.getAllEmployeeDetails();
+        log.info("Fetching all employee details");
+
+        List<Employee> employees = employeeService.getAllEmployeeDetails();
+
+        log.info("Retrieved {} employee details", employees.size());
+
+        return employees;
     }
 
     @PostMapping("/insertEmployee")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public Employee save(@RequestBody EmployeeDTO employeeDTO) {
-        return employeeService.saveEmployeeDetails(employeeDTO);
+        log.info("Inserting new employee details: {}", employeeDTO);
+
+        Employee employee = employeeService.saveEmployeeDetails(employeeDTO);
+
+        log.info("New employee details saved: {}", employee);
+
+        return employee;
     }
 
     @PutMapping("/updateEmployee/{employeeId}")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public Employee updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId) {
-        return employeeService.updateEmployeeDetails(employeeDTO, employeeId);
+        log.info("Updating employee with ID {}: {}", employeeId, employeeDTO);
+
+        Employee updatedEmployee = employeeService.updateEmployeeDetails(employeeDTO, employeeId);
+
+        log.info("Updated employee with ID {}: {}", employeeId, updatedEmployee);
+
+        return updatedEmployee;
     }
 
+
     @PostMapping("/additionalEmployeeDetails")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public Optional<Employee> additionalEmployeeDetails(@RequestParam Long employeeId,
                                                         @RequestParam String officialEmployeeId,
                                                         @RequestParam String managerEmail,
@@ -89,39 +115,81 @@ public class EmployeeController {
                                                         @RequestParam String managerName,
                                                         @RequestParam String hrName,
                                                         @RequestParam String hrEmail) {
-        return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,
-                managerName, hrEmail, hrName);
+        log.info("Adding additional details for employee with ID: {}", employeeId);
+
+        Optional<Employee> updatedEmployee = employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId,
+                managerEmail, mobileNumber, managerName, hrEmail, hrName);
+
+        log.info("Additional details added for employee with ID {}: {}", employeeId, updatedEmployee.orElse(null));
+
+        return updatedEmployee;
     }
 
     @GetMapping("/findEmployee/{employeeId}")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public Employee getEmployeeById(@PathVariable Long employeeId) {
-        return employeeService.getEmployeeById(employeeId);
+        log.info("Fetching employee details for ID: {}", employeeId);
+
+        Employee employee = employeeService.getEmployeeById(employeeId);
+
+        log.info("Retrieved employee details for ID {}: {}", employeeId, employee);
+
+        return employee;
     }
 
     @DeleteMapping("/deleteEmployee/{employeeId}")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public void deleteEmployeeById(@PathVariable Long employeeId) {
+        log.info("Deleting employee with ID: {}", employeeId);
+
         employeeService.deleteEmployeeDetailsById(employeeId);
+
+        log.info("Employee with ID {} deleted successfully", employeeId);
     }
 
+
     @PostMapping("/hideEmployee/{employeeId}")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public void hideEmployee(@PathVariable Long employeeId) {
+        log.info("Hiding employee with ID: {}", employeeId);
+
         employeeService.hideEmployee(employeeId);
+
+        log.info("Employee with ID {} hidden successfully", employeeId);
     }
 
     @PostMapping("/setFinanceAdmin")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public void setFinanceAdmin(@RequestParam Long employeeId) {
+        log.info("Setting employee with ID {} as Finance Admin", employeeId);
+
         employeeService.setFinanceAdmin(employeeId);
+
+        log.info("Employee with ID {} set as Finance Admin", employeeId);
     }
 
     @GetMapping("/getEmployeeDetails")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public Optional<Employee> getEmployeeDetails(@RequestParam Long employeeId) {
-        return employeeService.getEmployeeDetails(employeeId);
+        log.info("Fetching details for employee with ID: {}", employeeId);
+
+        Optional<Employee> employeeDetails = employeeService.getEmployeeDetails(employeeId);
+
+        log.info("Retrieved details for employee with ID {}: {}", employeeId, employeeDetails.orElse(null));
+
+        return employeeDetails;
     }
 
+
     @PostMapping("/editEmployeeDetails")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
     public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId,
                                     String managerName, @RequestParam String hrName,
                                     @RequestParam String hrEmail) {
+        log.info("Editing details for employee with ID: {}", employeeId);
+
         employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);
+
+        log.info("Details for employee with ID {} edited successfully", employeeId);
     }
 }

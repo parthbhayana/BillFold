@@ -78,75 +78,98 @@ import java.util.List;
 import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
 import com.nineleaps.expensemanagementproject.entity.Expense;
 import com.nineleaps.expensemanagementproject.service.IExpenseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/expense")
 public class ExpenseController {
     @Autowired
     private IExpenseService expenseService;
-
     @PostMapping("/insertExpenses/{employeeId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public String saveExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
                               @RequestParam Long categoryId) throws IllegalAccessException {
-        return expenseService.addExpense(expenseDTO, employeeId, categoryId);
+        log.info("Received request to add expense for employee ID: {}", employeeId);
+        log.debug("Expense details: {}", expenseDTO);
+
+        String result;
+        try {
+            result = expenseService.addExpense(expenseDTO, employeeId, categoryId);
+            log.info("Expense added successfully for employee ID: {}", employeeId);
+        } catch (IllegalAccessException e) {
+            log.error("Failed to add expense for employee ID: {}. Reason: {}", employeeId, e.getMessage());
+            throw e;
+        }
+        return result;
     }
 
     @PostMapping("/addPotentialDuplicateExpense/{employeeId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public Expense addPotentialDuplicateExpense(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long employeeId,
                                                 @RequestParam Long categoryId) {
+        log.info("Received request to potentially add duplicate expense for employee ID: {}", employeeId);
+        log.debug("Expense details: {}", expenseDTO);
+
         return expenseService.addPotentialDuplicateExpense(expenseDTO, employeeId, categoryId);
     }
 
     @GetMapping("/showAllExpenses")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public List<Expense> getAllExpenses() {
+        log.info("Fetching all expenses...");
         return expenseService.getAllExpenses();
     }
 
     @GetMapping("/findExpense/{expenseId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public Expense getExpenseById(@PathVariable Long expenseId) {
+        log.info("Fetching expense with ID: {}", expenseId);
         return expenseService.getExpenseById(expenseId);
     }
 
     @PutMapping("/updateExpenses/{expenseId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public Expense updateExpenses(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long expenseId) {
+        log.info("Updating expense with ID: {}", expenseId);
         return expenseService.updateExpenses(expenseDTO, expenseId);
     }
 
     @GetMapping("/getExpenseByEmployeeId/{employeeId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public List<Expense> getExpenseByEmpId(@PathVariable Long employeeId) {
+        log.info("Retrieving expenses for employee ID: {}", employeeId);
         return expenseService.getExpenseByEmployeeId(employeeId);
     }
 
     @GetMapping("/getExpenseByReportId/{reportId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public List<Expense> getExpenseByReportId(@PathVariable Long reportId) {
+        log.info("Retrieving expenses for report ID: {}", reportId);
         return expenseService.getExpenseByReportId(reportId);
     }
 
     @PostMapping("/removeTaggedExpense/{expenseId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public Expense removeTaggedExpense(@PathVariable Long expenseId) {
+        log.info("Removing tagged expense with ID: {}", expenseId);
         return expenseService.removeTaggedExpense(expenseId);
     }
 
     @GetMapping("/getUnreportedExpensesByEmployeeId/{employeeId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public List<Expense> getExpensesById(@PathVariable Long employeeId) {
+        log.info("Retrieving unreported expenses for employee ID: {}", employeeId);
         return expenseService.getExpensesByEmployeeId(employeeId);
     }
 
     @PostMapping("/deleteExpense/{expenseId}")
     @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
     public void hideExpense(@PathVariable Long expenseId) {
+        log.info("Hiding expense with ID: {}", expenseId);
         expenseService.hideExpense(expenseId);
     }
 }

@@ -13,6 +13,7 @@ import com.nineleaps.expensemanagementproject.DTO.ExpenseDTO;
 import com.nineleaps.expensemanagementproject.entity.*;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationRequest;
 import com.nineleaps.expensemanagementproject.firebase.PushNotificationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,6 +25,7 @@ import com.nineleaps.expensemanagementproject.repository.ExpenseRepository;
 import com.nineleaps.expensemanagementproject.repository.ReportsRepository;
 
 @Service
+@Slf4j
 public class ExpenseServiceImpl implements IExpenseService {
     @Autowired
     private ExpenseRepository expenseRepository;
@@ -49,7 +51,6 @@ public class ExpenseServiceImpl implements IExpenseService {
     @Autowired
     private PushNotificationService pushNotificationService;
 
-    private static final Logger LOGGER = Logger.getLogger(ExpenseServiceImpl.class.getName());
 
     @Transactional
     @Override
@@ -262,7 +263,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             notificationRequest.setTitle("[REMINDER]: Report your pending expenses.");
             notificationRequest.setMessage("Unreported expenses will be deleted.");
             notificationRequest.setToken(employee.getToken());
-            LOGGER.info("TOKEN-" + employee.getToken());
+            log.info("TOKEN-" + employee.getToken());
 
             pushNotificationService.sendPushNotificationToToken(notificationRequest);
         }

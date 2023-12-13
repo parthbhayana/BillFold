@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.nineleaps.expensemanagementproject.DTO.UserDTO;
 import com.nineleaps.expensemanagementproject.service.IEmailService;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,7 @@ import static com.nineleaps.expensemanagementproject.config.JwtUtil.ACCESS_TOKEN
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/user")
 public class UserController {
 
@@ -73,77 +75,104 @@ public class UserController {
 
     @GetMapping("/listTheUser")
     public List<Employee> getAllUserDetails() {
-        return employeeService.getAllUser();
+        try {
+            log.info("Fetching all user details...");
+            List<Employee> userDetails = employeeService.getAllUser();
+            log.info("User details fetched successfully");
+            return userDetails;
+        } catch (Exception e) {
+            log.error("Error fetching user details: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to fetch user details");
+        }
     }
 
     @SuppressWarnings("unchecked")
     @GetMapping("/getProfileData")
     public ResponseEntity<JSONObject> sendData(HttpServletRequest request) {
-        String authorisationHeader = request.getHeader(AUTHORIZATION);
+        try {
+            String authorisationHeader = request.getHeader("Authorization");
 
-        if (authorisationHeader == null) {
+            if (authorisationHeader == null || !authorisationHeader.startsWith("Bearer ")) {
+                log.error("Invalid or missing Authorization header");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
 
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            String token = authorisationHeader.substring("Bearer ".length());
+            DecodedJWT decodedAccessToken = JWT.decode(token);
+            String employeeEmailFromToken = decodedAccessToken.getSubject();
+            Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);
+
+            if (employee1 == null) {
+                log.error("Employee not found for email: {}", employeeEmailFromToken);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            Long employeeId = employee1.getEmployeeId();
+            String email = employee1.getEmployeeEmail();
+            String firstName = employee1.getFirstName();
+            String lastName = employee1.getLastName();
+            String imageUrl = employee1.getImageUrl();
+            JSONObject responseJson = new JSONObject();
+            responseJson.put("employeeId", employeeId);
+            responseJson.put("firstName", firstName);
+            responseJson.put("lastName", lastName);
+            responseJson.put("imageUrl", imageUrl);
+            responseJson.put("email", email);
+
+            return ResponseEntity.ok(responseJson);
+        } catch (Exception e) {
+            log.error("Error fetching profile data: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        String token = authorisationHeader.substring("Bearer ".length());
-        DecodedJWT decodedAccessToken = JWT.decode(token);
-        String employeeEmailFromToken = decodedAccessToken.getSubject();
-        Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);
-        Long employeeId = employee1.getEmployeeId();
-        String email = employee1.getEmployeeEmail();
-        String firstName = employee1.getFirstName();
-        String lastName = employee1.getLastName();
-        String imageUrl = employee1.getImageUrl();
-        JSONObject responsejson = new JSONObject();
-        responsejson.put("employeeId", employeeId);
-        responsejson.put("firstName", firstName);
-        responsejson.put("lastName", lastName);
-        responsejson.put("imageUrl", imageUrl);
-        responsejson.put("email", email);
-        return ResponseEntity.ok(responsejson);
     }
 
     @PostMapping("/theProfile")
     public ResponseEntity<JwtUtil.TokenResponse> insertUser(@RequestBody UserDTO userDTO, HttpServletResponse response)
             throws MessagingException {
-        String email = userDTO.getEmployeeEmail(); // Get the email from the UserDTO
+        try {
+            String email = userDTO.getEmployeeEmail(); // Get the email from the UserDTO
 
-        Employee employee = employeeService.findByEmailId(email);
+            Employee employee = employeeService.findByEmailId(email);
 
-        if (employee == null) {
-            employeeService.insertUser(userDTO);
-            employee = employeeService.findByEmailId(email);
-            if(employee == null){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }else{
-
+            if (employee == null) {
+                employeeService.insertUser(userDTO);
+                employee = employeeService.findByEmailId(email);
+                if (employee == null) {
+                    log.error("Failed to insert user: {}", email);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                } else {
+                    return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
+                }
+            } else {
+                employeeService.updateUser(userDTO);
                 return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
             }
-
-        } else {
-            employeeService.updateUser(userDTO);
-            return jwtUtil.generateTokens(email, employee.getEmployeeId(), employee.getRole(), response);
+        } catch (Exception e) {
+            log.error("Error inserting/updating user: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
 
     @PostMapping("/regenerateToken")
-    public void regenerateToken(HttpServletRequest request,HttpServletResponse response) {
-        String authorisationHeader = request.getHeader(AUTHORIZATION);
-        String token = authorisationHeader.substring("Bearer ".length());
-        System.out.println("refresh token from header"+ token);
-        if(!jwtUtil.isRefreshTokenExpired(token)){
-            DecodedJWT decodedrefreshToken = JWT.decode(token);
-            String employeeEmailFromToken = decodedrefreshToken.getSubject();
-            Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);
-            String AccessToken = jwtUtil.generateToken(employee1.getEmployeeEmail(),employee1.getEmployeeId(),employee1.getRole(),
-                    ACCESS_TOKEN_EXPIRATION_TIME );
-            response.setHeader("Access_Token",AccessToken);
-        }else{
-            System.out.println("refresh Token Expired. Login again");
+    public void regenerateToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String authorisationHeader = request.getHeader(AUTHORIZATION);
+            String token = authorisationHeader.substring("Bearer ".length());
+            log.info("Refresh token from header: {}", token);
+
+            if (!jwtUtil.isRefreshTokenExpired(token)) {
+                DecodedJWT decodedRefreshToken = JWT.decode(token);
+                String employeeEmailFromToken = decodedRefreshToken.getSubject();
+                Employee employee1 = employeeService.findByEmailId(employeeEmailFromToken);
+                String accessToken = jwtUtil.generateToken(employee1.getEmployeeEmail(), employee1.getEmployeeId(), employee1.getRole(), ACCESS_TOKEN_EXPIRATION_TIME);
+                response.setHeader("Access_Token", accessToken);
+            } else {
+                log.info("Refresh Token Expired. Login again");
+            }
+        } catch (Exception e) {
+            log.error("Error while regenerating token: {}", e.getMessage(), e);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-
-
     }
 }

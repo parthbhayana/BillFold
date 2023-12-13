@@ -36,15 +36,19 @@ package com.nineleaps.expensemanagementproject.controller;
  */
 import java.time.LocalDate;
 import javax.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.nineleaps.expensemanagementproject.entity.StatusExcel;
 import com.nineleaps.expensemanagementproject.service.IExcelGeneratorCategoryService;
 import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsService;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/excel")
 public class ExcelController {
 
@@ -59,9 +63,12 @@ public class ExcelController {
 	private static final String CONSTANT3 = "No data available for the selected period.So, Email can't be sent!";
 
 	@GetMapping("/excel/categoryBreakup")
+	@PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
 	public ResponseEntity<String> generateCategoryBreakupExcel(HttpServletResponse response,
 															   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 															   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws Exception {
+		log.info("Generating Excel for category breakup from {} to {}", startDate, endDate);
+
 		response.setContentType("application/octet-stream");
 		String headerKey = CONSTANT2;
 		String headerValue = "attachment;filename=Category_wise_Expense_Analytics.xls";
@@ -71,19 +78,26 @@ public class ExcelController {
 
 		if (result.equals(CONSTANT1)) {
 			response.flushBuffer();
+			log.info("Excel generated and sent successfully");
 			return ResponseEntity.ok(result);
 		} else if (result.equals(CONSTANT3)) {
+			log.info("No records found for the given date range");
 			return ResponseEntity.ok(result);
 		} else {
+			log.error("Error generating Excel: {}", result);
 			return ResponseEntity.badRequest().body(result);
 		}
 	}
 
+
 	@GetMapping("/excel/allReports")
+	@PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
 	public ResponseEntity<String> generateAllReportsExcel(HttpServletResponse response,
 														  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 														  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
 														  @RequestParam StatusExcel status) throws Exception {
+		log.info("Generating Excel for all reports from {} to {} with status {}", startDate, endDate, status);
+
 		String fileName = "Billfold_All_Submissions_Status.xls";
 		String headerKey = CONSTANT2;
 		String headerValue = "attachment; filename=" + fileName;
@@ -95,16 +109,22 @@ public class ExcelController {
 
 		if (result.equals(CONSTANT1)) {
 			response.flushBuffer();
+			log.info("Excel for all reports generated and sent successfully");
 			return ResponseEntity.ok(result);
 		} else if (result.equals(CONSTANT3)) {
+			log.info("No records found for the given date range and status");
 			return ResponseEntity.ok(result);
 		} else {
+			log.error("Error generating Excel for all reports: {}", result);
 			return ResponseEntity.badRequest().body(result);
 		}
 	}
 
 	@GetMapping("/reimburse/allReports")
+	@PreAuthorize("hasAnyAuthority('FINANCE_ADMIN','EMPLOYEE')")
 	public ResponseEntity<String> reimburseAndGenerateExcel(HttpServletResponse response) throws Exception {
+		log.info("Initiating reimbursement process and generating Excel report");
+
 		String fileName = "Billfold_All_Submissions_Status.xls";
 		String headerKey = CONSTANT2;
 		String headerValue = "attachment; filename=" + fileName;
@@ -116,10 +136,13 @@ public class ExcelController {
 
 		if (result.equals(CONSTANT1)) {
 			response.flushBuffer();
+			log.info("Reimbursement process and Excel generation completed successfully");
 			return ResponseEntity.ok(result);
 		} else if (result.equals(CONSTANT3)) {
+			log.info("No records found for reimbursement and Excel generation");
 			return ResponseEntity.ok(result);
 		} else {
+			log.error("Error during reimbursement process and Excel generation: {}", result);
 			return ResponseEntity.badRequest().body(result);
 		}
 	}
