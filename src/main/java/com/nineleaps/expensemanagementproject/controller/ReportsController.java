@@ -105,42 +105,42 @@ public class ReportsController {
     private IReportsService reportsService;
 
     @GetMapping("/getAllReports/{employeeId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public Set<Reports> getAllReports(@PathVariable Long employeeId) {
         log.info("Fetching all reports for employee with ID: {}", employeeId);
         return reportsService.getAllReports(employeeId);
     }
 
     @GetMapping("/getByReportId/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public Reports getReportByReportId(@PathVariable Long reportId) {
         log.info("Fetching report with ID: {}", reportId);
         return reportsService.getReportById(reportId);
     }
 
     @GetMapping("/getReportByEmployeeId/{employeeId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public List<Reports> getReportByEmpId(@PathVariable Long employeeId, @RequestParam String request) {
         log.info("Fetching reports for employee ID: {} with request: {}", employeeId, request);
         return reportsService.getReportByEmpId(employeeId, request);
     }
 
     @GetMapping("/getReportsSubmittedToUser/{managerEmail}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public List<Reports> getReportsSubmittedToUser(@PathVariable String managerEmail, @RequestParam String request) {
         log.info("Fetching reports submitted to manager email: {} with request: {}", managerEmail, request);
         return reportsService.getReportsSubmittedToUser(managerEmail, request);
     }
 
     @GetMapping("/getAllSubmittedReports")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public List<Reports> getAllSubmittedReports() {
         log.info("Fetching all submitted reports");
         return reportsService.getAllSubmittedReports();
     }
 
     @GetMapping("/getAllReportsApprovedByManager")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public List<Reports> getAllReportsApprovedByManager(@RequestParam String request) {
         log.info("Fetching all reports approved by manager with request: {}", request);
         return reportsService.getAllReportsApprovedByManager(request);
@@ -148,7 +148,7 @@ public class ReportsController {
 
 
     @PostMapping("/addReport/{employeeId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
                              @RequestParam List<Long> expenseIds) {
         log.info("Adding report for employee with ID: {}", employeeId);
@@ -157,14 +157,14 @@ public class ReportsController {
 
 
     @PatchMapping("/addExpenseToReport/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam List<Long> expenseIds) {
         log.info("Adding expenses to report with ID: {}", reportId);
         return reportsService.addExpenseToReport(reportId, expenseIds);
     }
 
     @PostMapping("/submitReport/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public void submitReport(@PathVariable Long reportId, HttpServletResponse response) {
         try {
             log.info("Submitting report with ID: {}", reportId);
@@ -176,7 +176,7 @@ public class ReportsController {
     }
 
     @PostMapping("/submitReportToManager/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public void submitReport(@PathVariable Long reportId, @RequestParam String managerEmail,
                              HttpServletResponse response) {
         try {
@@ -190,7 +190,7 @@ public class ReportsController {
 
 
     @PatchMapping("/editReport/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public List<Reports> editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
                                     @RequestParam String reportDescription, @RequestParam List<Long> addExpenseIds,
                                     @RequestParam List<Long> removeExpenseIds) {
@@ -206,7 +206,7 @@ public class ReportsController {
 
 
     @PostMapping("/approveReportByFinance")
-    @PreAuthorize("hasRole('FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN')")
     public void reimburseReportByFinance(@RequestParam List<Long> reportIds,
                                          @RequestParam(value = "comments", defaultValue = "null") String comments) {
         try {
@@ -218,7 +218,7 @@ public class ReportsController {
         }
     }
     @PostMapping("/rejectReportByFinance/{reportId}")
-    @PreAuthorize("hasRole('FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('FINANCE_ADMIN')")
     public void rejectReportByFinance(@PathVariable Long reportId,
                                       @RequestParam(value = "comments", defaultValue = "null") String comments) {
         try {
@@ -230,7 +230,7 @@ public class ReportsController {
     }
 
     @PostMapping("/hideReport/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public void hideReport(@PathVariable Long reportId) {
         try {
             log.info("Hiding report with ID: {}", reportId);
@@ -240,7 +240,7 @@ public class ReportsController {
         }
     }
     @GetMapping("/getTotalAmountInrByReportId")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public float totalAmountINR(@RequestParam Long reportId) {
         try {
             log.info("Calculating total amount in INR for report ID: {}", reportId);
@@ -252,7 +252,7 @@ public class ReportsController {
     }
 
     @GetMapping("/getReportsInDateRange")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public List<Reports> getReportsInDateRange(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam String request) {
@@ -265,7 +265,7 @@ public class ReportsController {
         }
     }
     @GetMapping("/getReportsSubmittedToUserInDateRange")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public List<Reports> getReportsSubmittedToUserInDateRange(@RequestBody String managerEmail,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
@@ -281,7 +281,7 @@ public class ReportsController {
     }
 
     @GetMapping("/getAmountOfReportsInDateRange")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public String getAmountOfReportsInDateRange(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
@@ -295,7 +295,7 @@ public class ReportsController {
     }
 
     @GetMapping("/getTotalApprovedAmount")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public float totalApprovedAmount(@RequestParam Long reportId) {
         try {
             log.info("Fetching total approved amount for report ID: {}", reportId);
@@ -308,7 +308,7 @@ public class ReportsController {
     }
 
     @PostMapping("/notifyHr/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public void notifyHr(@PathVariable Long reportId) {
         try {
             log.info("Notifying HR for report ID: {}", reportId);
@@ -321,7 +321,7 @@ public class ReportsController {
     }
 
     @PostMapping("/notifyLnD/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE','FINANCE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE','FINANCE_ADMIN')")
     public void notifyLnD(@PathVariable Long reportId) {
         try {
             log.info("Notifying Learning and Development for report ID: {}", reportId);
@@ -334,7 +334,7 @@ public class ReportsController {
     }
 
     @PostMapping("/updateExpenseStatus/{reportId}")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasAnyAuthority('EMPLOYEE')")
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,
                                     @RequestParam String json, @RequestParam String comments, HttpServletResponse response) {
         JSONParser parser = new JSONParser();

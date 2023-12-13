@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,7 +27,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain chain)
             throws ServletException, IOException {
         String header = request.getHeader("Authorization");
 
