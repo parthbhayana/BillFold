@@ -1,5 +1,5 @@
-package com.nineleaps.expensemanagementproject.firebase;
 
+package com.nineleaps.expensemanagementproject.firebase;
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;

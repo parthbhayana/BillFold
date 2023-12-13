@@ -128,7 +128,7 @@ public class EmailServiceImpl implements IEmailService {
             if (employee != null && employee.getManagerEmail() != null) {
                 MimeMessage message = javaMailSender.createMimeMessage();
                 MimeMessageHelper eMail = new MimeMessageHelper(message, true);
-                eMail.setFrom(Constants.CONSTANT9);
+                eMail.setFrom(Constants.CONSTANT3);
                 eMail.setTo(managerEmail);
                 eMail.setSubject("BillFold - " + employee.getFirstName() + " " + employee.getLastName());
                 eMail.setText(Constants.CONSTANT12 + employee.getManagerName() + Constants.CONSTANT9

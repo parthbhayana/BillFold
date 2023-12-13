@@ -1,8 +1,5 @@
 package com.nineleaps.expensemanagementproject.firebase;
 
-import lombok.Getter;
-
-@Getter
 public class PushNotificationRequest {
 	private String title;
 	private String topic;
@@ -19,16 +16,32 @@ public class PushNotificationRequest {
 		this.token = token;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getTopic() {
+		return topic;
 	}
 
 	public void setTopic(String topic) {
 		this.topic = topic;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getToken() {
+		return token;
 	}
 
 	public void setToken(String token) {

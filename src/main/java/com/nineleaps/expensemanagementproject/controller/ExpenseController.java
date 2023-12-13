@@ -83,7 +83,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/expense")
 public class ExpenseController {
     @Autowired
     private IExpenseService expenseService;

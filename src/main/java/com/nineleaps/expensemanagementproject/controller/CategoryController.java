@@ -70,21 +70,18 @@ package com.nineleaps.expensemanagementproject.controller;
               - **Returns:** Map containing monthly analytics data for all categories in the specified year.
  */
 
-
-
-
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import com.nineleaps.expensemanagementproject.DTO.CategoryDTO;
-import com.nineleaps.expensemanagementproject.entity.Category;
-import com.nineleaps.expensemanagementproject.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import com.nineleaps.expensemanagementproject.entity.Category;
+import com.nineleaps.expensemanagementproject.service.ICategoryService;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -93,7 +90,7 @@ public class CategoryController {
     @Autowired
     private ICategoryService categoryService;
 
-    @PostMapping("/insert")
+    @PostMapping("/insertCategory")
     public ResponseEntity<Object> addCategory(@RequestBody CategoryDTO categoryDTO) {
         try {
             Category addedCategory = categoryService.addCategory(categoryDTO);
@@ -103,50 +100,55 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/all")
-    public List<Category> getAllCategories() {
+
+    @GetMapping("/showAllCategories")
+    public List<Category> getAllCategory() {
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("/{categoryId}")
+    @GetMapping("/findCategory/{categoryId}")
     public Category getCategoryById(@PathVariable("categoryId") Long categoryId) {
         return categoryService.getCategoryById(categoryId);
     }
 
-    @PutMapping("/update/{categoryId}")
+    @PutMapping("/updateCategory/{categoryId}")
     public Category updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
-        return categoryService.updateCategory(categoryId, categoryDTO);
+
+        return categoryService.updateCategory(categoryId,categoryDTO);
     }
 
-    @PostMapping("/delete/{categoryId}")
+    @PostMapping("/hideCategory/{categoryId}")
     public void hideCategory(@PathVariable Long categoryId) {
         categoryService.hideCategory(categoryId);
     }
 
-    @GetMapping("/totalAmount")
-    public Map<String, Double> getCategoryTotalAmount(
+    @GetMapping("/categoryTotalAmount")
+    public HashMap<String, Double> getCategoryTotalAmount(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return categoryService.getCategoryTotalAmount(startDate, endDate);
     }
 
-    @GetMapping("/analyticsYearly/{categoryId}")
+
+    @GetMapping("/getCategoryAnalyticsYearly/{categoryId}")
     public Map<String, Object> getCategoryAnalytics(@PathVariable Long categoryId) {
         return categoryService.getCategoryAnalyticsYearly(categoryId);
     }
 
-    @GetMapping("/analyticsMonthly/{categoryId}")
+    @GetMapping("/getCategoryAnalyticsMonthly/{categoryId}")
     public Map<String, Object> getCategoryAnalytics(@PathVariable Long categoryId, @RequestParam Long year) {
         return categoryService.getCategoryAnalyticsMonthly(categoryId, year);
     }
 
-    @GetMapping("/allAnalyticsYearly")
+
+    @GetMapping("/getAllCategoryAnalyticsYearly")
     public Map<String, Object> getYearlyCategoryAnalyticsForAllCategories() {
         return categoryService.getYearlyCategoryAnalyticsForAllCategories();
     }
 
-    @GetMapping("/allAnalyticsMonthly")
+    @GetMapping("/getAllCategoryAnalyticsMonthly")
     public Map<String, Object> getMonthlyCategoryAnalyticsForAllCategories(@RequestParam Long year) {
         return categoryService.getMonthlyCategoryAnalyticsForAllCategories(year);
     }
+
 }

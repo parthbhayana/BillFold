@@ -95,7 +95,7 @@ import com.nineleaps.expensemanagementproject.service.IReportsService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/reports")
 public class ReportsController {
 
     @Autowired
@@ -224,35 +224,37 @@ public class ReportsController {
 
     @PostMapping("/updateExpenseStatus/{reportId}")
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,
-                                    @RequestParam String json, @RequestParam String comments,
-                                    HttpServletResponse response) throws ParseException, MessagingException,
-            IOException {
+                                    @RequestParam String json, @RequestParam String comments, HttpServletResponse response)
+            throws ParseException {
         JSONParser parser = new JSONParser();
+        try {
+            Map<Long, Float> partialApprovedMap = new HashMap<>();
+            List<Long> approvedIds = new ArrayList<>();
+            List<Long> rejectedIds = new ArrayList<>();
+            JSONArray jsonArray = (JSONArray) parser.parse(json);
+            for (Object object : jsonArray) {
+                JSONObject jsonObject = (JSONObject) object;
 
-        Map<Long, Float> partialApprovedMap = new HashMap<>();
-        List<Long> approvedIds = new ArrayList<>();
-        List<Long> rejectedIds = new ArrayList<>();
+                long expenseId = (Long) jsonObject.get("expenseId");
+                float amountApproved = (Long) jsonObject.get("amountApproved");
+                String status = (String) jsonObject.get("status");
 
-        JSONArray jsonArray = (JSONArray) parser.parse(json);
-        for (Object object : jsonArray) {
-            JSONObject jsonObject = (JSONObject) object;
-
-            long expenseId = (Long) jsonObject.get("expenseId");
-            long amountApproved = (Long) jsonObject.get("amountApproved");
-            String status = (String) jsonObject.get("status");
-
-            if (Objects.equals(status, "approved")) {
-                approvedIds.add(expenseId);
+                if (Objects.equals(status, "approved")) {
+                    approvedIds.add(expenseId);
+                }
+                if (Objects.equals(status, "rejected")) {
+                    rejectedIds.add(expenseId);
+                }
+                if (Objects.equals(status, "partiallyApproved")) {
+                    partialApprovedMap.put(expenseId, amountApproved);
+                }
             }
-            if (Objects.equals(status, "rejected")) {
-                rejectedIds.add(expenseId);
-            }
-            if (Objects.equals(status, "partiallyApproved")) {
-                partialApprovedMap.put(expenseId, (float) amountApproved);
-            }
+            reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,
+                    comments, response);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException(e);
         }
-        reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,
-                comments, response);
     }
-
 }

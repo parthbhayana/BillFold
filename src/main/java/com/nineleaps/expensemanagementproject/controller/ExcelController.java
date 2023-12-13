@@ -45,7 +45,7 @@ import com.nineleaps.expensemanagementproject.service.IExcelGeneratorCategorySer
 import com.nineleaps.expensemanagementproject.service.IExcelGeneratorReportsService;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/excel")
 public class ExcelController {
 
 	@Autowired
