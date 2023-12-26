@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - '*'
+      - parth-phase-2
 
 jobs:
   build:
