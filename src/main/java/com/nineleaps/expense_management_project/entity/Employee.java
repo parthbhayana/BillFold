@@ -1,8 +1,10 @@
 package com.nineleaps.expense_management_project.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -71,6 +73,10 @@ public class Employee {
     @ApiModelProperty(hidden = true)
     private Boolean isHidden = false;
 
+    @Column(name = "date_created")
+    @ApiModelProperty(hidden = true)
+    private LocalDateTime dateCreated;
+
     @JsonIgnore
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<Expense> expenseList = new ArrayList<>();
@@ -87,6 +93,29 @@ public class Employee {
 
     }
 
+    public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName, String employeeEmail, String managerEmail, String managerName, String hrName, String hrEmail, String lndName, String lndEmail, Long mobileNumber, Boolean isFinanceAdmin, String imageUrl, Boolean isHidden, LocalDateTime dateCreated, List<Expense> expenseList, String role, String token) {
+        this.employeeId = employeeId;
+        this.officialEmployeeId = officialEmployeeId;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.employeeEmail = employeeEmail;
+        this.managerEmail = managerEmail;
+        this.managerName = managerName;
+        this.hrName = hrName;
+        this.hrEmail = hrEmail;
+        this.lndName = lndName;
+        this.lndEmail = lndEmail;
+        this.mobileNumber = mobileNumber;
+        this.isFinanceAdmin = isFinanceAdmin;
+        this.imageUrl = imageUrl;
+        this.isHidden = isHidden;
+        this.dateCreated = Timestamp.getCurrentDateTime();
+        this.expenseList = expenseList;
+        this.role = role;
+        this.token = token;
+    }
+
     public Employee(Long employeeId, String officialEmployeeId, String firstName, String middleName, String lastName,
                     String employeeEmail, String managerEmail) {
         super();
@@ -100,9 +129,9 @@ public class Employee {
 
 
     }
+
     public Employee(String managerName, String hrName, String hrEmail,
-                    String lndName, String lndEmail, Long mobileNumber, Boolean isFinanceAdmin)
-    {
+                    String lndName, String lndEmail, Long mobileNumber, Boolean isFinanceAdmin) {
         this.managerName = managerName;
         this.hrName = hrName;
         this.hrEmail = hrEmail;
@@ -111,16 +140,15 @@ public class Employee {
         this.mobileNumber = mobileNumber;
         this.isFinanceAdmin = isFinanceAdmin;
     }
+
     public Employee(String imageUrl,
-                    Boolean isHidden, List<Expense> expenseList, String role, String token)
-    {
+                    Boolean isHidden, List<Expense> expenseList, String role, String token) {
         this.imageUrl = imageUrl;
         this.isHidden = isHidden;
         this.expenseList = expenseList;
         this.role = role;
         this.token = token;
     }
-
 
 
     public void setEmployeeId(Long employeeId) {
@@ -199,6 +227,9 @@ public class Employee {
         this.token = token;
     }
 
+    public void setDateCreated(LocalDateTime createdAt) {
+        this.dateCreated = createdAt;
+    }
 
 
 }

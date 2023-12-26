@@ -1,6 +1,7 @@
 package com.nineleaps.expense_management_project.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.*;
 import com.nineleaps.expense_management_project.dto.CategoryDTO;
@@ -41,7 +42,7 @@ public class CategoryServiceImpl implements ICategoryService {
 		if (optionalCategory.isPresent()) {
 			return optionalCategory.get();
 		} else {
-			throw new NullPointerException("Category with ID " + categoryId + " not found");
+			throw new NoSuchElementException("Category with ID " + categoryId + " not found");
 		}
 	}
 
@@ -68,6 +69,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 		Category category = new Category();
 		category.setCategoryDescription(categoryDescription);
+		category.setDateCreated(LocalDateTime.now());
 		return categoryRepository.save(category);
 	}
 

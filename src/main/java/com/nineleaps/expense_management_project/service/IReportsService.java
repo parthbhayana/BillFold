@@ -27,6 +27,8 @@ public interface IReportsService {
 
     List<Reports> getReportByEmpId(Long employeeId, String request);
 
+    public List<Reports> getReportByEmpId(Long employeeId, String request, int page, int size);
+
     Reports addExpenseToReport(Long reportId, List<Long> employeeids);
 
     void submitReport(Long reportId, HttpServletResponse response) throws MessagingException, IOException;

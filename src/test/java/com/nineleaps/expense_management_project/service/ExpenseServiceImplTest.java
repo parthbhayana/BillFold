@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -2017,7 +2018,7 @@ class ExpenseServiceImplTest {
         Long expenseId = 1L;
         ExpenseDTO expenseDTO = new ExpenseDTO();
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> {
+        assertThrows(NoSuchElementException.class, () -> {
             expenseServiceImpl.updateExpenses(expenseDTO, expenseId);
         });
     }
@@ -2065,7 +2066,7 @@ class ExpenseServiceImplTest {
     void testGetExpenseById_ExpenseNotFound() {
         Long expenseId = 0L;
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> {
+        assertThrows(NoSuchElementException.class, () -> {
             expenseServiceImpl.getExpenseById(expenseId);
         });
     }

@@ -1,8 +1,15 @@
 package com.nineleaps.expense_management_project.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import com.nineleaps.expense_management_project.dto.ExpenseDTO;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +21,15 @@ import com.nineleaps.expense_management_project.entity.Expense;
 import com.nineleaps.expense_management_project.service.IExpenseService;
 
 @RestController
+@ApiResponses(
+        value = {
+                @ApiResponse(code = 200, message = "SUCCESS"),
+                @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+                @ApiResponse(code = 403, message = "ACCESS_FORBIDDEN"),
+                @ApiResponse(code = 404, message = "NOT_FOUND"),
+                @ApiResponse(code = 500, message = "INTERNAL_SERVER_ERROR")
+        })
+
 public class ExpenseController {
     @Autowired
     private IExpenseService expenseService;
@@ -36,19 +52,50 @@ public class ExpenseController {
     }
 
     @GetMapping("/findExpense/{expenseId}")
-    public Expense getExpenseById(@PathVariable Long expenseId) {
-        return expenseService.getExpenseById(expenseId);
+    public ResponseEntity<Expense> getExpenseById(@PathVariable("expenseId") Long expenseId) {
+        try {
+            Expense expense = expenseService.getExpenseById(expenseId);
+            return ResponseEntity.ok(expense);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/updateExpenses/{expenseId}")
-    public Expense updateExpenses(@RequestBody ExpenseDTO expenseDTO, @PathVariable Long expenseId) {
-        return expenseService.updateExpenses(expenseDTO, expenseId);
+    public ResponseEntity<Expense> updateExpenses(@RequestBody ExpenseDTO expenseDTO, @PathVariable("expenseId") Long expenseId) {
+        try {
+            Expense updatedExpense = expenseService.updateExpenses(expenseDTO, expenseId);
+            return ResponseEntity.ok(updatedExpense);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/hideExpense/{expenseId}")
+    public ResponseEntity<Void> hideExpense(@PathVariable("expenseId") Long expenseId) {
+        try {
+            expenseService.hideExpense(expenseId);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/getExpenseByEmployeeId/{employeeId}")
     public List<Expense> getExpenseByEmpId(@PathVariable Long employeeId) {
         return expenseService.getExpenseByEmployeeId(employeeId);
     }
+
+    @GetMapping("/getExpenseByEmpId/{employeeId}")
+    public List<Expense> getExpenseByEmpId(
+            @PathVariable Long employeeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return expenseService.getExpenseByEmployeeId(employeeId, page, size);
+    }
+
+
 
     @GetMapping("/getExpenseByReportId/{reportId}")
     public List<Expense> getExpenseByReportId(@PathVariable Long reportId) {
@@ -63,11 +110,6 @@ public class ExpenseController {
     @GetMapping("/getUnreportedExpensesByEmployeeId/{employeeId}")
     public List<Expense> getExpensesById(@PathVariable Long employeeId) {
         return expenseService.getExpensesByEmployeeId(employeeId);
-    }
-
-    @PostMapping("/hideExpense/{expenseId}")
-    public void hideExpense(@PathVariable Long expenseId) {
-        expenseService.hideExpense(expenseId);
     }
 
 }

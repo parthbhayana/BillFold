@@ -1,9 +1,14 @@
 package com.nineleaps.expense_management_project.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +23,15 @@ import com.nineleaps.expense_management_project.service.IEmployeeService;
 
 @RestController
 @RequestMapping("/employee")
+@ApiResponses(
+        value = {
+                @ApiResponse(code = 200, message = "SUCCESS"),
+                @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+                @ApiResponse(code = 403, message = "ACCESS_FORBIDDEN"),
+                @ApiResponse(code = 404, message = "NOT_FOUND"),
+                @ApiResponse(code = 500, message = "INTERNAL_SERVER_ERROR")
+        })
+
 public class EmployeeController {
 
     @Autowired
@@ -50,19 +64,33 @@ public class EmployeeController {
     }
 
     @GetMapping("/findEmployee/{employeeId}")
-    public Employee getEmployeeById(@PathVariable Long employeeId) {
-        return employeeService.getEmployeeById(employeeId);
-
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("employeeId") Long employeeId) {
+        try {
+            Employee employee = employeeService.getEmployeeById(employeeId);
+            return ResponseEntity.ok(employee);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/deleteEmployee/{employeeId}")
-    public void deleteEmployeeById(@PathVariable Long employeeId) {
-        employeeService.deleteEmployeeDetailsById(employeeId);
+    public ResponseEntity<Void> deleteEmployeeById(@PathVariable Long employeeId) {
+        try {
+            employeeService.deleteEmployeeDetailsById(employeeId);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/hideEmployee/{employeeId}")
-    public void hideEmployee(@PathVariable Long employeeId) {
-        employeeService.hideEmployee(employeeId);
+    public ResponseEntity<Void> hideEmployee(@PathVariable Long employeeId) {
+        try {
+            employeeService.hideEmployee(employeeId);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/setFinanceAdmin")
@@ -77,11 +105,8 @@ public class EmployeeController {
 
     @PostMapping("/editEmployeeDetails")
     public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId,
-                                    String managerName,@RequestParam String hrName,
+                                    String managerName, @RequestParam String hrName,
                                     @RequestParam String hrEmail) {
         employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);
     }
-
-
-
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,7 @@ class CategoryTest {
         assertEquals(1L, actualCategory.getCategoryTotal());
         assertSame(expenseList, actualCategory.getExpenseList());
         assertTrue(actualCategory.getIsHidden());
+
     }
 
 

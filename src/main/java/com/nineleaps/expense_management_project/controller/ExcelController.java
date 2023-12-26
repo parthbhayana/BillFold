@@ -2,6 +2,9 @@ package com.nineleaps.expense_management_project.controller;
 
 import java.time.LocalDate;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,15 @@ import com.nineleaps.expense_management_project.service.IExcelGeneratorCategoryS
 import com.nineleaps.expense_management_project.service.IExcelGeneratorReportsService;
 
 @RestController
+@ApiResponses(
+		value = {
+				@ApiResponse(code = 200, message = "SUCCESS"),
+				@ApiResponse(code = 401, message = "UNAUTHORIZED"),
+				@ApiResponse(code = 403, message = "ACCESS_FORBIDDEN"),
+				@ApiResponse(code = 404, message = "NOT_FOUND"),
+				@ApiResponse(code = 500, message = "INTERNAL_SERVER_ERROR")
+		})
+
 public class ExcelController {
 	@Autowired
 	private IExcelGeneratorCategoryService excelService;

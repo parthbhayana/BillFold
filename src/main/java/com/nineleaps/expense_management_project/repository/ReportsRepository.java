@@ -3,6 +3,9 @@ package com.nineleaps.expense_management_project.repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.nineleaps.expense_management_project.entity.FinanceApprovalStatus;
 import com.nineleaps.expense_management_project.entity.ManagerApprovalStatus;
@@ -52,6 +55,13 @@ public interface ReportsRepository extends JpaRepository<Reports, Long> {
 
     List<Reports> findByDateSubmittedBetweenAndFinanceApprovalStatus(LocalDate startDate, LocalDate endDate,
                                                                      FinanceApprovalStatus financeApprovalStatus);
+
+    Page<Reports> getReportsByEmployeeIdAndIsSubmittedAndIsHidden(Long employeeId, boolean isSubmitted, boolean isHidden, Pageable pageable);
+
+    Page<Reports> getReportsByEmployeeIdAndManagerApprovalStatusAndIsSubmittedAndIsHidden(Long employeeId, ManagerApprovalStatus managerApprovalStatus, boolean isSubmitted, boolean isHidden, Pageable pageable);
+
+    Page<Reports> getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(Long employeeId, ManagerApprovalStatus managerApprovalStatus, boolean isHidden, Pageable pageable);
+
 
 
 

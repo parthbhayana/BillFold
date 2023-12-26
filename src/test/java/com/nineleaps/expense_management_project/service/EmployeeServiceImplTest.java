@@ -4,10 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
 import com.nineleaps.expense_management_project.dto.UserDTO;
@@ -445,7 +442,7 @@ class EmployeeServiceImplTest {
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
 
 
-        assertThrows(NullPointerException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail,
+        assertThrows(NoSuchElementException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail,
                 mobileNumber, officialEmployeeId, managerName));
     }
 
@@ -493,7 +490,7 @@ class EmployeeServiceImplTest {
         when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
 
 
-        assertThrows(NullPointerException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail,
+        assertThrows(NoSuchElementException.class, () -> employeeService.editEmployeeDetails(employeeId, managerEmail,
                 mobileNumber, officialEmployeeId, managerName, hrEmail, hrName));
     }
 

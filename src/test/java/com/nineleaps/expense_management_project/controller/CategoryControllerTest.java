@@ -91,7 +91,7 @@ class CategoryControllerTest {
 
         when(categoryService.getCategoryById(categoryId)).thenReturn(category);
 
-        Category response = categoryController.getCategoryById(categoryId);
+        Category response = categoryController.getCategoryById(categoryId).getBody();
 
         assertEquals(category, response);
     }

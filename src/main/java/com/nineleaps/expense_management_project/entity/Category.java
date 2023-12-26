@@ -1,5 +1,6 @@
 package com.nineleaps.expense_management_project.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -31,6 +32,10 @@ public class Category {
 	@ApiModelProperty(hidden = true)
 	private Boolean isHidden = false;
 
+	@Column(name = "date_created")
+	@ApiModelProperty(hidden = true)
+	private LocalDateTime dateCreated;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -48,6 +53,16 @@ public class Category {
 		this.categoryTotal = categoryTotal;
 		this.isHidden = isHidden;
 		this.expenseList = expenseList;
+	}
+	public Category(Long categoryId, String categoryDescription, long categoryTotal, Boolean isHidden,
+					List<Expense> expenseList,LocalDateTime dateCreated) {
+		super();
+		this.categoryId = categoryId;
+		this.categoryDescription = categoryDescription;
+		this.categoryTotal = categoryTotal;
+		this.isHidden = isHidden;
+		this.expenseList = expenseList;
+		this.dateCreated = Timestamp.getCurrentDateTime();
 	}
 
 	public void setCategoryId(Long categoryId) {
@@ -68,6 +83,10 @@ public class Category {
 
 	public void setExpenseList(List<Expense> expenseList) {
 		this.expenseList = expenseList;
+	}
+
+	public void setDateCreated(LocalDateTime createdAt) {
+		this.dateCreated = createdAt;
 	}
 
 }

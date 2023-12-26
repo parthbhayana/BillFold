@@ -59,7 +59,7 @@ class EmployeeControllerTest {
         Long employeeId = 1L;
         Employee mockEmployee = new Employee();
         when(employeeService.getEmployeeById(employeeId)).thenReturn(mockEmployee);
-        Employee resultEmployee = employeeController.getEmployeeById(employeeId);
+        Employee resultEmployee = employeeController.getEmployeeById(employeeId).getBody();
         verify(employeeService, times(1)).getEmployeeById(employeeId);
         assertEquals(mockEmployee, resultEmployee);
     }

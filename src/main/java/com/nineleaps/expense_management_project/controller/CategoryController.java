@@ -3,7 +3,11 @@ package com.nineleaps.expense_management_project.controller;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+
 import com.nineleaps.expense_management_project.dto.CategoryDTO;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,15 @@ import com.nineleaps.expense_management_project.entity.Category;
 import com.nineleaps.expense_management_project.service.ICategoryService;
 
 @RestController
+@ApiResponses(
+        value = {
+                @ApiResponse(code = 200, message = "SUCCESS"),
+                @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+                @ApiResponse(code = 403, message = "ACCESS_FORBIDDEN"),
+                @ApiResponse(code = 404, message = "NOT_FOUND"),
+                @ApiResponse(code = 500, message = "INTERNAL_SERVER_ERROR")
+        })
+
 public class CategoryController {
 
     @Autowired
@@ -41,8 +54,13 @@ public class CategoryController {
     }
 
     @GetMapping("/findCategory/{categoryId}")
-    public Category getCategoryById(@PathVariable("categoryId") Long categoryId) {
-        return categoryService.getCategoryById(categoryId);
+    public ResponseEntity<Category> getCategoryById(@PathVariable("categoryId") Long categoryId) {
+        try {
+            Category category = categoryService.getCategoryById(categoryId);
+            return new ResponseEntity<>(category, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/updateCategory/{categoryId}")

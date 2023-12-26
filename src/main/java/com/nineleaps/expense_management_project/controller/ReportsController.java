@@ -6,12 +6,18 @@ import java.util.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import com.nineleaps.expense_management_project.dto.ReportsDTO;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,25 +29,54 @@ import com.nineleaps.expense_management_project.service.IReportsService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
+@ApiResponses(
+        value = {
+                @ApiResponse(code = 200, message = "SUCCESS"),
+                @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+                @ApiResponse(code = 403, message = "ACCESS_FORBIDDEN"),
+                @ApiResponse(code = 404, message = "NOT_FOUND"),
+                @ApiResponse(code = 500, message = "INTERNAL_SERVER_ERROR")
+        })
+
+
 public class ReportsController {
 
     @Autowired
     private IReportsService reportsService;
 
     @GetMapping("/getAllReports/{employeeId}")
+    @ApiOperation(value = "Private Endpoint", tags = "private")
     public Set<Reports> getAllReports(@PathVariable Long employeeId) {
         return reportsService.getAllReports(employeeId);
     }
 
     @GetMapping("/getByReportId/{reportId}")
-    public Reports getReportByReportId(@PathVariable Long reportId) {
-        return reportsService.getReportById(reportId);
+    public ResponseEntity<Reports> getReportByReportId(@PathVariable Long reportId) {
+        try {
+            Reports report = reportsService.getReportById(reportId);
+            return new ResponseEntity<>(report, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
 
     @GetMapping("/getReportByEmployeeId/{employeeId}")
     public List<Reports> getReportByEmpId(@PathVariable Long employeeId, @RequestParam String request) {
         return reportsService.getReportByEmpId(employeeId, request);
     }
+
+    @GetMapping("/getReportByEmpId/{employeeId}")
+    public List<Reports> getReportByEmpId(
+            @PathVariable Long employeeId,
+            @RequestParam String request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        List<Reports> reportsList = reportsService.getReportByEmpId(employeeId, request, page, size);
+        return reportsList;
+    }
+
 
     @GetMapping("/getReportsSubmittedToUser/{managerEmail}")
     public List<Reports> getReportsSubmittedToUser(@PathVariable String managerEmail, @RequestParam String request) {

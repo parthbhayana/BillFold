@@ -111,7 +111,7 @@ class ReportsServiceImplTest {
     @Test
     void testGetReportByIdReportNotFound() {
         when(reportsRepository.findById(1L)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(RuntimeException.class, () -> {
+        Exception exception = assertThrows(NoSuchElementException.class, () -> {
             reportsService.getReportById(1L);
         });
         assertEquals("Report not found", exception.getMessage());

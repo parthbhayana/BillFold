@@ -43,7 +43,7 @@ class ExpenseControllerTest {
 
 
     @Test
-    @Disabled("TODO: Complete this test")
+    @Disabled()
     void testAddPotentialDuplicateExpense1() throws Exception {
 
         MockHttpServletRequestBuilder postResult = MockMvcRequestBuilders.post("/addPotentialDuplicateExpense/{employeeId}",

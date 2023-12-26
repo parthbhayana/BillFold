@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicPath(String servletPath) {
-        return servletPath.equals("/theProfile") || servletPath.equals("/regenerateToken");
+        return servletPath.equals("/theProfile") || servletPath.equals("/regenerateToken")|| servletPath.startsWith("/swagger")|| servletPath.equals("/v2/api-docs");
     }
 
     private void handleAuthorizationHeader(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

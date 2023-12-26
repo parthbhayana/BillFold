@@ -1,95 +1,153 @@
 package com.nineleaps.expense_management_project.entity;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import java.io.Serializable;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+
+import com.nineleaps.expense_management_project.entity.CustomIdGenerator;
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionDelegatorBaseImpl;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class CustomIdGeneratorTest {
-
-    private CustomIdGenerator customIdGenerator;
-    private Connection connection;
-    private PreparedStatement preparedStatement;
-    private ResultSet resultSet;
-
-    @BeforeEach
-    void setUp() throws SQLException {
-        customIdGenerator = new CustomIdGenerator();
-        connection = mock(Connection.class);
-        preparedStatement = mock(PreparedStatement.class);
-        resultSet = mock(ResultSet.class);
-
-        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-    }
-
+    /**
+     * Method under test: {@link CustomIdGenerator#generate(SharedSessionContractImplementor, Object)}
+     */
     @Test
-    void testGenerate() throws SQLException {
-        SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+    void testGenerate() throws SQLException, HibernateException {
+        // Arrange
+        CustomIdGenerator customIdGenerator = new CustomIdGenerator();
+        ResultSet resultSet = mock(ResultSet.class);
+        when(resultSet.getInt(anyInt())).thenReturn(1);
+        when(resultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);
+        doNothing().when(resultSet).close();
+        PreparedStatement preparedStatement = mock(PreparedStatement.class);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doNothing().when(preparedStatement).setString(anyInt(), Mockito.any());
+        doNothing().when(preparedStatement).close();
+        Connection connection = mock(Connection.class);
+        when(connection.prepareStatement(Mockito.any())).thenReturn(preparedStatement);
+        SessionDelegatorBaseImpl session = mock(SessionDelegatorBaseImpl.class);
         when(session.connection()).thenReturn(connection);
 
-        when(resultSet.next()).thenReturn(false);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        // Act
+        customIdGenerator.generate(session, "Object");
 
-        Serializable generatedId = customIdGenerator.generate(session, null);
-
-        assertEquals(Long.class, generatedId.getClass());
+        // Assert
+        verify(session).connection();
+        verify(connection).prepareStatement(Mockito.any());
+        verify(preparedStatement).executeQuery();
+        verify(preparedStatement).setString(anyInt(), Mockito.any());
+        verify(preparedStatement).close();
+        verify(resultSet).next();
+        verify(resultSet).getInt(anyInt());
+        verify(resultSet).close();
     }
 
+    /**
+     * Method under test: {@link CustomIdGenerator#generate(SharedSessionContractImplementor, Object)}
+     */
     @Test
-    void testGenerateWithExistingReports() throws SQLException {
-        SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+    void testGenerate2() throws SQLException, HibernateException {
+        // Arrange
+        CustomIdGenerator customIdGenerator = new CustomIdGenerator();
+        ResultSet resultSet = mock(ResultSet.class);
+        when(resultSet.getInt(anyInt())).thenThrow(new SQLException());
+        when(resultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);
+        doNothing().when(resultSet).close();
+        PreparedStatement preparedStatement = mock(PreparedStatement.class);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doNothing().when(preparedStatement).setString(anyInt(), Mockito.any());
+        doNothing().when(preparedStatement).close();
+        Connection connection = mock(Connection.class);
+        when(connection.prepareStatement(Mockito.any())).thenReturn(preparedStatement);
+        SessionDelegatorBaseImpl session = mock(SessionDelegatorBaseImpl.class);
         when(session.connection()).thenReturn(connection);
 
-        when(resultSet.next()).thenReturn(true);
-        when(resultSet.getInt(1)).thenReturn(3); // Assuming there are 3 reports with the same year and month
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-
-        Serializable generatedId = customIdGenerator.generate(session, null);
-
-        assertEquals(Long.class, generatedId.getClass());
-
-
-        assertEquals("2023100004", generatedId.toString());
+        // Act and Assert
+        assertThrows(HibernateException.class, () -> customIdGenerator.generate(session, "Object"));
+        verify(session).connection();
+        verify(connection).prepareStatement(Mockito.any());
+        verify(preparedStatement).executeQuery();
+        verify(preparedStatement).setString(anyInt(), Mockito.any());
+        verify(preparedStatement).close();
+        verify(resultSet).next();
+        verify(resultSet).getInt(anyInt());
+        verify(resultSet).close();
     }
 
+    /**
+     * Method under test: {@link CustomIdGenerator#generate(SharedSessionContractImplementor, Object)}
+     */
     @Test
-    void testGetSerialNumberForYearAndMonth() throws SQLException {
-        when(resultSet.next()).thenReturn(true);
-        when(resultSet.getInt(1)).thenReturn(2);
+    void testGenerate3() throws SQLException, HibernateException {
+        // Arrange
+        CustomIdGenerator customIdGenerator = new CustomIdGenerator();
+        ResultSet resultSet = mock(ResultSet.class);
+        when(resultSet.getInt(anyInt())).thenThrow(new HibernateException("An error occurred"));
+        when(resultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);
+        doNothing().when(resultSet).close();
+        PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doNothing().when(preparedStatement).setString(anyInt(), Mockito.any());
+        doNothing().when(preparedStatement).close();
+        Connection connection = mock(Connection.class);
+        when(connection.prepareStatement(Mockito.any())).thenReturn(preparedStatement);
+        SessionDelegatorBaseImpl session = mock(SessionDelegatorBaseImpl.class);
+        when(session.connection()).thenReturn(connection);
 
-        int serialNumber = customIdGenerator.getSerialNumberForYearAndMonth(connection, "YYYYMM");
-
-        assertEquals(3, serialNumber);
+        // Act and Assert
+        assertThrows(HibernateException.class, () -> customIdGenerator.generate(session, "Object"));
+        verify(session).connection();
+        verify(connection).prepareStatement(Mockito.any());
+        verify(preparedStatement).executeQuery();
+        verify(preparedStatement).setString(anyInt(), Mockito.any());
+        verify(preparedStatement).close();
+        verify(resultSet).next();
+        verify(resultSet).getInt(anyInt());
+        verify(resultSet).close();
     }
 
+    /**
+     * Method under test: {@link CustomIdGenerator#generate(SharedSessionContractImplementor, Object)}
+     */
     @Test
-    void testGetSerialNumberForYearAndMonthNoExistingReports() throws SQLException {
-        when(resultSet.next()).thenReturn(false);
+    void testGenerate4() throws SQLException, HibernateException {
+        // Arrange
+        CustomIdGenerator customIdGenerator = new CustomIdGenerator();
+        ResultSet resultSet = mock(ResultSet.class);
+        when(resultSet.next()).thenReturn(false).thenReturn(true).thenReturn(false);
+        doNothing().when(resultSet).close();
+        PreparedStatement preparedStatement = mock(PreparedStatement.class);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        doNothing().when(preparedStatement).setString(anyInt(), Mockito.any());
+        doNothing().when(preparedStatement).close();
+        Connection connection = mock(Connection.class);
+        when(connection.prepareStatement(Mockito.any())).thenReturn(preparedStatement);
+        SessionDelegatorBaseImpl session = mock(SessionDelegatorBaseImpl.class);
+        when(session.connection()).thenReturn(connection);
 
-        int serialNumber = customIdGenerator.getSerialNumberForYearAndMonth(connection, "YYYYMM");
+        // Act
+        customIdGenerator.generate(session, "Object");
 
-        assertEquals(1, serialNumber);
+        // Assert
+        verify(session).connection();
+        verify(connection).prepareStatement(Mockito.any());
+        verify(preparedStatement).executeQuery();
+        verify(preparedStatement).setString(anyInt(), Mockito.any());
+        verify(preparedStatement).close();
+        verify(resultSet).next();
+        verify(resultSet).close();
     }
-
-    @Test
-    void testGetSerialNumberForYearAndMonthSQLException() throws SQLException {
-        when(preparedStatement.executeQuery()).thenThrow(new SQLException("SQL Error"));
-
-        // Ensure that a HibernateException is thrown in case of an SQL error
-        assertThrows(HibernateException.class, () -> customIdGenerator.getSerialNumberForYearAndMonth(connection, "YYYYMM"));
-    }
-
-
 }
+

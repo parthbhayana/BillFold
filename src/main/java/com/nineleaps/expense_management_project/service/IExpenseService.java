@@ -17,6 +17,8 @@ public interface IExpenseService {
 
      List<Expense> getExpenseByEmployeeId(Long employeeId);
 
+     public List<Expense> getExpenseByEmployeeId(Long employeeId, int page, int size);
+
      List<Expense> getExpenseByReportId(Long employeeId);
 
      Expense updateExpenses(ExpenseDTO expense, Long expenseId);

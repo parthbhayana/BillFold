@@ -1,13 +1,0 @@
-
-o
-java:S37763"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(—ßğ§8»åÀá´1
-`
-java:S1854k">Remove this useless assignment to local variable "formatter1".(ÈÜ™Õùÿÿÿÿ8»åÀá´1
-H
-java:S11723"+Remove this unused method parameter "role".(—ßğ§8¼åÀá´1
-Q
-java:S1481k"/Remove this unused "formatter1" local variable.(ÈÜ™Õùÿÿÿÿ8ÆåÀá´1
-X	java:S125m"<This block of commented-out lines of code should be removed.(Ù¾„À8ÇåÀá´1
-^	java:S125Š"<This block of commented-out lines of code should be removed.(òŠÁÅùÿÿÿÿ8ÇåÀá´1
-R
-java:S1128"0Remove this unused import 'java.time.LocalDate'.(›‘¬èıÿÿÿÿ8İåÀá´1

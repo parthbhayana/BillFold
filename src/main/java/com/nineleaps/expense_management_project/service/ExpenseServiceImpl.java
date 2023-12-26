@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
@@ -117,7 +118,7 @@ public class ExpenseServiceImpl implements IExpenseService {
             return expenseOptional.get();
         } else {
 
-            throw new EntityNotFoundException("Expense with ID " + expenseId + " not found");
+            throw new NoSuchElementException("Expense with ID " + expenseId + " not found");
         }
     }
     @Override
@@ -161,6 +162,24 @@ public class ExpenseServiceImpl implements IExpenseService {
     }
 
 
+        @Override
+        public List<Expense> getExpenseByEmployeeId(Long employeeId, int page, int size) {
+            Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
+    
+            if (employeeOptional.isPresent()) {
+                Employee employee = employeeOptional.get();
+                Sort sort = Sort.by(Sort.Direction.DESC, "dateCreated");
+                List<Expense> expenses = expenseRepository.findByEmployeeAndIsHidden(employee, false, sort);
+    
+                // Paginate the list manually based on page and size
+                int start = page * size;
+                int end = Math.min(start + size, expenses.size());
+    
+                return expenses.subList(start, end);
+            } else {
+                return Collections.emptyList();
+            }
+        }
 
     @Override
     public Expense updateExpenses(ExpenseDTO expenseDTO, Long expenseId) {

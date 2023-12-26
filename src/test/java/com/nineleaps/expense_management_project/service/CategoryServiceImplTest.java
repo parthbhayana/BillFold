@@ -742,10 +742,11 @@ class CategoryServiceImplTest {
 
         Mockito.when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
-        NullPointerException exception = assertThrows(NullPointerException.class, () -> categoryService.getCategoryById(categoryId));
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> categoryService.getCategoryById(categoryId));
 
         assertEquals("Category with ID 1 not found", exception.getMessage());
     }
+
 
     @Test
     void testGetYearlyReimbursementRatioForAllCategories1() {

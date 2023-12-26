@@ -12,6 +12,9 @@ import com.nineleaps.expense_management_project.firebase.PushNotificationService
 import com.nineleaps.expense_management_project.repository.EmployeeRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.nineleaps.expense_management_project.repository.ExpenseRepository;
@@ -78,11 +81,11 @@ public class ReportsServiceImpl implements IReportsService {
     @Override
     public Reports getReportById(Long reportId) {
         Optional<Reports> optionalReport = reportsRepository.findById(reportId);
-        return optionalReport.orElseThrow(() -> new RuntimeException("Report not found"));
+        return optionalReport.orElseThrow(() -> new NoSuchElementException("Report not found"));
     }
 
     @Override
-    public Reports addReport(ReportsDTO reportsDTO, Long employeeId, List<Long> expenseIds) {
+    public Reports addReport(ReportsDTO reportsDTO, Long employeeId, List<Long> expenseids) {
         Employee employee = employeeServices.getEmployeeById(employeeId);
 
         if (employee == null) {
@@ -101,8 +104,65 @@ public class ReportsServiceImpl implements IReportsService {
         newReport.setDateCreated(LocalDate.now());
         newReport.setEmployeeId(employeeId);
         reportsRepository.save(newReport);
+        Long id = newReport.getReportId();
+        List<Expense> expp = expenseRepository.findAllById(expenseids);
+        //Setting Amounts
+        Long expensesCount = (long) expenseids.size();
+        newReport.setExpensesCount(expensesCount);
+        float amt = 0;
+        for (Expense expense2 : expp) {
+            amt += expense2.getAmount();
+        }
+        newReport.setTotalAmount(amt);
+        addExpenseToReport(id, expenseids);
+        String reportTitle = newReport.getReportTitle();
+        List<Expense> exp = expenseServices.getExpenseByReportId(id);
+        for (Expense exp2 : exp) {
+            if (exp != null) {
+                exp2.setReportTitle(reportTitle);
+                expenseRepository.save(exp2);
+            }
+        }
         return reportsRepository.save(newReport);
     }
+
+//    @Override
+//    public Reports addReport(ReportsDTO reportsDTO, Long employeeId, List<Long> expenseids) {
+//        Employee employee = employeeServices.getEmployeeById(employeeId);
+//        String employeeEmail = employee.getEmployeeEmail();
+//        String managerEmail = employee.getManagerEmail();
+//        String employeeName = (employee.getFirstName() + " " + employee.getLastName());
+//        String officialEmployeeId = employee.getOfficialEmployeeId();
+//        Reports newReport = new Reports();
+//        newReport.setReportTitle(reportsDTO.getReportTitle());
+//        newReport.setEmployeeMail(employeeEmail);
+//        newReport.setManagerEmail(managerEmail);
+//        newReport.setEmployeeName(employeeName);
+//        newReport.setOfficialEmployeeId(officialEmployeeId);
+//        newReport.setDateCreated(LocalDate.now());
+//        newReport.setEmployeeId(employeeId);
+//        reportsRepository.save(newReport);
+//        Long id = newReport.getReportId();
+//        List<Expense> expp = expenseRepository.findAllById(expenseids);
+//        //Setting Amounts
+//        Long expensesCount = (long) expenseids.size();
+//        newReport.setExpensesCount(expensesCount);
+//        float amt = 0;
+//        for (Expense expense2 : expp) {
+//            amt += expense2.getAmount();
+//        }
+//        newReport.setTotalAmount(amt);
+//        addExpenseToReport(id, expenseids);
+//        String reportTitle = newReport.getReportTitle();
+//        List<Expense> exp = expenseServices.getExpenseByReportId(id);
+//        for (Expense exp2 : exp) {
+//            if (exp != null) {
+//                exp2.setReportTitle(reportTitle);
+//                expenseRepository.save(exp2);
+//            }
+//        }
+//        return reportsRepository.save(newReport);
+//    }
 
 
     @Override
@@ -196,7 +256,8 @@ public class ReportsServiceImpl implements IReportsService {
         }
 
         Reports re = reportsRepository.getReportByReportId(reportId);
-        re.setTotalAmount(totalAmount(reportId));
+        if(re != null)
+            re.setTotalAmount(totalAmount(reportId));
         return reportsRepository.save(re);
     }
 
@@ -224,6 +285,34 @@ public class ReportsServiceImpl implements IReportsService {
                 throw new IllegalArgumentException(CONSTANT6 + request);
         }
     }
+
+    @Override
+    public List<Reports> getReportByEmpId(Long employeeId, String request, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        switch (request) {
+            case "drafts":
+                Page<Reports> draftsPage = reportsRepository.getReportsByEmployeeIdAndIsSubmittedAndIsHidden(employeeId, false, false, pageable);
+                return draftsPage.getContent();
+            case "submitted":
+                Page<Reports> submittedPage = reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.PENDING, true, false, pageable);
+                return submittedPage.getContent();
+            case CONSTANT4:
+                Page<Reports> rejectedPage = reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsHidden(employeeId, ManagerApprovalStatus.REJECTED, false, pageable);
+                return rejectedPage.getContent();
+            case CONSTANT5:
+                Page<Reports> approvedPage = reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.APPROVED, true, false, pageable);
+                Page<Reports> partiallyApprovedPage = reportsRepository.getReportsByEmployeeIdAndManagerApprovalStatusAndIsSubmittedAndIsHidden(employeeId, ManagerApprovalStatus.PARTIALLY_APPROVED, true, false, pageable);
+
+                List<Reports> mergedList = new ArrayList<>();
+                mergedList.addAll(approvedPage.getContent());
+                mergedList.addAll(partiallyApprovedPage.getContent());
+                return mergedList;
+            default:
+                throw new IllegalArgumentException(CONSTANT6 + request);
+        }
+    }
+
 
     @Override
     public List<Reports> getReportsSubmittedToUser(String managerEmail, String request) {
