@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
 <span class="fc" id="L36">    }</span>
 
     private boolean isPublicPath(String servletPath) {
-<span class="fc bfc" id="L39" title="All 4 branches covered.">        return servletPath.equals(&quot;/theProfile&quot;) || servletPath.equals(&quot;/regenerateToken&quot;);</span>
+<span class="pc bpc" id="L39" title="2 of 8 branches missed.">        return servletPath.equals(&quot;/theProfile&quot;) || servletPath.equals(&quot;/regenerateToken&quot;)|| servletPath.startsWith(&quot;/swagger&quot;)|| servletPath.equals(&quot;/v2/api-docs&quot;);</span>
     }
 
     private void handleAuthorizationHeader(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ExpenseManagementProject</a> &gt; <a href="index.source.html" class="el_package">com.nineleaps.expense_management_project.controller</a> &gt; <span class="el_source">EmployeeController.java</span></div><h1>EmployeeController.java</h1><pre class="source lang-java linenums">package com.nineleaps.expense_management_project.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
 import com.nineleaps.expense_management_project.dto.EmployeeDTO;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,24 +23,33 @@ import com.nineleaps.expense_management_project.service.IEmployeeService;
 
 @RestController
 @RequestMapping(&quot;/employee&quot;)
-<span class="fc" id="L21">public class EmployeeController {</span>
+@ApiResponses(
+        value = {
+                @ApiResponse(code = 200, message = &quot;SUCCESS&quot;),
+                @ApiResponse(code = 401, message = &quot;UNAUTHORIZED&quot;),
+                @ApiResponse(code = 403, message = &quot;ACCESS_FORBIDDEN&quot;),
+                @ApiResponse(code = 404, message = &quot;NOT_FOUND&quot;),
+                @ApiResponse(code = 500, message = &quot;INTERNAL_SERVER_ERROR&quot;)
+        })
+
+<span class="fc" id="L35">public class EmployeeController {</span>
 
     @Autowired
     private IEmployeeService employeeService;
 
     @GetMapping(&quot;/listEmployee&quot;)
     public List&lt;Employee&gt; getAllEmployeeDetails() {
-<span class="fc" id="L28">        return employeeService.getAllEmployeeDetails();</span>
+<span class="fc" id="L42">        return employeeService.getAllEmployeeDetails();</span>
     }
 
     @PostMapping(&quot;/insertEmployee&quot;)
     public Employee save(@RequestBody EmployeeDTO employeeDTO) {
-<span class="fc" id="L33">        return employeeService.saveEmployeeDetails(employeeDTO);</span>
+<span class="fc" id="L47">        return employeeService.saveEmployeeDetails(employeeDTO);</span>
     }
 
     @PutMapping(&quot;/updateEmployee/{employeeId}&quot;)
     public Employee updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long employeeId) {
-<span class="fc" id="L38">        return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
+<span class="fc" id="L52">        return employeeService.updateEmployeeDetails(employeeDTO, employeeId);</span>
     }
 
     @PostMapping(&quot;/additionalEmployeeDetails&quot;)
@@ -45,44 +59,55 @@ import com.nineleaps.expense_management_project.service.IEmployeeService;
                                                         @RequestParam Long mobileNumber,
                                                         @RequestParam String managerName, @RequestParam String hrName,
                                                         @RequestParam String hrEmail) {
-<span class="fc" id="L48">        return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,</span>
+<span class="fc" id="L62">        return employeeService.additionalEmployeeDetails(employeeId, officialEmployeeId, managerEmail, mobileNumber,</span>
                 managerName, hrEmail, hrName);
     }
 
     @GetMapping(&quot;/findEmployee/{employeeId}&quot;)
-    public Employee getEmployeeById(@PathVariable Long employeeId) {
-<span class="fc" id="L54">        return employeeService.getEmployeeById(employeeId);</span>
-
+    public ResponseEntity&lt;Employee&gt; getEmployeeById(@PathVariable(&quot;employeeId&quot;) Long employeeId) {
+        try {
+<span class="fc" id="L69">            Employee employee = employeeService.getEmployeeById(employeeId);</span>
+<span class="fc" id="L70">            return ResponseEntity.ok(employee);</span>
+<span class="nc" id="L71">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L72">            return ResponseEntity.notFound().build();</span>
+        }
     }
 
     @DeleteMapping(&quot;/deleteEmployee/{employeeId}&quot;)
-    public void deleteEmployeeById(@PathVariable Long employeeId) {
-<span class="fc" id="L60">        employeeService.deleteEmployeeDetailsById(employeeId);</span>
-<span class="fc" id="L61">    }</span>
+    public ResponseEntity&lt;Void&gt; deleteEmployeeById(@PathVariable Long employeeId) {
+        try {
+<span class="fc" id="L79">            employeeService.deleteEmployeeDetailsById(employeeId);</span>
+<span class="fc" id="L80">            return ResponseEntity.noContent().build();</span>
+<span class="nc" id="L81">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L82">            return ResponseEntity.notFound().build();</span>
+        }
+    }
 
     @PostMapping(&quot;/hideEmployee/{employeeId}&quot;)
-    public void hideEmployee(@PathVariable Long employeeId) {
-<span class="fc" id="L65">        employeeService.hideEmployee(employeeId);</span>
-<span class="fc" id="L66">    }</span>
+    public ResponseEntity&lt;Void&gt; hideEmployee(@PathVariable Long employeeId) {
+        try {
+<span class="fc" id="L89">            employeeService.hideEmployee(employeeId);</span>
+<span class="fc" id="L90">            return ResponseEntity.noContent().build();</span>
+<span class="nc" id="L91">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L92">            return ResponseEntity.notFound().build();</span>
+        }
+    }
 
     @PostMapping(&quot;/setFinanceAdmin&quot;)
     public void setFinanceAdmin(@RequestParam Long employeeId) {
-<span class="fc" id="L70">        employeeService.setFinanceAdmin(employeeId);</span>
-<span class="fc" id="L71">    }</span>
+<span class="fc" id="L98">        employeeService.setFinanceAdmin(employeeId);</span>
+<span class="fc" id="L99">    }</span>
 
     @GetMapping(&quot;/getEmployeeDetails&quot;)
     public Optional&lt;Employee&gt; getEmployeeDetails(@RequestParam Long employeeId) {
-<span class="fc" id="L75">        return employeeService.getEmployeeDetails(employeeId);</span>
+<span class="fc" id="L103">        return employeeService.getEmployeeDetails(employeeId);</span>
     }
 
     @PostMapping(&quot;/editEmployeeDetails&quot;)
     public void editEmployeeDetails(Long employeeId, String managerEmail, Long mobileNumber, String officialEmployeeId,
-                                    String managerName,@RequestParam String hrName,
+                                    String managerName, @RequestParam String hrName,
                                     @RequestParam String hrEmail) {
-<span class="fc" id="L82">        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);</span>
-<span class="fc" id="L83">    }</span>
-
-
-
+<span class="fc" id="L110">        employeeService.editEmployeeDetails(employeeId, managerEmail, mobileNumber, officialEmployeeId, managerName, hrEmail, hrName);</span>
+<span class="fc" id="L111">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

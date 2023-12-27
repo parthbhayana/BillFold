@@ -7,6 +7,7 @@ com/nineleaps/expense_management_project/firebase/PushNotificationRequest.class
 com/nineleaps/expense_management_project/controller/ExpenseController.class
 com/nineleaps/expense_management_project/repository/ReportsRepository.class
 com/nineleaps/expense_management_project/service/IExcelGeneratorCategoryService.class
+com/nineleaps/expense_management_project/entity/Timestamp.class
 com/nineleaps/expense_management_project/config/SwaggerConfig.class
 com/nineleaps/expense_management_project/config/JwtFilter.class
 com/nineleaps/expense_management_project/repository/EmployeeRepository.class

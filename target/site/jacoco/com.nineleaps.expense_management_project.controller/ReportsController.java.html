@@ -6,12 +6,18 @@ import java.util.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import com.nineleaps.expense_management_project.dto.ReportsDTO;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,71 +29,100 @@ import com.nineleaps.expense_management_project.service.IReportsService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-<span class="fc" id="L26">public class ReportsController {</span>
+@ApiResponses(
+        value = {
+                @ApiResponse(code = 200, message = &quot;SUCCESS&quot;),
+                @ApiResponse(code = 401, message = &quot;UNAUTHORIZED&quot;),
+                @ApiResponse(code = 403, message = &quot;ACCESS_FORBIDDEN&quot;),
+                @ApiResponse(code = 404, message = &quot;NOT_FOUND&quot;),
+                @ApiResponse(code = 500, message = &quot;INTERNAL_SERVER_ERROR&quot;)
+        })
+
+
+<span class="fc" id="L42">public class ReportsController {</span>
 
     @Autowired
     private IReportsService reportsService;
 
     @GetMapping(&quot;/getAllReports/{employeeId}&quot;)
+    @ApiOperation(value = &quot;Private Endpoint&quot;, tags = &quot;private&quot;)
     public Set&lt;Reports&gt; getAllReports(@PathVariable Long employeeId) {
-<span class="fc" id="L33">        return reportsService.getAllReports(employeeId);</span>
+<span class="fc" id="L50">        return reportsService.getAllReports(employeeId);</span>
     }
 
     @GetMapping(&quot;/getByReportId/{reportId}&quot;)
-    public Reports getReportByReportId(@PathVariable Long reportId) {
-<span class="fc" id="L38">        return reportsService.getReportById(reportId);</span>
+    public ResponseEntity&lt;Reports&gt; getReportByReportId(@PathVariable Long reportId) {
+        try {
+<span class="fc" id="L56">            Reports report = reportsService.getReportById(reportId);</span>
+<span class="fc" id="L57">            return new ResponseEntity&lt;&gt;(report, HttpStatus.OK);</span>
+<span class="nc" id="L58">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L59">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+        }
     }
+
 
     @GetMapping(&quot;/getReportByEmployeeId/{employeeId}&quot;)
     public List&lt;Reports&gt; getReportByEmpId(@PathVariable Long employeeId, @RequestParam String request) {
-<span class="fc" id="L43">        return reportsService.getReportByEmpId(employeeId, request);</span>
+<span class="fc" id="L66">        return reportsService.getReportByEmpId(employeeId, request);</span>
     }
+
+    @GetMapping(&quot;/getReportByEmpId/{employeeId}&quot;)
+    public List&lt;Reports&gt; getReportByEmpId(
+            @PathVariable Long employeeId,
+            @RequestParam String request,
+            @RequestParam(defaultValue = &quot;0&quot;) int page,
+            @RequestParam(defaultValue = &quot;10&quot;) int size) {
+
+<span class="nc" id="L76">        List&lt;Reports&gt; reportsList = reportsService.getReportByEmpId(employeeId, request, page, size);</span>
+<span class="nc" id="L77">        return reportsList;</span>
+    }
+
 
     @GetMapping(&quot;/getReportsSubmittedToUser/{managerEmail}&quot;)
     public List&lt;Reports&gt; getReportsSubmittedToUser(@PathVariable String managerEmail, @RequestParam String request) {
-<span class="fc" id="L48">        return reportsService.getReportsSubmittedToUser(managerEmail, request);</span>
+<span class="fc" id="L83">        return reportsService.getReportsSubmittedToUser(managerEmail, request);</span>
     }
 
     @GetMapping(&quot;/getAllSubmittedReports&quot;)
     public List&lt;Reports&gt; getAllSubmittedReports() {
-<span class="fc" id="L53">        return reportsService.getAllSubmittedReports();</span>
+<span class="fc" id="L88">        return reportsService.getAllSubmittedReports();</span>
     }
 
     @GetMapping(&quot;/getAllReportsApprovedByManager&quot;)
     public List&lt;Reports&gt; getAllReportsApprovedByManager(@RequestParam String request) {
-<span class="fc" id="L58">        return reportsService.getAllReportsApprovedByManager(request);</span>
+<span class="fc" id="L93">        return reportsService.getAllReportsApprovedByManager(request);</span>
     }
 
     @PostMapping(&quot;/addReport/{employeeId}&quot;)
     public Reports addReport(@RequestBody ReportsDTO reportsDTO, @PathVariable Long employeeId,
                              @RequestParam List&lt;Long&gt; expenseIds) {
-<span class="fc" id="L64">        return reportsService.addReport(reportsDTO, employeeId, expenseIds);</span>
+<span class="fc" id="L99">        return reportsService.addReport(reportsDTO, employeeId, expenseIds);</span>
     }
 
     @PatchMapping(&quot;/addExpenseToReport/{reportId}&quot;)
     public Reports addExpensesToReport(@PathVariable Long reportId, @RequestParam List&lt;Long&gt; expenseIds) {
-<span class="fc" id="L69">        return reportsService.addExpenseToReport(reportId, expenseIds);</span>
+<span class="fc" id="L104">        return reportsService.addExpenseToReport(reportId, expenseIds);</span>
     }
 
     @PostMapping(&quot;/submitReport/{reportId}&quot;)
     public void submitReport(@PathVariable Long reportId,
                              HttpServletResponse response) throws MessagingException, IOException {
 
-<span class="fc" id="L76">        reportsService.submitReport(reportId, response);</span>
-<span class="fc" id="L77">    }</span>
+<span class="fc" id="L111">        reportsService.submitReport(reportId, response);</span>
+<span class="fc" id="L112">    }</span>
 
     @PostMapping(&quot;/submitReportToManager/{reportId}&quot;)
     public void submitReport(@PathVariable Long reportId, @RequestParam String managerEmail,
                              HttpServletResponse response) throws MessagingException, IOException {
 
-<span class="fc" id="L83">        reportsService.submitReport(reportId, managerEmail, response);</span>
-<span class="fc" id="L84">    }</span>
+<span class="fc" id="L118">        reportsService.submitReport(reportId, managerEmail, response);</span>
+<span class="fc" id="L119">    }</span>
 
     @PatchMapping(&quot;/editReport/{reportId}&quot;)
     public List&lt;Reports&gt; editReport(@PathVariable Long reportId, @RequestParam String reportTitle,
                                     @RequestParam String reportDescription, @RequestParam List&lt;Long&gt; addExpenseIds,
                                     @RequestParam List&lt;Long&gt; removeExpenseIds) {
-<span class="fc" id="L90">        return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);</span>
+<span class="fc" id="L125">        return reportsService.editReport(reportId, reportTitle, reportDescription, addExpenseIds, removeExpenseIds);</span>
     }
 
 
@@ -95,24 +130,24 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
     @PostMapping(&quot;/rejectReportByFinance/{reportId}&quot;)
     public void rejectReportByFinance(@PathVariable Long reportId,
                                       @RequestParam(value = &quot;comments&quot;, defaultValue = &quot;null&quot;) String comments) {
-<span class="fc" id="L98">        reportsService.rejectReportByFinance(reportId, comments);</span>
-<span class="fc" id="L99">    }</span>
+<span class="fc" id="L133">        reportsService.rejectReportByFinance(reportId, comments);</span>
+<span class="fc" id="L134">    }</span>
 
     @PostMapping(&quot;/hideReport/{reportId}&quot;)
     public void hideReport(@PathVariable Long reportId) {
-<span class="fc" id="L103">        reportsService.hideReport(reportId);</span>
-<span class="fc" id="L104">    }</span>
+<span class="fc" id="L138">        reportsService.hideReport(reportId);</span>
+<span class="fc" id="L139">    }</span>
 
     @GetMapping(&quot;/getTotalAmountInrByReportId&quot;)
     public float totalAmountINR(@RequestParam Long reportId) {
-<span class="fc" id="L108">        return reportsService.totalAmount(reportId);</span>
+<span class="fc" id="L143">        return reportsService.totalAmount(reportId);</span>
     }
 
     @GetMapping(&quot;/getReportsInDateRange&quot;)
     public List&lt;Reports&gt; getReportsInDateRange(
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate, @RequestParam String request) {
-<span class="fc" id="L115">        return reportsService.getReportsInDateRange(startDate, endDate, request);</span>
+<span class="fc" id="L150">        return reportsService.getReportsInDateRange(startDate, endDate, request);</span>
     }
 
     @GetMapping(&quot;/getReportsSubmittedToUserInDateRange&quot;)
@@ -120,63 +155,63 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
                                                               @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
                                                               @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate,
                                                               @RequestParam String request) {
-<span class="fc" id="L123">        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);</span>
+<span class="fc" id="L158">        return reportsService.getReportsSubmittedToUserInDateRange(managerEmail, startDate, endDate, request);</span>
     }
 
     @GetMapping(&quot;/getAmountOfReportsInDateRange&quot;)
     public String getAmountOfReportsInDateRange(
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate startDate,
             @RequestParam @DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) LocalDate endDate) {
-<span class="fc" id="L130">        return reportsService.getAmountOfReportsInDateRange(startDate, endDate);</span>
+<span class="fc" id="L165">        return reportsService.getAmountOfReportsInDateRange(startDate, endDate);</span>
     }
 
     @GetMapping(&quot;/getTotalApprovedAmount&quot;)
     public float totalApprovedAmount(Long reportId) {
-<span class="fc" id="L135">        return reportsService.totalApprovedAmount(reportId);</span>
+<span class="fc" id="L170">        return reportsService.totalApprovedAmount(reportId);</span>
     }
 
     @PostMapping(&quot;/notifyHr/{reportId}&quot;)
     public void notifyHr(@RequestParam Long reportId) throws MessagingException {
-<span class="fc" id="L140">        reportsService.notifyHR(reportId);</span>
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L175">        reportsService.notifyHR(reportId);</span>
+<span class="fc" id="L176">    }</span>
 
     @PostMapping(&quot;/notifyLnD/{reportId}&quot;)
     public void notifyLnD(@RequestParam Long reportId) throws MessagingException {
-<span class="fc" id="L145">        reportsService.notifyLnD(reportId);</span>
-<span class="fc" id="L146">    }</span>
+<span class="fc" id="L180">        reportsService.notifyLnD(reportId);</span>
+<span class="fc" id="L181">    }</span>
 
     @PostMapping(&quot;/updateExpenseStatus/{reportId}&quot;)
     public void updateExpenseStatus(@PathVariable Long reportId, @RequestParam String reviewTime,
                                     @RequestParam String json, @RequestParam String comments,
                                     HttpServletResponse response) throws ParseException, MessagingException,
             IOException {
-<span class="fc" id="L153">        JSONParser parser = new JSONParser();</span>
+<span class="fc" id="L188">        JSONParser parser = new JSONParser();</span>
 
-<span class="fc" id="L155">        Map&lt;Long, Float&gt; partialApprovedMap = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L156">        List&lt;Long&gt; approvedIds = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L157">        List&lt;Long&gt; rejectedIds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L190">        Map&lt;Long, Float&gt; partialApprovedMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L191">        List&lt;Long&gt; approvedIds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L192">        List&lt;Long&gt; rejectedIds = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L159">        JSONArray jsonArray = (JSONArray) parser.parse(json);</span>
-<span class="fc bfc" id="L160" title="All 2 branches covered.">        for (Object object : jsonArray) {</span>
-<span class="fc" id="L161">            JSONObject jsonObject = (JSONObject) object;</span>
+<span class="fc" id="L194">        JSONArray jsonArray = (JSONArray) parser.parse(json);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        for (Object object : jsonArray) {</span>
+<span class="fc" id="L196">            JSONObject jsonObject = (JSONObject) object;</span>
 
-<span class="fc" id="L163">            long expenseId = (Long) jsonObject.get(&quot;expenseId&quot;);</span>
-<span class="fc" id="L164">            double amountApproved = (double) jsonObject.get(&quot;amountApproved&quot;);</span>
-<span class="fc" id="L165">            String status = (String) jsonObject.get(&quot;status&quot;);</span>
+<span class="fc" id="L198">            long expenseId = (Long) jsonObject.get(&quot;expenseId&quot;);</span>
+<span class="fc" id="L199">            double amountApproved = (double) jsonObject.get(&quot;amountApproved&quot;);</span>
+<span class="fc" id="L200">            String status = (String) jsonObject.get(&quot;status&quot;);</span>
 
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;approved&quot;)) {</span>
-<span class="fc" id="L168">                approvedIds.add(expenseId);</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;approved&quot;)) {</span>
+<span class="fc" id="L203">                approvedIds.add(expenseId);</span>
             }
-<span class="pc bpc" id="L170" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;rejected&quot;)) {</span>
-<span class="nc" id="L171">                rejectedIds.add(expenseId);</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;rejected&quot;)) {</span>
+<span class="nc" id="L206">                rejectedIds.add(expenseId);</span>
             }
-<span class="pc bpc" id="L173" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;partiallyApproved&quot;)) {</span>
-<span class="nc" id="L174">                partialApprovedMap.put(expenseId, (float) amountApproved);</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">            if (Objects.equals(status, &quot;partiallyApproved&quot;)) {</span>
+<span class="nc" id="L209">                partialApprovedMap.put(expenseId, (float) amountApproved);</span>
             }
-<span class="fc" id="L176">        }</span>
-<span class="fc" id="L177">        reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,</span>
+<span class="fc" id="L211">        }</span>
+<span class="fc" id="L212">        reportsService.updateExpenseStatus(reportId, approvedIds, rejectedIds, partialApprovedMap, reviewTime,</span>
                 comments, response);
-<span class="fc" id="L179">    }</span>
+<span class="fc" id="L214">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
