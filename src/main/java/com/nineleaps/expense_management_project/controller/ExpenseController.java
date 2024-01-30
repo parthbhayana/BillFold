@@ -4,23 +4,19 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.nineleaps.expense_management_project.dto.ExpenseDTO;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.nineleaps.expense_management_project.entity.Expense;
 import com.nineleaps.expense_management_project.service.IExpenseService;
 
 @RestController
+@RequestMapping("/expense")
 @ApiResponses(
         value = {
                 @ApiResponse(code = 200, message = "SUCCESS"),
@@ -82,6 +78,7 @@ public class ExpenseController {
     }
 
     @GetMapping("/getExpenseByEmployeeId/{employeeId}")
+    @ApiOperation(value = "Deprecated Endpoint", tags = "api-v1")
     public List<Expense> getExpenseByEmpId(@PathVariable Long employeeId) {
         return expenseService.getExpenseByEmployeeId(employeeId);
     }

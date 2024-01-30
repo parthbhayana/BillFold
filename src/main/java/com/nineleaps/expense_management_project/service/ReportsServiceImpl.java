@@ -438,9 +438,23 @@ public class ReportsServiceImpl implements IReportsService {
         re.setManagerApprovalStatus(ManagerApprovalStatus.PENDING);
         re.setDateSubmitted(LocalDate.now());
         re.setTotalAmount(totalAmount(reportId));
+        // Fetch the associated Employee based on the employeeId in Reports
+        Employee employee = employeeServices.getEmployeeById(re.getEmployeeId());
+
+        // Set the managerEmail from the employee's data
+        re.setManagerEmail(employee.getManagerEmail());
 
         reportsRepository.save(re);
 
+        // Send email notification to the manager
+        List<Expense> expenseList = expenseServices.getExpenseByReportId(reportId);
+        ArrayList<Long> expenseIds = new ArrayList<>();
+        for (Expense expense : expenseList) {
+            expenseIds.add(expense.getExpenseId());
+        }
+        emailService.managerNotification(reportId, expenseIds, re.getManagerEmail(), response);
+
+        reportsRepository.save(re);
     }
 
 

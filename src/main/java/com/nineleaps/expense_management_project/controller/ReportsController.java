@@ -45,7 +45,7 @@ public class ReportsController {
     private IReportsService reportsService;
 
     @GetMapping("/getAllReports/{employeeId}")
-    @ApiOperation(value = "Private Endpoint", tags = "private")
+    @ApiOperation(value = "Deprecated Endpoint", tags = "api-v1")
     public Set<Reports> getAllReports(@PathVariable Long employeeId) {
         return reportsService.getAllReports(employeeId);
     }
@@ -62,6 +62,7 @@ public class ReportsController {
 
 
     @GetMapping("/getReportByEmployeeId/{employeeId}")
+    @ApiOperation(value = "Deprecated Endpoint", tags = "api-v1")
     public List<Reports> getReportByEmpId(@PathVariable Long employeeId, @RequestParam String request) {
         return reportsService.getReportByEmpId(employeeId, request);
     }
@@ -105,6 +106,7 @@ public class ReportsController {
     }
 
     @PostMapping("/submitReport/{reportId}")
+    @ApiOperation(value = "Deprecated Endpoint", tags = "api-v1")
     public void submitReport(@PathVariable Long reportId,
                              HttpServletResponse response) throws MessagingException, IOException {
 

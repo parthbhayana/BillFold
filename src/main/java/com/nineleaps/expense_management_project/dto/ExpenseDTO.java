@@ -1,5 +1,6 @@
 package com.nineleaps.expense_management_project.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import java.time.LocalDate;
 
@@ -11,6 +12,7 @@ public class ExpenseDTO {
 	private String merchantName;
 	private byte[] file;
 	private String fileName;
+	@ApiModelProperty(value = "Expense date", example = "2023-12-01")
 	private LocalDate date;
 
 	public ExpenseDTO() {
